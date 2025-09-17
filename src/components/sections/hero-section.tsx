@@ -1,5 +1,4 @@
 'use client';
-
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/layout/header';
@@ -60,7 +59,7 @@ export function HeroSection() {
                   width={400}
                   height={533}
                   quality={95}
-                  className="object-contain drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)] animate-pulse-slow"
+                  className="object-contain drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)]"
                   data-ai-hint={warriorImg.imageHint}
                   style={{
                     animation: 'float 6s ease-in-out infinite',
