@@ -18,7 +18,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
-        headline: ['Teko', 'sans-serif'],
+        headline: ['"Russo One"', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
