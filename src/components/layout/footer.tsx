@@ -14,7 +14,7 @@ export function Footer() {
   ];
 
   const paymentMethods = [
-    { name: 'Vodafone Cash', logo: '/assets/vodafone-cash.png' },
+    { name: 'Vodafone Cash', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Vodafone_icon.svg/200px-Vodafone_icon.svg.png' },
     { name: 'PayPal', logo: '/assets/paypal.png' },
     { name: 'InstaPay', logo: '/assets/instapay.png' },
   ];
@@ -45,7 +45,7 @@ export function Footer() {
             <h3 className="font-headline text-lg text-white mb-4">We Accept</h3>
             <div className="flex items-center space-x-4">
               {paymentMethods.map((method) => (
-                <div key={method.name} className="p-2 bg-white/10 rounded-lg">
+                <div key={method.name} className="p-2 bg-white/10 rounded-lg flex items-center justify-center h-[41px]">
                   <Image src={method.logo} alt={method.name} width={40} height={25} className="object-contain" />
                 </div>
               ))}
