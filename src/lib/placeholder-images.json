@@ -1,12 +1,6 @@
 {
   "placeholderImages": [
     {
-      "id": "hero-background",
-      "description": "A futuristic city skyline at night with neon pink and blue lights.",
-      "imageUrl": "/assets/hero-background.jpg",
-      "imageHint": "city skyline"
-    },
-    {
       "id": "cyber-warrior",
       "description": "A glowing cybernetic futuristic warrior holding a plasma rifle.",
       "imageUrl": "/assets/cyber-warrior.png",

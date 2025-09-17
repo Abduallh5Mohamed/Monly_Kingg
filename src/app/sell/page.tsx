@@ -1,8 +1,6 @@
 'use client';
 import { Header } from '@/components/layout/header';
 import { SellForm } from '@/components/sell-form';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const CircuitBackground = () => (
     <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
@@ -20,20 +18,18 @@ const CircuitBackground = () => (
   
 
 export default function SellPage() {
-  const heroBg = PlaceHolderImages.find(img => img.id === 'hero-background');
 
   return (
     <div className="relative min-h-screen w-full bg-background overflow-x-hidden">
-       {heroBg && (
-        <Image
-          src={heroBg.imageUrl}
-          alt={heroBg.description}
-          fill
-          quality={100}
-          className="object-cover object-center"
-          data-ai-hint={heroBg.imageHint}
-        />
-      )}
+       <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src="/assets/Hero-Background.m4v" type="video/mp4" />
+      </video>
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/90 to-background z-10" />
       <CircuitBackground />
       <Header />

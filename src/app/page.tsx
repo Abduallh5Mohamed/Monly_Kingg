@@ -1,11 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlayCircle } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
+import Image from 'next/image';
 
 const CircuitBackground = () => (
   <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
@@ -23,22 +23,19 @@ const CircuitBackground = () => (
 
 
 export default function Home() {
-  const heroBg = PlaceHolderImages.find(img => img.id === 'hero-background');
   const warriorImg = PlaceHolderImages.find(img => img.id === 'cyber-warrior');
 
   return (
     <div className="relative min-h-screen w-full bg-background overflow-x-hidden">
-      {heroBg && (
-        <Image
-          src={heroBg.imageUrl}
-          alt={heroBg.description}
-          fill
-          quality={100}
-          className="object-cover object-center"
-          data-ai-hint={heroBg.imageHint}
-          priority
-        />
-      )}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src="/assets/Hero-Background.m4v" type="video/mp4" />
+      </video>
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background z-10" />
       <CircuitBackground />
       <Header />
