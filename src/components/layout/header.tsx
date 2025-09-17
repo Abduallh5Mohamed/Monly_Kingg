@@ -33,7 +33,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                     isActive
-                      ? "bg-primary/10 text-white shadow-[0_0_15px_0px_hsl(var(--primary)/0.4)]"
+                      ? "bg-[#8A704D]/80 text-white"
                       : "text-foreground/70 hover:text-white"
                   )}
                 >
