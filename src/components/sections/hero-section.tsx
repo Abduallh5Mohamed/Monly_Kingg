@@ -50,8 +50,14 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            <div className="relative hidden lg:block">
-              {/* FeaturedGames was here */}
+            <div className="relative hidden lg:block h-[600px] w-full">
+               <Image 
+                src="/assets/cyber-warrior.png"
+                alt="Cyber Warrior"
+                fill
+                className="object-contain object-bottom animate-float"
+                data-ai-hint="cybernetic warrior"
+              />
             </div>
           </div>
         </section>
@@ -60,7 +66,10 @@ export function HeroSection() {
         @keyframes float {
           0% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
-          100% { translateY(0px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
         }
         .button-glow-hover {
           box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.7), 0 0 40px 8px hsl(var(--primary) / 0.4);
