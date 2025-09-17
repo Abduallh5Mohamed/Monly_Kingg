@@ -5,25 +5,21 @@ const features = [
     icon: <Shield className="w-10 h-10 text-primary" />,
     title: 'Secure Transactions',
     description: 'Guaranteed safety for all your purchases and sales, protected by cutting-edge security.',
-    clipPath: 'polygon(0 15%, 100% 0, 100% 85%, 0 100%)',
   },
   {
     icon: <Gamepad2 className="w-10 h-10 text-primary" />,
     title: 'Vast Selection',
     description: 'The widest variety of premium and rare gaming accounts across all popular titles.',
-    clipPath: 'polygon(0 0, 100% 15%, 100% 100%, 0 85%)',
   },
   {
     icon: <Rocket className="w-10 h-10 text-primary" />,
     title: 'Instant Delivery',
     description: 'Gain immediate access to your new account credentials right after purchase confirmation.',
-    clipPath: 'polygon(0 15%, 100% 0, 100% 85%, 0 100%)',
   },
   {
     icon: <Headset className="w-10 h-10 text-primary" />,
     title: '24/7 Support',
     description: 'Our dedicated support team is always available to assist you with any inquiries or issues.',
-    clipPath: 'polygon(0 0, 100% 15%, 100% 100%, 0 85%)',
   },
 ];
 
@@ -42,27 +38,18 @@ export function WhyChooseUsSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative p-1 transition-all duration-300 hover:scale-105"
-              style={{ clipPath: feature.clipPath }}
+              className="group relative p-6 rounded-lg overflow-hidden holographic-border bg-card/50 backdrop-blur-sm transition-all duration-300 hover:bg-card/70 hover:scale-105"
             >
-              <div
-                className="absolute inset-0 bg-gradient-to-br from-primary to-accent transition-all duration-300 group-hover:blur-md"
-              />
-              <div
-                className="relative bg-card/50 backdrop-blur-sm p-6 h-full"
-                style={{ clipPath: feature.clipPath }}
-              >
-                <div className="relative z-10 flex flex-col items-center text-center h-full">
-                  <div className="mb-4 p-4 bg-primary/10 rounded-full border-2 border-primary/30">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold font-headline text-white mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="mb-4 p-4 bg-primary/10 rounded-full border-2 border-primary/30">
+                  {feature.icon}
                 </div>
+                <h3 className="text-xl font-bold font-headline text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             </div>
           ))}
