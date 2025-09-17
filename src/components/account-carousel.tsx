@@ -9,18 +9,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
 import type { Account } from "@/lib/types";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Gamepad2 } from "lucide-react";
 
 const placeholderAccountImages = PlaceHolderImages.filter(img => img.id.startsWith('account-'));
 
 const trendingAccounts: Account[] = [
   {
     id: '1',
-    name: 'Cybernetic Ghost',
+    name: 'HALO_PREDNITE',
     game: 'Apex Legends',
-    rank: 'Apex Predator',
+    title: 'Apex Predator',
     price: 499.99,
     image: {
       id: placeholderAccountImages[0].id,
@@ -31,9 +31,9 @@ const trendingAccounts: Account[] = [
   },
   {
     id: '2',
-    name: 'DragonSlayer',
+    name: 'AZLA',
     game: 'League of Legends',
-    rank: 'Challenger',
+    title: 'Challenger',
     price: 799.99,
     image: {
       id: placeholderAccountImages[1].id,
@@ -44,9 +44,9 @@ const trendingAccounts: Account[] = [
   },
   {
     id: '3',
-    name: 'NetRunner X',
+    name: 'CYBRPURK 20770',
     game: 'Valorant',
-    rank: 'Radiant',
+    title: 'Radiant',
     price: 650.00,
     image: {
       id: placeholderAccountImages[2].id,
@@ -59,7 +59,7 @@ const trendingAccounts: Account[] = [
     id: '4',
     name: 'Void Jumper',
     game: 'Star Citizen',
-    rank: 'High Admiral',
+    title: 'High Admiral',
     price: 1200.00,
     image: {
       id: placeholderAccountImages[3].id,
@@ -75,26 +75,24 @@ export function AccountCarousel() {
     <Carousel opts={{ loop: true, align: "start" }} className="w-full">
       <CarouselContent className="-ml-4">
         {trendingAccounts.map((account) => (
-          <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/2">
+          <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
             <div className="p-1">
-              <div className="p-px rounded-lg bg-gradient-to-br from-primary/50 via-accent/50 to-purple-600/50 group transition-all duration-300 hover:from-primary hover:via-accent hover:to-purple-600 hover:scale-[1.03]">
-                <Card className="bg-card/80 backdrop-blur-sm border-0 rounded-md overflow-hidden">
-                  <CardContent className="relative flex aspect-[4/5] items-end p-0">
+              <div className="p-px rounded-lg bg-gradient-to-b from-primary/50 via-accent/50 to-blue-600/50 group transition-all duration-300 hover:from-primary hover:via-accent hover:to-blue-600 hover:scale-[1.03]">
+                <Card className="bg-card/80 backdrop-blur-sm border-0 rounded-md overflow-hidden aspect-[1/1.1]">
+                  <CardContent className="relative flex flex-col justify-end h-full p-0">
                     <Image
                       src={account.image.url}
                       alt={account.image.alt}
-                      width={400}
-                      height={500}
+                      fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       data-ai-hint={account.image.hint}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                    <div className="relative w-full p-4 space-y-1">
-                      <h3 className="text-lg font-bold text-white font-headline">{account.name}</h3>
-                      <p className="text-sm text-foreground/70">{account.game}</p>
-                      <Badge className="bg-primary/80 border-none font-bold text-primary-foreground">
-                        {account.rank}
-                      </Badge>
+                    <div className="relative w-full p-4 space-y-2 flex justify-between items-end">
+                      <h3 className="text-base font-bold text-white font-headline leading-none">{account.name}</h3>
+                      <div className="w-8 h-8 rounded-full bg-blue-600/50 flex items-center justify-center border-2 border-blue-400">
+                        <Gamepad2 className="w-4 h-4 text-white"/>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
