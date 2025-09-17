@@ -31,10 +31,10 @@ export function HeroSection() {
         <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-              <h1 className="text-6xl md:text-8xl font-bold text-white uppercase font-headline" style={{ transform: 'scaleY(0.8)' }}>
+              <h1 className="text-6xl md:text-8xl font-bold text-white uppercase font-headline" style={{ transform: 'scaleY(0.88)' }}>
                 Dominate <br/> Of Ranks
               </h1>
-              <div className="space-y-2 mt-0">
+              <div className="space-y-2 -mt-4">
                 <p className="text-sm md:text-base max-w-md text-foreground/70">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
