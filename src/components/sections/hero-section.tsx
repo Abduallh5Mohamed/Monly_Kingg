@@ -45,8 +45,8 @@ export function HeroSection() {
                   </span>
                 </Button>
               </div>
-              <div className="pt-8 w-full max-w-2xl">
-                <h2 className="text-xl font-bold font-headline text-white mb-4 text-right uppercase tracking-wide">TRENDING ACCOUNTS</h2>
+              <div className="pt-12 w-full max-w-2xl">
+                <h2 className="text-xl font-bold font-headline text-white mb-4 text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
                 <AccountCarousel />
               </div>
             </div>
