@@ -26,9 +26,11 @@ const features = [
 export function WhyChooseUsSection() {
   return (
     <section className="py-16 sm:py-24 bg-background relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-0 w-1/3 h-full bg-primary/10 blur-[100px] -translate-x-1/2" />
-        <div className="absolute bottom-0 right-0 w-1/3 h-full bg-accent/10 blur-[100px] translate-x-1/2" />
+      <div className="absolute inset-x-0 top-0 h-[500px] z-0 opacity-10">
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-primary to-accent"
+          style={{ clipPath: 'polygon(0 0, 70% 0, 50% 100%, 0% 100%)' }}
+        />
       </div>
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-4xl font-headline font-bold text-white text-glow text-center mb-16 uppercase">
@@ -38,20 +40,16 @@ export function WhyChooseUsSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group relative p-1 transition-all duration-300"
-              style={{ clipPath: 'polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%)' }}
+              className="group relative bg-card/50 p-6 rounded-lg border border-border/20 transition-all duration-300 hover:-translate-y-2 hover:border-primary/50"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-primary opacity-50 group-hover:opacity-80 transition-opacity duration-300 animate-pulse group-hover:animate-none" />
-              <div
-                className="relative bg-card/80 backdrop-blur-md p-6 h-full flex flex-col items-center text-center transition-all duration-300 group-hover:scale-105"
-                style={{ clipPath: 'polygon(20% 0, 80% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 80%, 0 20%)' }}
-              >
-                <div className="mb-4 flex-shrink-0">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="mb-6">
                     <div 
                         className="relative w-24 h-24 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
                         style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                     >
-                        <div className="absolute inset-0 bg-primary/10 border-2 border-primary/30"/>
+                        <div className="absolute inset-0 bg-primary/10 border-2 border-primary/30 group-hover:bg-primary/20 transition-colors duration-300"/>
                         {feature.icon}
                     </div>
                 </div>
