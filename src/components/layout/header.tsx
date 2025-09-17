@@ -24,7 +24,7 @@ export function Header() {
         <div className="flex-1 flex justify-start">
           <Logo />
         </div>
-        <ul className="hidden md:flex items-center justify-center space-x-6">
+        <ul className="hidden md:flex items-center justify-center space-x-8">
           {navItems.map((item) => {
             const isActive = item.name === 'Home'; // Example active state
             return (
@@ -32,9 +32,9 @@ export function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300",
+                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                     isActive
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary/10 text-white shadow-[0_0_15px_0px_hsl(var(--primary)/0.4)]"
                       : "text-foreground/70 hover:text-white"
                   )}
                 >
