@@ -21,7 +21,7 @@ export function FeaturedGames() {
   
   return (
     <div 
-      className="w-full max-w-60 p-6 bg-black/20 backdrop-blur-sm relative h-[400px] flex flex-col"
+      className="w-full max-w-60 p-6 bg-transparent relative h-[400px] flex flex-col"
       style={{
         clipPath: 'polygon(0 5%, 10% 0, 90% 0, 100% 5%, 100% 100%, 0 100%)',
         boxShadow: '0 -5px 15px -5px hsl(190 90% 50% / 0.6), 0 5px 15px -5px hsl(190 90% 50% / 0.6)',
@@ -32,7 +32,6 @@ export function FeaturedGames() {
       <div 
         className="overflow-y-auto pr-4 -mr-4 space-y-6"
         style={{
-            maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
             scrollbarWidth: 'none',
         }}
        >
