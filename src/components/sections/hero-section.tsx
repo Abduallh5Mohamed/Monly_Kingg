@@ -8,7 +8,6 @@ import { CircuitBackground } from '../layout/circuit-background';
 import { FeaturedGames } from '../featured-games';
 
 export function HeroSection() {
-  const warriorImg = PlaceHolderImages.find(img => img.id === 'cyber-warrior');
 
   const PlayIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +50,7 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            <div className="relative hidden lg:flex flex-col justify-center items-center h-full gap-8 -ml-16">
+            <div className="relative hidden lg:flex flex-col justify-start items-end h-full pt-20">
               <FeaturedGames />
             </div>
           </div>
@@ -61,7 +60,7 @@ export function HeroSection() {
         @keyframes float {
           0% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
-          100% { transform: translateY(0px); }
+          100% { translateY(0px); }
         }
         .button-glow-hover {
           box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.7), 0 0 40px 8px hsl(var(--primary) / 0.4);
