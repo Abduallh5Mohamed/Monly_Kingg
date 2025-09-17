@@ -12,7 +12,7 @@ export function Footer() {
     { name: 'Games', href: '#featured-games' },
     { name: 'About', href: '#why-us' },
     { name: 'Sell', href: '/sell' },
-    { name: 'Support', href: '#footer' },
+    { name: 'Support', href: '#support' },
   ];
 
   const paymentMethods = [

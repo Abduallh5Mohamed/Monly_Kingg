@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
 import { CircuitBackground } from '../layout/circuit-background';
 import Image from 'next/image';
+import Snowfall from '../layout/snowfall';
 
 export function HeroSection() {
 
@@ -15,6 +16,7 @@ export function HeroSection() {
 
   return (
     <div id="home" className="relative min-h-screen w-full bg-background overflow-x-hidden">
+       <Snowfall className="hero-snow" />
       <video
         autoPlay
         loop
