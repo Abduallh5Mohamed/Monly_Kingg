@@ -14,7 +14,7 @@ export function HeroSection() {
   );
 
   return (
-    <>
+    <div className="relative min-h-screen w-full bg-background overflow-x-hidden">
       <video
         autoPlay
         loop
@@ -66,6 +66,6 @@ export function HeroSection() {
           box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.7), 0 0 40px 8px hsl(var(--primary) / 0.4);
         }
       `}</style>
-    </>
+    </div>
   );
 }
