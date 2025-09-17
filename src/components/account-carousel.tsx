@@ -89,27 +89,19 @@ export function AccountCarousel() {
             <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="relative p-1 group">
                 <div 
-                  className="absolute inset-0 bg-cyan-400/80 transition-all duration-300"
-                  style={{
-                    clipPath: 'url(#hexagon-clip)',
-                    filter: 'blur(10px) opacity(0.7)',
-                  }}
-                />
-                <div 
                   className="relative transition-transform duration-300 group-hover:scale-105"
                   style={{
                     clipPath: 'url(#hexagon-clip)',
                   }}
                 >
-                  <Card className="bg-card/80 backdrop-blur-sm border-0 overflow-hidden aspect-[1/1.15]">
+                  <Card 
+                    className="bg-card/80 backdrop-blur-sm border-0 overflow-hidden aspect-[1/1.15]"
+                    style={{
+                      boxShadow: '0 0 15px 3px hsl(190 90% 50% / 0.5), inset 0 0 5px 1px hsl(190 90% 50% / 0.7)',
+                      border: '1px solid hsl(190 90% 50% / 0.8)',
+                    }}
+                  >
                     <CardContent className="relative flex flex-col justify-end h-full p-0">
-                      <div 
-                        className="absolute inset-0 border-2 border-cyan-300/50"
-                        style={{
-                           clipPath: 'url(#hexagon-clip)',
-                           pointerEvents: 'none'
-                        }}
-                      />
                       <Image
                         src={account.image.url}
                         alt={account.image.alt}
