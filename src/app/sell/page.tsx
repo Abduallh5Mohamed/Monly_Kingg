@@ -1,0 +1,44 @@
+import { Header } from '@/components/layout/header';
+import { SellForm } from '@/components/sell-form';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const CircuitBackground = () => (
+    <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="circuit-sell" patternUnits="userSpaceOnUse" width="40" height="40">
+            <path d="M0 10h10v10H0zM10 0v10h10V0zM20 10h10v10H20zM30 20v10h10V20zM10 20v10h10V20zM0 30h10v10H0zM20 30h10v10H20z" stroke="hsl(var(--primary))" strokeWidth="0.5" fill="none" />
+            <path d="M10 5h10M5 10v10M15 20h10M25 10v10M35 20v10M5 30v10M15 30h10" stroke="hsl(var(--accent))" strokeWidth="0.5" fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#circuit-sell)" />
+      </svg>
+    </div>
+  );
+  
+
+export default function SellPage() {
+  const heroBg = PlaceHolderImages.find(img => img.id === 'hero-background');
+
+  return (
+    <div className="relative min-h-screen w-full bg-background overflow-x-hidden">
+       {heroBg && (
+        <Image
+          src={heroBg.imageUrl}
+          alt={heroBg.description}
+          fill
+          quality={100}
+          className="object-cover object-center"
+          data-ai-hint={heroBg.imageHint}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/90 to-background z-10" />
+      <CircuitBackground />
+      <Header />
+      <main className="relative container mx-auto px-4 z-20 pt-32 pb-16">
+        <SellForm />
+      </main>
+    </div>
+  );
+}

@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "A futuristic city skyline at night with neon pink and blue lights.",
+      "imageUrl": "https://picsum.photos/seed/skyline/1920/1080",
+      "imageHint": "city skyline"
+    },
+    {
+      "id": "cyber-warrior",
+      "description": "A glowing cybernetic futuristic warrior holding a plasma rifle.",
+      "imageUrl": "https://picsum.photos/seed/warrior/600/800",
+      "imageHint": "cybernetic warrior"
+    },
+    {
+      "id": "account-1",
+      "description": "Sci-fi soldier character portrait.",
+      "imageUrl": "https://picsum.photos/seed/soldier1/400/500",
+      "imageHint": "sci-fi soldier"
+    },
+    {
+      "id": "account-2",
+      "description": "Fantasy warrior character portrait.",
+      "imageUrl": "https://picsum.photos/seed/fantasy1/400/500",
+      "imageHint": "fantasy warrior"
+    },
+    {
+      "id": "account-3",
+      "description": "Cyberpunk hero character portrait.",
+      "imageUrl": "https://picsum.photos/seed/cyberpunk1/400/500",
+      "imageHint": "cyberpunk hero"
+    },
+    {
+      "id": "account-4",
+      "description": "Another sci-fi soldier.",
+      "imageUrl": "https://picsum.photos/seed/soldier2/400/500",
+      "imageHint": "sci-fi soldier"
+    }
+  ]
 }
