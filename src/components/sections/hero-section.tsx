@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
 import { CircuitBackground } from '../layout/circuit-background';
 import { FeaturedGames } from '../featured-games';
+import Image from 'next/image';
 
 export function HeroSection() {
 
