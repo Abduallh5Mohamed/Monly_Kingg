@@ -31,19 +31,21 @@ export function HeroSection() {
       <main className="relative container mx-auto px-4 z-20">
         <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               <h1 className="text-6xl md:text-8xl font-headline font-bold text-white uppercase leading-none">
                 Dominate <br/> Of Ranks
               </h1>
-              <p className="text-sm md:text-base max-w-md text-foreground/70">
-                Your Gateway to the Premium Game Accounts & Unmatched Powers.
-              </p>
-              <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-4 group">
-                EXPLORE THE UNIVERSE
-                <span className="ml-3 h-8 w-8 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
-                  <PlayIcon />
-                </span>
-              </Button>
+              <div className="space-y-6 mt-6">
+                <p className="text-sm md:text-base max-w-md text-foreground/70">
+                  Your Gateway to the Premium Game Accounts & Unmatched Powers.
+                </p>
+                <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-4 group">
+                  EXPLORE THE UNIVERSE
+                  <span className="ml-3 h-8 w-8 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
+                    <PlayIcon />
+                  </span>
+                </Button>
+              </div>
               <div className="pt-8 w-full max-w-2xl">
                 <h2 className="text-xl font-bold font-headline text-white mb-4 text-left">TRENDING ACCOUNTS</h2>
                 <AccountCarousel />
