@@ -15,8 +15,8 @@ export function Footer() {
 
   const paymentMethods = [
     { name: 'Vodafone Cash', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Vodafone_icon.svg/200px-Vodafone_icon.svg.png' },
-    { name: 'PayPal', logo: '/assets/paypal.png' },
-    { name: 'InstaPay', logo: '/assets/instapay.png' },
+    { name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png' },
+    { name: 'InstaPay', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/InstaPay_logo.svg/2560px-InstaPay_logo.svg.png' },
   ];
 
   return (
