@@ -2,8 +2,12 @@ import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Wallet } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+
 
 export function Header() {
+  const pathname = usePathname();
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Games', href: '#' },
@@ -13,22 +17,33 @@ export function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md">
       <nav className="container mx-auto flex items-center justify-between px-4 py-3">
         <div className="flex-1 flex justify-start">
           <Logo />
         </div>
-        <ul className="hidden md:flex items-center justify-center space-x-8">
-          {navItems.map((item) => (
-            <li key={item.name}>
-              <Link href={item.href} className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300">
-                {item.name}
-              </Link>
-            </li>
-          ))}
+        <ul className="hidden md:flex items-center justify-center space-x-2">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <li key={item.name}>
+                <Link 
+                  href={item.href} 
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300",
+                    isActive 
+                      ? "bg-yellow-700/50 text-white" 
+                      : "text-foreground/70 hover:text-white"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
         <div className="flex-1 flex justify-end">
-          <Button className="font-bold shadow-[0_0_10px_hsl(var(--accent)/0.7)] hover:shadow-[0_0_20px_hsl(var(--accent))] transition-all duration-300 bg-accent/90 hover:bg-accent text-white">
+          <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300">
             <Wallet className="mr-2 h-4 w-4" />
             Connect Wallet
           </Button>

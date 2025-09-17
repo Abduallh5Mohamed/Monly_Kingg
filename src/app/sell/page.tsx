@@ -1,3 +1,4 @@
+'use client';
 import { Header } from '@/components/layout/header';
 import { SellForm } from '@/components/sell-form';
 import Image from 'next/image';
