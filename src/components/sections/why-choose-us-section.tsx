@@ -42,6 +42,7 @@ export function WhyChooseUsSection() {
               key={index}
               className="group relative bg-card/50 p-6 rounded-lg border border-border/20 transition-all duration-300 hover:-translate-y-2 hover:border-primary/50"
             >
+              <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
               <div className="relative z-10 flex flex-col items-center text-center">
                 <div className="mb-6">
