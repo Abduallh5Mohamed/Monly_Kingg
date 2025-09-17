@@ -51,7 +51,7 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            <div className="relative hidden lg:flex flex-col justify-center items-center h-full gap-8">
+            <div className="relative hidden lg:flex flex-col justify-center items-center h-full gap-8 -ml-16">
               <FeaturedGames />
             </div>
           </div>
