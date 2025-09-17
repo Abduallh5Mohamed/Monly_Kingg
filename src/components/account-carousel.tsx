@@ -17,7 +17,7 @@ type TrendingGame = {
 const trendingGames: TrendingGame[] = [
   {
     name: 'FIFA',
-    logo: '/assets/FiFa-Logo.jpg',
+    logo: '/assets/FiFa-Logo.png',
     iconBg: 'bg-red-600/50 border-red-400',
   },
   {
