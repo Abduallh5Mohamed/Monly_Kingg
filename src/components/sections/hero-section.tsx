@@ -1,9 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
-import Image from 'next/image';
 import { CircuitBackground } from '../layout/circuit-background';
 import { FeaturedGames } from '../featured-games';
 
@@ -50,7 +48,7 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            <div className="relative hidden lg:flex flex-col justify-start items-end h-full pt-20">
+            <div className="relative hidden lg:flex flex-col justify-start items-end h-full pt-16">
               <FeaturedGames />
             </div>
           </div>
