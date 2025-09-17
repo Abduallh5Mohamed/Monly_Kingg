@@ -35,7 +35,7 @@ export function HeroSection() {
                 Dominate <br/> Of Ranks
               </h1>
               <div className="space-y-2 -mt-4">
-                <p className="text-sm md:text-base max-w-md text-foreground/70">
+                <p className="text-sm md:text-base max-w-md text-foreground/70 lg:pl-4">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
                 <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-1 group">
