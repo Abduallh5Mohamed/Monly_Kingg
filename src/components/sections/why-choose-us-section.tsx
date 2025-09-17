@@ -28,13 +28,10 @@ const features = [
 export function WhyChooseUsSection() {
   return (
     <>
-      <section className="py-16 sm:py-24 bg-background relative overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-[500px] z-0 opacity-10">
-          <div 
-            className="absolute inset-0 bg-gradient-to-r from-primary to-accent"
-            style={{ clipPath: 'polygon(0 0, 70% 0, 50% 100%, 0% 100%)' }}
-          />
-        </div>
+      <section 
+        className="py-24 sm:py-32 bg-background relative"
+        style={{ clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0% 100%)' }}
+      >
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-4xl font-headline font-bold text-white text-glow text-center mb-16 uppercase">
             // Why Choose Us?
