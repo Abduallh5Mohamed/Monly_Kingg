@@ -4,19 +4,12 @@
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Wallet } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-
 
 export function Header() {
   const pathname = usePathname();
-  const [activePath, setActivePath] = useState(pathname);
-
-  useEffect(() => {
-    setActivePath(pathname);
-  }, [pathname]);
 
   const navItems = [
     { name: 'Home', href: '/' },
@@ -34,7 +27,7 @@ export function Header() {
         </div>
         <ul className="hidden md:flex items-center justify-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2">
           {navItems.map((item) => {
-            const isActive = activePath === item.href;
+            const isActive = pathname === item.href;
             return (
               <li key={item.name}>
                 <Link
@@ -42,7 +35,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300",
                     isActive
-                      ? "bg-primary/80 text-primary-foreground"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground/70 hover:text-white"
                   )}
                 >
@@ -53,9 +46,9 @@ export function Header() {
           })}
         </ul>
         <div className="flex-1 flex justify-end">
-          <Button className="font-bold rounded-full bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300">
-            <Wallet className="mr-2 h-4 w-4" />
-            Connect Wallet
+          <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Create Account
           </Button>
         </div>
       </nav>
