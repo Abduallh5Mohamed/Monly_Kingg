@@ -65,8 +65,8 @@ export default function Home() {
                 <Image
                   src={warriorImg.imageUrl}
                   alt={warriorImg.description}
-                  width={600}
-                  height={800}
+                  width={500}
+                  height={667}
                   quality={95}
                   className="object-contain drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)] animate-pulse-slow"
                   data-ai-hint={warriorImg.imageHint}

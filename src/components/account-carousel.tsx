@@ -83,7 +83,8 @@ export function AccountCarousel() {
                     <Image
                       src={account.image.url}
                       alt={account.image.alt}
-                      fill
+                      width={400}
+                      height={500}
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       data-ai-hint={account.image.hint}
                     />
