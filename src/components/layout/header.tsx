@@ -1,9 +1,8 @@
-
-import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from '../logo';
 
 export function Header() {
   const navItems = [
@@ -27,7 +26,7 @@ export function Header() {
         </div>
         <ul className="hidden md:flex items-center justify-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2">
           {navItems.map((item) => {
-            const isActive = false; // Temporarily disable active state
+            const isActive = item.name === 'Home'; // Example active state
             return (
               <li key={item.name}>
                 <Link
