@@ -23,7 +23,7 @@ export function FeaturedGames() {
     <div 
       className="w-full max-w-60 p-6 bg-transparent relative h-[400px] flex flex-col"
       style={{
-        clipPath: 'polygon(0 5%, 10% 0, 90% 0, 100% 5%, 100% 100%, 0 100%)',
+        clipPath: 'polygon(0 5%, 40% 5%, 45% 0, 55% 0, 60% 5%, 100% 5%, 100% 100%, 0 100%)',
         boxShadow: '0 -5px 15px -5px hsl(190 90% 50% / 0.6), 0 5px 15px -5px hsl(190 90% 50% / 0.6)',
         border: '1px solid hsl(190 90% 50% / 0.5)',
         borderBottom: 'none',
