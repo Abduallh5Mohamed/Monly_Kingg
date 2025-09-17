@@ -46,7 +46,7 @@ export function Footer() {
             <div className="flex items-center space-x-4">
               {paymentMethods.map((method) => (
                 <div key={method.name} className="p-2 bg-white/10 rounded-lg flex items-center justify-center h-[41px]">
-                  <Image src={method.logo} alt={method.name} width={40} height={25} className="object-contain" />
+                  <Image src={method.logo} alt={method.name} width={method.name === 'InstaPay' ? 60 : 40} height={method.name === 'InstaPay' ? 40 : 25} className="object-contain" />
                 </div>
               ))}
             </div>
