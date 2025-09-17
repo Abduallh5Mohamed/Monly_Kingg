@@ -31,7 +31,7 @@ export function HeroSection() {
         <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-              <h1 className="text-6xl md:text-8xl font-bold text-white uppercase tracking-wider leading-[0.8] font-headline" style={{ transform: 'scaleY(0.8)' }}>
+              <h1 className="text-6xl md:text-8xl font-bold text-white uppercase font-headline" style={{ transform: 'scaleY(0.8)' }}>
                 Dominate <br/> Of Ranks
               </h1>
               <div className="space-y-6 mt-6">
@@ -46,7 +46,7 @@ export function HeroSection() {
                 </Button>
               </div>
               <div className="pt-8 w-full max-w-2xl">
-                <h2 className="text-xl font-bold font-headline text-white mb-4 text-left">TRENDING ACCOUNTS</h2>
+                <h2 className="text-xl font-bold font-headline text-white mb-4 text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
                 <AccountCarousel />
               </div>
             </div>

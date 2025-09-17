@@ -68,57 +68,44 @@ const trendingAccounts: Account[] = [
   },
 ];
 
-const HexagonClip = () => (
-  <svg width="0" height="0">
-    <defs>
-      <clipPath id="hexagon-clip" clipPathUnits="objectBoundingBox">
-        <path d="M0.5,0 L0.955,0.25 V0.75 L0.5,1 L0.045,0.75 V0.25 L0.5,0 Z" />
-      </clipPath>
-    </defs>
-  </svg>
-);
-
-
 export function AccountCarousel() {
   return (
     <>
-      <HexagonClip />
       <Carousel opts={{ loop: true, align: "start" }} className="w-full">
         <CarouselContent className="-ml-4">
-          {trendingAccounts.map((account) => (
+          {trendingAccounts.map((account, index) => (
             <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="relative p-1 group">
-                <div 
-                  className="relative transition-transform duration-300 group-hover:scale-105"
+                <Card 
+                  className="bg-card/80 backdrop-blur-sm border-2 border-transparent rounded-2xl overflow-hidden aspect-[1/1.15] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_5px_hsl(var(--primary)/0.6)]"
                   style={{
-                    clipPath: 'url(#hexagon-clip)',
+                    borderColor: 'hsl(var(--primary))',
+                    boxShadow: '0 0 10px 2px hsl(var(--primary)/0.5)',
                   }}
                 >
-                  <Card 
-                    className="bg-card/80 backdrop-blur-sm border-0 overflow-hidden aspect-[1/1.15]"
-                    style={{
-                      boxShadow: '0 0 15px 3px hsl(190 90% 50% / 0.5), inset 0 0 5px 1px hsl(190 90% 50% / 0.7)',
-                      border: '1px solid hsl(190 90% 50% / 0.8)',
-                    }}
-                  >
-                    <CardContent className="relative flex flex-col justify-end h-full p-0">
-                      <Image
-                        src={account.image.url}
-                        alt={account.image.alt}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        data-ai-hint={account.image.hint}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                      <div className="relative w-full p-6 space-y-2 flex justify-between items-end">
-                        <h3 className="text-lg font-bold text-white font-headline leading-none">{account.name}</h3>
-                        <div className="w-8 h-8 rounded-full bg-blue-600/50 flex items-center justify-center border-2 border-blue-400">
-                          <Gamepad2 className="w-4 h-4 text-white"/>
-                        </div>
+                  <CardContent className="relative flex flex-col justify-between h-full p-0">
+                    <Image
+                      src={account.image.url}
+                      alt={account.image.alt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      data-ai-hint={account.image.hint}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
+                    
+                    <div className="relative w-full p-3 flex justify-center">
+                      <div className="bg-black/40 backdrop-blur-sm px-4 py-1 rounded-full">
+                        <h3 className="text-base font-bold text-white font-headline tracking-wide">{account.name}</h3>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+
+                    <div className="relative w-full p-4 flex justify-start">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${index === 1 ? 'bg-red-600/50 border-red-400' : 'bg-blue-600/50 border-blue-400'}`}>
+                        <Gamepad2 className="w-5 h-5 text-white"/>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </CarouselItem>
           ))}
