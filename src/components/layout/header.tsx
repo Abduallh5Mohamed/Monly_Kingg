@@ -24,7 +24,7 @@ export function Header() {
         <div className="flex-1 flex justify-start">
           <Logo />
         </div>
-        <ul className="hidden md:flex items-center justify-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2">
+        <ul className="hidden md:flex items-center justify-center space-x-6">
           {navItems.map((item) => {
             const isActive = item.name === 'Home'; // Example active state
             return (
@@ -34,7 +34,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300",
                     isActive
-                      ? "bg-primary/20 text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "text-foreground/70 hover:text-white"
                   )}
                 >
