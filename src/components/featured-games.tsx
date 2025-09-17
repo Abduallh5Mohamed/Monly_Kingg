@@ -15,7 +15,7 @@ export function FeaturedGames() {
 
   const ListItem = ({ children }: { children: React.ReactNode }) => (
     <li className="flex items-center gap-2">
-      <span className="text-foreground/70 text-sm tracking-wider">{children}</span>
+      <span className="text-white text-sm tracking-wider">{children}</span>
     </li>
   );
   
@@ -36,13 +36,13 @@ export function FeaturedGames() {
         }}
        >
         <div>
-          <h3 className="font-bold text-cyan-400 mb-3 tracking-widest" style={{ textShadow: '0 0 5px hsl(190 90% 50% / 0.8)' }}>Featured Games. 02</h3>
+          <h3 className="font-bold text-white mb-3 tracking-widest">Featured Games. 02</h3>
           <ul className="space-y-2">
             {gameList1.map(game => <ListItem key={game}>{game}</ListItem>)}
           </ul>
         </div>
         <div>
-            <h3 className="font-bold text-cyan-400 mb-3 tracking-widest" style={{ textShadow: '0 0 5px hsl(190 90% 50% / 0.8)' }}>Featured Games. 02</h3>
+            <h3 className="font-bold text-white mb-3 tracking-widest">Featured Games. 02</h3>
             <ul className="space-y-2">
                 {gameList2.map(game => <ListItem key={game}>{game}</ListItem>)}
             </ul>
