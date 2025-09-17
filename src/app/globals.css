@@ -81,6 +81,25 @@ body {
   .holographic-border {
     border: 2px solid transparent;
     background-clip: padding-box;
-    border-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) 1;
+    border-image: linear-gradient(135deg, hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.8)) 1;
+    position: relative;
+  }
+  .holographic-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .button-glow-hover {
+     box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.7), 0 0 40px 8px hsl(var(--primary) / 0.4);
   }
 }

@@ -45,6 +45,7 @@ export function SupportSection() {
     toast({
       title: 'Message Sent!',
       description: 'Our support team will get back to you shortly.',
+      variant: 'default',
     });
     form.reset();
   }
@@ -55,13 +56,13 @@ export function SupportSection() {
             className="absolute inset-0 bg-gradient-to-b from-background to-transparent"
         />
        <div className="container mx-auto px-4 relative z-10">
-        <div className="w-full max-w-3xl mx-auto holographic-border bg-card/50 backdrop-blur-sm p-8 rounded-lg">
+        <div className="w-full max-w-3xl mx-auto holographic-border bg-card/50 backdrop-blur-sm p-8 md:p-12 rounded-lg">
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-headline font-bold text-white text-glow uppercase">
+            <h2 className="text-4xl md:text-5xl font-headline font-bold text-white text-glow uppercase">
               // Have a problem?
             </h2>
-            <p className="text-muted-foreground mt-2">
-                Our support team is here to help you 24/7.
+            <p className="text-muted-foreground mt-2 max-w-md mx-auto">
+                Our support team is always on standby, ready to assist you 24/7. Let us know how we can help.
             </p>
           </div>
           <Form {...form}>
@@ -72,9 +73,9 @@ export function SupportSection() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary">Your Name</FormLabel>
+                      <FormLabel className="text-primary font-semibold">Your Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} className="bg-input/50" />
+                        <Input placeholder="John Doe" {...field} className="bg-input/30 focus:bg-input/50 transition-colors" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -85,9 +86,9 @@ export function SupportSection() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-primary">Your Email</FormLabel>
+                      <FormLabel className="text-primary font-semibold">Your Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="you@example.com" {...field} className="bg-input/50" />
+                        <Input placeholder="you@example.com" {...field} className="bg-input/30 focus:bg-input/50 transition-colors" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -99,11 +100,11 @@ export function SupportSection() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-primary">Your Message</FormLabel>
+                    <FormLabel className="text-primary font-semibold">Your Message</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Please describe your issue in detail..."
-                        className="resize-none bg-input/50"
+                        className="resize-none bg-input/30 focus:bg-input/50 transition-colors"
                         rows={5}
                         {...field}
                       />
@@ -112,7 +113,7 @@ export function SupportSection() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover">
+              <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover hover:scale-105 active:scale-100">
                 Send Message
                 <Send className="ml-2 h-5 w-5" />
               </Button>
