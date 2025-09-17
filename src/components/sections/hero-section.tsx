@@ -34,7 +34,7 @@ export function HeroSection() {
               <h1 className="text-6xl md:text-8xl font-bold text-white uppercase font-headline" style={{ transform: 'scaleY(0.8)' }}>
                 Dominate <br/> Of Ranks
               </h1>
-              <div className="space-y-6 mt-6">
+              <div className="space-y-6 mt-2">
                 <p className="text-sm md:text-base max-w-md text-foreground/70">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
