@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '../logo';
+import { usePathname } from 'next/navigation';
 
 export function Header() {
+  const pathname = usePathname();
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Games', href: '#' },
@@ -12,11 +16,6 @@ export function Header() {
     { name: 'Sell', href: '/sell' },
     { name: 'Support', href: '#' },
   ];
-
-  // In a server component, we can't use usePathname.
-  // For this simple case, we can live without the active state,
-  // or pass the current path down from the page.
-  // For now, we remove the active state logic to fix hydration.
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
@@ -26,7 +25,7 @@ export function Header() {
         </div>
         <ul className="hidden md:flex items-center justify-center space-x-8">
           {navItems.map((item) => {
-            const isActive = item.name === 'Home'; // Example active state
+            const isActive = pathname === item.href;
             return (
               <li key={item.name}>
                 <Link
