@@ -11,16 +11,16 @@ const featuredGames = [
     logo: '/assets/game-valorant.png',
   },
   {
-    name: 'Star Citizen',
-    description: 'An epic space trading and combat simulation game.',
+    name: 'PUBG',
+    description: 'A multiplayer online battle royale game.',
     bgImage: '/assets/account-1.jpg',
-    logo: '/assets/game-star-citizen.png', 
+    logo: '/assets/game-pubg.png',
   },
   {
-    name: 'Apex Legends',
-    description: 'A free-to-play battle royale-hero shooter.',
+    name: 'FIFA',
+    description: 'A series of association football simulation video games.',
     bgImage: '/assets/account-4.jpg',
-    logo: '/assets/game-apex.png',
+    logo: '/assets/game-fifa.png',
   },
   {
     name: 'League of Legends',
