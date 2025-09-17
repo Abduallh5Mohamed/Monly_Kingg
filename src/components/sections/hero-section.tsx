@@ -38,15 +38,15 @@ export function HeroSection() {
                 <p className="text-sm md:text-base max-w-md text-foreground/70">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
-                <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-4 group">
+                <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-1 group">
                   EXPLORE THE UNIVERSE
-                  <span className="ml-3 h-8 w-8 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
+                  <span className="ml-3 h-10 w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
                     <PlayIcon />
                   </span>
                 </Button>
               </div>
-              <div className="pt-2 w-full max-w-2xl">
-                <h2 className="text-xl font-bold font-headline text-white mb-4 text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
+              <div className="pt-8 w-full max-w-2xl">
+                <h2 className="text-xl font-bold font-headline text-white mb-4 text-right uppercase tracking-wide">TRENDING ACCOUNTS</h2>
                 <AccountCarousel />
               </div>
             </div>
