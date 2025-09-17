@@ -30,11 +30,6 @@ const trendingGames: TrendingGame[] = [
     logo: '/assets/game-valorant.png',
     iconBg: 'bg-pink-600/50 border-pink-400',
   },
-   {
-    name: 'Apex Legends',
-    logo: '/assets/game-apex.png',
-    iconBg: 'bg-red-800/50 border-red-600',
-  },
 ];
 
 export function AccountCarousel() {
@@ -46,7 +41,7 @@ export function AccountCarousel() {
             <CarouselItem key={index} className="pl-8 md:basis-1/2 lg:basis-1/3">
               <div className="group relative aspect-[1/1.05] w-full flex items-center justify-center">
                 <div 
-                  className="absolute inset-0 bg-primary transition-all duration-300 group-hover:blur-[16px] group-hover:scale-105"
+                  className="absolute inset-0 bg-primary transition-all duration-300 group-hover:blur-[32px] group-hover:scale-105"
                   style={{
                     clipPath: 'polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%)',
                   }}
@@ -71,7 +66,7 @@ export function AccountCarousel() {
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${game.iconBg}`}>
                         <Gamepad2 className="w-4 h-4 text-white"/>
                       </div>
-                      <span className="font-headline text-white text-lg tracking-wide">{game.name}</span>
+                      <span className="font-headline text-white text-base tracking-wide">{game.name}</span>
                     </div>
                   </div>
                 </div>
