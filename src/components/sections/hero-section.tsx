@@ -50,15 +50,7 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            <div className="relative hidden lg:block h-[600px] w-full">
-               <Image 
-                src="/assets/cyber-warrior.png"
-                alt="Cyber Warrior"
-                fill
-                className="object-contain object-bottom animate-float"
-                data-ai-hint="cybernetic warrior"
-              />
-            </div>
+            
           </div>
         </section>
       </main>

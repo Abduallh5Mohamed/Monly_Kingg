@@ -22,6 +22,18 @@ const featuredGames = [
     bgImage: '/assets/account-4.jpg',
     logo: '/assets/game-apex.png',
   },
+  {
+    name: 'League of Legends',
+    description: 'A multiplayer online battle arena video game.',
+    bgImage: '/assets/account-2.jpg',
+    logo: '/assets/game-lol.png',
+  },
+  {
+    name: 'Call of Duty',
+    description: 'A first-person shooter video game series.',
+    bgImage: '/assets/account-1.jpg',
+    logo: '/assets/game-cod.png',
+  }
 ];
 
 export function FeaturedGamesSection() {
