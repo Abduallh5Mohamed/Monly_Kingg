@@ -33,7 +33,7 @@ const featuredGames = [
     description: 'A first-person shooter video game series.',
     bgImage: '/assets/account-1.jpg',
     logo: '/assets/game-cod.png',
-  }
+  },
 ];
 
 export function FeaturedGamesSection() {
