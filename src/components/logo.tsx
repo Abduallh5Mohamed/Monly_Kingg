@@ -7,8 +7,8 @@ export function Logo() {
       <Image 
         src="/assets/logo.png" 
         alt="Monly King Logo" 
-        width={140} 
-        height={40}
+        width={180} 
+        height={50}
         priority
       />
     </Link>
