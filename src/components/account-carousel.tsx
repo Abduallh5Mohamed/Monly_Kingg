@@ -5,8 +5,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image"
 import type { Account } from "@/lib/types";
@@ -133,8 +131,6 @@ export function AccountCarousel() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="text-white bg-white/10 hover:bg-white/20 border-white/20 -left-4" />
-        <CarouselNext className="text-white bg-white/10 hover:bg-white/20 border-white/20 -right-4" />
       </Carousel>
     </>
   )
