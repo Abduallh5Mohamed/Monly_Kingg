@@ -70,39 +70,72 @@ const trendingAccounts: Account[] = [
   },
 ];
 
+const HexagonClip = () => (
+  <svg width="0" height="0">
+    <defs>
+      <clipPath id="hexagon-clip" clipPathUnits="objectBoundingBox">
+        <path d="M0.5,0 L0.955,0.25 V0.75 L0.5,1 L0.045,0.75 V0.25 L0.5,0 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+
 export function AccountCarousel() {
   return (
-    <Carousel opts={{ loop: true, align: "start" }} className="w-full">
-      <CarouselContent className="-ml-4">
-        {trendingAccounts.map((account) => (
-          <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-            <div className="p-1">
-              <div className="p-px rounded-lg bg-gradient-to-b from-primary/50 via-accent/50 to-blue-600/50 group transition-all duration-300 hover:from-primary hover:via-accent hover:to-blue-600 hover:scale-[1.03]">
-                <Card className="bg-card/80 backdrop-blur-sm border-0 rounded-md overflow-hidden aspect-[1/1.1]">
-                  <CardContent className="relative flex flex-col justify-end h-full p-0">
-                    <Image
-                      src={account.image.url}
-                      alt={account.image.alt}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      data-ai-hint={account.image.hint}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                    <div className="relative w-full p-4 space-y-2 flex justify-between items-end">
-                      <h3 className="text-base font-bold text-white font-headline leading-none">{account.name}</h3>
-                      <div className="w-8 h-8 rounded-full bg-blue-600/50 flex items-center justify-center border-2 border-blue-400">
-                        <Gamepad2 className="w-4 h-4 text-white"/>
+    <>
+      <HexagonClip />
+      <Carousel opts={{ loop: true, align: "start" }} className="w-full">
+        <CarouselContent className="-ml-4">
+          {trendingAccounts.map((account) => (
+            <CarouselItem key={account.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="relative p-1 group">
+                <div 
+                  className="absolute inset-0 bg-cyan-400/80 transition-all duration-300"
+                  style={{
+                    clipPath: 'url(#hexagon-clip)',
+                    filter: 'blur(10px) opacity(0.7)',
+                  }}
+                />
+                <div 
+                  className="relative transition-transform duration-300 group-hover:scale-105"
+                  style={{
+                    clipPath: 'url(#hexagon-clip)',
+                  }}
+                >
+                  <Card className="bg-card/80 backdrop-blur-sm border-0 overflow-hidden aspect-[1/1.15]">
+                    <CardContent className="relative flex flex-col justify-end h-full p-0">
+                      <div 
+                        className="absolute inset-0 border-2 border-cyan-300/50"
+                        style={{
+                           clipPath: 'url(#hexagon-clip)',
+                           pointerEvents: 'none'
+                        }}
+                      />
+                      <Image
+                        src={account.image.url}
+                        alt={account.image.alt}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        data-ai-hint={account.image.hint}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                      <div className="relative w-full p-6 space-y-2 flex justify-between items-end">
+                        <h3 className="text-lg font-bold text-white font-headline leading-none">{account.name}</h3>
+                        <div className="w-8 h-8 rounded-full bg-blue-600/50 flex items-center justify-center border-2 border-blue-400">
+                          <Gamepad2 className="w-4 h-4 text-white"/>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="text-white bg-white/10 hover:bg-white/20 border-white/20 -left-4" />
-      <CarouselNext className="text-white bg-white/10 hover:bg-white/20 border-white/20 -right-4" />
-    </Carousel>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="text-white bg-white/10 hover:bg-white/20 border-white/20 -left-4" />
+        <CarouselNext className="text-white bg-white/10 hover:bg-white/20 border-white/20 -right-4" />
+      </Carousel>
+    </>
   )
 }
