@@ -51,7 +51,7 @@ export function WhyChooseUsSection() {
                   <div className="mb-6">
                       <div 
                           className="relative w-24 h-24 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                          style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
+                          style={{ clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)' }}
                       >
                           <div className="absolute inset-0 bg-primary/10 border-2 border-primary/30 group-hover:bg-primary/20 transition-colors duration-300"/>
                           {feature.icon}
