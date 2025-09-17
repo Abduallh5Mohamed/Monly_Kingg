@@ -5,12 +5,12 @@ import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
-import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 export function Header() {
   const pathname = usePathname();
-
+  
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Games', href: '#' },
@@ -35,7 +35,7 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300",
                     isActive
-                      ? "bg-primary text-primary-foreground"
+                      ? "bg-primary/50 text-white"
                       : "text-foreground/70 hover:text-white"
                   )}
                 >
