@@ -4,14 +4,15 @@ import { Logo } from '../logo';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Separator } from '../ui/separator';
+import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 export function Footer() {
   const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Games', href: '#' },
-    { name: 'Accounts', href: '#' },
+    { name: 'Home', href: '#home' },
+    { name: 'Games', href: '#featured-games' },
+    { name: 'About', href: '#why-us' },
     { name: 'Sell', href: '/sell' },
-    { name: 'Support', href: '#' },
+    { name: 'Support', href: '#footer' },
   ];
 
   const paymentMethods = [
@@ -21,7 +22,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-card/20 border-t border-border/20 backdrop-blur-sm">
+    <footer id="footer" className="bg-card/20 border-t border-border/20 backdrop-blur-sm">
       <div className="container mx-auto px-4 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           
@@ -53,7 +54,7 @@ export function Footer() {
                   <Image 
                     src={method.logo} 
                     alt={method.name} 
-                    width={80}
+                    width={method.name === 'InstaPay' ? 100 : 80}
                     height={30}
                     className="object-contain h-full w-auto"
                   />
@@ -63,9 +64,18 @@ export function Footer() {
           </div>
 
           <div className="md:col-span-3 flex flex-col items-center md:items-start">
-             <h3 className="font-headline text-lg text-white mb-4">Newsletter</h3>
-             <p className="text-sm text-muted-foreground mb-3 text-center md:text-left">Stay up to date with our latest news and offers.</p>
-             {/* Newsletter form can be added here */}
+             <h3 className="font-headline text-lg text-white mb-4">Connect With Us</h3>
+             <div className="flex items-center gap-4">
+                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Facebook className="h-6 w-6" />
+                </Link>
+                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Twitter className="h-6 w-6" />
+                </Link>
+                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Instagram className="h-6 w-6" />
+                </Link>
+             </div>
           </div>
 
         </div>

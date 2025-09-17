@@ -1,0 +1,35 @@
+.snowfall-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 15;
+}
+
+@keyframes snowfall-animation {
+    0% {
+        transform: translate(calc(var(--random-x-start) * 100vw), -10px) scale(var(--random-scale));
+        opacity: var(--random-opacity);
+    }
+    100% {
+        transform: translate(calc(var(--random-x-end) * 100vw), calc(100vh + 10px)) scale(var(--random-scale));
+        opacity: 0;
+    }
+}
+
+.snowflake {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    will-change: transform, opacity;
+    animation: snowfall-animation linear infinite;
+    animation-delay: var(--random-delay);
+    animation-duration: var(--random-duration);
+}
