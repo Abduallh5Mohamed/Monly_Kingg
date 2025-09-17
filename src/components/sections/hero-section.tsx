@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { PlayCircle } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
@@ -10,6 +9,12 @@ import { CircuitBackground } from '../layout/circuit-background';
 
 export function HeroSection() {
   const warriorImg = PlaceHolderImages.find(img => img.id === 'cyber-warrior');
+
+  const PlayIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 20V4L19 12L5 20Z" fill="white"/>
+    </svg>
+  );
 
   return (
     <>
@@ -28,16 +33,18 @@ export function HeroSection() {
       <main className="relative container mx-auto px-4 z-20">
         <section className="min-h-screen flex items-center pt-24 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8">
-              <h1 className="text-5xl md:text-7xl font-headline font-bold text-glow uppercase tracking-wider">
-                Dominate the Ranks
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+              <h1 className="text-7xl md:text-9xl font-headline font-bold text-white uppercase leading-[0.8]">
+                Dominate <br/> Of Ranks
               </h1>
-              <p className="text-lg md:text-xl max-w-lg text-foreground/80">
-                Your Gateway to Premium Game Accounts & Unmatched Powers
+              <p className="text-base md:text-lg max-w-md text-foreground/70">
+                Your Gateway to the Premium Game Accounts & Unmatched Powers.
               </p>
-              <Button size="lg" className="text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover">
-                <PlayCircle className="mr-3 h-6 w-6" />
-                Explore the Universe
+              <Button size="lg" className="text-lg font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-8 pr-4 group">
+                EXPLORE THE UNIVERSE
+                <span className="ml-4 h-8 w-8 rounded-full bg-black flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                  <PlayIcon />
+                </span>
               </Button>
               <div className="pt-8 w-full max-w-lg">
                 <AccountCarousel />
