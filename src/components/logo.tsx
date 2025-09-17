@@ -1,13 +1,16 @@
 import Link from 'next/link';
-import { ShieldHalf } from 'lucide-react';
+import Image from 'next/image';
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2 group">
-      <ShieldHalf className="h-8 w-8 text-primary transition-all duration-300 group-hover:text-white group-hover:scale-110" />
-      <span className="text-xl font-bold tracking-wider text-white font-headline transition-colors duration-300 group-hover:text-primary">
-        Monly King
-      </span>
+    <Link href="/" className="flex items-center">
+      <Image 
+        src="/assets/logo.png" 
+        alt="Monly King Logo" 
+        width={140} 
+        height={40}
+        priority
+      />
     </Link>
   );
 }
