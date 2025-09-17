@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex-1 flex justify-start">
           <Logo />
         </div>
-        <ul className="hidden md:flex items-center justify-center space-x-8">
+        <ul className="hidden md:flex items-center justify-center space-x-2 md:space-x-4 lg:space-x-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
