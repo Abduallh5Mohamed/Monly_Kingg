@@ -14,7 +14,7 @@ export function Footer() {
   ];
 
   const paymentMethods = [
-    { name: 'Vodafone Cash', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Vodafone_icon.svg/200px-Vodafone_icon.svg.png' },
+    { name: 'Vodafone Cash', logo: 'https://www.clipartmax.com/png/middle/151-1517832_pay-with-vodafone-cash-vodafone-mobile-money-logo.png' },
     { name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a4/Paypal_2014_logo.png' },
     { name: 'InstaPay', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/InstaPay_Logo.png?20230411102327' },
   ];
