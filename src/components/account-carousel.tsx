@@ -57,8 +57,8 @@ export function AccountCarousel() {
                        <Image
                         src={game.logo}
                         alt={`${game.name} logo`}
-                        width={200}
-                        height={200}
+                        width={250}
+                        height={250}
                         className="object-contain transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
