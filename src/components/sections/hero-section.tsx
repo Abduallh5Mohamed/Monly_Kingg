@@ -52,21 +52,6 @@ export function HeroSection() {
               </div>
             </div>
             <div className="relative hidden lg:flex flex-col justify-center items-center h-full gap-8">
-              {warriorImg && (
-                <Image
-                  src={warriorImg.imageUrl}
-                  alt={warriorImg.description}
-                  width={400}
-                  height={533}
-                  quality={95}
-                  className="object-contain drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)]"
-                  data-ai-hint={warriorImg.imageHint}
-                  style={{
-                    animation: 'float 6s ease-in-out infinite',
-                    filter: 'drop-shadow(0 0 1rem hsl(var(--primary)/0.7)) drop-shadow(0 0 0.5rem hsl(var(--accent)/0.5))',
-                  }}
-                />
-              )}
               <FeaturedGames />
             </div>
           </div>
