@@ -25,6 +25,11 @@ const trendingGames: TrendingGame[] = [
     logo: '/assets/game-valorant.png',
     iconBg: 'bg-pink-600/50 border-pink-400',
   },
+  {
+    name: 'FIFA',
+    logo: '/assets/game-fifa.png',
+    iconBg: 'bg-green-600/50 border-green-400',
+  },
 ];
 
 export function AccountCarousel() {
