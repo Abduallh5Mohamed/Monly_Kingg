@@ -4,7 +4,6 @@ import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
 import { CircuitBackground } from '../layout/circuit-background';
 import Image from 'next/image';
-import Snowfall from '../layout/snowfall';
 
 export function HeroSection() {
 
@@ -26,7 +25,6 @@ export function HeroSection() {
         <source src="/assets/Hero-Background.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background z-10" />
-      <Snowfall />
       <CircuitBackground />
       <Header />
       <main className="relative container mx-auto px-4 z-20">

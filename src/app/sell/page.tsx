@@ -19,7 +19,7 @@ export default function SellPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/90 to-background z-10" />
       <CircuitBackground />
       <Header />
-      <main className="relative container mx-auto px-4 z-20 pt-32 pb-16">
+      <main className="relative container mx-auto px-4 z-30 pt-32 pb-16">
         <SellForm />
       </main>
     </div>
