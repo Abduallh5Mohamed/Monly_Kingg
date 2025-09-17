@@ -13,9 +13,8 @@ export function FeaturedGames() {
     'Diablo IV',
   ];
 
-  const ListItem = ({ children, hasNumber }: { children: React.ReactNode, hasNumber?: boolean }) => (
+  const ListItem = ({ children }: { children: React.ReactNode }) => (
     <li className="flex items-center gap-2">
-      {hasNumber && <span className="text-cyan-400 text-sm">02.</span>}
       <span className="text-foreground/70 text-sm tracking-wider">{children}</span>
     </li>
   );
@@ -24,8 +23,8 @@ export function FeaturedGames() {
     <div 
       className="w-full max-w-60 p-6 bg-black/20 backdrop-blur-sm relative h-[400px] flex flex-col"
       style={{
-        clipPath: 'polygon(10% 0, 90% 0, 100% 5%, 100% 100%, 0 100%, 0 5%)',
-        boxShadow: '0 0 15px hsl(190 90% 50% / 0.5), 0 0 5px hsl(190 90% 50% / 0.7) inset',
+        clipPath: 'polygon(0 5%, 10% 0, 90% 0, 100% 5%, 100% 100%, 0 100%)',
+        boxShadow: '0 -5px 15px -5px hsl(190 90% 50% / 0.6), 0 5px 15px -5px hsl(190 90% 50% / 0.6)',
         border: '1px solid hsl(190 90% 50% / 0.5)',
         borderBottom: 'none',
       }}
@@ -38,15 +37,15 @@ export function FeaturedGames() {
         }}
        >
         <div>
-          <h3 className="font-bold text-cyan-400 mb-3 tracking-widest">Featured Games. 02</h3>
+          <h3 className="font-bold text-cyan-400 mb-3 tracking-widest" style={{ textShadow: '0 0 5px hsl(190 90% 50% / 0.8)' }}>Featured Games. 02</h3>
           <ul className="space-y-2">
-            {gameList1.map(game => <ListItem key={game} hasNumber={!game.includes('Duty Legends')}>{game}</ListItem>)}
+            {gameList1.map(game => <ListItem key={game}>{game}</ListItem>)}
           </ul>
         </div>
         <div>
-            <h3 className="font-bold text-cyan-400 mb-3 tracking-widest">Featured Games. 02</h3>
+            <h3 className="font-bold text-cyan-400 mb-3 tracking-widest" style={{ textShadow: '0 0 5px hsl(190 90% 50% / 0.8)' }}>Featured Games. 02</h3>
             <ul className="space-y-2">
-                {gameList2.map(game => <ListItem key={game} hasNumber={false}>{game}</ListItem>)}
+                {gameList2.map(game => <ListItem key={game}>{game}</ListItem>)}
             </ul>
         </div>
       </div>
