@@ -44,10 +44,12 @@ export function Header() {
           })}
         </ul>
         <div className="flex-1 flex justify-end">
-          <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
-            <UserPlus className="mr-2 h-4 w-4" />
-            Create Account
-          </Button>
+          <Link href="/register">
+            <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Create Account
+            </Button>
+          </Link>
         </div>
       </nav>
     </header>
