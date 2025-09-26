@@ -44,19 +44,18 @@ export function AccountCarousel() {
                   className="absolute inset-0 bg-primary rounded-lg transition-all duration-300 group-hover:blur-[32px] group-hover:scale-105"
                 />
                 <div 
-                  className="relative w-[97%] h-[97%] bg-background rounded-lg transition-all duration-300 group-hover:scale-105"
+                  className="relative w-[97%] h-[97%] bg-background rounded-lg transition-all duration-300 group-hover:scale-105 overflow-hidden"
                 >
-                  <div className="w-full h-full flex flex-col items-center justify-center p-6">
+                  <div className="w-full h-full flex flex-col items-center justify-end p-6">
                     <div className="relative flex-1 w-full flex items-center justify-center">
                        <Image
                         src={game.logo}
                         alt={`${game.name} logo`}
-                        width={200}
-                        height={200}
-                        className="object-contain transition-transform duration-500 group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 mt-4 relative z-10">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${game.iconBg}`}>
                         <Gamepad2 className="w-4 h-4 text-white"/>
                       </div>
