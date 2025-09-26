@@ -39,28 +39,26 @@ export function AccountCarousel() {
         <CarouselContent className="-ml-4">
           {trendingGames.map((game, index) => (
             <CarouselItem key={index} className="pl-8 md:basis-1/2 lg:basis-1/3">
-              <div className="group relative aspect-[3/4] w-full flex items-center justify-center">
+              <div className="group relative aspect-[3/4] w-full">
                 <div 
                   className="absolute inset-0 bg-primary rounded-lg transition-all duration-300 group-hover:blur-[32px] group-hover:scale-105"
                 />
                 <div 
                   className="relative w-[97%] h-[97%] bg-background rounded-lg transition-all duration-300 group-hover:scale-105 overflow-hidden"
                 >
-                  <div className="w-full h-full flex flex-col items-center justify-end p-6">
-                    <div className="relative flex-1 w-full flex items-center justify-center">
-                       <Image
-                        src={game.logo}
-                        alt={`${game.name} logo`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
+                  <Image
+                    src={game.logo}
+                    alt={`${game.name} logo`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                  <div className="absolute bottom-0 left-0 right-0 p-6 flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${game.iconBg}`}>
+                      <Gamepad2 className="w-4 h-4 text-white"/>
                     </div>
-                    <div className="flex items-center gap-3 mt-4 relative z-10">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${game.iconBg}`}>
-                        <Gamepad2 className="w-4 h-4 text-white"/>
-                      </div>
-                      <span className="font-headline text-white text-sm tracking-wide">{game.name}</span>
-                    </div>
+                    <span className="font-headline text-white text-sm tracking-wide">{game.name}</span>
                   </div>
                 </div>
               </div>
