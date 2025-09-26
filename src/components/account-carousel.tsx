@@ -39,26 +39,20 @@ export function AccountCarousel() {
         <CarouselContent className="-ml-4">
           {trendingGames.map((game, index) => (
             <CarouselItem key={index} className="pl-8 md:basis-1/2 lg:basis-1/3">
-              <div className="group relative aspect-[1/1.05] w-full flex items-center justify-center">
+              <div className="group relative aspect-[3/4] w-full flex items-center justify-center">
                 <div 
-                  className="absolute inset-0 bg-primary transition-all duration-300 group-hover:blur-[48px] group-hover:scale-105"
-                  style={{
-                    clipPath: 'polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%)',
-                  }}
+                  className="absolute inset-0 bg-primary rounded-lg transition-all duration-300 group-hover:blur-[32px] group-hover:scale-105"
                 />
                 <div 
-                  className="relative w-[96%] h-[96%] bg-background transition-all duration-300 group-hover:scale-105"
-                  style={{
-                    clipPath: 'polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%)',
-                  }}
+                  className="relative w-[97%] h-[97%] bg-background rounded-lg transition-all duration-300 group-hover:scale-105"
                 >
                   <div className="w-full h-full flex flex-col items-center justify-center p-6">
                     <div className="relative flex-1 w-full flex items-center justify-center">
                        <Image
                         src={game.logo}
                         alt={`${game.name} logo`}
-                        width={250}
-                        height={250}
+                        width={200}
+                        height={200}
                         className="object-contain transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
