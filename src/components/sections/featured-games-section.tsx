@@ -13,7 +13,7 @@ const featuredGames = [
   {
     name: 'PUBG',
     description: 'A multiplayer online battle royale game.',
-    bgImage: '/assets/account-1.jpg',
+    bgVideo: '/assets/pubg.mp4',
     logo: '/assets/game-pubg.png',
   },
   {
@@ -44,7 +44,7 @@ export function FeaturedGamesSection() {
           // Featured Games
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredGames.map((game) => (
+          {featuredGames.map((game: any) => (
             <div key={game.name} className="group relative aspect-[3/4] overflow-hidden">
               <div 
                 className="absolute inset-0 transition-transform duration-500 ease-in-out group-hover:scale-110"
@@ -52,13 +52,24 @@ export function FeaturedGamesSection() {
                   clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
                 }}
               >
-                <Image
-                  src={game.bgImage}
-                  alt={`${game.name} background`}
-                  fill
-                  className="object-cover"
-                  data-ai-hint="game background"
-                />
+                {game.bgVideo ? (
+                  <video
+                    src={game.bgVideo}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={game.bgImage}
+                    alt={`${game.name} background`}
+                    fill
+                    className="object-cover"
+                    data-ai-hint="game background"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
               </div>
 
