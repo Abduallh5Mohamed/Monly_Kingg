@@ -25,7 +25,7 @@ const trendingGames: TrendingGame[] = [
   },
   {
     name: '',
-    logo: '/assets/game-fifa.png',
+    logo: '/assets/fifa.jpg',
   },
 ];
 
