@@ -1,0 +1,15 @@
+import rateLimit from "express-rate-limit";
+
+export const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// more strict limiter for resend endpoint
+export const resendLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 3, // max 3 per minute per IP
+  message: { message: "Too many requests, please try again later." }
+});
