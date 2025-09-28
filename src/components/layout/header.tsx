@@ -2,13 +2,15 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, LogOut, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '../logo';
+import { useAuth } from '@/lib/auth-context';
 import { useEffect, useState } from 'react';
 
 export function Header() {
   const [activeSection, setActiveSection] = useState('home');
+  const { user, logout, isAuthenticated, loading } = useAuth();
 
   const navItems = [
     { name: 'Home', href: '#home' },
@@ -28,8 +30,9 @@ export function Header() {
 
       let currentSection = 'home';
       for (const section of sections) {
-        if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.clientHeight > scrollPosition) {
-            currentSection = section.id;
+        const element = section as HTMLElement;
+        if (element && element.offsetTop <= scrollPosition && element.offsetTop + element.clientHeight > scrollPosition) {
+            currentSection = element.id;
             break;
         }
       }
@@ -39,6 +42,10 @@ export function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navItems]);
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
 
   return (
@@ -68,12 +75,44 @@ export function Header() {
           })}
         </ul>
         <div className="flex-1 flex justify-end">
-          <Link href="/register">
-            <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Create Account
-            </Button>
-          </Link>
+          {loading ? (
+            <div className="flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+              <span className="text-sm text-muted-foreground">جاري التحميل...</span>
+            </div>
+          ) : isAuthenticated && user ? (
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-sm">
+                <User className="h-4 w-4 text-primary" />
+                <span className="text-white">مرحباً، {user.username}</span>
+              </div>
+              <Button 
+                onClick={handleLogout}
+                variant="outline"
+                className="font-bold rounded-full border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                تسجيل خروج
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Link href="/login">
+                <Button 
+                  variant="ghost"
+                  className="font-bold rounded-full text-white hover:bg-white/10 transition-all duration-300"
+                >
+                  تسجيل دخول
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  إنشاء حساب
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
     </header>

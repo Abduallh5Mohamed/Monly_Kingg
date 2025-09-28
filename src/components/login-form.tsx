@@ -13,8 +13,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const loginFormSchema = z.object({
   email: z.string().email({
@@ -26,7 +27,9 @@ const loginFormSchema = z.object({
 });
 
 export function LoginForm() {
-  const { toast } = useToast();
+  const { login, loading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -35,13 +38,16 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    console.log(values);
-    toast({
-      title: 'Login Successful!',
-      description: 'Welcome back!',
-    });
-    form.reset();
+  async function onSubmit(values: z.infer<typeof loginFormSchema>) {
+    try {
+      setIsSubmitting(true);
+      await login(values.email, values.password);
+      // إذا نجح تسجيل الدخول، سيتم التوجيه تلقائياً من AuthContext
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -56,7 +62,12 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel className="text-primary">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} className="bg-input/50" />
+                  <Input 
+                    placeholder="you@example.com" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -69,14 +80,25 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel className="text-primary">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="********" {...field} className="bg-input/50" />
+                  <Input 
+                    type="password" 
+                    placeholder="********" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover">
-            Login
+          <Button 
+            type="submit" 
+            size="lg" 
+            className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover"
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting ? 'جاري تسجيل الدخول...' : 'Login'}
           </Button>
         </form>
         <p className="text-center text-sm text-muted-foreground mt-6">

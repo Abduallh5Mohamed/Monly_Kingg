@@ -13,42 +13,78 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const verifyEmailFormSchema = z.object({
-  code: z.string().length(6, {
-    message: 'Verification code must be 6 digits.',
+  email: z.string().email({
+    message: 'Please enter a valid email address.',
+  }),
+  code: z.string().min(6, {
+    message: 'Verification code must be at least 6 characters.',
   }),
 });
 
 export function VerifyEmailForm() {
-  const { toast } = useToast();
+  const { verifyEmail, loading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+  const emailFromQuery = searchParams.get('email');
+
   const form = useForm<z.infer<typeof verifyEmailFormSchema>>({
     resolver: zodResolver(verifyEmailFormSchema),
     defaultValues: {
+      email: emailFromQuery || '',
       code: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof verifyEmailFormSchema>) {
-    console.log(values);
-    toast({
-      title: 'Email Verified!',
-      description: 'Your account is now active. You can log in.',
-    });
-    form.reset();
-    window.location.href = '/login';
+  useEffect(() => {
+    if (emailFromQuery) {
+      form.setValue('email', emailFromQuery);
+    }
+  }, [emailFromQuery, form]);
+
+  async function onSubmit(values: z.infer<typeof verifyEmailFormSchema>) {
+    try {
+      setIsSubmitting(true);
+      await verifyEmail(values.email, values.code);
+      // إذا نجح التحقق، سيتم التوجيه تلقائياً من AuthContext
+    } catch (error) {
+      console.error('Verification error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <div className="w-full max-w-md mx-auto holographic-border bg-card/50 backdrop-blur-sm p-8 rounded-lg">
-      <h2 className="text-3xl font-headline font-bold text-glow text-center mb-4">Verify Your Email</h2>
-      <p className="text-center text-muted-foreground mb-8">
-        We've sent a 6-digit code to your email. Please enter it below.
+      <h2 className="text-3xl font-headline font-bold text-glow text-center mb-8">Verify Your Email</h2>
+      <p className="text-center text-sm text-muted-foreground mb-6">
+        Please enter the verification code sent to your email address.
       </p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-primary">Email</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="you@example.com" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading || !!emailFromQuery}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="code"
@@ -56,18 +92,28 @@ export function VerifyEmailForm() {
               <FormItem>
                 <FormLabel className="text-primary">Verification Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="123456" {...field} className="bg-input/50 text-center text-2xl tracking-[1.5rem]" />
+                  <Input 
+                    placeholder="123456" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover">
-            Verify
+          <Button 
+            type="submit" 
+            size="lg" 
+            className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover"
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting ? 'جاري التحقق...' : 'Verify Email'}
           </Button>
         </form>
-         <p className="text-center text-sm text-muted-foreground mt-6">
-          Didn't receive a code?{' '}
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Didn't receive the code?{' '}
           <Link href="/resend-code" className="text-primary hover:underline">
             Resend code
           </Link>

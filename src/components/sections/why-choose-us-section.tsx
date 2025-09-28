@@ -1,6 +1,6 @@
 'use client';
 
-import { Shield, Gamepad2, Rocket, Headset } from 'lucide-react';
+import { Shield, Gamepad2, Rocket, HeartHandshake } from 'lucide-react';
 
 const features = [
   {
@@ -19,7 +19,7 @@ const features = [
     description: 'Gain immediate access to your new account credentials right after purchase confirmation.',
   },
   {
-    icon: <Headset className="w-10 h-10 text-primary" />,
+    icon: <HeartHandshake className="w-10 h-10 text-primary" />,
     title: '24/7 Support',
     description: 'Our dedicated support team is always available to assist you with any inquiries or issues.',
   },

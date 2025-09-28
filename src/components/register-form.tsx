@@ -13,12 +13,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const registerFormSchema = z.object({
-  username: z.string().min(3, {
-    message: 'Username must be at least 3 characters.',
+  username: z.string().min(5, {
+    message: 'Username must be at least 5 characters.',
   }),
   email: z.string().email({
     message: 'Please enter a valid email address.',
@@ -29,7 +30,9 @@ const registerFormSchema = z.object({
 });
 
 export function RegisterForm() {
-  const { toast } = useToast();
+  const { register, loading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -39,15 +42,16 @@ export function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    console.log(values);
-    toast({
-      title: 'Account Created!',
-      description: 'Please check your email to verify your account.',
-    });
-    form.reset();
-    // Redirect to /verify-email, we will use next/navigation for this
-    window.location.href = '/verify-email';
+  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    try {
+      setIsSubmitting(true);
+      await register(values.username, values.email, values.password);
+      // إذا نجح التسجيل، سيتم التوجيه تلقائياً من AuthContext
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -62,7 +66,12 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel className="text-primary">Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., DragonSlayerX" {...field} className="bg-input/50" />
+                  <Input 
+                    placeholder="e.g., DragonSlayerX" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -75,7 +84,12 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel className="text-primary">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} className="bg-input/50" />
+                  <Input 
+                    placeholder="you@example.com" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,14 +102,25 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel className="text-primary">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="********" {...field} className="bg-input/50" />
+                  <Input 
+                    type="password" 
+                    placeholder="********" 
+                    {...field} 
+                    className="bg-input/50"
+                    disabled={isSubmitting || loading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover">
-            Create Account
+          <Button 
+            type="submit" 
+            size="lg" 
+            className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover"
+            disabled={isSubmitting || loading}
+          >
+            {isSubmitting ? 'جاري إنشاء الحساب...' : 'Create Account'}
           </Button>
         </form>
          <p className="text-center text-sm text-muted-foreground mt-6">

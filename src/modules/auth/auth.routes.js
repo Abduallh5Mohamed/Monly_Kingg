@@ -1,7 +1,5 @@
 import express from "express";
-import * as authController from "./auth.controller.js";
-import { validate, registerSchema, resendCodeSchema, loginSchema } from "../../middlewares/validatorMiddleware.js";
-import { resendLimiter } from "../../middlewares/rateLimiter.js";
+import * as authController from "./auth.controller.temp.js";
 import crypto from "crypto";
 
 const router = express.Router();
@@ -17,9 +15,11 @@ router.get("/csrf-token", (req, res) => {
     res.json({ csrfToken });
 });
 
-router.post("/register", validate(registerSchema), authController.register);
+router.post("/register", authController.register);
 router.post("/verify-email", authController.verifyEmail);
-router.post("/login", validate(loginSchema), authController.login);
-router.post("/resend-code", resendLimiter, validate(resendCodeSchema), authController.resendCode);
+router.post("/login", authController.login);
+router.post("/resend-code", authController.resendCode);
+router.post("/refresh", authController.refresh);
+router.post("/logout", authController.logout);
 
 export default router;
