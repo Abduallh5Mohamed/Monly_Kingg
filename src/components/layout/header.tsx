@@ -78,13 +78,13 @@ export function Header() {
           {loading ? (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-              <span className="text-sm text-muted-foreground">جاري التحميل...</span>
+              <span className="text-sm text-muted-foreground">Loading...</span>
             </div>
           ) : isAuthenticated && user ? (
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-sm">
                 <User className="h-4 w-4 text-primary" />
-                <span className="text-white">مرحباً، {user.username}</span>
+                <span className="text-white">Welcome, {user.username}</span>
               </div>
               <Button 
                 onClick={handleLogout}
@@ -92,7 +92,7 @@ export function Header() {
                 className="font-bold rounded-full border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                تسجيل خروج
+                Logout
               </Button>
             </div>
           ) : (
@@ -102,13 +102,13 @@ export function Header() {
                   variant="ghost"
                   className="font-bold rounded-full text-white hover:bg-white/10 transition-all duration-300"
                 >
-                  تسجيل دخول
+                  Login
                 </Button>
               </Link>
               <Link href="/register">
                 <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
                   <UserPlus className="mr-2 h-4 w-4" />
-                  إنشاء حساب
+                  Create Account
                 </Button>
               </Link>
             </div>

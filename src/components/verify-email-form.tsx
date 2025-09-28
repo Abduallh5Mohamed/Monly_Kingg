@@ -109,7 +109,7 @@ export function VerifyEmailForm() {
             className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover"
             disabled={isSubmitting || loading}
           >
-            {isSubmitting ? 'جاري التحقق...' : 'Verify Email'}
+            {isSubmitting ? 'Verifying...' : 'Verify Email'}
           </Button>
         </form>
         <p className="text-center text-sm text-muted-foreground mt-6">

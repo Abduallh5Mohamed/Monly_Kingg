@@ -1,6 +1,7 @@
 import Joi from "joi";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import { sendEmail } from "../../utils/email.js";
 
 const registerSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -45,8 +46,21 @@ export const register = async (req, res, next) => {
 
     console.log(`📧 Verification code for ${email}: ${verificationCode}`);
 
+    // إرسال البريد الإلكتروني
+    try {
+      await sendEmail(
+        email,
+        "Verify your email - Account Store",
+        `Your verification code is: ${verificationCode}\n\nThis code will expire in 10 minutes.`
+      );
+      console.log(`✅ Email sent successfully to ${email}`);
+    } catch (emailError) {
+      console.error(`❌ Failed to send email to ${email}:`, emailError.message);
+      console.log(`📧 Please use this verification code: ${verificationCode}`);
+    }
+
     res.status(201).json({
-      message: "User registered successfully. Please check the console for verification code.",
+      message: "User registered successfully. Please check your email for verification code.",
       user: { id: Date.now().toString(), email, username, role: 'user' }
     });
   } catch (err) {
@@ -116,7 +130,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     res.status(200).json({
-      message: "Email verified and logged in",
+      message: "Email verified successfully and logged in",
       userData: {
         id: user.id,
         username: user.username,
@@ -154,8 +168,21 @@ export const resendCode = async (req, res) => {
 
     console.log(`📧 New verification code for ${email}: ${verificationCode}`);
 
+    // إرسال البريد الإلكتروني
+    try {
+      await sendEmail(
+        email,
+        "New verification code - Account Store",
+        `Your new verification code is: ${verificationCode}\n\nThis code will expire in 10 minutes.`
+      );
+      console.log(`✅ New email sent successfully to ${email}`);
+    } catch (emailError) {
+      console.error(`❌ Failed to send email to ${email}:`, emailError.message);
+      console.log(`📧 Please use this verification code: ${verificationCode}`);
+    }
+
     res.status(200).json({ 
-      message: "New verification code sent. Please check the console." 
+      message: "New verification code sent. Please check your email." 
     });
   } catch (err) {
     console.error('Resend code error:', err);

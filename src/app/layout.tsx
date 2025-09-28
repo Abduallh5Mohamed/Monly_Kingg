@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Footer } from '@/components/layout/footer';
 import Snowfall from '@/components/layout/snowfall';
 import { AuthProvider } from '@/lib/auth-context';
+import { ConditionalFooter } from '@/components/layout/conditional-footer';
 
 export const metadata: Metadata = {
   title: 'Monly King',
@@ -29,7 +30,7 @@ export default function RootLayout({
             <main className="flex-grow z-20">
               {children}
             </main>
-            <Footer />
+            <ConditionalFooter />
           </div>
           <Toaster />
         </AuthProvider>

@@ -29,7 +29,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // تحقق من حالة المصادقة عند تحميل الصفحة
+    // Check authentication status on page load
     checkAuthStatus();
   }, []);
 
@@ -55,26 +55,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (response.success && response.data) {
         setUser(response.data.userData);
         toast({
-          title: 'تم تسجيل الدخول بنجاح!',
-          description: `مرحباً بك، ${response.data.userData.username}`,
+          title: 'Login Successful!',
+          description: `Welcome back, ${response.data.userData.username}`,
           variant: 'default',
         });
         
-        // توجيه المستخدم للصفحة الرئيسية
+        // Redirect user to home page
         router.push('/');
         return true;
       } else {
         toast({
-          title: 'خطأ في تسجيل الدخول',
-          description: response.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+          title: 'Login Error',
+          description: response.message || 'Invalid email or password',
           variant: 'destructive',
         });
         return false;
       }
     } catch (error) {
       toast({
-        title: 'خطأ في الاتصال',
-        description: 'يرجى المحاولة مرة أخرى',
+        title: 'Connection Error',
+        description: 'Please try again',
         variant: 'destructive',
       });
       return false;
@@ -91,26 +91,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       if (response.success && response.data) {
         toast({
-          title: 'تم إنشاء الحساب بنجاح!',
-          description: 'يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب',
+          title: 'Account Created Successfully!',
+          description: 'Please check your email to verify your account',
           variant: 'default',
         });
         
-        // توجيه المستخدم لصفحة التحقق من البريد الإلكتروني
+        // Redirect user to email verification page
         router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         return true;
       } else {
         toast({
-          title: 'خطأ في إنشاء الحساب',
-          description: response.message || 'فشل في إنشاء الحساب',
+          title: 'Registration Error',
+          description: response.message || 'Failed to create account',
           variant: 'destructive',
         });
         return false;
       }
     } catch (error) {
       toast({
-        title: 'خطأ في الاتصال',
-        description: 'يرجى المحاولة مرة أخرى',
+        title: 'Connection Error',
+        description: 'Please try again',
         variant: 'destructive',
       });
       return false;
@@ -128,26 +128,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (response.success && response.data) {
         setUser(response.data.userData);
         toast({
-          title: 'تم تفعيل الحساب بنجاح!',
-          description: `مرحباً بك، ${response.data.userData.username}`,
+          title: 'Account Verified Successfully!',
+          description: `Welcome, ${response.data.userData.username}`,
           variant: 'default',
         });
         
-        // توجيه المستخدم للصفحة الرئيسية
+        // Redirect user to home page
         router.push('/');
         return true;
       } else {
         toast({
-          title: 'خطأ في التفعيل',
-          description: response.message || 'رمز التفعيل غير صحيح',
+          title: 'Verification Error',
+          description: response.message || 'Invalid verification code',
           variant: 'destructive',
         });
         return false;
       }
     } catch (error) {
       toast({
-        title: 'خطأ في الاتصال',
-        description: 'يرجى المحاولة مرة أخرى',
+        title: 'Connection Error',
+        description: 'Please try again',
         variant: 'destructive',
       });
       return false;
@@ -164,23 +164,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       if (response.success) {
         toast({
-          title: 'تم إرسال الرمز',
-          description: 'تم إرسال رمز تفعيل جديد إلى بريدك الإلكتروني',
+          title: 'Code Sent',
+          description: 'A new verification code has been sent to your email',
           variant: 'default',
         });
         return true;
       } else {
         toast({
-          title: 'خطأ في إرسال الرمز',
-          description: response.message || 'فشل في إرسال رمز التفعيل',
+          title: 'Failed to Send Code',
+          description: response.message || 'Failed to send verification code',
           variant: 'destructive',
         });
         return false;
       }
     } catch (error) {
       toast({
-        title: 'خطأ في الاتصال',
-        description: 'يرجى المحاولة مرة أخرى',
+        title: 'Connection Error',
+        description: 'Please try again',
         variant: 'destructive',
       });
       return false;
@@ -197,16 +197,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(null);
       
       toast({
-        title: 'تم تسجيل الخروج',
-        description: 'تم تسجيل خروجك بنجاح',
+        title: 'Logged Out',
+        description: 'You have been logged out successfully',
         variant: 'default',
       });
       
-      // توجيه المستخدم لصفحة تسجيل الدخول
+      // Redirect user to login page
       router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
-      // حتى لو فشل الطلب، امسح البيانات المحلية
+      // Even if request fails, clear local data
       setUser(null);
     } finally {
       setLoading(false);
