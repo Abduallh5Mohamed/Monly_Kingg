@@ -80,12 +80,14 @@ export function FeaturedGamesSection() {
 
               <div className="absolute inset-0 p-6 flex flex-col justify-end">
                 <div className="relative h-20 w-20 mb-4 transition-transform duration-300 group-hover:scale-105">
-                  <Image
-                    src={game.logo}
-                    alt={`${game.name} logo`}
-                    fill
-                    className="object-contain"
-                  />
+                  {game.logo && (
+                    <Image
+                      src={game.logo}
+                      alt={`${game.name} logo`}
+                      fill
+                      className="object-contain"
+                    />
+                  )}
                 </div>
                 <h3 className="text-3xl font-headline text-white">{game.name}</h3>
                 <p className="text-muted-foreground mt-1 text-sm">{game.description}</p>
