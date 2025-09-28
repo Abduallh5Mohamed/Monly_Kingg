@@ -79,3 +79,11 @@
 [2025-09-28T09:26:25.246Z] [ERROR]: Failed login attempt for baraawael7901@gmail.com: Invalid credentials
 [2025-09-28T09:27:00.382Z] [INFO]: Email verified for user: baraawael7901@gmail.com
 [2025-09-28T09:27:06.930Z] [INFO]: User logged in: baraawael7901@gmail.com
+[2025-09-28T22:03:48.886Z] [INFO]: ✅ User created in database: testdirect@gmail.com with ID: 68d9b0c41e8046d1a6efd87e
+[2025-09-28T22:03:50.168Z] [INFO]: ✅ User registration completed: testdirect@gmail.com
+[2025-09-28T22:39:02.983Z] [ERROR]: Failed login attempt for baraawael7901@gmail.com: Invalid credentials
+[2025-09-28T22:39:17.523Z] [INFO]: User logged in: baraawael7901@gmail.com
+[2025-09-28T22:39:34.441Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-09-28T22:40:25.048Z] [INFO]: User registered: abduallhshadow@gmail.com
+[2025-09-28T22:40:49.116Z] [INFO]: Email verified for user: abduallhshadow@gmail.com
+[2025-09-28T22:41:26.990Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
