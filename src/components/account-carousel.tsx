@@ -16,7 +16,7 @@ type TrendingGame = {
 
 const trendingGames: TrendingGame[] = [
   {
-    name: 'PUBG',
+    name: '',
     logo: '/assets/pubg.jpg',
     iconBg: 'bg-blue-600/50 border-blue-400',
   },
