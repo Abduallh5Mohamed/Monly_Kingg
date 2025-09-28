@@ -79,7 +79,7 @@ body {
     box-shadow: 0 0 12px 2px hsl(var(--primary) / 0.5), 0 0 30px 5px hsl(var(--primary) / 0.3);
   }
   .holographic-border {
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     background-clip: padding-box;
     border-image: linear-gradient(135deg, hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.8)) 1;
     position: relative;
@@ -89,7 +89,7 @@ body {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 2px;
+    padding: 3px;
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     -webkit-mask: 
       linear-gradient(#fff 0 0) content-box, 
