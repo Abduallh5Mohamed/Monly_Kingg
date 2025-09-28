@@ -6,7 +6,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 import Image from "next/image"
-import { Gamepad2 } from "lucide-react";
 
 type TrendingGame = {
   name: string;
@@ -21,12 +20,12 @@ const trendingGames: TrendingGame[] = [
     iconBg: 'bg-blue-600/50 border-blue-400',
   },
   {
-    name: 'VALORANT',
+    name: '',
     logo: '/assets/game-valorant.png',
     iconBg: 'bg-pink-600/50 border-pink-400',
   },
   {
-    name: 'FIFA',
+    name: '',
     logo: '/assets/game-fifa.png',
     iconBg: 'bg-green-600/50 border-green-400',
   },
@@ -48,17 +47,13 @@ export function AccountCarousel() {
                 >
                   <Image
                     src={game.logo}
-                    alt={`${game.name} logo`}
+                    alt={'Trending Game'}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
                   <div className="absolute bottom-0 left-0 right-0 p-6 flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${game.iconBg}`}>
-                      <Gamepad2 className="w-4 h-4 text-white"/>
-                    </div>
-                    <span className="font-headline text-white text-sm tracking-wide">{game.name}</span>
                   </div>
                 </div>
               </div>
