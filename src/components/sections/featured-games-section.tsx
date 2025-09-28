@@ -48,19 +48,18 @@ export function FeaturedGamesSection() {
             <div key={game.name} className="group relative aspect-[3/4] overflow-hidden">
               <div 
                 className="absolute inset-0 transition-transform duration-500 ease-in-out group-hover:scale-110"
-                style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
-                }}
               >
                 {game.bgVideo ? (
-                  <video
-                    src={game.bgVideo}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+                  <div className="absolute inset-0 w-full h-full" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)' }}>
+                    <video
+                      src={game.bgVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
                 ) : (
                   <Image
                     src={game.bgImage}
@@ -68,9 +67,17 @@ export function FeaturedGamesSection() {
                     fill
                     className="object-cover"
                     data-ai-hint="game background"
+                    style={{
+                      clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
+                    }}
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" 
+                  style={{
+                    clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
+                  }}
+                />
               </div>
 
               <div 
