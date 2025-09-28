@@ -5,17 +5,41 @@ import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '../logo';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export function Header() {
-  const pathname = usePathname();
+  const [activeSection, setActiveSection] = useState('home');
+
   const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Games', href: '#' },
-    { name: 'Accounts', href: '#' },
+    { name: 'Home', href: '#home' },
+    { name: 'Features', href: '#features' },
+    { name: 'Games', href: '#games' },
     { name: 'Sell', href: '/sell' },
-    { name: 'Support', href: '#' },
+    { name: 'Support', href: '#support' },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = navItems
+        .map(item => (item.href.startsWith('#') ? document.querySelector(item.href) : null))
+        .filter(Boolean);
+      
+      const scrollPosition = window.scrollY + 150;
+
+      let currentSection = 'home';
+      for (const section of sections) {
+        if (section && section.offsetTop <= scrollPosition && section.offsetTop + section.clientHeight > scrollPosition) {
+            currentSection = section.id;
+            break;
+        }
+      }
+      setActiveSection(currentSection);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [navItems]);
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
@@ -25,7 +49,7 @@ export function Header() {
         </div>
         <ul className="hidden md:flex items-center justify-center space-x-2 md:space-x-4 lg:space-x-8">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = item.href === `#${activeSection}` || (item.href === '/sell' && activeSection === 'sell-page');
             return (
               <li key={item.name}>
                 <Link

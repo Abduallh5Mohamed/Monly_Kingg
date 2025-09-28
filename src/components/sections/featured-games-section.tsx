@@ -38,7 +38,7 @@ const featuredGames = [
 
 export function FeaturedGamesSection() {
   return (
-    <section className="py-24 sm:py-32 bg-background relative">
+    <section id="games" className="py-24 sm:py-32 bg-background relative">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-headline font-bold text-white text-glow text-center mb-16 uppercase">
           // Featured Games

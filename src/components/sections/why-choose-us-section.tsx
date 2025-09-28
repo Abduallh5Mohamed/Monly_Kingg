@@ -29,6 +29,7 @@ export function WhyChooseUsSection() {
   return (
     <>
       <section 
+        id="features"
         className="py-24 sm:py-32 bg-background relative"
         style={{ clipPath: 'polygon(0 10%, 100% 0, 100% 100%, 0% 100%)' }}
       >
