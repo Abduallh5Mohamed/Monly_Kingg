@@ -21,7 +21,7 @@ const trendingGames: TrendingGame[] = [
   {
     name: '',
     logo: '/assets/valorant.jpg',
-    objectPosition: 'bottom',
+    objectPosition: 'center',
   },
   {
     name: '',
