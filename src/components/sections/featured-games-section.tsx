@@ -45,21 +45,25 @@ export function FeaturedGamesSection() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredGames.map((game: any) => (
-            <div key={game.name} className="group relative aspect-[3/4] overflow-hidden">
+            <div 
+              key={game.name} 
+              className="group relative aspect-[3/4] overflow-hidden"
+              style={{
+                clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
+              }}
+            >
               <div 
                 className="absolute inset-0 transition-transform duration-500 ease-in-out group-hover:scale-110"
               >
                 {game.bgVideo ? (
-                  <div className="absolute inset-0 w-full h-full" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)' }}>
-                    <video
-                      src={game.bgVideo}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  </div>
+                  <video
+                    src={game.bgVideo}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
                 ) : (
                   <Image
                     src={game.bgImage}
@@ -67,25 +71,14 @@ export function FeaturedGamesSection() {
                     fill
                     className="object-cover"
                     data-ai-hint="game background"
-                    style={{
-                      clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
-                    }}
                   />
                 )}
                 <div 
                   className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" 
-                  style={{
-                    clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
-                  }}
                 />
               </div>
 
-              <div 
-                className="absolute inset-0 p-6 flex flex-col justify-end"
-                style={{
-                  clipPath: 'polygon(0 0, 100% 0, 100% 90%, 85% 100%, 0 100%)'
-                }}
-              >
+              <div className="absolute inset-0 p-6 flex flex-col justify-end">
                 <div className="relative h-20 w-20 mb-4 transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src={game.logo}
