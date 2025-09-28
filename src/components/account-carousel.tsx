@@ -35,8 +35,8 @@ export function AccountCarousel() {
       <Carousel opts={{ loop: true, align: "start" }} className="w-full">
         <CarouselContent className="-ml-4">
           {trendingGames.map((game, index) => (
-            <CarouselItem key={index} className="pl-8 md:basis-1/2 lg:basis-1/4">
-              <div className="group relative aspect-[3/4] w-full overflow-hidden rounded-[2rem]">
+            <CarouselItem key={index} className="pl-8 md:basis-1/2 lg:basis-1/3">
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem]">
                 <Image
                   src={game.logo}
                   alt={'Trending Game'}
