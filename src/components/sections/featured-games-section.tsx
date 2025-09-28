@@ -14,7 +14,7 @@ const featuredGames = [
     name: 'PUBG',
     description: 'A multiplayer online battle royale game.',
     bgVideo: '/assets/pubg.mp4',
-    logo: '/assets/game-pubg.png',
+    logo: '/assets/pubg-battlegrounds.png',
   },
   {
     name: 'FIFA',
