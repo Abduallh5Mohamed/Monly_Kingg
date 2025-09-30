@@ -11,7 +11,14 @@
     "build": "next build",
     "start": "npm run build && node server-integrated.js",
     "start:server": "node src/server.js",
-    "start:next": "next start"
+    "start:next": "next start",
+    "load-test": "node load-test-setup.js",
+    "quick-test": "node quick-load-test.js",
+    "stress-test": "powershell -ExecutionPolicy Bypass -File run-load-test.ps1",
+    "stress-test-quick": "powershell -ExecutionPolicy Bypass -File run-load-test.ps1 -Quick",
+    "stress-test-heavy": "powershell -ExecutionPolicy Bypass -File run-load-test.ps1 -Users 50 -Duration 120",
+    "create-test-users": "node create-test-users.js all",
+    "cleanup-test-users": "node create-test-users.js cleanup"
   },
   "type": "module",
   "author": "",
@@ -56,6 +63,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
+    "ioredis": "^5.8.0",
     "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.294.0",
@@ -71,6 +79,7 @@
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.63.0",
     "recharts": "^2.8.0",
+    "redis": "^5.8.2",
     "socket.io": "^4.8.1",
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^2.0.0",
@@ -86,6 +95,8 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/passport": "^1.0.16",
     "@types/qrcode": "^1.5.5",
+    "autocannon": "^8.0.0",
+    "axios": "^1.12.2",
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.10"
   }

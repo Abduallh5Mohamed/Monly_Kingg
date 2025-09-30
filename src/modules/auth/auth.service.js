@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import User from "../users/user.model.js";
 import { sendEmail } from "../../utils/email.js";
 import logger from "../../utils/logger.js";
+import userCacheService from "../../services/userCacheService.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
@@ -132,10 +133,10 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
     // audit
     user.authLogs.push({ action: "verify", success: true, ip, userAgent });
     await user.save();
-    logger.info(`Email verified for user: ${email}`); 
+    logger.info(`Email verified for user: ${email}`);
     return { accessToken, refreshToken };
   } catch (err) {
-    logger.error(`Invalid verification attempt for ${email}: ${err.message}`); 
+    logger.error(`Invalid verification attempt for ${email}: ${err.message}`);
     throw err;
 
   }
@@ -174,10 +175,10 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
     await user.save();
 
     await sendEmail(user.email, "Email Verification", `Your new verification code is: ${rawCode}`);
-    logger.info(`Verification code resent to: ${email}`); 
+    logger.info(`Verification code resent to: ${email}`);
     return { message: "Verification code resent successfully" };
   } catch (err) {
-    logger.error(`Resend verification failed for ${email}: ${err.message}`); 
+    logger.error(`Resend verification failed for ${email}: ${err.message}`);
     throw err;
 
   }
@@ -186,12 +187,61 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
 
 /* ---------------- login ---------------- */
 export const login = async (email, password, ip = null, userAgent = null) => {
+  const startTime = Date.now();
+
   try {
-    const user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
+    // 🎯 CACHE FIRST STRATEGY: Check cache for user data
+    logger.info(`🔍 [LOGIN START] Checking cache for user: ${email}`);
+    let cachedUser = await userCacheService.getUser(email);
+    let user;
+    let fromCache = false;
+
+    if (cachedUser) {
+      logger.info(`⚡ [CACHE HIT] User found in cache: ${email}`);
+
+      // For login, we MUST get the password hash from database
+      // Cache might not have sensitive data like passwordHash
+      const dbStartTime = Date.now();
+      user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
+      const dbTime = Date.now() - dbStartTime;
+
+      if (user) {
+        logger.info(`🔐 [PASSWORD CHECK] Got password hash from DB: ${email} (${dbTime}ms)`);
+        // Update cache with fresh data (but without password hash for security)
+        const userDataForCache = { ...user.toObject() };
+        delete userDataForCache.passwordHash; // Don't cache password hash
+        await userCacheService.cacheUser(userDataForCache);
+        fromCache = true; // We used cache to find the user initially
+      } else {
+        logger.warn(`❌ [INCONSISTENT DATA] User in cache but not in DB: ${email}`);
+        // Remove from cache if not in DB
+        await userCacheService.removeUser(cachedUser._id);
+        throw new Error("Invalid credentials");
+      }
+    } else {
+      // Cache miss - query database directly
+      logger.info(`📊 [CACHE MISS] User not in cache, querying database: ${email}`);
+      const dbStartTime = Date.now();
+      user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
+      const dbTime = Date.now() - dbStartTime;
+
+      if (user) {
+        logger.info(`📊 [DB QUERY] User found in database: ${email} (${dbTime}ms)`);
+        // Cache the user for future requests (without password hash)
+        const userDataForCache = { ...user.toObject() };
+        delete userDataForCache.passwordHash; // Don't cache password hash
+        await userCacheService.cacheUser(userDataForCache);
+      } else {
+        logger.warn(`❌ [NOT FOUND] User not found: ${email} (${dbTime}ms)`);
+      }
+    }
 
     if (!user) throw new Error("Invalid credentials");
     if (!user.verified) throw new Error("Invalid credentials");
-    if (!user.passwordHash) throw new Error("Invalid credentials");
+    if (!user.passwordHash) {
+      logger.error(`❌ [NO PASSWORD HASH] Missing password hash for user: ${email}`);
+      throw new Error("Invalid credentials");
+    }
 
     // check account lock
     if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
@@ -206,8 +256,17 @@ export const login = async (email, password, ip = null, userAgent = null) => {
         user.lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lock
         user.failedLoginAttempts = 0; // reset counter after locking
       }
+
+      // Update database with failed attempt
       user.authLogs.push({ action: "login", success: false, ip, userAgent });
       await user.save();
+
+      // Update cache
+      await userCacheService.addAuthLog(user._id, 'login', ip, false);
+
+      const totalTime = Date.now() - startTime;
+      const source = fromCache ? 'CACHE→DB' : 'DATABASE';
+      logger.warn(`❌ [LOGIN FAILED] Invalid password for ${email} from ${source} (${totalTime}ms)`);
       throw new Error("Invalid credentials");
     }
 
@@ -218,13 +277,35 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const accessToken = signAccessToken(user);
     const refreshToken = await createAndStoreRefreshToken(user, ip, userAgent);
 
-    // audit success
+    // Cache session data
+    await userCacheService.cacheSession(user._id, {
+      accessToken,
+      refreshToken,
+      loginTime: new Date(),
+      ip,
+      userAgent
+    });
+
+    // audit success - always save to database for important events
     user.authLogs.push({ action: "login", success: true, ip, userAgent });
     await user.save();
-    logger.info(`User logged in: ${email}`);
+
+    // Cache the auth log
+    await userCacheService.addAuthLog(user._id, 'login', ip, true);
+
+    // Update user cache with fresh data (excluding password hash)
+    const userDataForCache = { ...user.toObject() };
+    delete userDataForCache.passwordHash; // Security: don't cache password hash
+    await userCacheService.cacheUser(userDataForCache);
+
+    const totalTime = Date.now() - startTime;
+    const source = fromCache ? 'CACHE→DB' : 'DATABASE';
+    logger.info(`✅ [LOGIN SUCCESS] ${email} from ${source} (${totalTime}ms)`);
+
     return { accessToken, refreshToken };
   } catch (err) {
-    logger.error(`Failed login attempt for ${email}: ${err.message}`);
+    const totalTime = Date.now() - startTime;
+    logger.error(`❌ [LOGIN ERROR] ${email}: ${err.message} (${totalTime}ms)`);
     throw err;
   }
 };
@@ -265,7 +346,7 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     // audit
     user.authLogs.push({ action: "refresh", success: true, ip, userAgent });
     await user.save();
-    logger.info(`Refresh token rotated for user: ${user.email}`); 
+    logger.info(`Refresh token rotated for user: ${user.email}`);
     const accessToken = signAccessToken(user);
     return { accessToken, refreshToken: newRefreshToken };
   } catch (err) {
@@ -283,7 +364,7 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     } catch (innerErr) {
       // ignore helper probe errors
     }
-    logger.error(`Invalid refresh token attempt for user: ${user?.email || "unknown"}`); 
+    logger.error(`Invalid refresh token attempt for user: ${user?.email || "unknown"}`);
     throw err;
 
   }

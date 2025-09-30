@@ -87,3 +87,320 @@
 [2025-09-28T22:40:25.048Z] [INFO]: User registered: abduallhshadow@gmail.com
 [2025-09-28T22:40:49.116Z] [INFO]: Email verified for user: abduallhshadow@gmail.com
 [2025-09-28T22:41:26.990Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2025-09-29T18:51:27.765Z] [ERROR]: Failed login attempt for baraawael7901@gmail.com: Invalid credentials
+[2025-09-29T18:51:32.965Z] [ERROR]: Failed login attempt for baraawael7901@gmail.com: Invalid credentials
+[2025-09-29T18:51:33.907Z] [ERROR]: Failed login attempt for baraawael7901@gmail.com: Invalid credentials
+[2025-09-30T15:08:10.172Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:10.183Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:10.300Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:10.517Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:10.826Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:11.231Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:11.745Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:12.352Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:13.061Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:13.862Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:14.766Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:15.775Z] [ERROR]: Redis max reconnection attempts reached
+[2025-09-30T15:08:15.776Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:15.776Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-09-30T15:08:27.144Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:27.155Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:27.278Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:27.490Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:27.798Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:28.202Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:28.717Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:29.327Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:30.039Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:30.849Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:31.762Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:32.771Z] [ERROR]: Redis max reconnection attempts reached
+[2025-09-30T15:08:32.772Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:08:32.772Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-09-30T15:19:12.291Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:12.302Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:12.405Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:12.609Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:12.919Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:13.324Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:13.840Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:14.446Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:15.153Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:15.962Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:16.865Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:17.876Z] [ERROR]: Redis max reconnection attempts reached
+[2025-09-30T15:19:17.877Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:19:17.877Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-09-30T15:20:50.299Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:50.315Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:50.425Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:50.628Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:50.941Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:51.350Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:51.852Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:52.462Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:53.177Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:53.989Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:54.900Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:55.913Z] [ERROR]: Redis max reconnection attempts reached
+[2025-09-30T15:20:55.913Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:20:55.914Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-09-30T15:26:42.375Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:42.383Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:42.500Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:42.704Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:43.019Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:43.428Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:43.942Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:44.555Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:45.270Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:46.084Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:47.002Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:48.013Z] [ERROR]: Redis max reconnection attempts reached
+[2025-09-30T15:26:48.014Z] [ERROR]: Redis Client Error:
+[2025-09-30T15:26:48.014Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-09-30T15:34:08.497Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:34:08.519Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:34:27.111Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:34:27.115Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:34:27.121Z] [INFO]: ✅ User 507f1f77bcf86cd799439011 cached for 3600 seconds
+[2025-09-30T15:34:27.122Z] [INFO]: ✅ Cache hit for user 507f1f77bcf86cd799439011
+[2025-09-30T15:34:27.124Z] [INFO]: ✅ verification code cached for test@example.com
+[2025-09-30T15:34:27.126Z] [INFO]: ✅ Valid verification code found in cache for test@example.com
+[2025-09-30T15:34:27.129Z] [INFO]: 🗑️ User cache invalidated for 507f1f77bcf86cd799439011
+[2025-09-30T15:34:27.130Z] [INFO]: 🗑️ verification code cache invalidated for test@example.com
+[2025-09-30T15:34:27.133Z] [WARN]: ⚠️ Redis Connection Ended
+[2025-09-30T15:34:27.133Z] [INFO]: Redis Disconnected
+[2025-09-30T15:34:31.189Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:34:31.192Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:34:31.196Z] [INFO]: ✅ User 507f1f77bcf86cd799439011 cached for 3600 seconds
+[2025-09-30T15:34:31.198Z] [INFO]: ✅ Cache hit for user 507f1f77bcf86cd799439011
+[2025-09-30T15:34:31.200Z] [INFO]: ✅ verification code cached for test@example.com
+[2025-09-30T15:34:31.202Z] [INFO]: ✅ Valid verification code found in cache for test@example.com
+[2025-09-30T15:34:31.206Z] [INFO]: 🗑️ User cache invalidated for 507f1f77bcf86cd799439011
+[2025-09-30T15:34:31.207Z] [INFO]: 🗑️ verification code cache invalidated for test@example.com
+[2025-09-30T15:34:31.209Z] [WARN]: ⚠️ Redis Connection Ended
+[2025-09-30T15:34:31.210Z] [INFO]: Redis Disconnected
+[2025-09-30T15:35:13.892Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:35:13.897Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:36:49.783Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds
+[2025-09-30T15:36:49.791Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T15:36:49.794Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T15:36:49.794Z] [INFO]: User logged in: baraawael7901@gmail.com
+[2025-09-30T15:42:03.517Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:42:03.543Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:42:03.552Z] [INFO]: ✅ User test-user-1759246923550 cached for 3600 seconds
+[2025-09-30T15:42:03.554Z] [INFO]: ✅ Cache hit for user test-user-1759246923550
+[2025-09-30T15:48:50.336Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T15:48:50.350Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T15:48:50.358Z] [INFO]: ✅ User test-user-1759247330357 cached for 3600 seconds
+[2025-09-30T15:48:50.359Z] [INFO]: ✅ Cache hit for user test-user-1759247330357
+[2025-09-30T16:02:06.110Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T16:02:06.165Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T16:02:13.875Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T16:02:13.880Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T16:57:26.704Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T16:57:26.842Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T16:57:42.948Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T16:57:42.959Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T16:57:42.964Z] [INFO]: 📊 Cache stats retrieved: 0 total keys
+[2025-09-30T16:58:57.333Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T16:58:57.363Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:00:35.886Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T17:00:35.905Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:00:35.908Z] [INFO]: 📊 Cache stats retrieved: 0 total keys
+[2025-09-30T17:04:31.796Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T17:04:31.813Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:04:46.376Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-09-30T17:04:53.570Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-09-30T17:05:17.043Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T17:05:17.051Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-09-30T17:05:17.055Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-09-30T17:05:17.055Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-09-30T17:05:17.078Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T17:05:17.081Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T17:05:17.082Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds
+[2025-09-30T17:05:17.083Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-09-30T17:05:17.085Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (42ms)
+[2025-09-30T17:05:24.158Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T17:05:24.160Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-09-30T17:05:24.161Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-09-30T17:05:24.161Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (3ms)
+[2025-09-30T17:05:41.971Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T17:05:41.973Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-09-30T17:05:41.973Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-09-30T17:05:41.973Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (2ms)
+[2025-09-30T17:08:36.454Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T17:08:36.503Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:10:21.365Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T17:10:21.371Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:10:59.109Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T17:10:59.115Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-09-30T17:10:59.116Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-09-30T17:10:59.116Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-09-30T17:10:59.158Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (41ms)
+[2025-09-30T17:10:59.167Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T17:10:59.169Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T17:10:59.170Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T17:10:59.502Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-09-30T17:10:59.503Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T17:10:59.516Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-09-30T17:10:59.516Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T17:10:59.519Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T17:10:59.520Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T17:10:59.521Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T17:10:59.521Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (412ms)
+[2025-09-30T17:29:15.810Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T17:29:15.827Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T17:29:26.323Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-09-30T17:29:29.713Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-09-30T17:32:28.249Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T17:32:28.259Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-09-30T17:32:28.263Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-09-30T17:32:28.264Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-09-30T17:32:28.291Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (27ms)
+[2025-09-30T17:32:28.301Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T17:32:28.304Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T17:32:28.304Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T17:32:28.624Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-09-30T17:32:28.625Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T17:32:28.648Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-09-30T17:32:28.649Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T17:32:28.654Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T17:32:28.656Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T17:32:28.657Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T17:32:28.657Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (408ms)
+[2025-09-30T18:12:24.548Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T18:12:24.581Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T18:13:33.614Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2025-09-30T18:13:33.622Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2025-09-30T18:13:33.625Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2025-09-30T18:13:33.625Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2025-09-30T18:13:43.640Z] [ERROR]: User cache get error for abduallhshadow@gmail.com:
+[2025-09-30T18:13:53.644Z] [ERROR]: Database fallback error:
+[2025-09-30T18:13:53.646Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: abduallhshadow@gmail.com
+[2025-09-30T18:14:03.653Z] [ERROR]: ❌ [LOGIN ERROR] abduallhshadow@gmail.com: Operation `users.findOne()` buffering timed out after 10000ms (30039ms)
+[2025-09-30T18:17:52.098Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T18:17:52.141Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T18:19:44.671Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T18:19:44.697Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T18:19:52.359Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2025-09-30T18:19:52.363Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2025-09-30T18:19:52.366Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2025-09-30T18:19:52.368Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2025-09-30T18:19:52.420Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2025-09-30T18:19:52.423Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2025-09-30T18:19:52.424Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:19:52.424Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2025-09-30T18:19:52.425Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2025-09-30T18:19:52.430Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (5ms)
+[2025-09-30T18:19:52.437Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2025-09-30T18:19:52.439Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2025-09-30T18:19:52.440Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:19:52.774Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2025-09-30T18:19:52.775Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2025-09-30T18:19:52.785Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2025-09-30T18:19:52.786Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2025-09-30T18:19:52.789Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2025-09-30T18:19:52.791Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2025-09-30T18:19:52.791Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:19:52.792Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (433ms)
+[2025-09-30T18:20:10.618Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2025-09-30T18:23:23.002Z] [ERROR]: Register failed for baraaweal24@gmail.com: E11000 duplicate key error collection: accountsstore.users index: username_1 dup key: { username: "baraa7" }
+[2025-09-30T18:23:47.580Z] [INFO]: User registered: baraaweal24@gmail.com
+[2025-09-30T18:24:10.775Z] [INFO]: Email verified for user: baraaweal24@gmail.com
+[2025-09-30T18:45:55.605Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2025-09-30T18:46:11.277Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T18:46:11.288Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-09-30T18:46:11.290Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-09-30T18:46:11.291Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-09-30T18:46:11.308Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T18:46:11.315Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T18:46:11.315Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:46:11.316Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-09-30T18:46:11.317Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-09-30T18:46:11.321Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (4ms)
+[2025-09-30T18:46:11.325Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T18:46:11.327Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T18:46:11.328Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:46:11.615Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-09-30T18:46:11.616Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T18:46:11.634Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-09-30T18:46:11.636Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T18:46:11.643Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T18:46:11.648Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T18:46:11.649Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T18:46:11.650Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (373ms)
+[2025-09-30T18:58:24.603Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T18:58:24.659Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T18:59:37.136Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T18:59:37.150Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T19:00:14.992Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T19:00:14.999Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T19:02:13.141Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T19:02:13.159Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T19:08:31.244Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T19:08:31.270Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T19:11:54.683Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T19:11:54.729Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T23:01:32.658Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T23:01:32.723Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T23:01:44.327Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-09-30T23:01:56.300Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-09-30T23:02:24.703Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-09-30T23:02:24.712Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-09-30T23:02:24.717Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-09-30T23:02:24.718Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-09-30T23:02:24.734Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T23:02:24.737Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T23:02:24.738Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:02:24.738Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-09-30T23:02:24.739Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-09-30T23:02:24.743Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (4ms)
+[2025-09-30T23:02:24.747Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T23:02:24.751Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T23:02:24.751Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:02:25.056Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-09-30T23:02:25.057Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T23:02:25.068Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-09-30T23:02:25.069Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-09-30T23:02:25.072Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-09-30T23:02:25.073Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-09-30T23:02:25.073Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:02:25.074Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (371ms)
+[2025-09-30T23:02:28.746Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-09-30T23:04:48.489Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-09-30T23:04:48.494Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-09-30T23:04:48.496Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-09-30T23:04:48.497Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-09-30T23:04:48.509Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: monlykingstore@gmail.com
+[2025-09-30T23:04:48.513Z] [WARN]: ❌ [NOT FOUND] User not found: monlykingstore@gmail.com (2ms)
+[2025-09-30T23:04:48.513Z] [ERROR]: ❌ [LOGIN ERROR] monlykingstore@gmail.com: Invalid credentials (24ms)
+[2025-09-30T23:07:05.254Z] [INFO]: User registered: monlykingstore@gmail.com
+[2025-09-30T23:07:54.107Z] [INFO]: Email verified for user: monlykingstore@gmail.com
+[2025-09-30T23:14:05.083Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T23:14:05.107Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T23:14:14.262Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-09-30T23:14:17.952Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-09-30T23:15:16.812Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-09-30T23:15:16.817Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-09-30T23:15:16.820Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-09-30T23:15:16.820Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-09-30T23:15:16.835Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-09-30T23:15:16.838Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-09-30T23:15:16.838Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:15:16.839Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-09-30T23:15:16.839Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-09-30T23:15:16.844Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (5ms)
+[2025-09-30T23:15:16.849Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-09-30T23:15:16.851Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-09-30T23:15:16.851Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:15:17.168Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-09-30T23:15:17.168Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-09-30T23:15:17.177Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-09-30T23:15:17.177Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-09-30T23:15:17.181Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-09-30T23:15:17.183Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-09-30T23:15:17.183Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-09-30T23:15:17.184Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (372ms)
