@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const refreshTokenSubSchema = new mongoose.Schema({
-  token: { type: String, required: true },           
+  token: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   expiresAt: { type: Date, required: true },
   revoked: { type: Boolean, default: false },
@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
 
   forgotPasswordCode: { type: String, select: false },
   forgotPasswordCodeValidation: { type: Date, select: false },
+
+  // Password reset system
+  passwordResetToken: { type: String, select: false },
+  passwordResetExpires: { type: Date, select: false },
+  lastPasswordResetSentAt: { type: Date, select: false },
 
   googleId: { type: String, index: true },
 

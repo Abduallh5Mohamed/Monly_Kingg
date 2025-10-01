@@ -386,3 +386,194 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null) => {
   logger.info(`User logged out, refresh token revoked: ${user.email}`);
 
 };
+
+/* ---------------- Forgot Password System ---------------- */
+
+// Generate and send reset token
+export const forgotPassword = async (email, ip = null, userAgent = null) => {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // 🎯 Try cache first
+    logger.info(`🔍 [FORGOT PASSWORD] Checking cache for user: ${normalizedEmail}`);
+    let cachedUser = await userCacheService.getUser(normalizedEmail);
+    let user;
+
+    if (cachedUser) {
+      logger.info(`⚡ [CACHE HIT] User found in cache: ${normalizedEmail}`);
+      // Get user from database for password reset operations
+      user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
+    } else {
+      logger.info(`📊 [CACHE MISS] User not in cache, querying database: ${normalizedEmail}`);
+      user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
+
+      if (user) {
+        // Cache user for future requests
+        const userDataForCache = { ...user.toObject() };
+        delete userDataForCache.passwordHash; // Security
+        delete userDataForCache.passwordResetToken; // Security
+        await userCacheService.cacheUser(userDataForCache);
+      }
+    }
+
+    // Generic response to prevent email enumeration
+    const genericResponse = { message: "If the email exists, a reset link will be sent" };
+
+    if (!user || !user.verified) {
+      logger.warn(`❌ [FORGOT PASSWORD] Invalid user or unverified: ${normalizedEmail}`);
+      return genericResponse;
+    }
+
+    // Rate limiting - only allow one reset request per 5 minutes per user
+    if (user.lastPasswordResetSentAt && user.lastPasswordResetSentAt.getTime() > Date.now() - 5 * 60 * 1000) {
+      logger.warn(`⚠️ [RATE LIMIT] Password reset rate limited for: ${normalizedEmail}`);
+      return genericResponse; // Don't reveal rate limiting to prevent abuse
+    }
+
+    // Generate secure reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedResetToken = await bcrypt.hash(resetToken, BCRYPT_ROUNDS);
+
+    // Set token and expiry (15 minutes)
+    user.passwordResetToken = hashedResetToken;
+    user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    user.lastPasswordResetSentAt = new Date();
+
+    // Cache the reset token temporarily (for faster verification)
+    await userCacheService.cachePasswordResetToken(user._id, resetToken);
+
+    // Audit log
+    user.authLogs.push({ action: "forgot_password", success: true, ip, userAgent });
+    await user.save();
+
+    // Send email with reset link
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(normalizedEmail)}`;
+    const emailContent = `
+      <h2>Password Reset Request</h2>
+      <p>You requested a password reset for your account.</p>
+      <p>Click the link below to reset your password:</p>
+      <a href="${resetLink}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+      <p>This link will expire in 15 minutes.</p>
+      <p>If you didn't request this, please ignore this email.</p>
+    `;
+
+    await sendEmail(user.email, "Password Reset Request", emailContent);
+
+    logger.info(`✅ [FORGOT PASSWORD] Reset token sent to: ${normalizedEmail}`);
+    return genericResponse;
+
+  } catch (err) {
+    logger.error(`❌ [FORGOT PASSWORD ERROR] ${email}: ${err.message}`);
+    throw new Error("Unable to process password reset request");
+  }
+};
+
+// Verify reset token
+export const verifyResetToken = async (email, token) => {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    logger.info(`🔍 [VERIFY RESET TOKEN] Checking token for: ${normalizedEmail}`);
+
+    // Check cache first for faster verification
+    const cachedToken = await userCacheService.getPasswordResetToken(normalizedEmail);
+    let isValidToken = false;
+
+    if (cachedToken && cachedToken === token) {
+      logger.info(`⚡ [CACHE HIT] Reset token found in cache: ${normalizedEmail}`);
+      isValidToken = true;
+    }
+
+    // Always verify against database for security
+    const user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires");
+
+    if (!user || !user.passwordResetToken || !user.passwordResetExpires) {
+      logger.warn(`❌ [INVALID TOKEN] No reset token found for: ${normalizedEmail}`);
+      throw new Error("Invalid or expired reset token");
+    }
+
+    // Check expiry
+    if (user.passwordResetExpires.getTime() < Date.now()) {
+      logger.warn(`⏰ [EXPIRED TOKEN] Reset token expired for: ${normalizedEmail}`);
+      // Clean up expired token
+      user.passwordResetToken = null;
+      user.passwordResetExpires = null;
+      await user.save();
+      await userCacheService.removePasswordResetToken(user._id);
+      throw new Error("Invalid or expired reset token");
+    }
+
+    // Verify token hash
+    const isMatch = await bcrypt.compare(token, user.passwordResetToken);
+    if (!isMatch) {
+      logger.warn(`❌ [INVALID TOKEN] Token hash mismatch for: ${normalizedEmail}`);
+      throw new Error("Invalid or expired reset token");
+    }
+
+    logger.info(`✅ [VALID TOKEN] Reset token verified for: ${normalizedEmail}`);
+    return { valid: true, userId: user._id };
+
+  } catch (err) {
+    logger.error(`❌ [VERIFY TOKEN ERROR] ${email}: ${err.message}`);
+    throw err;
+  }
+};
+
+// Reset password with token
+export const resetPassword = async (email, token, newPassword, ip = null, userAgent = null) => {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    logger.info(`🔄 [RESET PASSWORD] Processing for: ${normalizedEmail}`);
+
+    // First verify the token
+    const tokenVerification = await verifyResetToken(normalizedEmail, token);
+    if (!tokenVerification.valid) {
+      throw new Error("Invalid or expired reset token");
+    }
+
+    // Get user with full data
+    const user = await User.findOne({ email: normalizedEmail }).select("+passwordHash +passwordResetToken +passwordResetExpires +refreshTokens");
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+    // Update password and clear reset token
+    user.passwordHash = hashedPassword;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+    user.lastPasswordResetSentAt = null;
+
+    // Revoke all existing refresh tokens for security
+    await revokeAllRefreshTokens(user, "password_reset");
+
+    // Clear user from cache (password changed, need fresh data)
+    await userCacheService.removeUser(user._id);
+    await userCacheService.removePasswordResetToken(user._id);
+
+    // Audit log
+    user.authLogs.push({ action: "reset_password", success: true, ip, userAgent });
+    await user.save();
+
+    // Send confirmation email
+    const confirmationContent = `
+      <h2>Password Reset Successful</h2>
+      <p>Your password has been successfully reset.</p>
+      <p>If you didn't make this change, please contact support immediately.</p>
+      <p>For security, all your active sessions have been logged out.</p>
+    `;
+
+    await sendEmail(user.email, "Password Reset Successful", confirmationContent);
+
+    logger.info(`✅ [PASSWORD RESET] Successful password reset for: ${normalizedEmail}`);
+    return { message: "Password reset successful" };
+
+  } catch (err) {
+    logger.error(`❌ [RESET PASSWORD ERROR] ${email}: ${err.message}`);
+    throw err;
+  }
+};

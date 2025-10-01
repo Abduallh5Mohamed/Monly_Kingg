@@ -29,7 +29,7 @@ const loginFormSchema = z.object({
 export function LoginForm() {
   const { login, loading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -62,9 +62,9 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel className="text-primary">Email</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="you@example.com" 
-                    {...field} 
+                  <Input
+                    placeholder="you@example.com"
+                    {...field}
                     className="bg-input/50"
                     disabled={isSubmitting || loading}
                   />
@@ -80,10 +80,10 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel className="text-primary">Password</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="password" 
-                    placeholder="********" 
-                    {...field} 
+                  <Input
+                    type="password"
+                    placeholder="********"
+                    {...field}
                     className="bg-input/50"
                     disabled={isSubmitting || loading}
                   />
@@ -92,15 +92,25 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          <Button 
-            type="submit" 
-            size="lg" 
+          <Button
+            type="submit"
+            size="lg"
             className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover"
             disabled={isSubmitting || loading}
           >
             {isSubmitting ? 'Logging in...' : 'Login'}
           </Button>
         </form>
+
+        <div className="text-center mt-4">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-primary hover:underline"
+          >
+            Forgot your password?
+          </Link>
+        </div>
+
         <p className="text-center text-sm text-muted-foreground mt-6">
           Don't have an account?{' '}
           <Link href="/register" className="text-primary hover:underline">

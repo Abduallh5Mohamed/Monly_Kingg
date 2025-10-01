@@ -20,7 +20,7 @@ export default function ForgotPasswordForm() {
     e.preventDefault();
     setError('');
     setMessage('');
-    
+
     if (!email) {
       setError('Please enter your email address');
       return;
@@ -34,18 +34,26 @@ export default function ForgotPasswordForm() {
     }
 
     setLoading(true);
-    
+
     try {
-      // TODO: Integrate with your forgot password API
-      // const response = await apiClient.forgotPassword(email);
-      
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setEmailSent(true);
-      setMessage('Password reset instructions have been sent to your email');
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmailSent(true);
+        setMessage(data.message || 'Password reset instructions have been sent to your email');
+      } else {
+        setError(data.message || 'Failed to send reset instructions');
+      }
     } catch (error: any) {
-      setError(error.message || 'Failed to send reset instructions');
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -58,12 +66,12 @@ export default function ForgotPasswordForm() {
   return (
     <div className="min-h-screen relative">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/assets/Login-Background.png)' }}
       />
       <div className="absolute inset-0 bg-black/30" />
-      
+
       {/* Content positioned to the right */}
       <div className="relative z-10 min-h-screen flex items-center justify-end pr-8 md:pr-16 lg:pr-24 pt-20">
         <Card className="w-full max-w-md shadow-xl border-0 bg-transparent backdrop-blur-md">
@@ -91,7 +99,7 @@ export default function ForgotPasswordForm() {
                 </AlertDescription>
               </Alert>
             )}
-            
+
             {!emailSent ? (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
@@ -136,7 +144,7 @@ export default function ForgotPasswordForm() {
                     We've sent password reset instructions to <strong>{email}</strong>
                   </p>
                 </div>
-                
+
                 <Button
                   onClick={() => {
                     setEmailSent(false);

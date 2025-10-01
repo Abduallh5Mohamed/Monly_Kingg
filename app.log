@@ -404,3 +404,192 @@
 [2025-09-30T23:15:17.183Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
 [2025-09-30T23:15:17.183Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
 [2025-09-30T23:15:17.184Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (372ms)
+[2025-09-30T23:17:56.954Z] [INFO]: ✅ Redis Connected Successfully
+[2025-09-30T23:17:56.963Z] [INFO]: 🚀 Redis Client Ready
+[2025-09-30T23:18:08.421Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-09-30T23:18:47.902Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-01T16:55:01.138Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:01.149Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:01.262Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:01.479Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:01.787Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:02.203Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:02.719Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:03.326Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:04.037Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:04.842Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:05.752Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:06.762Z] [ERROR]: Redis max reconnection attempts reached
+[2025-10-01T16:55:06.763Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:06.764Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T16:55:48.053Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:48.061Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:48.067Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:48.070Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:48.193Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:48.195Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:48.400Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:48.403Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:48.709Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:48.713Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:49.126Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:49.129Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:49.637Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:49.639Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:50.252Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:50.255Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:50.964Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:50.968Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:51.771Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:51.774Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:52.685Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:52.689Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:53.698Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T16:55:53.701Z] [ERROR]: Redis max reconnection attempts reached
+[2025-10-01T16:55:53.701Z] [ERROR]: Redis Client Error:
+[2025-10-01T16:55:53.702Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T16:57:09.212Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-01T16:57:09.216Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-01T16:57:09.219Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-01T16:57:09.312Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-01T16:57:09.314Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-01T16:57:09.315Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-01T16:57:09.316Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-01T16:57:09.322Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (5ms)
+[2025-10-01T16:57:09.324Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-01T16:57:09.325Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-01T16:57:09.679Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2025-10-01T16:57:09.681Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-01T16:57:09.690Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-01T16:57:09.693Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-01T16:57:09.694Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-01T16:57:09.694Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (482ms)
+[2025-10-01T19:34:42.387Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:42.479Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:42.486Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:42.496Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:42.608Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:42.611Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:42.824Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:42.853Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:43.160Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:43.164Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:43.578Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:43.583Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:44.100Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:44.103Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:44.715Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:44.720Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:45.423Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:45.427Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:46.241Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:46.246Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:47.161Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:47.165Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:48.172Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:34:48.178Z] [ERROR]: Redis max reconnection attempts reached
+[2025-10-01T19:34:48.179Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:34:48.180Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T19:34:55.448Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-01T19:35:03.194Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-01T19:38:55.705Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:38:55.754Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:38:55.757Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:38:55.766Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:38:56.283Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:38:56.289Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:38:57.306Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:38:57.312Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:38:58.823Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:38:58.830Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:39:00.847Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:39:00.854Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:39:02.868Z] [INFO]: ✅ Redis Connected Successfully
+[2025-10-01T19:39:02.873Z] [ERROR]: Redis max reconnection attempts reached
+[2025-10-01T19:39:02.874Z] [ERROR]: Redis Client Error:
+[2025-10-01T19:39:02.877Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T19:40:19.587Z] [INFO]: ✅ Redis Connected
+[2025-10-01T19:40:19.594Z] [ERROR]: Redis Error:
+[2025-10-01T19:40:19.596Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T19:40:30.895Z] [INFO]: 🔍 [FORGOT PASSWORD] Checking cache for user: baraawael7901@gmail.com
+[2025-10-01T19:40:30.896Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:40:30.897Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:40:30.944Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:40:30.945Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:40:30.946Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:40:30.947Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-01T19:40:31.241Z] [WARN]: Cache skip - Redis not ready for key: password_reset:68d8ff2507dbca5b8253d47c
+[2025-10-01T19:40:31.243Z] [INFO]: ✅ Password reset token cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-01T19:40:32.523Z] [INFO]: ✅ [FORGOT PASSWORD] Reset token sent to: baraawael7901@gmail.com
+[2025-10-01T19:42:36.635Z] [INFO]: ✅ Redis Connected
+[2025-10-01T19:42:36.660Z] [ERROR]: Redis Error:
+[2025-10-01T19:42:36.661Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-01T19:43:15.056Z] [INFO]: 🔍 [FORGOT PASSWORD] Checking cache for user: baraawael7901@gmail.com
+[2025-10-01T19:43:15.058Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:15.059Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:43:15.146Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:15.147Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:43:15.147Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:43:15.149Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-01T19:43:15.160Z] [WARN]: ⚠️ [RATE LIMIT] Password reset rate limited for: baraawael7901@gmail.com
+[2025-10-01T19:43:30.407Z] [INFO]: 🔍 [VERIFY RESET TOKEN] Checking token for: baraawael7901@gmail.com
+[2025-10-01T19:43:30.409Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:30.410Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:43:30.431Z] [INFO]: 🔍 [VERIFY RESET TOKEN] Checking token for: baraawael7901@gmail.com
+[2025-10-01T19:43:30.432Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:30.433Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:43:30.457Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:30.458Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:43:30.459Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:43:30.460Z] [WARN]: Cache miss - Redis not ready for key: password_reset:68d8ff2507dbca5b8253d47c
+[2025-10-01T19:43:30.460Z] [INFO]: 📊 PASSWORD RESET CACHE MISS: baraawael7901@gmail.com
+[2025-10-01T19:43:30.818Z] [INFO]: ✅ [VALID TOKEN] Reset token verified for: baraawael7901@gmail.com
+[2025-10-01T19:43:30.822Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:43:30.823Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:43:30.823Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:43:30.824Z] [WARN]: Cache miss - Redis not ready for key: password_reset:68d8ff2507dbca5b8253d47c
+[2025-10-01T19:43:30.824Z] [INFO]: 📊 PASSWORD RESET CACHE MISS: baraawael7901@gmail.com
+[2025-10-01T19:43:31.118Z] [INFO]: ✅ [VALID TOKEN] Reset token verified for: baraawael7901@gmail.com
+[2025-10-01T19:44:12.239Z] [INFO]: 🔄 [RESET PASSWORD] Processing for: baraawael7901@gmail.com
+[2025-10-01T19:44:12.241Z] [INFO]: 🔍 [VERIFY RESET TOKEN] Checking token for: baraawael7901@gmail.com
+[2025-10-01T19:44:12.242Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:12.243Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:44:12.251Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:12.252Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:12.252Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:44:12.253Z] [WARN]: Cache miss - Redis not ready for key: password_reset:68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:12.253Z] [INFO]: 📊 PASSWORD RESET CACHE MISS: baraawael7901@gmail.com
+[2025-10-01T19:44:12.515Z] [INFO]: ✅ [VALID TOKEN] Reset token verified for: baraawael7901@gmail.com
+[2025-10-01T19:44:12.830Z] [INFO]: 🗑️ User 68d8ff2507dbca5b8253d47c removed from cache
+[2025-10-01T19:44:12.831Z] [INFO]: 🗑️ Password reset token removed for user 68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:14.482Z] [INFO]: ✅ [PASSWORD RESET] Successful password reset for: baraawael7901@gmail.com
+[2025-10-01T19:44:43.358Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-01T19:44:43.359Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:43.360Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:44:43.368Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:43.368Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:43.369Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:44:43.370Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-01T19:44:43.379Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (9ms)
+[2025-10-01T19:44:43.381Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:43.382Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:43.701Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:43.702Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:43.709Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:43.712Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:43.713Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:43.713Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (355ms)
+[2025-10-01T19:44:45.641Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-01T19:44:54.034Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-01T19:44:54.035Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:54.035Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-01T19:44:54.041Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:54.043Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:54.044Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-01T19:44:54.045Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-01T19:44:54.053Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (8ms)
+[2025-10-01T19:44:54.054Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-01T19:44:54.055Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-01T19:44:54.333Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-01T19:44:54.333Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraawael7901@gmail.com from CACHE→DB (299ms)
+[2025-10-01T19:44:54.334Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (300ms)

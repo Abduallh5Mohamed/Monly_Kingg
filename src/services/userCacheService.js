@@ -279,6 +279,99 @@ class UserCacheService {
     }
   }
 
+  // =================== PASSWORD RESET CACHING ===================
+  async cachePasswordResetToken(userId, token) {
+    try {
+      const resetKey = `password_reset:${userId}`;
+      const resetData = {
+        token,
+        userId,
+        createdAt: new Date(),
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
+      };
+
+      await redis.set(resetKey, resetData, 15 * 60); // 15 minutes TTL
+      logger.info(`✅ Password reset token cached for user ${userId}`);
+      return true;
+    } catch (error) {
+      logger.error(`Cache password reset token error:`, error.message);
+      return false;
+    }
+  }
+
+  async getPasswordResetToken(identifier) {
+    try {
+      let resetKey;
+
+      // If identifier is email, find userId first
+      if (identifier.includes('@')) {
+        const userData = await this.getUser(identifier);
+        if (!userData) return null;
+        resetKey = `password_reset:${userData._id}`;
+      } else {
+        resetKey = `password_reset:${identifier}`;
+      }
+
+      const resetData = await redis.get(resetKey);
+
+      if (resetData) {
+        logger.info(`⚡ PASSWORD RESET CACHE HIT: ${identifier}`);
+        // Check if token is expired
+        if (new Date(resetData.expiresAt) < new Date()) {
+          logger.warn(`⏰ Cached password reset token expired for: ${identifier}`);
+          await redis.del(resetKey);
+          return null;
+        }
+        return resetData.token;
+      } else {
+        logger.info(`📊 PASSWORD RESET CACHE MISS: ${identifier}`);
+        return null;
+      }
+    } catch (error) {
+      logger.error(`Get password reset token error:`, error.message);
+      return null;
+    }
+  }
+
+  async removePasswordResetToken(userId) {
+    try {
+      const resetKey = `password_reset:${userId}`;
+      await redis.del(resetKey);
+      logger.info(`🗑️ Password reset token removed for user ${userId}`);
+      return true;
+    } catch (error) {
+      logger.error(`Remove password reset token error:`, error.message);
+      return false;
+    }
+  }
+
+  // =================== PASSWORD RESET RATE LIMITING ===================
+  async checkPasswordResetRateLimit(email, maxRequests = 3, windowMinutes = 60) {
+    try {
+      const rateLimitKey = `password_reset_rate:${email}`;
+      const currentCount = await redis.incr(rateLimitKey, windowMinutes * 60); // Convert to seconds
+
+      const isLimited = currentCount > maxRequests;
+
+      if (isLimited) {
+        logger.warn(`🚫 PASSWORD RESET RATE LIMIT EXCEEDED: ${email} (${currentCount}/${maxRequests})`);
+      } else {
+        logger.info(`✅ PASSWORD RESET RATE LIMIT OK: ${email} (${currentCount}/${maxRequests})`);
+      }
+
+      return {
+        allowed: !isLimited,
+        currentCount,
+        maxRequests,
+        resetTime: Date.now() + (windowMinutes * 60 * 1000)
+      };
+    } catch (error) {
+      logger.error(`Password reset rate limit check error:`, error.message);
+      // Allow request on error (fail open)
+      return { allowed: true, currentCount: 0, maxRequests, resetTime: null };
+    }
+  }
+
   async getCacheStats() {
     try {
       if (!redis.isReady()) {
@@ -295,6 +388,7 @@ class UserCacheService {
         tempCodeKeys: keys.filter(k => k.startsWith('temp_code:')).length,
         rateLimitKeys: keys.filter(k => k.startsWith('rate_limit:')).length,
         authLogKeys: keys.filter(k => k.startsWith('auth_logs:')).length,
+        passwordResetKeys: keys.filter(k => k.startsWith('password_reset:')).length,
         redisConnected: redis.isReady(),
         timestamp: new Date()
       };

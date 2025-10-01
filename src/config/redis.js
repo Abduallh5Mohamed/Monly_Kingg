@@ -9,44 +9,56 @@ class RedisService {
 
   async connect() {
     try {
+      if (this.client && this.isConnected) {
+        return true;
+      }
+
+      // Close existing connection if any
+      if (this.client) {
+        try {
+          await this.client.quit();
+        } catch (err) {
+          // Ignore quit errors
+        }
+      }
+
       this.client = createClient({
         url: `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
         password: process.env.REDIS_PASSWORD || undefined,
         database: process.env.REDIS_DB || 0,
         socket: {
-          connectTimeout: 5000,
-          lazyConnect: true,
-          reconnectStrategy: (retries) => {
-            if (retries > 10) {
-              logger.error('Redis max reconnection attempts reached');
-              return false;
-            }
-            return Math.min(retries * 100, 3000);
-          }
+          connectTimeout: 10000,
+          lazyConnect: false,
+          reconnectStrategy: false // Disable auto-reconnect to prevent loops
         }
       });
 
+      // Single error handler
       this.client.on('error', (err) => {
-        logger.error('Redis Client Error:', err);
+        logger.error('Redis Error:', err.message);
         this.isConnected = false;
       });
 
       this.client.on('connect', () => {
-        logger.info('✅ Redis Connected Successfully');
+        logger.info('✅ Redis Connected');
         this.isConnected = true;
       });
 
       this.client.on('ready', () => {
-        logger.info('🚀 Redis Client Ready');
+        logger.info('🚀 Redis Ready');
         this.isConnected = true;
       });
 
       this.client.on('end', () => {
-        logger.warn('⚠️ Redis Connection Ended');
         this.isConnected = false;
       });
 
       await this.client.connect();
+
+      // Test connection
+      await this.client.ping();
+      logger.info('🏓 Redis Ping Successful');
+
       return true;
     } catch (error) {
       logger.error('❌ Redis Connection Failed:', error.message);

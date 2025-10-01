@@ -139,7 +139,8 @@ nextApp.prepare().then(async () => {
   app.use(globalLimiter);
 
   // API Routes - These come before Next.js handler
-  app.use("/api/v1/auth", authRoutes);
+  app.use("/api/auth", authRoutes);
+  app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
   app.use("/api/v1/users", csrfProtection, userRoutes);
 
   // Health check endpoint

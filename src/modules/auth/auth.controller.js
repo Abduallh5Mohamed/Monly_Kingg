@@ -88,7 +88,7 @@ export const resendCode = async (req, res) => {
     const result = await authService.resendVerificationCode(email, password, ip, userAgent);
     res.status(200).json(result);
   } catch (err) {
-    
+
     res.status(400).json({ message: err.message || "Failed to resend code" });
   }
 };
@@ -201,5 +201,81 @@ export const logout = async (req, res) => {
     res.status(200).json({ message: "Logged out" });
   } catch (err) {
     res.status(500).json({ message: "Failed to logout" });
+  }
+};
+
+// =================== FORGOT PASSWORD CONTROLLERS ===================
+
+const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required()
+});
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { error, value } = forgotPasswordSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    const ip = req.ip;
+    const userAgent = req.get("User-Agent");
+
+    const result = await authService.forgotPassword(value.email, ip, userAgent);
+
+    // Always return success message to prevent email enumeration
+    res.status(200).json(result);
+  } catch (err) {
+    // Log error but return generic message
+    console.error('Forgot password error:', err.message);
+    res.status(200).json({ message: "If the email exists, a reset link will be sent" });
+  }
+};
+
+const verifyResetTokenSchema = Joi.object({
+  email: Joi.string().email().required(),
+  token: Joi.string().required()
+});
+
+export const verifyResetToken = async (req, res) => {
+  try {
+    const { error, value } = verifyResetTokenSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+
+    const result = await authService.verifyResetToken(value.email, value.token);
+    res.status(200).json({ valid: result.valid });
+  } catch (err) {
+    res.status(400).json({ message: err.message, valid: false });
+  }
+};
+
+const resetPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+  token: Joi.string().required(),
+  newPassword: Joi.string().min(8).required()
+});
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { error, value } = resetPasswordSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
+
+    const ip = req.ip;
+    const userAgent = req.get("User-Agent");
+
+    const result = await authService.resetPassword(
+      value.email,
+      value.token,
+      value.newPassword,
+      ip,
+      userAgent
+    );
+
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
