@@ -6,51 +6,51 @@ import { Play } from 'lucide-react';
 
 export function FeatureBanner() {
   return (
-    <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-[#1a1d2e] via-[#2a2d4e] to-[#1a1d2e] min-h-[280px]">
+    <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-[#1a1d2e] via-[#2a2d4e] to-[#1a1d2e] min-h-[200px] md:min-h-[280px]">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex items-center justify-between h-full p-8">
-        {/* Left Side - Character/Image Placeholder */}
-        <div className="flex-shrink-0 w-1/3">
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full p-4 md:p-8 gap-4">
+        {/* Left Side - Character/Image Placeholder - Hidden on mobile */}
+        <div className="hidden lg:flex flex-shrink-0 w-1/3">
           <div className="relative w-full h-48 flex items-center justify-center">
             {/* Placeholder for character image */}
-            <div className="w-40 h-40 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center backdrop-blur-sm border-2 border-purple-500/30">
-              <span className="text-6xl">🎮</span>
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center backdrop-blur-sm border-2 border-purple-500/30">
+              <span className="text-4xl md:text-6xl">🎮</span>
             </div>
             {/* Decorative elements */}
-            <div className="absolute top-4 right-4 w-12 h-12 bg-orange-500/20 rounded-lg rotate-12 animate-pulse" />
-            <div className="absolute bottom-4 left-4 w-8 h-8 bg-blue-500/20 rounded-lg -rotate-12 animate-pulse" />
+            <div className="absolute top-4 right-4 w-8 h-8 md:w-12 md:h-12 bg-orange-500/20 rounded-lg rotate-12 animate-pulse" />
+            <div className="absolute bottom-4 left-4 w-6 h-6 md:w-8 md:h-8 bg-blue-500/20 rounded-lg -rotate-12 animate-pulse" />
           </div>
         </div>
 
         {/* Center - Main Content */}
-        <div className="flex-1 text-center px-8">
-          <h2 className="text-5xl font-bold text-white mb-3">
+        <div className="flex-1 text-center px-2 md:px-8">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-3">
             Admin Dashboard
           </h2>
-          <p className="text-white/70 text-lg mb-6">
+          <p className="text-white/70 text-sm md:text-lg mb-4 md:mb-6">
             Manage your gaming marketplace and get insights of{' '}
             <span className="text-purple-400 font-semibold">unlimited control</span>
             {' '}in your Admin Dashboard
           </p>
           
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
             <Button 
               size="lg"
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold rounded-full px-8 shadow-lg shadow-yellow-500/50"
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold rounded-full px-6 md:px-8 shadow-lg shadow-yellow-500/50 w-full sm:w-auto"
             >
-              <Play className="mr-2 h-5 w-5 fill-current" />
+              <Play className="mr-2 h-4 w-4 md:h-5 md:w-5 fill-current" />
               Quick Actions
             </Button>
             
             {/* Timer/Stats Display */}
-            <div className="flex items-center gap-3 text-white">
-              <span className="text-sm text-white/60">Don't miss</span>
-              <div className="flex gap-2">
+            <div className="flex items-center gap-2 md:gap-3 text-white">
+              <span className="text-xs md:text-sm text-white/60">Don't miss</span>
+              <div className="flex gap-1 md:gap-2">
                 {[
                   { value: '15', label: 'h' },
                   { value: '24', label: 'm' },
@@ -58,10 +58,10 @@ export function FeatureBanner() {
                 ].map((time, idx) => (
                   <div 
                     key={idx}
-                    className="bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 border border-white/20"
+                    className="bg-white/10 backdrop-blur-sm rounded-full px-2 md:px-3 py-1 border border-white/20"
                   >
-                    <span className="font-bold">{time.value}</span>
-                    <span className="text-xs text-white/60 ml-1">{time.label}</span>
+                    <span className="font-bold text-sm md:text-base">{time.value}</span>
+                    <span className="text-xs text-white/60 ml-0.5 md:ml-1">{time.label}</span>
                   </div>
                 ))}
               </div>
@@ -69,8 +69,8 @@ export function FeatureBanner() {
           </div>
         </div>
 
-        {/* Right Side - Decorative */}
-        <div className="flex-shrink-0 w-1/4">
+        {/* Right Side - Decorative - Hidden on mobile/tablet */}
+        <div className="hidden xl:flex flex-shrink-0 w-1/4">
           <div className="relative h-48">
             {/* Floating elements */}
             <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-purple-500/30 to-blue-500/30 rounded-2xl rotate-12 animate-float" />

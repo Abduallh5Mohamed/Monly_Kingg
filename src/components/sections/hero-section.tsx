@@ -49,6 +49,13 @@ export function HeroSection() {
                   </Button>
                   <Button 
                     size="lg" 
+                    onClick={() => window.location.href = '/support'}
+                    className="text-base font-bold rounded-full bg-gradient-to-r from-green-600 to-blue-600 text-white hover:from-green-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-green-500/50"
+                  >
+                    💬 Live Support
+                  </Button>
+                  <Button 
+                    size="lg" 
                     onClick={() => window.location.href = '/admin'}
                     className="text-base font-bold rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
                   >
