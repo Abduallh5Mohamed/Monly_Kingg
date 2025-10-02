@@ -17,19 +17,42 @@ dotenv.config();
 
 // Initialize services
 async function initializeServices() {
+  let mongoConnected = false;
+  let redisConnected = false;
+
   try {
-    // Connect to MongoDB
+    // Try to connect to MongoDB
+    console.log('🔄 Attempting to connect to MongoDB...');
     await connectDB();
-
-    // Connect to Redis
-    await redis.connect();
-
-    console.log('✅ All services initialized successfully');
-    return true;
+    mongoConnected = true;
   } catch (error) {
-    console.error('❌ Service initialization failed:', error.message);
-    return false;
+    console.warn('⚠️ MongoDB connection failed:', error.message);
+    console.log('📝 Server will run without MongoDB (Frontend-only mode)');
   }
+
+  try {
+    // Try to connect to Redis
+    console.log('🔄 Attempting to connect to Redis...');
+    redisConnected = await redis.connect();
+  } catch (error) {
+    console.warn('⚠️ Redis connection failed:', error.message);
+    console.log('📝 Server will run without Redis (No caching)');
+  }
+
+  if (mongoConnected && redisConnected) {
+    console.log('✅ All services initialized successfully');
+  } else if (mongoConnected || redisConnected) {
+    console.log('⚠️ Server running with partial services');
+    if (mongoConnected) console.log('  ✓ MongoDB: Connected');
+    else console.log('  ✗ MongoDB: Disconnected (Frontend-only mode)');
+    if (redisConnected) console.log('  ✓ Redis: Connected');
+    else console.log('  ✗ Redis: Disconnected (No caching)');
+  } else {
+    console.log('⚠️ Server running in Frontend-only mode (No Backend services)');
+    console.log('📱 Perfect for Frontend development!');
+  }
+
+  return true; // Always return true to allow server to start
 }
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -40,12 +63,8 @@ const nextApp = next({ dev });
 const handle = nextApp.getRequestHandler();
 
 nextApp.prepare().then(async () => {
-  // Initialize services first
-  const servicesReady = await initializeServices();
-  if (!servicesReady) {
-    console.error('❌ Failed to start server - services not ready');
-    process.exit(1);
-  }
+  // Initialize services first (but don't fail if they're not available)
+  await initializeServices();
 
   const app = express();
   const server = createServer(app);

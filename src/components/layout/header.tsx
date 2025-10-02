@@ -86,6 +86,16 @@ export function Header() {
                 <User className="h-4 w-4 text-primary" />
                 <span className="text-white">Welcome, {user.username}</span>
               </div>
+              {user.role === 'admin' && (
+                <Link href="/admin">
+                  <Button 
+                    variant="outline"
+                    className="font-bold rounded-full border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300"
+                  >
+                    🎮 Admin Panel
+                  </Button>
+                </Link>
+              )}
               <Button 
                 onClick={handleLogout}
                 variant="outline"

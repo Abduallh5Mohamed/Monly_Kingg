@@ -27,7 +27,7 @@ class RedisService {
         password: process.env.REDIS_PASSWORD || undefined,
         database: process.env.REDIS_DB || 0,
         socket: {
-          connectTimeout: 10000,
+          connectTimeout: 5000, // Reduced timeout for faster failure
           lazyConnect: false,
           reconnectStrategy: false // Disable auto-reconnect to prevent loops
         }
@@ -35,7 +35,10 @@ class RedisService {
 
       // Single error handler
       this.client.on('error', (err) => {
-        logger.error('Redis Error:', err.message);
+        // Suppress error logs after initial connection attempt
+        if (!this.isConnected) {
+          logger.error('Redis Error:', err.message);
+        }
         this.isConnected = false;
       });
 
@@ -62,7 +65,9 @@ class RedisService {
       return true;
     } catch (error) {
       logger.error('❌ Redis Connection Failed:', error.message);
+      logger.info('📝 Server will continue without caching');
       this.isConnected = false;
+      this.client = null; // Clear client on failure
       return false;
     }
   }

@@ -593,3 +593,41 @@
 [2025-10-01T19:44:54.333Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
 [2025-10-01T19:44:54.333Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraawael7901@gmail.com from CACHE→DB (299ms)
 [2025-10-01T19:44:54.334Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (300ms)
+[2025-10-02T01:36:23.698Z] [ERROR]: Redis Error:
+[2025-10-02T01:36:23.700Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T01:43:20.449Z] [ERROR]: Redis Error:
+[2025-10-02T01:43:20.451Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T01:46:10.288Z] [ERROR]: Redis Error:
+[2025-10-02T01:46:10.289Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T01:52:29.521Z] [ERROR]: Redis Error:
+[2025-10-02T01:52:29.524Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T01:52:29.525Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T01:56:31.338Z] [ERROR]: Redis Error:
+[2025-10-02T01:56:31.340Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T01:56:31.341Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T02:07:00.472Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-02T02:07:00.474Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-02T02:07:00.475Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-02T02:07:10.486Z] [ERROR]: User cache get error for monlykingstore@gmail.com:
+[2025-10-02T02:07:20.488Z] [ERROR]: Database fallback error:
+[2025-10-02T02:07:20.490Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: monlykingstore@gmail.com
+[2025-10-02T02:07:30.497Z] [ERROR]: ❌ [LOGIN ERROR] monlykingstore@gmail.com: Operation `users.findOne()` buffering timed out after 10000ms (30025ms)
+[2025-10-02T02:07:33.561Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-02T02:07:33.562Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-02T02:07:33.563Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-02T02:07:43.565Z] [ERROR]: User cache get error for monlykingstore@gmail.com:
+[2025-10-02T02:07:53.572Z] [ERROR]: Database fallback error:
+[2025-10-02T02:07:53.573Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: monlykingstore@gmail.com
+[2025-10-02T02:08:03.577Z] [ERROR]: ❌ [LOGIN ERROR] monlykingstore@gmail.com: Operation `users.findOne()` buffering timed out after 10000ms (30016ms)
+[2025-10-02T02:36:31.170Z] [ERROR]: Redis Error:
+[2025-10-02T02:36:31.174Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T02:36:31.174Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T03:06:28.611Z] [ERROR]: Redis Error:
+[2025-10-02T03:06:28.614Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T03:06:28.615Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T03:07:20.839Z] [ERROR]: Redis Error:
+[2025-10-02T03:07:20.843Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T03:07:20.844Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T03:10:25.551Z] [ERROR]: Redis Error:
+[2025-10-02T03:10:25.553Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T03:10:25.554Z] [INFO]: 📝 Server will continue without caching

@@ -40,12 +40,21 @@ export function HeroSection() {
                 <p className="text-sm md:text-base max-w-md text-foreground/70 lg:pl-4">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
-                <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-1 group">
-                  EXPLORE THE UNIVERSE
-                  <span className="ml-3 h-10 w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
-                    <PlayIcon />
-                  </span>
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4 items-center lg:items-start">
+                  <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-1 group">
+                    EXPLORE THE UNIVERSE
+                    <span className="ml-3 h-10 w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
+                      <PlayIcon />
+                    </span>
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    onClick={() => window.location.href = '/admin'}
+                    className="text-base font-bold rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
+                  >
+                    🎮 Admin Dashboard
+                  </Button>
+                </div>
               </div>
               <div className="pt-12 w-full max-w-2xl">
                 <h2 className="text-xl font-bold font-headline text-white mb-4 text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
