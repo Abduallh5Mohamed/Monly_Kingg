@@ -22,7 +22,7 @@ const sidebarItems = [
   { icon: Users, label: 'Users', href: '/admin/users' },
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
-  { icon: MessageSquare, label: 'Tickets', href: '/admin/tickets' },
+  { icon: MessageSquare, label: 'Chats', href: '/admin/chats' },
   { icon: BarChart3, label: 'Analytics', href: '/admin/analytics' },
   { icon: Gamepad2, label: 'Games', href: '/admin/games' },
   { icon: Shield, label: 'Security', href: '/admin/security' },
@@ -34,14 +34,9 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-20 bg-[#1a1d2e] border-r border-white/10 flex flex-col items-center py-6 z-50">
-      {/* Logo */}
-      <div className="mb-8">
-        <Logo />
-      </div>
-
+    <aside className="fixed left-0 top-0 h-screen w-20 bg-[#1a1d2e] border-r border-white/10 flex flex-col items-center py-6 z-50 md:flex hidden">
       {/* Navigation Icons */}
-      <nav className="flex-1 flex flex-col gap-4 w-full items-center">
+      <nav className="flex-1 flex flex-col gap-4 w-full items-center pt-4">
         {sidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;

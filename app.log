@@ -631,3 +631,18 @@
 [2025-10-02T03:10:25.551Z] [ERROR]: Redis Error:
 [2025-10-02T03:10:25.553Z] [ERROR]: ❌ Redis Connection Failed:
 [2025-10-02T03:10:25.554Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T04:43:04.180Z] [ERROR]: Redis Error:
+[2025-10-02T04:43:04.182Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T04:43:04.182Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T04:51:24.337Z] [ERROR]: Redis Error:
+[2025-10-02T04:51:24.342Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T04:51:24.343Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T05:00:53.266Z] [ERROR]: Redis Error:
+[2025-10-02T05:00:53.269Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T05:00:53.270Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T05:02:28.429Z] [ERROR]: Redis Error:
+[2025-10-02T05:02:28.432Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T05:02:28.433Z] [INFO]: 📝 Server will continue without caching
+[2025-10-02T05:10:50.602Z] [ERROR]: Redis Error:
+[2025-10-02T05:10:50.604Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-02T05:10:50.605Z] [INFO]: 📝 Server will continue without caching

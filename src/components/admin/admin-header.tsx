@@ -9,9 +9,9 @@ export function AdminHeader() {
   const { user, logout } = useAuth();
 
   return (
-    <header className="fixed top-0 left-20 right-0 h-16 bg-[#1a1d2e]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-8 z-40">
+    <header className="fixed top-0 md:left-20 left-0 right-0 h-16 bg-[#1a1d2e]/80 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-4 md:px-8 z-40">
       {/* Search Bar */}
-      <div className="flex-1 max-w-md">
+      <div className="flex-1 max-w-md hidden md:block">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
           <Input
