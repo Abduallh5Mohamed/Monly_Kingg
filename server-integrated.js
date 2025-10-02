@@ -162,6 +162,15 @@ nextApp.prepare().then(async () => {
   app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
   app.use("/api/v1/users", csrfProtection, userRoutes);
 
+  // Admin routes (load dynamically to avoid import issues)
+  try {
+    const { default: adminRoutes } = await import("./src/modules/admin/admin.routes.js");
+    app.use("/api/v1/admin", adminRoutes); // No CSRF for admin routes (protected by JWT)
+    app.use("/api/admin", adminRoutes); // Keep both for compatibility
+  } catch (error) {
+    console.warn('⚠️ Admin routes not loaded:', error.message);
+  }
+
   // Health check endpoint
   app.get("/api/health", async (req, res) => {
     const cacheStats = await userCacheService.getCacheStats();

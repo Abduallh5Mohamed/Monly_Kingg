@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -59,6 +60,7 @@ app.use(globalLimiter);
 // API Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

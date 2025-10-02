@@ -40,3 +40,6 @@ export const authMiddleware = async (req, res, next) => {
     next(err);
   }
 };
+
+// Export with both names for compatibility
+export const authenticateToken = authMiddleware;

@@ -1,19 +1,89 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { StatCard } from '@/components/admin/stat-card';
 import { UsersTable } from '@/components/admin/users-table';
 import { LiveActivity } from '@/components/admin/live-activity';
 import { FeatureBanner } from '@/components/admin/feature-banner';
+import { adminApi } from '@/lib/admin-api';
 import {
   Users,
-  ShoppingCart,
-  DollarSign,
+  ShieldCheck,
+  UserCheck,
+  UserPlus,
   TrendingUp,
-  Package,
-  MessageSquare
+  Activity
 } from 'lucide-react';
 
+interface AdminStats {
+  totalUsers: number;
+  verifiedUsers: number;
+  adminUsers: number;
+  newUsersToday: number;
+  userGrowth: number;
+  verificationRate: number;
+  registrationTrend: Array<{ date: string; count: number }>;
+}
+
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const response = await adminApi.getStats();
+      if (response.success) {
+        setStats(response.data);
+      } else {
+        setError('Failed to fetch statistics');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch statistics');
+      console.error('Stats fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-white/10 rounded w-48 mb-2"></div>
+          <div className="h-4 bg-white/10 rounded w-96"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-32 bg-white/10 rounded-lg animate-pulse"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-red-400">Error: {error}</p>
+          <button
+            onClick={fetchStats}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -29,30 +99,42 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Users"
-          value="2,543"
+          value={stats?.totalUsers.toLocaleString() || '0'}
           icon={Users}
-          trend={{ value: 12.5, isPositive: true }}
+          trend={{
+            value: stats?.userGrowth || 0,
+            isPositive: (stats?.userGrowth || 0) >= 0
+          }}
           gradient="from-blue-500 to-cyan-600"
         />
         <StatCard
-          title="Total Orders"
-          value="1,234"
-          icon={ShoppingCart}
-          trend={{ value: 8.3, isPositive: true }}
-          gradient="from-purple-500 to-pink-600"
-        />
-        <StatCard
-          title="Revenue"
-          value="$45,678"
-          icon={DollarSign}
-          trend={{ value: 23.1, isPositive: true }}
+          title="Verified Users"
+          value={stats?.verifiedUsers.toLocaleString() || '0'}
+          icon={UserCheck}
+          trend={{
+            value: stats?.verificationRate || 0,
+            isPositive: (stats?.verificationRate || 0) > 80
+          }}
           gradient="from-green-500 to-emerald-600"
         />
         <StatCard
-          title="Active Games"
-          value="156"
-          icon={Package}
-          trend={{ value: 5.4, isPositive: false }}
+          title="New Today"
+          value={stats?.newUsersToday.toString() || '0'}
+          icon={UserPlus}
+          trend={{
+            value: stats?.userGrowth || 0,
+            isPositive: (stats?.userGrowth || 0) >= 0
+          }}
+          gradient="from-purple-500 to-pink-600"
+        />
+        <StatCard
+          title="Admin Users"
+          value={stats?.adminUsers.toString() || '0'}
+          icon={ShieldCheck}
+          trend={{
+            value: stats?.adminUsers ? (stats.adminUsers / stats.totalUsers * 100) : 0,
+            isPositive: true
+          }}
           gradient="from-orange-500 to-red-600"
         />
       </div>
@@ -73,24 +155,33 @@ export default function AdminDashboard() {
       {/* Additional Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
-          title="Support Tickets"
-          value="23"
-          icon={MessageSquare}
-          trend={{ value: 3.2, isPositive: false }}
+          title="Verification Rate"
+          value={`${stats?.verificationRate || 0}%`}
+          icon={Activity}
+          trend={{
+            value: stats?.verificationRate || 0,
+            isPositive: (stats?.verificationRate || 0) > 80
+          }}
           gradient="from-indigo-500 to-blue-600"
         />
         <StatCard
           title="Growth Rate"
-          value="18.5%"
+          value={`${stats?.userGrowth || 0}%`}
           icon={TrendingUp}
-          trend={{ value: 4.7, isPositive: true }}
+          trend={{
+            value: stats?.userGrowth || 0,
+            isPositive: (stats?.userGrowth || 0) >= 0
+          }}
           gradient="from-teal-500 to-green-600"
         />
         <StatCard
-          title="Avg Order Value"
-          value="$37.89"
-          icon={DollarSign}
-          trend={{ value: 6.8, isPositive: true }}
+          title="Active Ratio"
+          value={`${stats?.totalUsers ? ((stats.verifiedUsers / stats.totalUsers) * 100).toFixed(1) : 0}%`}
+          icon={Users}
+          trend={{
+            value: stats?.totalUsers ? ((stats.verifiedUsers / stats.totalUsers) * 100) : 0,
+            isPositive: stats?.totalUsers ? ((stats.verifiedUsers / stats.totalUsers) * 100) > 70 : false
+          }}
           gradient="from-pink-500 to-rose-600"
         />
       </div>
