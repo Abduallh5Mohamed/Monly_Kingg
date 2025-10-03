@@ -48,7 +48,27 @@ export const addXp = async (id, amount) => {
   let nextLevelRequirement = user.level * 500;
   if (user.xp >= nextLevelRequirement) {
     user.level += 1;
+    user.xp = 0;
   }
 
   return await user.save();
+};
+
+export const searchUsers = async (query, excludeUserId) => {
+  try {
+    // Search by username or email (case-insensitive)
+    const users = await User.find({
+      _id: { $ne: excludeUserId }, // Exclude current user
+      $or: [
+        { username: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
+      ]
+    })
+      .select('username email avatar role')
+      .limit(10);
+
+    return users;
+  } catch (error) {
+    throw error;
+  }
 };

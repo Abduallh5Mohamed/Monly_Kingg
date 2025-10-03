@@ -243,19 +243,20 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       throw new Error("Invalid credentials");
     }
 
-    // check account lock
-    if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
-      throw new Error("Account locked. Try later.");
-    }
+    // Account lock disabled
+    // if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
+    //   throw new Error("Account locked. Try later.");
+    // }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      // increment failed attempts and possibly lock
+      // Track failed attempts (but don't lock account)
       user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
-      if (user.failedLoginAttempts >= 5) {
-        user.lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lock
-        user.failedLoginAttempts = 0; // reset counter after locking
-      }
+      // Account lock feature disabled
+      // if (user.failedLoginAttempts >= 5) {
+      //   user.lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lock
+      //   user.failedLoginAttempts = 0; // reset counter after locking
+      // }
 
       // Update database with failed attempt
       user.authLogs.push({ action: "login", success: false, ip, userAgent });
@@ -547,6 +548,10 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
     user.passwordResetToken = null;
     user.passwordResetExpires = null;
     user.lastPasswordResetSentAt = null;
+
+    // Clear account lock (if any)
+    user.lockUntil = null;
+    user.failedLoginAttempts = 0;
 
     // Revoke all existing refresh tokens for security
     await revokeAllRefreshTokens(user, "password_reset");

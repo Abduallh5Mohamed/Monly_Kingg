@@ -2,9 +2,13 @@ import rateLimit from "express-rate-limit";
 
 export const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 500, // limit each IP to 500 requests per windowMs (increased for Socket.IO)
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for Socket.IO connections
+    return req.path.includes('/socket.io/');
+  }
 });
 
 // more strict limiter for resend endpoint

@@ -10,6 +10,38 @@ const registerSchema = Joi.object({
   password: Joi.string().min(8).required()
 });
 
+/* ---------------- Get Current User ---------------- */
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password -verificationCode -resetPasswordToken -resetPasswordExpires -refreshTokens');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: user._id,
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch user"
+    });
+  }
+};
+
 export const register = async (req, res, next) => {
   try {
     const { error, value } = registerSchema.validate(req.body);

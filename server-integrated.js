@@ -162,6 +162,15 @@ nextApp.prepare().then(async () => {
   app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
   app.use("/api/v1/users", csrfProtection, userRoutes);
 
+  // Chat routes (no CSRF for Socket.IO compatibility)
+  try {
+    const { default: chatRoutes } = await import("./src/modules/chats/chat.routes.js");
+    app.use("/api/v1/chats", chatRoutes);
+    console.log('✅ Chat routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Chat routes not loaded:', error.message);
+  }
+
   // Admin routes (load dynamically to avoid import issues)
   try {
     const { default: adminRoutes } = await import("./src/modules/admin/admin.routes.js");
@@ -210,10 +219,21 @@ nextApp.prepare().then(async () => {
     return handle(req, res);
   });
 
-  server.listen(port, (err) => {
+  server.listen(port, async (err) => {
     if (err) throw err;
+
+    // Initialize Socket.IO
+    try {
+      const socketService = (await import("./src/services/socketService.js")).default;
+      socketService.initialize(server);
+      console.log('🔌 Socket.IO initialized for real-time chat');
+    } catch (error) {
+      console.warn('⚠️ Socket.IO not initialized:', error.message);
+    }
+
     console.log(`✅ Server running in ${process.env.NODE_ENV || 'development'} mode on port ${port}`);
     console.log(`🌐 Frontend: http://localhost:${port}`);
     console.log(`🔗 API: http://localhost:${port}/api/v1`);
+    console.log(`💬 Socket.IO: ws://localhost:${port}`);
   });
 });

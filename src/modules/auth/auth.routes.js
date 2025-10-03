@@ -1,5 +1,6 @@
 import express from "express";
 import * as authController from "./auth.controller.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import crypto from "crypto";
 
 const router = express.Router();
@@ -21,6 +22,9 @@ router.post("/login", authController.login);
 router.post("/resend-code", authController.resendCode);
 router.post("/refresh", authController.refresh);
 router.post("/logout", authController.logout);
+
+// Get current user (protected)
+router.get("/me", authMiddleware, authController.getCurrentUser);
 
 // Password reset routes
 router.post("/forgot-password", authController.forgotPassword);
