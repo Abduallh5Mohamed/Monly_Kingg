@@ -238,17 +238,18 @@ export default function SupportPage() {
       if (selectedChat?._id === chatId) {
         setMessages(prev => prev.map(msg => ({ ...msg, read: true })));
       }
-      // Update last message read status in chats list
+      // Update chats list: mark messages as read and clear unread count
       setChats(prev => prev.map(chat => {
-        if (chat._id === chatId && chat.lastMessage) {
+        if (chat._id === chatId) {
           return {
             ...chat,
-            lastMessage: {
+            unreadCount: 0, // Clear unread count
+            lastMessage: chat.lastMessage ? {
               content: chat.lastMessage.content || '',
               timestamp: chat.lastMessage.timestamp || new Date(),
               sender: chat.lastMessage.sender,
               read: true
-            }
+            } : undefined
           };
         }
         return chat;
@@ -297,6 +298,14 @@ export default function SupportPage() {
   useEffect(() => {
     if (selectedChat) {
       loadMessages(selectedChat._id);
+
+      // Clear unread count immediately when opening chat
+      setChats(prev => prev.map(chat =>
+        chat._id === selectedChat._id
+          ? { ...chat, unreadCount: 0 }
+          : chat
+      ));
+
       if (socket) {
         socket.emit('join_chat', selectedChat._id);
         socket.emit('mark_read', { chatId: selectedChat._id });
@@ -765,8 +774,8 @@ export default function SupportPage() {
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
                   className={`group p-4 rounded-2xl cursor-pointer transition-all duration-300 ${selectedChat?._id === chat._id
-                      ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/30 shadow-lg shadow-purple-500/10'
-                      : 'hover:bg-white/5 border border-transparent hover:border-white/10'
+                    ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/30 shadow-lg shadow-purple-500/10'
+                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
                     }`}
                 >
                   <div className="flex items-start gap-3">
@@ -879,8 +888,8 @@ export default function SupportPage() {
                       <div className={`max-w-[70%] group`}>
                         <div
                           className={`relative rounded-3xl px-5 py-3 shadow-2xl backdrop-blur-sm transition-all duration-300 ${isOwn
-                              ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white rounded-br-md hover:shadow-purple-500/50'
-                              : 'bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-bl-md hover:bg-white/15'
+                            ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white rounded-br-md hover:shadow-purple-500/50'
+                            : 'bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-bl-md hover:bg-white/15'
                             }`}
                         >
                           {!isOwn && showAvatar && (
@@ -992,8 +1001,8 @@ export default function SupportPage() {
                 <Button
                   size="icon"
                   className={`h-12 w-12 rounded-2xl flex-shrink-0 transition-all duration-300 ${messageText.trim() && !isSending
-                      ? 'bg-gradient-to-br from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg shadow-purple-500/50 scale-100'
-                      : 'bg-white/10 hover:bg-white/20 scale-95 opacity-50'
+                    ? 'bg-gradient-to-br from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg shadow-purple-500/50 scale-100'
+                    : 'bg-white/10 hover:bg-white/20 scale-95 opacity-50'
                     }`}
                   onClick={handleSendMessage}
                   disabled={!messageText.trim() || isSending}

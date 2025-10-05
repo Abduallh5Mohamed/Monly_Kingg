@@ -43,3 +43,53 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# ============================================
+# 🚨 SECURITY - Test Files (NEVER commit!)
+# ============================================
+
+# Test user creation scripts - SECURITY RISK
+create-load-test-users.js
+create-test-users.js
+create-mongo-user.js
+unlock-user.js
+clear-user-cache.js
+
+# Load testing scripts
+*-load-test.js
+advanced-load-test.js
+comprehensive-load-test.js
+instant-load-test.js
+quick-load-test.js
+system-capacity-test.js
+load-test-setup.js
+load-test-monitor.js
+
+# Quick test scripts
+quick-*.js
+quick-*.ps1
+fast-*.ps1
+simple-*.js
+
+# Test and verification scripts
+test-*.js
+test-*.mjs
+verify-*.js
+cache-monitor.js
+
+# Load test data and reports
+load-test-*.json
+load-test-report.json
+
+# PowerShell test scripts
+*.ps1
+
+# Logs
+*.log
+app.log
+logs/
+
+# PM2
+.pm2/
+pids/
+*.pid

@@ -48,12 +48,12 @@ export const register = async (req, res, next) => {
     if (error) return res.status(400).json({ message: "Invalid input" });
 
     const exists = await User.findOne({ email: value.email });
-    if (exists) return res.status(400).json({ message: "Email already registered" });
+    if (exists) return res.status(400).json({ message: "Registration failed" }); // Generic message to prevent enumeration
 
     const user = await authService.register(value);
 
     res.status(201).json({
-      message: "User registered successfully",
+      message: "Registration successful. Please check your email for verification code.",
       user: { id: user._id, email: user.email, username: user.username, role: user.role }
     });
   } catch (err) {
@@ -257,8 +257,7 @@ export const forgotPassword = async (req, res) => {
     // Always return success message to prevent email enumeration
     res.status(200).json(result);
   } catch (err) {
-    // Log error but return generic message
-    console.error('Forgot password error:', err.message);
+    // Always return generic message to prevent email enumeration (removed console.error)
     res.status(200).json({ message: "If the email exists, a reset link will be sent" });
   }
 };

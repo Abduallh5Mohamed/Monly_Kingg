@@ -1,6 +1,7 @@
 import express from "express";
 import * as authController from "./auth.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { passwordResetLimiter } from "../../middlewares/rateLimiter.js";
 import crypto from "crypto";
 
 const router = express.Router();
@@ -26,9 +27,9 @@ router.post("/logout", authController.logout);
 // Get current user (protected)
 router.get("/me", authMiddleware, authController.getCurrentUser);
 
-// Password reset routes
-router.post("/forgot-password", authController.forgotPassword);
-router.post("/verify-reset-token", authController.verifyResetToken);
-router.post("/reset-password", authController.resetPassword);
+// Password reset routes (rate limited to prevent abuse)
+router.post("/forgot-password", passwordResetLimiter, authController.forgotPassword);
+router.post("/verify-reset-token", passwordResetLimiter, authController.verifyResetToken);
+router.post("/reset-password", passwordResetLimiter, authController.resetPassword);
 
 export default router;

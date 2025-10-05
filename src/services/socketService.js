@@ -1,4 +1,6 @@
 import { Server } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
 import jwt from 'jsonwebtoken';
 import Chat from '../modules/chats/chat.model.js';
 import User from '../modules/users/user.model.js';
@@ -9,9 +11,10 @@ class SocketService {
     constructor() {
         this.io = null;
         this.userSockets = new Map(); // userId -> socketId
+        this.redisAdapter = null;
     }
 
-    initialize(httpServer) {
+    async initialize(httpServer) {
         this.io = new Server(httpServer, {
             cors: {
                 origin: process.env.NODE_ENV === 'production'
@@ -21,8 +24,34 @@ class SocketService {
             },
             pingTimeout: 60000,
             pingInterval: 25000,
-            transports: ['websocket', 'polling']
+            transports: ['websocket', 'polling'],
+            // Performance optimizations
+            maxHttpBufferSize: 1e6, // 1MB
+            connectTimeout: 10000,
+            perMessageDeflate: {
+                threshold: 1024 // Only compress messages > 1KB
+            }
         });
+
+        // Setup Redis Adapter for horizontal scaling
+        try {
+            const pubClient = createClient({
+                url: process.env.REDIS_URL || 'redis://localhost:6379',
+                password: process.env.REDIS_PASSWORD
+            });
+            const subClient = pubClient.duplicate();
+
+            await Promise.all([
+                pubClient.connect(),
+                subClient.connect()
+            ]);
+
+            this.io.adapter(createAdapter(pubClient, subClient));
+            this.redisAdapter = { pubClient, subClient };
+            logger.info('✅ Socket.IO Redis Adapter initialized');
+        } catch (error) {
+            logger.warn(`⚠️  Socket.IO Redis Adapter failed: ${error.message}. Running in standalone mode.`);
+        }
 
         // Authentication middleware
         this.io.use(async (socket, next) => {
