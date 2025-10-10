@@ -49,10 +49,10 @@ export function HeroSection() {
                   </Button>
                   <Button 
                     size="lg" 
-                    onClick={() => window.location.href = '/support'}
+                    onClick={() => window.location.href = '/user/dashboard'}
                     className="text-base font-bold rounded-full bg-gradient-to-r from-green-600 to-blue-600 text-white hover:from-green-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-green-500/50"
                   >
-                    💬 Live Support
+                    🏠 User Dashboard
                   </Button>
                   <Button 
                     size="lg" 

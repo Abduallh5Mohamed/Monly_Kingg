@@ -24,7 +24,7 @@ router.get("/online", getOnlineUsers);
 // Create or get chat with user
 router.post("/", createChat);
 
-// Create support chat
+// Create support / user chats
 router.post("/support", createSupportChat);
 
 // Send message to chat (MUST be before /:chatId route)

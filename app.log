@@ -3868,3 +3868,144 @@
 [2025-10-05T16:40:30.380Z] [INFO]: Email verified for user: baraaweal24@gmail.com
 [2025-10-05T16:40:58.802Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
 [2025-10-05T16:41:02.002Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-05T19:59:55.571Z] [ERROR]: Redis Error:
+[2025-10-05T19:59:55.574Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T19:59:55.575Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T19:59:55.700Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T19:59:55.701Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T20:17:27.889Z] [ERROR]: Redis Error:
+[2025-10-05T20:17:27.892Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T20:17:27.892Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T20:17:28.033Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T20:17:28.034Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T20:21:36.842Z] [ERROR]: Redis Error:
+[2025-10-05T20:21:36.844Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T20:21:36.845Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T20:23:43.786Z] [ERROR]: Redis Error:
+[2025-10-05T20:23:43.788Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T20:23:43.789Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T20:27:56.311Z] [ERROR]: Redis Error:
+[2025-10-05T20:27:56.314Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T20:27:56.315Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T20:31:29.686Z] [ERROR]: Redis Error:
+[2025-10-05T20:31:29.688Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T20:31:29.688Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T20:31:29.813Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T20:31:29.814Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T22:10:42.093Z] [ERROR]: Redis Error:
+[2025-10-05T22:10:42.098Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T22:10:42.100Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T22:10:42.698Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T22:10:42.699Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T22:16:23.762Z] [ERROR]: Redis Error:
+[2025-10-05T22:16:23.768Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T22:16:23.776Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T22:17:22.459Z] [ERROR]: Redis Error:
+[2025-10-05T22:17:22.468Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T22:17:22.469Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T22:17:22.794Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T22:17:22.796Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T22:21:18.559Z] [ERROR]: Redis Error:
+[2025-10-05T22:21:18.563Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-05T22:21:18.564Z] [INFO]: 📝 Server will continue without caching
+[2025-10-05T22:21:18.817Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-05T22:21:18.820Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T22:27:56.899Z] [INFO]: ✅ Redis Connected
+[2025-10-05T22:27:56.915Z] [INFO]: 🚀 Redis Ready
+[2025-10-05T22:27:56.924Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-05T22:27:57.183Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-05T22:27:57.185Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-05T22:32:27.016Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-05T22:32:27.027Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-10-05T22:32:27.035Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-10-05T22:32:27.039Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-05T22:32:27.120Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-05T22:32:27.131Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-05T22:32:27.134Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-05T22:32:27.136Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-05T22:32:27.140Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-05T22:32:27.170Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (27ms)
+[2025-10-05T22:32:27.181Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-05T22:32:27.190Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-05T22:32:27.192Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-05T22:32:27.609Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-05T22:32:27.610Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-05T22:32:27.653Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-05T22:32:27.655Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-05T22:32:27.662Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-05T22:32:27.669Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-05T22:32:27.672Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-05T22:32:27.674Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (658ms)
+[2025-10-05T22:32:31.596Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-05T22:32:31.869Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-05T22:32:31.903Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-05T22:32:32.027Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-05T22:33:34.594Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-05T22:33:34.752Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-05T22:33:35.680Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-05T22:33:36.143Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-05T22:34:18.447Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-05T22:34:56.849Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-05T22:34:56.858Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-05T22:34:56.861Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-05T22:34:56.866Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-05T22:34:56.887Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (19ms)
+[2025-10-05T22:34:56.921Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-05T22:34:56.929Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-05T22:34:56.931Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-05T22:34:57.335Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-05T22:34:57.338Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-05T22:34:57.384Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-05T22:34:57.387Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-05T22:34:57.397Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-05T22:34:57.410Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-05T22:34:57.415Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-05T22:34:57.417Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (568ms)
+[2025-10-05T22:35:02.643Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-05T22:35:02.687Z] [INFO]: User monlykingstore@gmail.com fetched 0 chats
+[2025-10-05T22:35:02.734Z] [INFO]: User monlykingstore@gmail.com fetched 0 chats
+[2025-10-05T22:35:08.762Z] [INFO]: Support chat created for monlykingstore@gmail.com
+[2025-10-05T22:35:08.876Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f29c987be6d104147748
+[2025-10-05T22:35:22.612Z] [INFO]: ✅ New chat created with participants: 68dc6297ea6649ef04ed569c (creator) and 68d9b957e9a319acf7221479 (recipient)
+[2025-10-05T22:35:22.618Z] [INFO]: 👥 Chat participants: monlyx99xking (68dc6297ea6649ef04ed569c), abduallh (68d9b957e9a319acf7221479)
+[2025-10-05T22:35:22.622Z] [INFO]: Chat created/retrieved between 68dc6297ea6649ef04ed569c and 68d9b957e9a319acf7221479
+[2025-10-05T22:35:22.748Z] [INFO]: User monlykingstore@gmail.com fetched 0 messages from chat 68e2f2aa987be6d104147808
+[2025-10-05T22:35:24.446Z] [INFO]: User monlykingstore@gmail.com fetched 0 messages from chat 68e2f2aa987be6d104147808
+[2025-10-05T22:35:34.168Z] [INFO]: Message sent in chat 68e2f2aa987be6d104147808 by monlykingstore@gmail.com
+[2025-10-05T22:35:34.289Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-05T22:36:04.581Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-05T22:36:38.145Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T10:50:05.058Z] [ERROR]: Redis Error:
+[2025-10-08T10:50:05.063Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-08T10:50:05.064Z] [INFO]: 📝 Server will continue without caching
+[2025-10-08T10:50:05.356Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-08T10:50:05.357Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-08T10:50:44.236Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:02:52.028Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:02:52.124Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:02:52.200Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:07:31.223Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:07:31.265Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:07:31.295Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:09:41.297Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:09:46.435Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:09:49.324Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:09:52.549Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:09:53.917Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:09:53.956Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:10:50.781Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:10:50.837Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:10:55.202Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:10:55.237Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:10:57.667Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:11:01.327Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:11:01.359Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:11:01.403Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:17:16.759Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:17:16.823Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:17:16.874Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:23:02.560Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:23:02.605Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:28:05.045Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-08T11:28:05.103Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-08T11:28:05.154Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats

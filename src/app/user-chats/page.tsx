@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import {
   Send,
   Paperclip,
@@ -661,21 +662,22 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-[#0a0b14] via-[#0e1118] to-[#1a1d2e] flex overflow-hidden">
-      {/* Sidebar - Chat List */}
-      <div className="w-full md:w-96 bg-gradient-to-b from-[#131720]/80 to-[#0a0b14]/80 backdrop-blur-xl border-r border-white/5 flex flex-col">
+    <UserDashboardLayout>
+      <div className="h-[calc(100vh-120px)] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
+        {/* Sidebar - Chat List */}
+        <div className="w-full md:w-96 bg-gray-50 border-r border-gray-200 flex flex-col">
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-white/5 backdrop-blur-sm">
+        <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-white text-xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Messages</h1>
+                <h1 className="text-gray-900 text-xl font-bold">Messages</h1>
                 <div className="flex items-center gap-2 mt-0.5">
                   <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
-                  <span className="text-xs text-white/60">{isConnected ? 'Connected' : 'Offline'}</span>
+                  <span className="text-xs text-gray-500">{isConnected ? 'Connected' : 'Offline'}</span>
                 </div>
               </div>
             </div>
@@ -1032,6 +1034,7 @@ export default function SupportPage() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </UserDashboardLayout>
   );
 }
