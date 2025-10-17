@@ -3,334 +3,229 @@
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { Button } from '@/components/ui/button';
 import {
-  Star,
-  ShoppingCart,
+  TrendingUp,
+  Users,
+  MessageSquare,
+  Calendar,
   ArrowRight,
-  Swords,
-  Crown,
-  Shield,
-  Zap,
-  Trophy,
-  Target,
-  Flame,
-  ChevronRight
+  Clock,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
-import { useState } from 'react';
 
 export default function UserDashboardPage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const popularOffers = [
+  const stats = [
     {
-      id: 1,
-      title: 'Castle Nathria Heroic Raid - Heroic CN Carry',
-      price: '400',
-      originalPrice: '500',
-      discount: '-20%',
-      image: '/assets/pubg.jpg',
-      badge: 'TRENDING',
-      rating: 4.8,
-      reviews: 124
+      title: 'Total Messages',
+      value: '48',
+      change: '+12%',
+      icon: MessageSquare,
+      color: 'from-blue-500 to-blue-600'
     },
     {
-      id: 2,
-      title: '0/9 GD Shadowlands Power leveling (Unlock the Maw - WoW)',
-      price: '400',
-      originalPrice: '600',
-      discount: '-33%',
-      image: '/assets/valorant.jpg',
-      badge: 'HOT',
-      rating: 4.9,
-      reviews: 98
+      title: 'Active Chats',
+      value: '12',
+      change: '+5%',
+      icon: Users,
+      color: 'from-purple-500 to-purple-600'
     },
     {
-      id: 3,
-      title: 'Custom 1-60 Powerleveling',
-      price: '400',
-      originalPrice: '500',
-      discount: '-20%',
-      image: '/assets/fifa.jpg',
-      badge: 'NEW',
-      rating: 4.7,
-      reviews: 156
+      title: 'Scheduled Meetings',
+      value: '8',
+      change: '+3%',
+      icon: Calendar,
+      color: 'from-pink-500 to-pink-600'
     },
     {
-      id: 4,
-      title: 'Buy WoW Shadowlands (%) | Timeless Rarity Boost Service',
-      price: '400',
-      originalPrice: '550',
-      discount: '-27%',
-      image: '/assets/pubg-battlegrounds.png',
-      badge: 'POPULAR',
-      rating: 4.8,
-      reviews: 203
+      title: 'Tasks Completed',
+      value: '24',
+      change: '+18%',
+      icon: CheckCircle,
+      color: 'from-green-500 to-green-600'
     }
   ];
 
-  const categories = [
+  const recentChats = [
     {
-      name: 'Covenants',
-      count: 15,
-      icon: Crown,
-      gradient: 'from-purple-500 to-purple-700'
+      name: 'Jonathan',
+      message: 'Lorem ipsum is simply text...',
+      time: '9:00 AM',
+      unread: 1,
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jonathan',
+      online: true
     },
     {
-      name: 'Legendary powers',
-      count: 19,
-      icon: Flame,
-      gradient: 'from-orange-500 to-red-600'
+      name: 'Elizabeth Jan',
+      message: 'It is a long established fact',
+      time: '10:00 AM',
+      unread: 0,
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elizabeth',
+      online: false
     },
     {
-      name: 'Mounts',
-      count: 8,
-      icon: Target,
-      gradient: 'from-blue-500 to-blue-700'
+      name: 'Kevin',
+      message: 'Contrary to popular belief...',
+      time: '02:00 PM',
+      unread: 2,
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin',
+      online: true
+    }
+  ];
+
+  const upcomingEvents = [
+    {
+      title: 'Team Meeting',
+      time: '10:00 AM - 11:00 AM',
+      date: 'Today',
+      color: 'bg-blue-500'
     },
     {
-      name: 'Mythic+',
-      count: 22,
-      icon: Trophy,
-      gradient: 'from-cyan-500 to-cyan-700'
+      title: 'Project Review',
+      time: '2:00 PM - 3:30 PM',
+      date: 'Today',
+      color: 'bg-purple-500'
     },
     {
-      name: 'Powerleveling',
-      count: 15,
-      icon: Zap,
-      gradient: 'from-yellow-500 to-yellow-700'
-    },
-    {
-      name: 'Pvp',
-      count: 27,
-      icon: Swords,
-      gradient: 'from-red-500 to-red-700'
-    },
-    {
-      name: 'Raid',
-      count: 17,
-      icon: Shield,
-      gradient: 'from-green-500 to-green-700'
-    },
-    {
-      name: 'Shadowlands services',
-      count: 9,
-      icon: Crown,
-      gradient: 'from-indigo-500 to-indigo-700'
-    },
-    {
-      name: 'Torghast Tower',
-      count: 13,
-      icon: Target,
-      gradient: 'from-pink-500 to-pink-700'
-    },
-    {
-      name: 'Watch all items',
-      count: 161,
-      icon: ChevronRight,
-      gradient: 'from-amber-500 to-amber-700',
-      special: true
+      title: 'Client Call',
+      time: '4:00 PM - 5:00 PM',
+      date: 'Tomorrow',
+      color: 'bg-pink-500'
     }
   ];
 
   return (
     <UserDashboardLayout>
-      <div className="space-y-8 pb-12">
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-br from-[#0a0e1a] via-[#1a1f3a] to-[#0f1419] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-          {/* Background Video */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
-          >
-            <source src="/assets/Hero-Background.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
-          
-          <div className="relative z-10 p-8 md:p-12 lg:p-16">
-            <div className="max-w-2xl">
-              <div className="inline-block mb-4">
-                <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
-                  ⚔️ Gaming Marketplace
-                </span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                Boost your gear, level and rating
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-600">
-                  on our WoW marketplace
-                </span>
-              </h1>
-              
-              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Professional boosted World of Warcraft carries, legendary coaching from professional gamers. Secured service with fast results!
-              </p>
-              
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span className="text-white font-bold text-lg">4.8</span>
-                  <span className="text-gray-400">Trustpilot</span>
-                </div>
-                <div className="text-gray-500">•</div>
-                <div className="text-gray-400">1000+ reviews</div>
-              </div>
-              
-              <Button className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white px-8 py-6 rounded-full text-lg font-bold shadow-2xl shadow-yellow-500/50 transition-all duration-300 hover:scale-105">
-                EXPLORE NOW
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Popular Offers Section */}
-        <div className="space-y-6">
+      <div className="space-y-8">
+        {/* Welcome Section */}
+        <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-3xl p-8 text-white shadow-2xl shadow-cyan-500/20">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-2">POPULAR OFFERS</h2>
-              <div className="h-1 w-24 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full"></div>
+              <h1 className="text-3xl font-bold mb-2">Welcome back, Natalie! 👋</h1>
+              <p className="text-white/80">Here's what's happening with your account today.</p>
             </div>
-            <Button 
-              variant="ghost" 
-              className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10 font-semibold"
-            >
-              WATCH
-              <ArrowRight className="ml-2 h-5 w-5" />
+            <Button className="bg-white text-cyan-600 hover:bg-white/90 rounded-full px-6 font-bold">
+              View Profile
             </Button>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularOffers.map((offer) => (
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
               <div
-                key={offer.id}
-                className="group bg-gradient-to-br from-[#0f1419]/90 to-[#1a1f3a]/90 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/20 hover:-translate-y-2"
+                key={index}
+                className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-cyan-500/20 hover:border-cyan-500/30 transition-all duration-300"
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={offer.image}
-                    alt={offer.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      {offer.badge}
-                    </span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
-                  {offer.discount && (
-                    <div className="absolute top-3 right-3">
-                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        {offer.discount}
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  <span className="text-sm font-semibold text-green-500 flex items-center gap-1">
+                    <TrendingUp className="h-4 w-4" />
+                    {stat.change}
+                  </span>
                 </div>
-
-                <div className="p-5 space-y-4">
-                  <h3 className="text-white font-semibold line-clamp-2 min-h-[3rem] group-hover:text-yellow-400 transition-colors">
-                    {offer.title}
-                  </h3>
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                      <span className="text-white font-semibold">{offer.rating}</span>
-                    </div>
-                    <span className="text-gray-500">({offer.reviews} reviews)</span>
-                  </div>
-
-                  <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-white">{offer.price}€</span>
-                    {offer.originalPrice && (
-                      <span className="text-gray-500 line-through text-lg mb-1">{offer.originalPrice}€</span>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button className="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 text-white rounded-lg font-semibold text-sm">
-                      BUY NOW
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/10 rounded-lg font-semibold text-sm"
-                    >
-                      ADD TO CART
-                    </Button>
-                  </div>
-                </div>
+                <h3 className="text-white/60 text-sm mb-1">{stat.title}</h3>
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Categories Section */}
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-3xl font-bold text-white mb-2">CATEGORIES</h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full"></div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categories.map((category, index) => {
-              const Icon = category.icon;
-              return (
-                <div
-                  key={index}
-                  className={`group relative bg-gradient-to-br from-[#0f1419]/90 to-[#1a1f3a]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-yellow-500/50 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:shadow-yellow-500/20 hover:-translate-y-2 ${
-                    category.special ? 'border-yellow-500/30 bg-gradient-to-br from-amber-900/20 to-yellow-900/20' : ''
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  
-                  <h3 className="text-white font-semibold mb-1 group-hover:text-yellow-400 transition-colors">
-                    {category.name}
-                  </h3>
-                  
-                  <p className="text-gray-400 text-sm">
-                    {category.count} {category.count === 161 ? 'OFFERS' : 'offers'}
-                  </p>
-
-                  {category.special && (
-                    <div className="absolute top-3 right-3">
-                      <ChevronRight className="w-5 h-5 text-yellow-400" />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Mythic+ Bundles Banner */}
-        <div className="relative bg-gradient-to-br from-purple-900/30 via-indigo-900/30 to-pink-900/30 rounded-3xl overflow-hidden shadow-2xl border border-purple-500/30">
-          <div className="absolute inset-0 bg-[url('/assets/valorant.jpg')] bg-cover bg-center opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-purple-900/40 to-transparent" />
-          
-          <div className="relative z-10 p-8 md:p-12">
-            <div className="max-w-2xl">
-              <div className="inline-block mb-3">
-                <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1.5 rounded-full text-sm font-bold uppercase">
-                  KEYSTONE MASTER
-                </span>
-              </div>
-              
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-3">
-                Mythic + Bundles
-              </h2>
-              
-              <p className="text-gray-300 text-lg mb-6">
-                x3 Mythic + 15 timed gameplay + 15% OFF!
-              </p>
-              
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 rounded-full text-lg font-bold shadow-2xl shadow-purple-500/50 transition-all duration-300 hover:scale-105">
-                VIEW OFFERS
-                <ArrowRight className="ml-2 h-5 w-5" />
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Recent Chats */}
+          <div className="lg:col-span-2 bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">Recent Chats</h2>
+              <Button variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10">
+                View All <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </div>
+            <div className="space-y-4">
+              {recentChats.map((chat, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 hover:border-cyan-500/30 border border-transparent transition-all cursor-pointer"
+                >
+                  <div className="relative">
+                    <img
+                      src={chat.avatar}
+                      alt={chat.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    {chat.online && (
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#131720]" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-white">{chat.name}</h3>
+                    <p className="text-sm text-gray-400 truncate">{chat.message}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500 mb-1">{chat.time}</p>
+                    {chat.unread > 0 && (
+                      <span className="inline-flex items-center justify-center w-6 h-6 bg-cyan-500 text-white text-xs font-bold rounded-full">
+                        {chat.unread}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Upcoming Events */}
+          <div className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+            <h2 className="text-xl font-bold text-white mb-6">Upcoming Events</h2>
+            <div className="space-y-4">
+              {upcomingEvents.map((event, index) => (
+                <div
+                  key={index}
+                  className="border-l-4 border-cyan-500 pl-4 py-3 hover:bg-white/5 rounded-r-xl transition-all"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`w-2 h-2 ${event.color} rounded-full mt-2`} />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white mb-1">{event.title}</h3>
+                      <p className="text-sm text-gray-400 flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {event.time}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">{event.date}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Button className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 rounded-full shadow-lg shadow-cyan-500/20">
+              Schedule New Meeting
+            </Button>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+          <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button className="h-20 bg-gradient-to-br from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-500/20">
+              <MessageSquare className="h-6 w-6" />
+              <span className="text-sm">New Chat</span>
+            </Button>
+            <Button className="h-20 bg-gradient-to-br from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-600/20">
+              <Calendar className="h-6 w-6" />
+              <span className="text-sm">Schedule</span>
+            </Button>
+            <Button className="h-20 bg-gradient-to-br from-cyan-400 to-cyan-500 hover:from-cyan-500 hover:to-cyan-600 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-400/20">
+              <Users className="h-6 w-6" />
+              <span className="text-sm">Create Group</span>
+            </Button>
+            <Button className="h-20 bg-gradient-to-br from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-500/20">
+              <CheckCircle className="h-6 w-6" />
+              <span className="text-sm">View Tasks</span>
+            </Button>
           </div>
         </div>
       </div>

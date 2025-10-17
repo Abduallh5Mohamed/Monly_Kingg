@@ -4,15 +4,12 @@ import { UserSidebar } from './user-sidebar';
 import { Search, Bell, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
-  const router = useRouter();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0b14] via-[#0e1118] to-[#1a1d2e]">
       {/* Sidebar */}
@@ -36,44 +33,6 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
 
             {/* Right Actions */}
             <div className="flex items-center gap-4">
-              {/* Level Badge - Gaming Style */}
-              <div className="relative group">
-                <div 
-                  onClick={() => router.push('/user/profile')}
-                  className="bg-gradient-to-br from-purple-600/90 to-purple-800/90 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-purple-400/30 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all cursor-pointer"
-                  title="Go to Profile"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-purple-900/50 flex items-center justify-center border border-purple-400/50">
-                      <span className="text-purple-200 text-xs font-bold">12</span>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-purple-200/80 leading-none">Level</p>
-                      <p className="text-sm font-bold text-white leading-none">VIP</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Balance Badge - Gaming Style */}
-              <div className="relative group">
-                <div 
-                  onClick={() => router.push('/user/payments')}
-                  className="bg-gradient-to-br from-emerald-600/90 to-emerald-800/90 backdrop-blur-sm rounded-xl px-3 py-1.5 border border-emerald-400/30 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-105 transition-all cursor-pointer"
-                  title="Go to Payments"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-emerald-900/50 flex items-center justify-center border border-emerald-400/50">
-                      <span className="text-emerald-200 text-xs font-bold">ج</span>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-emerald-200/80 leading-none">Balance</p>
-                      <p className="text-sm font-bold text-white leading-none">2,480</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* Language Selector */}
               <select className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 hover:bg-white/10 transition-all">
                 <option className="bg-[#1a1d2e]">English</option>
@@ -100,11 +59,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               </Button>
 
               {/* User Avatar */}
-              <button 
-                onClick={() => router.push('/user/profile')}
-                className="w-10 h-10 rounded-full overflow-hidden border-2 border-cyan-500 hover:border-cyan-400 hover:scale-110 transition-all cursor-pointer"
-                title="Go to Profile"
-              >
+              <button className="w-10 h-10 rounded-full overflow-hidden border-2 border-cyan-500 hover:border-cyan-400 transition-all">
                 <img
                   src="https://api.dicebear.com/7.x/avataaars/svg?seed=user"
                   alt="User"

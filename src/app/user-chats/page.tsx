@@ -21,8 +21,7 @@ import {
   Image as ImageIcon,
   Zap,
   Loader2,
-  MessageCircle,
-  X
+  MessageCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -73,18 +72,9 @@ export default function SupportPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
   const router = useRouter();
 
   // Get token from cookies or localStorage
@@ -112,23 +102,6 @@ export default function SupportPage() {
     }
     return null;
   };
-
-  // Load recent emojis from localStorage
-  useEffect(() => {
-    const savedEmojis = localStorage.getItem('recentEmojis');
-    if (savedEmojis) {
-      setRecentEmojis(JSON.parse(savedEmojis));
-    }
-  }, []);
-
-  // Cleanup recording interval on unmount
-  useEffect(() => {
-    return () => {
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
-    };
-  }, []);
 
   // Get current user ID from backend
   useEffect(() => {
@@ -517,128 +490,6 @@ export default function SupportPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleFileUpload = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleVideoUpload = () => {
-    videoInputRef.current?.click();
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && selectedChat) {
-      console.log('📎 File selected:', file.name);
-      // TODO: Implement file upload logic
-      alert(`File upload: ${file.name}\nFeature coming soon!`);
-    }
-  };
-
-  const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && selectedChat) {
-      console.log('🎥 Video selected:', file.name);
-      // TODO: Implement video upload logic
-      alert(`Video upload: ${file.name}\nFeature coming soon!`);
-    }
-  };
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-      
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-      
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        console.log('🎤 Recording stopped, size:', audioBlob.size, 'duration:', recordingTime, 's');
-        
-        if (recordingTime > 0 && selectedChat) {
-          // TODO: Send audio message to backend
-          const tempMessage: Message = {
-            _id: `temp-audio-${Date.now()}`,
-            sender: {
-              _id: currentUserId || 'unknown',
-              username: 'You',
-              avatar: ''
-            },
-            content: `🎤 Voice message (${recordingTime}s)`,
-            type: 'audio',
-            timestamp: new Date(),
-            read: false,
-            delivered: false
-          };
-          
-          setMessages(prev => [...prev, tempMessage]);
-          scrollToBottom();
-        }
-        
-        stream.getTracks().forEach(track => track.stop());
-        setRecordingTime(0);
-      };
-      
-      mediaRecorder.start();
-      setIsRecording(true);
-      
-      // Start timer
-      recordingIntervalRef.current = setInterval(() => {
-        setRecordingTime(prev => prev + 1);
-      }, 1000);
-      
-      console.log('🎤 Recording started...');
-    } catch (error) {
-      console.error('❌ Failed to start recording:', error);
-      alert('Please allow microphone access to record voice messages.');
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-        recordingIntervalRef.current = null;
-      }
-    }
-  };
-
-  const cancelRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      setRecordingTime(0);
-      audioChunksRef.current = [];
-      
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-        recordingIntervalRef.current = null;
-      }
-      
-      console.log('🎤 Recording cancelled');
-    }
-  };
-
-  const handleEmojiSelect = (emoji: string) => {
-    setMessageText(prev => prev + emoji);
-    
-    // Update recent emojis
-    setRecentEmojis(prev => {
-      const filtered = prev.filter(e => e !== emoji);
-      const updated = [emoji, ...filtered].slice(0, 16); // Keep only 16 recent
-      localStorage.setItem('recentEmojis', JSON.stringify(updated));
-      return updated;
-    });
-  };
-
   const createSupportChat = async () => {
     try {
       const token = getToken();
@@ -697,20 +548,7 @@ export default function SupportPage() {
   const getChatAvatar = (chat: Chat) => {
     if (chat.type === 'support') return 'https://api.dicebear.com/7.x/avataaars/svg?seed=support';
     const other = getOtherParticipant(chat);
-    
-    // If user has avatar, use it
-    if (other?.avatar) return other.avatar;
-    
-    // Default avatars based on gender or role
-    // Check if user data has gender field, otherwise use male as default
-    const isFemale = other?.email?.toLowerCase().includes('female') || 
-                     other?.username?.toLowerCase().includes('female') ||
-                     other?.role === 'female';
-    
-    // Use big-smile style with specific male/female seeds for consistent avatars
-    return isFemale 
-      ? 'https://api.dicebear.com/7.x/big-smile/svg?seed=female-default'
-      : 'https://api.dicebear.com/7.x/big-smile/svg?seed=male-default';
+    return other?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${other?.username}`;
   };
 
   const searchUsers = async (query: string) => {
@@ -825,21 +663,21 @@ export default function SupportPage() {
 
   return (
     <UserDashboardLayout>
-      <div className="h-[calc(100vh-120px)] bg-gradient-to-br from-[#0a0b14] via-[#0e1118] to-[#1a1d2e] rounded-3xl shadow-2xl flex overflow-hidden border border-white/10">
+      <div className="h-[calc(100vh-120px)] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
         {/* Sidebar - Chat List */}
-        <div className="w-full md:w-96 bg-gradient-to-br from-[#131720] to-[#1a1d2e] border-r border-white/10 flex flex-col">
+        <div className="w-full md:w-96 bg-gray-50 border-r border-gray-200 flex flex-col">
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-white/10 bg-gradient-to-br from-[#131720] to-[#1a1d2e]">
+        <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                <MessageCircle className="h-5 w-5 text-white" />
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-white text-xl font-bold">Messages</h1>
+                <h1 className="text-gray-900 text-xl font-bold">Messages</h1>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse shadow-lg ${isConnected ? 'shadow-green-500/50' : 'shadow-red-500/50'}`} />
-                  <span className="text-xs text-gray-400">{isConnected ? 'Online' : 'Offline'}</span>
+                  <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
+                  <span className="text-xs text-gray-500">{isConnected ? 'Connected' : 'Offline'}</span>
                 </div>
               </div>
             </div>
@@ -847,18 +685,18 @@ export default function SupportPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl transition-all"
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all">
+              <Button variant="ghost" size="icon" className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl transition-all">
                 <MoreVertical className="h-5 w-5" />
               </Button>
             </div>
           </div>
           <div className="relative group mb-3">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 group-hover:text-cyan-400 transition-colors" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40 group-hover:text-purple-400 transition-colors" />
             <Input
               placeholder="Search users or chats..."
               value={searchQuery}
@@ -866,7 +704,7 @@ export default function SupportPage() {
                 setSearchQuery(e.target.value);
                 searchUsers(e.target.value);
               }}
-              className="pl-11 bg-[#1a1d2e] border border-white/10 hover:border-cyan-500/30 focus:border-cyan-500/50 text-white placeholder:text-gray-500 rounded-2xl h-12 transition-all"
+              className="pl-11 bg-white/5 border border-white/10 hover:border-purple-500/30 focus:border-purple-500/50 text-white placeholder:text-white/40 rounded-2xl h-12 transition-all"
             />
           </div>
 
@@ -875,23 +713,15 @@ export default function SupportPage() {
             <div className="mb-3 bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
               <div className="p-2 space-y-1">
                 <p className="text-xs text-white/60 px-2 py-1">Search Results</p>
-                {searchResults.map((user: any) => {
-                  const isFemale = user.gender === 'female' || 
-                                   user.email?.toLowerCase().includes('female') || 
-                                   user.username?.toLowerCase().includes('female');
-                  const defaultAvatar = isFemale 
-                    ? 'https://api.dicebear.com/7.x/big-smile/svg?seed=female-default'
-                    : 'https://api.dicebear.com/7.x/big-smile/svg?seed=male-default';
-                  
-                  return (
+                {searchResults.map((user: any) => (
                   <div
                     key={user._id}
                     onClick={() => startChatWithUser(user._id)}
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition-all"
                   >
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-cyan-500 to-cyan-600">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-blue-500">
                       <img
-                        src={user.avatar || defaultAvatar}
+                        src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`}
                         alt={user.username}
                         className="w-full h-full object-cover"
                       />
@@ -901,8 +731,7 @@ export default function SupportPage() {
                       <p className="text-white/60 text-xs">{user.email}</p>
                     </div>
                   </div>
-                  );
-                })}
+                ))}
               </div>
             </div>
           )}
@@ -947,13 +776,13 @@ export default function SupportPage() {
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
                   className={`group p-4 rounded-2xl cursor-pointer transition-all duration-300 ${selectedChat?._id === chat._id
-                    ? 'bg-gradient-to-br from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 shadow-lg shadow-cyan-500/20'
+                    ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/30 shadow-lg shadow-purple-500/10'
                     : 'hover:bg-white/5 border border-transparent hover:border-white/10'
                     }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="relative flex-shrink-0">
-                      <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-lg shadow-cyan-500/30">
+                      <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500 to-blue-500">
                         <img src={chatAvatar} alt={chatName} className="w-full h-full object-cover" />
                       </div>
                       {isOnline && (
@@ -972,7 +801,7 @@ export default function SupportPage() {
                           {chat.lastMessage?.content || 'No messages yet'}
                         </p>
                         {chat.unreadCount && chat.unreadCount > 0 && (
-                          <span className="ml-2 bg-gradient-to-br from-cyan-500 to-cyan-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 shadow-lg shadow-cyan-500/50 animate-pulse font-bold">
+                          <span className="ml-2 bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/50 animate-pulse">
                             {chat.unreadCount}
                           </span>
                         )}
@@ -995,7 +824,7 @@ export default function SupportPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="relative group">
-                    <div className="w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-500 to-cyan-600 shadow-lg shadow-cyan-500/30">
+                    <div className="w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500 to-blue-500">
                       <img src={getChatAvatar(selectedChat)} alt={getChatName(selectedChat)} className="w-full h-full object-cover" />
                     </div>
                     {selectedChat.participants.some(p => isUserOnline(p._id)) && (
@@ -1017,6 +846,12 @@ export default function SupportPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="icon" className="text-white/60 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all group">
+                    <Video className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-white/60 hover:text-blue-400 hover:bg-blue-500/10 rounded-xl transition-all group">
+                    <Phone className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  </Button>
                   <Button variant="ghost" size="icon" className="text-white/60 hover:text-white hover:bg-white/10 rounded-xl transition-all group">
                     <Search className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   </Button>
@@ -1055,7 +890,7 @@ export default function SupportPage() {
                       <div className={`max-w-[70%] group`}>
                         <div
                           className={`relative rounded-3xl px-5 py-3 shadow-2xl backdrop-blur-sm transition-all duration-300 ${isOwn
-                            ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white rounded-br-md hover:shadow-cyan-500/50'
+                            ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white rounded-br-md hover:shadow-purple-500/50'
                             : 'bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-bl-md hover:bg-white/15'
                             }`}
                         >
@@ -1112,189 +947,26 @@ export default function SupportPage() {
 
             {/* Message Input */}
             <div className="p-5 bg-gradient-to-t from-[#131720]/95 to-transparent backdrop-blur-xl border-t border-white/5">
-              {/* Hidden file inputs */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,.pdf,.doc,.docx"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-              <input
-                ref={videoInputRef}
-                type="file"
-                accept="video/*"
-                className="hidden"
-                onChange={handleVideoChange}
-              />
-
               <div className="flex items-center gap-3 max-w-4xl mx-auto">
                 <div className="flex items-center gap-2">
-                  {/* Emoji Picker Button */}
-                  <div className="relative">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      className="text-gray-400 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl flex-shrink-0 transition-all group"
-                      title="Add emoji"
-                    >
-                      <Smile className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                    </Button>
-                    
-                    {/* Enhanced Emoji Picker */}
-                    {showEmojiPicker && (
-                      <div className="absolute bottom-full mb-2 left-0 bg-[#1a1d2e] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 z-50 w-80">
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-3 border-b border-white/10">
-                          <h3 className="text-white font-semibold text-sm">Emoji</h3>
-                          <button
-                            onClick={() => setShowEmojiPicker(false)}
-                            className="text-gray-400 hover:text-white transition-colors"
-                          >
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-
-                        {/* Search Bar */}
-                        <div className="p-3 border-b border-white/10">
-                          <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                            <input
-                              type="text"
-                              placeholder="Search emojis"
-                              className="w-full bg-[#131720] border border-white/10 rounded-xl pl-10 pr-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-cyan-500/50"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Recent Emojis */}
-                        <div className="p-3 border-b border-white/10">
-                          <p className="text-xs text-gray-400 mb-2 font-medium">Recent</p>
-                          <div className="flex gap-1 flex-wrap min-h-[48px]">
-                            {recentEmojis.length > 0 ? (
-                              recentEmojis.map((emoji, index) => (
-                                <button
-                                  key={`${emoji}-${index}`}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="text-2xl hover:bg-white/10 rounded-lg p-1.5 transition-all hover:scale-110"
-                                >
-                                  {emoji}
-                                </button>
-                              ))
-                            ) : (
-                              <p className="text-xs text-gray-500 italic py-2">No recent emojis yet. Start using emojis!</p>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Emoji Grid */}
-                        <div className="max-h-64 overflow-y-auto p-3">
-                          {/* Smileys & People */}
-                          <div className="mb-4">
-                            <p className="text-xs text-gray-400 mb-2 font-medium">Smileys & People</p>
-                            <div className="grid grid-cols-8 gap-1">
-                              {['😀', '�', '😄', '😁', '😆', '😅', '🤣', '�😂', '�', '🙃', '😉', '😊', '😇', '🥰', '�', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '😶‍🌫️', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '�😎', '🤓', '🧐', '😕', '😟', '🙁', '☹️', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭', '😱', '😖', '😣', '😞', '😓', '😩', '😫', '🥱', '😤', '😡', '😠', '🤬', '😈', '👿', '💀', '☠️', '💩', '🤡', '👹', '👺', '👻', '👽', '👾', '🤖'].map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="text-2xl hover:bg-white/10 rounded-lg p-1 transition-all hover:scale-125"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Gestures & Body Parts */}
-                          <div className="mb-4">
-                            <p className="text-xs text-gray-400 mb-2 font-medium">Gestures & Body Parts</p>
-                            <div className="grid grid-cols-8 gap-1">
-                              {['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '�', '👈', '👉', '👆', '🖕', '�', '☝️', '👍', '👎', '✊', '�', '🤛', '🤜', '�👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂', '🦻', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀', '👁️', '👅', '👄', '💋'].map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="text-2xl hover:bg-white/10 rounded-lg p-1 transition-all hover:scale-125"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Hearts & Symbols */}
-                          <div className="mb-4">
-                            <p className="text-xs text-gray-400 mb-2 font-medium">Hearts & Symbols</p>
-                            <div className="grid grid-cols-8 gap-1">
-                              {['❤️', '🧡', '�', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍�🔥', '❤️‍🩹', '�', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '�💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗', '❕', '❓', '❔', '‼️', '⁉️', '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '�', '💹', '❇️', '✳️', '❎', '🌐', '💠', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '🟤', '⚫', '⚪', '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '🟫', '⬛', '⬜', '◼️', '◻️', '◾', '◽', '▪️', '▫️', '🔶', '🔷', '🔸', '🔹', '🔺', '🔻', '💧', '💦', '🔥', '✨', '🌟', '⭐', '🌠', '🌌'].map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="text-2xl hover:bg-white/10 rounded-lg p-1 transition-all hover:scale-125"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Objects */}
-                          <div>
-                            <p className="text-xs text-gray-400 mb-2 font-medium">Objects</p>
-                            <div className="grid grid-cols-8 gap-1">
-                              {['⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '🕹️', '🗜️', '💾', '💿', '📀', '📼', '📷', '📸', '📹', '🎥', '📽️', '🎞️', '📞', '☎️', '📟', '📠', '📺', '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⌛', '⏳', '📡', '🔋', '🔌', '💡', '🔦', '🕯️', '🪔', '🧯', '�️', '💸', '💵', '💴', '💶', '💷', '💰', '💳', '💎', '⚖️', '🧰', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🔩', '⚙️', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🪓', '🔪', '🗡️', '⚔️', '🛡️', '🚬', '⚰️', '⚱️', '🏺', '🔮', '📿', '🧿', '💈', '⚗️', '🔭', '🔬', '🕳️', '🩹', '🩺', '💊', '💉', '🩸', '🧬', '🦠', '🧫', '🧪', '🌡️', '🧹', '🧺', '🧻', '🚽', '🚰', '🚿', '🛁', '🛀', '🧼', '🪒', '🧽', '🧴', '🛎️', '🔑', '🗝️', '🚪', '🪑', '🛋️', '🛏️', '🛌', '🧸', '🖼️', '🛍️', '🛒', '🎁', '🎈', '🎏', '🎀', '🎊', '🎉', '🎎', '🏮', '🎐', '🧧', '✉️', '📩', '📨', '📧', '💌', '📥', '📤', '📦', '🏷️', '📪', '📫', '📬', '📭', '📮', '📯', '📜', '📃', '📄', '📑', '🧾', '📊', '📈', '📉', '🗒️', '🗓️', '📆', '📅', '🗑️', '📇', '🗃️', '🗳️', '🗄️', '📋', '📁', '📂', '🗂️', '🗞️', '📰', '📓', '📔', '📒', '📕', '📗', '📘', '📙', '📚', '📖', '🔖', '🧷', '🔗', '📎', '🖇️', '📐', '📏', '🧮', '📌', '📍', '✂️', '🖊️', '🖋️', '✒️', '🖌️', '🖍️', '📝', '✏️', '🔍', '🔎', '🔏', '🔐', '�', '�'].map((emoji) => (
-                                <button
-                                  key={emoji}
-                                  onClick={() => handleEmojiSelect(emoji)}
-                                  className="text-2xl hover:bg-white/10 rounded-lg p-1 transition-all hover:scale-125"
-                                >
-                                  {emoji}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Category Tabs */}
-                        <div className="flex items-center justify-around p-2 border-t border-white/10">
-                          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Recent">
-                            <Clock className="h-5 w-5 text-gray-400" />
-                          </button>
-                          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Smileys">
-                            <Smile className="h-5 w-5 text-gray-400" />
-                          </button>
-                          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Gestures">
-                            <span className="text-lg">👋</span>
-                          </button>
-                          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Objects">
-                            <span className="text-lg">💡</span>
-                          </button>
-                          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Symbols">
-                            <span className="text-lg">❤️</span>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* File Upload Button */}
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={handleFileUpload}
-                    className="text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl flex-shrink-0 transition-all group"
-                    title="Upload file"
+                    className="text-white/60 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl flex-shrink-0 transition-all group"
+                  >
+                    <Smile className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white/60 hover:text-blue-400 hover:bg-blue-500/10 rounded-xl flex-shrink-0 transition-all group"
                   >
                     <Paperclip className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   </Button>
-
-                  {/* Video Upload Button */}
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={handleVideoUpload}
-                    className="text-gray-400 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl flex-shrink-0 transition-all group"
-                    title="Upload video"
+                    className="text-white/60 hover:text-green-400 hover:bg-green-500/10 rounded-xl flex-shrink-0 transition-all group"
                   >
                     <ImageIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   </Button>
@@ -1317,49 +989,21 @@ export default function SupportPage() {
                     disabled={isSending}
                     className="w-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 focus:border-purple-500/50 text-white placeholder:text-white/40 rounded-2xl h-12 pl-5 pr-12 transition-all"
                   />
-                  {!messageText.trim() && !isRecording && (
+                  {!messageText.trim() && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={startRecording}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded-xl transition-all group text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10"
-                      title="Record voice message"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all group"
                     >
-                      <Mic className="h-5 w-5 transition-transform group-hover:scale-110" />
+                      <Mic className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     </Button>
-                  )}
-                  {isRecording && (
-                    <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-xl px-3 py-1.5 border border-red-500/50">
-                      <button
-                        onClick={cancelRecording}
-                        className="text-red-400 hover:text-red-300 transition-colors"
-                        title="Cancel"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-                        <span className="text-red-400 font-mono text-xs min-w-[32px]">
-                          {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, '0')}
-                        </span>
-                      </div>
-                      
-                      <button
-                        onClick={stopRecording}
-                        className="p-1 rounded-lg bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700 transition-all shadow-lg shadow-cyan-500/30"
-                        title="Send"
-                      >
-                        <Send className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
                   )}
                 </div>
 
                 <Button
                   size="icon"
                   className={`h-12 w-12 rounded-2xl flex-shrink-0 transition-all duration-300 ${messageText.trim() && !isSending
-                    ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 shadow-lg shadow-cyan-500/50 scale-100'
+                    ? 'bg-gradient-to-br from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg shadow-purple-500/50 scale-100'
                     : 'bg-white/10 hover:bg-white/20 scale-95 opacity-50'
                     }`}
                   onClick={handleSendMessage}
