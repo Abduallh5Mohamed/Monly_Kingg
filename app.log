@@ -4009,3 +4009,108 @@
 [2025-10-08T11:28:05.045Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
 [2025-10-08T11:28:05.103Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
 [2025-10-08T11:28:05.154Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-19T19:55:24.045Z] [ERROR]: Redis Error:
+[2025-10-19T19:55:24.047Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-19T19:55:24.047Z] [INFO]: 📝 Server will continue without caching
+[2025-10-19T19:55:24.444Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-19T19:55:24.446Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-19T19:55:39.995Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-19T19:55:53.272Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-19T19:55:58.754Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-19T19:56:01.647Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-19T19:56:16.019Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:24:02.810Z] [ERROR]: Redis Error:
+[2025-10-20T07:24:02.814Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-20T07:24:02.815Z] [INFO]: 📝 Server will continue without caching
+[2025-10-20T07:24:03.029Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-20T07:24:03.031Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T07:24:16.452Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:24:51.940Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:24:58.508Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:00.335Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:01.376Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:02.652Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:03.927Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:05.395Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:19.493Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:21.624Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:23.277Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:32.224Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:32.351Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:25:32.423Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:25:34.669Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:37.590Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:37.645Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:25:37.707Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:25:39.477Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:25:41.789Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:26:56.570Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:27:53.851Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:28:00.954Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:28:26.983Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:28:33.781Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:29:55.246Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:29:57.980Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:36:35.639Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:36:35.680Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:48:10.187Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:48:11.733Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T07:48:11.775Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:48:11.825Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T07:53:23.288Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:04:43.638Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:04:48.243Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:10:11.995Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:10:14.554Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:10:15.933Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:10:18.014Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:18:19.052Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:18:21.630Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:18:28.473Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:18:30.459Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:23:23.522Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:23:28.069Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T08:28:01.229Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:03:28.787Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:03:30.659Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:05:48.798Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:07:43.165Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:08:11.673Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:08:47.391Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:09:23.430Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:09:41.788Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:09:47.994Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:12:36.079Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:12:39.227Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:12:40.986Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:12:43.050Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:12:45.620Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:13:57.022Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:14:28.729Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:14:28.767Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:14:31.664Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:14:35.477Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f29c987be6d104147748
+[2025-10-20T09:14:41.298Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:14:41.338Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:14:43.826Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:14:45.223Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f29c987be6d104147748
+[2025-10-20T09:15:04.511Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:15:04.579Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:22:40.409Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:24:18.505Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:24:18.574Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:25:14.950Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:25:15.034Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:25:16.453Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:25:56.622Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:25:56.693Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:25:57.918Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:30:16.147Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:30:16.193Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:34:37.833Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:34:37.892Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:34:39.442Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:39:21.741Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:39:25.329Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:39:25.375Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:39:26.683Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808

@@ -47,20 +47,6 @@ export function HeroSection() {
                       <PlayIcon />
                     </span>
                   </Button>
-                  <Button 
-                    size="lg" 
-                    onClick={() => window.location.href = '/user/dashboard'}
-                    className="text-base font-bold rounded-full bg-gradient-to-r from-green-600 to-blue-600 text-white hover:from-green-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-green-500/50"
-                  >
-                    🏠 User Dashboard
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    onClick={() => window.location.href = '/admin'}
-                    className="text-base font-bold rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/50"
-                  >
-                    🎮 Admin Dashboard
-                  </Button>
                 </div>
               </div>
               <div className="pt-12 w-full max-w-2xl">
