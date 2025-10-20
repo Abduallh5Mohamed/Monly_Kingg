@@ -12,7 +12,7 @@ const refreshTokenSubSchema = new mongoose.Schema({
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: [true, 'Email is required'], unique: true, sparse: true, trim: true, lowercase: true },
+  email: { type: String, required: [true, 'Email is required'], sparse: true, trim: true, lowercase: true },
   username: { type: String, unique: true, required: [true, 'Username is required!'], minLength: [5, "Username must have 5 characters!"], lowercase: true, trim: true },
   passwordHash: { type: String, required: [true, "Password must be provided!"], trim: true, select: false },
 
@@ -29,9 +29,9 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: { type: Date, select: false },
   lastPasswordResetSentAt: { type: Date, select: false },
 
-  googleId: { type: String, index: true },
+  googleId: { type: String },
 
-  role: { type: String, enum: ["user", "admin"], default: "user", index: true },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
 
   twoFA: {
     enabled: { type: Boolean, default: false },
@@ -73,6 +73,14 @@ const userSchema = new mongoose.Schema({
 },
   { timestamps: true });
 
+// Indexes for performance optimization
 userSchema.index({ username: 1, createdAt: -1 });
+userSchema.index({ email: 1 }, { unique: true, sparse: true }); // للبحث السريع بالإيميل
+userSchema.index({ verificationCode: 1 }); // للتحقق من الإيميل
+userSchema.index({ passwordResetToken: 1 }); // لإعادة تعيين كلمة المرور
+userSchema.index({ 'refreshTokens.token': 1 }); // للبحث في refresh tokens
+userSchema.index({ googleId: 1 }); // للـ OAuth
+userSchema.index({ role: 1 }); // لفلترة الأدمنز
+userSchema.index({ isOnline: 1, lastSeenAt: -1 }); // لجلب المستخدمين النشطين
 
 export default mongoose.model("User", userSchema);

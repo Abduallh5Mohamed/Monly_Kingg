@@ -1,5 +1,6 @@
 
 import * as userService from "./user.service.js";
+import enhancedCacheService from "../../services/enhancedCacheService.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -14,15 +15,28 @@ export const getUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-
     if (req.user.role !== "admin" && req.user._id.toString() !== id) {
       return res.status(403).json({ message: "Forbidden: You can only view your own data" });
     }
 
-    const user = await userService.getUserById(id);
+    // Try cache first (middleware may have populated req.cachedUser)
+    if (req.cachedUser) {
+      return res.json({
+        success: true,
+        data: req.cachedUser,
+        cached: true
+      });
+    }
+
+    // Fallback to Read-Through cache (will populate cache automatically)
+    const user = await enhancedCacheService.getUser(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json(user);
+    res.json({
+      success: true,
+      data: user,
+      cached: false
+    });
   } catch (err) {
     next(err);
   }
@@ -31,13 +45,11 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-
     if (req.body.role !== undefined) {
       return res.status(403).json({
         message: "Forbidden: Role can only be changed by system administrators directly in the database"
       });
     }
-
 
     if (req.user.role !== "admin" && req.user._id.toString() !== req.params.id) {
       return res.status(403).json({
@@ -45,8 +57,14 @@ export const updateUser = async (req, res, next) => {
       });
     }
 
-    const user = await userService.updateUser(req.params.id, req.body);
-    res.json(user);
+    // Use Write-Through: updates DB first, then cache
+    const user = await enhancedCacheService.updateUser(req.params.id, req.body);
+
+    res.json({
+      success: true,
+      data: user,
+      message: "User updated successfully (DB + Cache)"
+    });
   } catch (err) {
     next(err);
   }
@@ -54,8 +72,12 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
-    await userService.deleteUser(req.params.id);
-    res.json({ message: "User deleted" });
+    // Delete from DB and cache
+    await enhancedCacheService.deleteUser(req.params.id);
+    res.json({
+      success: true,
+      message: "User deleted (DB + Cache)"
+    });
   } catch (err) {
     next(err);
   }

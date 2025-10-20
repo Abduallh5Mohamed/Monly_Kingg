@@ -13,7 +13,9 @@ const registerSchema = Joi.object({
 /* ---------------- Get Current User ---------------- */
 export const getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password -verificationCode -resetPasswordToken -resetPasswordExpires -refreshTokens');
+    const user = await User.findById(req.user._id)
+      .select('-password -verificationCode -resetPasswordToken -resetPasswordExpires -refreshTokens')
+      .lean(); // Return plain object instead of Mongoose document (faster)
 
     if (!user) {
       return res.status(404).json({
@@ -92,8 +94,8 @@ export const verifyEmail = async (req, res) => {
       maxAge: 15 * 60 * 1000
     });
 
-    // Get user data
-    const userData = await User.findOne({ email }).select('_id username email role');
+    // Get user data (lean for performance)
+    const userData = await User.findOne({ email }).select('_id username email role').lean();
 
     res.status(200).json({
       message: "Email verified and logged in",
@@ -155,8 +157,8 @@ export const login = async (req, res) => {
       maxAge: 15 * 60 * 1000
     });
 
-    // Get user data from auth.service
-    const user = await User.findOne({ email }).select('_id username email role');
+    // Get user data from auth.service (lean for performance)
+    const user = await User.findOne({ email }).select('_id username email role').lean();
 
     // Return user data in response (without exposing tokens)
     res.status(200).json({
@@ -200,8 +202,8 @@ export const refresh = async (req, res) => {
 
     // Decode JWT to get user ID
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-    // Get user data
-    const userData = await User.findById(decoded.id).select('_id username email role');
+    // Get user data (lean for performance)
+    const userData = await User.findById(decoded.id).select('_id username email role').lean();
 
     res.status(200).json({
       message: "Tokens refreshed",

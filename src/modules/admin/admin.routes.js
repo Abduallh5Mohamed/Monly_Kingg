@@ -9,6 +9,7 @@ import {
 } from "./admin.controller.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import cacheRoutes from "./cache.routes.js";
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.put("/users/:userId/toggle-status", toggleUserStatus);
 // Statistics and analytics routes
 router.get("/stats", getAdminStats);
 router.get("/activity", getRecentActivity);
+
+// Cache management routes
+router.use("/cache", cacheRoutes);
 
 export default router;

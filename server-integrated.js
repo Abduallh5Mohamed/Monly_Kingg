@@ -9,6 +9,7 @@ import userRoutes from "./src/modules/users/user.routes.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import { globalLimiter } from "./src/middlewares/rateLimiter.js";
 import csrfProtection from "./src/middlewares/csrf.js";
 import userCacheService from "./src/services/userCacheService.js";
@@ -149,6 +150,17 @@ nextApp.prepare().then(async () => {
 
   app.use(cookieParser());
 
+  // Enable gzip compression for responses (60-80% reduction)
+  app.use(compression({
+    filter: (req, res) => {
+      if (req.headers['x-no-compression']) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+    level: 6 // Compression level (0-9, 6 is good balance)
+  }));
+
   // Add request logging
   app.use((req, res, next) => {
     console.log(`📝 ${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -161,6 +173,15 @@ nextApp.prepare().then(async () => {
   app.use("/api/auth", authRoutes);
   app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
   app.use("/api/v1/users", csrfProtection, userRoutes);
+
+  // Upload routes
+  try {
+    const { default: uploadRoutes } = await import("./src/modules/uploads/upload.routes.js");
+    app.use("/api/v1/uploads", uploadRoutes);
+    console.log('✅ Upload routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Upload routes not loaded:', error.message);
+  }
 
   // Chat routes (no CSRF for Socket.IO compatibility)
   try {
@@ -229,6 +250,15 @@ nextApp.prepare().then(async () => {
       console.log('🔌 Socket.IO initialized for real-time chat');
     } catch (error) {
       console.warn('⚠️ Socket.IO not initialized:', error.message);
+    }
+
+    // Start cache cleanup job
+    try {
+      const cacheCleanupJob = (await import("./src/jobs/cacheCleanupJob.js")).default;
+      cacheCleanupJob.start();
+      console.log('🧹 Cache cleanup job started (runs every 6 hours)');
+    } catch (error) {
+      console.warn('⚠️ Cache cleanup job not started:', error.message);
     }
 
     console.log(`✅ Server running in ${process.env.NODE_ENV || 'development'} mode on port ${port}`);

@@ -43,3 +43,6 @@ export const authMiddleware = async (req, res, next) => {
 
 // Export with both names for compatibility
 export const authenticateToken = authMiddleware;
+export const protect = authMiddleware;
+
+export default authMiddleware;

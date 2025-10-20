@@ -20,6 +20,21 @@ scripts/
 
 سكريبتات لاختبار أداء النظام تحت ضغط:
 
+### Socket.IO Load Test (جديد):
+```bash
+# اختبار خفيف: 100 مستخدم متصل
+node scripts/socket-load-test.js
+
+# اختبار متوسط: 1,000 مستخدم، 60 ثانية
+node scripts/socket-load-test.js --users 1000 --duration 60
+
+# اختبار ثقيل: 10,000 مستخدم، دقيقتين
+node scripts/socket-load-test.js --users 10000 --duration 120 --messageRate 0.2
+
+# اختبار استطلاعي للإنتاج: 50,000 مستخدم
+node scripts/socket-load-test.js --users 50000 --duration 300 --messageRate 0.05
+```
+
 ### JavaScript Scripts:
 ```bash
 node scripts/load-tests/create-load-test-users.js    # إنشاء مستخدمين للاختبار
