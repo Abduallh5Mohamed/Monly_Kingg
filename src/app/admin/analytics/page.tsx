@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatCard } from '@/components/admin/stat-card';
 import {
@@ -10,37 +11,85 @@ import {
   Eye,
   MousePointer,
   UserPlus,
-  Package
+  Package,
+  Loader2
 } from 'lucide-react';
 
-const monthlyData = [
-  { month: 'Jan', revenue: 12450, orders: 145, users: 89 },
-  { month: 'Feb', revenue: 15680, orders: 178, users: 102 },
-  { month: 'Mar', revenue: 18920, orders: 201, users: 125 },
-  { month: 'Apr', revenue: 22340, orders: 234, users: 156 },
-  { month: 'May', revenue: 25890, orders: 267, users: 178 },
-];
-
-const topProducts = [
-  { name: 'PUBG Mobile Account', sales: 145, revenue: 6670.55 },
-  { name: 'FIFA 24 Account', sales: 234, revenue: 15210.00 },
-  { name: 'Valorant Account', sales: 89, revenue: 8009.11 },
-  { name: 'League of Legends', sales: 67, revenue: 8040.00 },
-  { name: 'Call of Duty', sales: 178, revenue: 13439.00 },
-];
-
-const topCustomers = [
-  { name: 'Layla Ahmed', orders: 34, spent: 3200.00 },
-  { name: 'Sara Mohamed', orders: 23, spent: 2340.50 },
-  { name: 'Ahmed Hassan', orders: 12, spent: 1250.00 },
-  { name: 'Nour Adel', orders: 15, spent: 1580.00 },
-  { name: 'Hassan Mahmoud', orders: 8, spent: 890.00 },
-];
+interface AdminStats {
+  totalUsers: number;
+  verifiedUsers: number;
+  adminUsers: number;
+  newUsersToday: number;
+  userGrowth: number;
+  verificationRate: number;
+  registrationTrend: Array<{ date: string; count: number }>;
+}
 
 export default function AnalyticsPage() {
-  const currentRevenue = 25890;
-  const previousRevenue = 22340;
-  const revenueGrowth = ((currentRevenue - previousRevenue) / previousRevenue * 100).toFixed(1);
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/v1/admin/stats', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch statistics');
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setStats(data.data);
+      } else {
+        throw new Error(data.message || 'Failed to fetch statistics');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch statistics');
+      console.error('Error fetching stats:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <p className="text-red-500 text-lg mb-2">Error loading analytics</p>
+          <p className="text-white/60">{error}</p>
+          <button
+            onClick={fetchStats}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
 
   return (
     <div className="space-y-8">
@@ -53,31 +102,30 @@ export default function AnalyticsPage() {
       {/* Main Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Revenue"
-          value={`$${currentRevenue.toLocaleString()}`}
-          icon={DollarSign}
-          trend={{ value: parseFloat(revenueGrowth), isPositive: true }}
-          gradient="from-green-500 to-emerald-600"
-        />
-        <StatCard
-          title="Total Orders"
-          value="1,234"
-          icon={ShoppingCart}
-          trend={{ value: 8.3, isPositive: true }}
-          gradient="from-purple-500 to-pink-600"
-        />
-        <StatCard
           title="Total Users"
-          value="2,543"
+          value={stats.totalUsers.toLocaleString()}
           icon={Users}
-          trend={{ value: 12.5, isPositive: true }}
+          trend={{ value: stats.userGrowth, isPositive: stats.userGrowth >= 0 }}
           gradient="from-blue-500 to-cyan-600"
         />
         <StatCard
-          title="Conversion Rate"
-          value="3.2%"
+          title="Verified Users"
+          value={stats.verifiedUsers.toLocaleString()}
+          icon={ShoppingCart}
+          trend={{ value: parseFloat(stats.verificationRate.toString()), isPositive: true }}
+          gradient="from-green-500 to-emerald-600"
+        />
+        <StatCard
+          title="New Users Today"
+          value={stats.newUsersToday.toLocaleString()}
+          icon={UserPlus}
+          trend={{ value: stats.userGrowth, isPositive: stats.userGrowth >= 0 }}
+          gradient="from-purple-500 to-pink-600"
+        />
+        <StatCard
+          title="Admin Users"
+          value={stats.adminUsers.toLocaleString()}
           icon={TrendingUp}
-          trend={{ value: 0.8, isPositive: true }}
           gradient="from-orange-500 to-red-600"
         />
       </div>
@@ -88,8 +136,8 @@ export default function AnalyticsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-sm mb-1">Page Views</p>
-                <p className="text-2xl font-bold text-white">48,592</p>
+                <p className="text-white/60 text-sm mb-1">Verification Rate</p>
+                <p className="text-2xl font-bold text-white">{stats.verificationRate}%</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                 <Eye className="h-6 w-6 text-blue-400" />
@@ -97,27 +145,27 @@ export default function AnalyticsPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-[#1e2236] border-white/10">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-sm mb-1">Click Rate</p>
-                <p className="text-2xl font-bold text-white">15.8%</p>
+                <p className="text-white/60 text-sm mb-1">User Growth</p>
+                <p className="text-2xl font-bold text-white">{stats.userGrowth.toFixed(1)}%</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                <MousePointer className="h-6 w-6 text-purple-400" />
+                <TrendingUp className="h-6 w-6 text-purple-400" />
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-[#1e2236] border-white/10">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-sm mb-1">New Users</p>
-                <p className="text-2xl font-bold text-white">892</p>
+                <p className="text-white/60 text-sm mb-1">New Today</p>
+                <p className="text-2xl font-bold text-white">{stats.newUsersToday}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
                 <UserPlus className="h-6 w-6 text-green-400" />
@@ -125,124 +173,51 @@ export default function AnalyticsPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-[#1e2236] border-white/10">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/60 text-sm mb-1">Products Sold</p>
-                <p className="text-2xl font-bold text-white">1,156</p>
+                <p className="text-white/60 text-sm mb-1">Admins</p>
+                <p className="text-2xl font-bold text-white">{stats.adminUsers}</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                <Package className="h-6 w-6 text-orange-400" />
+                <Users className="h-6 w-6 text-orange-400" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Chart */}
-        <Card className="bg-[#1e2236] border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Revenue Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {monthlyData.map((data, idx) => (
+      {/* User Registration Trend */}
+      <Card className="bg-[#1e2236] border-white/10">
+        <CardHeader>
+          <CardTitle className="text-white">User Registration Trend (Last 7 Days)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {stats.registrationTrend.map((day, idx) => {
+              const maxCount = Math.max(...stats.registrationTrend.map(d => d.count));
+              const dateObj = new Date(day.date);
+              const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+              return (
                 <div key={idx} className="flex items-center gap-4">
-                  <span className="text-white/60 text-sm w-12">{data.month}</span>
+                  <span className="text-white/60 text-sm w-24">{dayName}</span>
                   <div className="flex-1 h-8 bg-white/5 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-end pr-3"
-                      style={{ width: `${(data.revenue / 30000) * 100}%` }}
+                      className="h-full bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-end pr-3"
+                      style={{ width: maxCount > 0 ? `${(day.count / maxCount) * 100}%` : '0%' }}
                     >
-                      <span className="text-white text-xs font-semibold">${data.revenue.toLocaleString()}</span>
+                      <span className="text-white text-xs font-semibold">{day.count} users</span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Orders Chart */}
-        <Card className="bg-[#1e2236] border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Orders Growth</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {monthlyData.map((data, idx) => (
-                <div key={idx} className="flex items-center gap-4">
-                  <span className="text-white/60 text-sm w-12">{data.month}</span>
-                  <div className="flex-1 h-8 bg-white/5 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-end pr-3"
-                      style={{ width: `${(data.orders / 300) * 100}%` }}
-                    >
-                      <span className="text-white text-xs font-semibold">{data.orders}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tables Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Products */}
-        <Card className="bg-[#1e2236] border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Top Products</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topProducts.map((product, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex-1">
-                    <p className="text-white font-medium text-sm">{product.name}</p>
-                    <p className="text-white/60 text-xs">{product.sales} sales</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-green-400 font-semibold">${product.revenue.toFixed(2)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Top Customers */}
-        <Card className="bg-[#1e2236] border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white">Top Customers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topCustomers.map((customer, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                      {customer.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="text-white font-medium text-sm">{customer.name}</p>
-                      <p className="text-white/60 text-xs">{customer.orders} orders</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-blue-400 font-semibold">${customer.spent.toFixed(2)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -11,6 +11,13 @@ const messageSchema = new mongoose.Schema({
 }, { _id: true });
 
 const chatSchema = new mongoose.Schema({
+  chatNumber: {
+    type: String,
+    unique: true,
+    sparse: true,  // Allow null temporarily for pre-save hook
+    index: true
+    // Validation removed to allow pre-save hook to generate the number
+  },
   type: { type: String, enum: ["direct", "support", "group"], default: "direct", index: true },
   participants: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +55,30 @@ chatSchema.index({ participants: 1, updatedAt: -1 });
 chatSchema.index({ participants: 1, isActive: 1 });
 chatSchema.index({ 'lastMessage.timestamp': -1 });
 chatSchema.index({ type: 1, isActive: 1, updatedAt: -1 });
+
+// Generate unique 9-digit chat number
+chatSchema.statics.generateChatNumber = async function () {
+  let chatNumber;
+  let exists = true;
+
+  while (exists) {
+    // Generate random 9-digit number
+    chatNumber = Math.floor(100000000 + Math.random() * 900000000).toString();
+    // Check if it already exists
+    const existing = await this.findOne({ chatNumber });
+    exists = !!existing;
+  }
+
+  return chatNumber;
+};
+
+// Auto-generate chat number before saving if not present
+chatSchema.pre('save', async function (next) {
+  if (this.isNew && !this.chatNumber) {
+    this.chatNumber = await this.constructor.generateChatNumber();
+  }
+  next();
+});
 
 // Method to add message efficiently
 chatSchema.methods.addMessage = async function (messageData) {

@@ -4114,3 +4114,1716 @@
 [2025-10-20T09:39:25.329Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
 [2025-10-20T09:39:25.375Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
 [2025-10-20T09:39:26.683Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T11:00:45.956Z] [INFO]: ✅ Redis Connected
+[2025-10-20T11:00:45.961Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-20T11:00:45.962Z] [INFO]: 📝 Server will continue without caching
+[2025-10-20T11:00:46.100Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: WRONGPASS invalid username-password pair or user is disabled.. Running in standalone mode.
+[2025-10-20T11:00:46.101Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T11:01:05.214Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-20T11:01:05.216Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-20T11:01:05.216Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-20T11:01:05.320Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-20T11:01:05.322Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T11:01:05.324Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-20T11:01:05.329Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-20T11:01:05.368Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (37ms)
+[2025-10-20T11:01:05.374Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-20T11:01:05.376Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T11:01:05.833Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2025-10-20T11:01:05.834Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-20T11:01:05.858Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-20T11:01:05.861Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-20T11:01:05.862Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T11:01:05.863Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (649ms)
+[2025-10-20T11:02:21.504Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:02:21.692Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:21.756Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:02:21.769Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:27.685Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:02:27.823Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:27.929Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:27.954Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:02:48.580Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:02:48.767Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:48.893Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:02:48.913Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:03:19.899Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T11:03:30.416Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T11:03:46.426Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:03:46.508Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:03:48.943Z] [INFO]: User monlykingstore@gmail.com fetched 8 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T11:03:55.621Z] [INFO]: User monlykingstore@gmail.com fetched 2 messages from chat 68e28999cfe238a77a2a69a1
+[2025-10-20T11:04:35.250Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:04:35.276Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:04:46.643Z] [INFO]: User monlykingstore@gmail.com fetched 8 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T11:04:51.940Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by monlykingstore@gmail.com
+[2025-10-20T11:04:52.034Z] [INFO]: User monlykingstore@gmail.com fetched 9 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T11:07:39.614Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:07:39.684Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:10:07.303Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:10:07.377Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T11:10:12.139Z] [INFO]: User monlykingstore@gmail.com fetched 9 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T11:11:02.770Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T11:11:04.865Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:11:05.007Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:11:05.081Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T11:11:05.121Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T11:18:05.447Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-20T11:23:53.737Z] [INFO]: ✅ Redis Connected
+[2025-10-20T11:23:53.775Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T11:23:53.778Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T11:23:54.013Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T11:23:54.014Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T11:39:58.381Z] [INFO]: ✅ Redis Connected
+[2025-10-20T11:39:58.410Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T11:39:58.414Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T11:39:58.623Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T11:39:58.624Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T11:41:23.766Z] [INFO]: ✅ Redis Connected
+[2025-10-20T11:41:23.811Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T11:41:23.816Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T11:51:30.423Z] [INFO]: ✅ Redis Connected
+[2025-10-20T11:51:30.456Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T11:51:30.458Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T11:51:30.704Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T11:51:30.705Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T12:47:48.174Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-20T12:47:48.262Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-10-20T12:47:48.276Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-10-20T12:47:48.277Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-20T12:47:48.738Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-20T12:47:48.832Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-20T12:47:48.834Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-20T12:47:48.836Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-20T12:47:48.849Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-20T12:47:48.931Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (80ms)
+[2025-10-20T12:47:48.961Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-20T12:47:49.010Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-20T12:47:49.012Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-20T12:47:49.685Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-20T12:47:49.686Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-20T12:47:49.762Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-20T12:47:49.763Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-20T12:47:49.815Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-20T12:47:49.860Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-20T12:47:49.861Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-20T12:47:49.863Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1691ms)
+[2025-10-20T12:48:22.359Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T12:48:39.705Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T12:48:39.808Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T12:48:42.704Z] [INFO]: User baraawael7901@gmail.com fetched 9 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T12:48:57.041Z] [INFO]: User baraawael7901@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2025-10-20T14:12:12.967Z] [INFO]: ✅ Redis Connected
+[2025-10-20T14:12:13.046Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T14:12:13.052Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T14:12:13.332Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T14:12:13.333Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T14:12:26.640Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:12:35.358Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:12:40.661Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:12:40.827Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:12:40.905Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:12:41.084Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:13:08.857Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:13:48.288Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:13:52.285Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:13:54.146Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:14:03.292Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:14:03.383Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:14:03.425Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:14:03.505Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:28:10.468Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:28:16.901Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T14:28:17.005Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T14:35:50.537Z] [INFO]: ✅ Redis Connected
+[2025-10-20T14:35:50.554Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T14:35:50.557Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T14:35:50.826Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-20T14:35:50.827Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-20T14:35:50.847Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T14:35:50.848Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T14:35:50.856Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-20T14:35:50.861Z] [INFO]: ✅ Cleanup complete in 34ms
+[2025-10-20T14:35:50.862Z] [INFO]:    Users removed: 0
+[2025-10-20T14:35:50.862Z] [INFO]:    Cached users before: 0
+[2025-10-20T14:35:50.862Z] [INFO]:    Cached users after: 0
+[2025-10-20T14:35:50.863Z] [INFO]:    Memory before: 1.32M
+[2025-10-20T14:35:50.863Z] [INFO]:    Memory after: 1.38M
+[2025-10-20T14:36:02.889Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:36:11.909Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:36:12.245Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:36:12.268Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:36:12.427Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:36:23.236Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:36:23.393Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:36:23.535Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-20T14:36:23.561Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-20T14:36:40.317Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-20T14:36:43.241Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T14:36:43.353Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-20T14:36:44.273Z] [INFO]: User baraawael7901@gmail.com fetched 9 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:48.692Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:48.793Z] [INFO]: User baraawael7901@gmail.com fetched 10 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:49.805Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:49.896Z] [INFO]: User baraawael7901@gmail.com fetched 11 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:51.007Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:51.104Z] [INFO]: User baraawael7901@gmail.com fetched 12 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:51.657Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:51.731Z] [INFO]: User baraawael7901@gmail.com fetched 13 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:52.414Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:52.500Z] [INFO]: User baraawael7901@gmail.com fetched 14 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:53.029Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:53.129Z] [INFO]: User baraawael7901@gmail.com fetched 15 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:53.642Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:53.728Z] [INFO]: User baraawael7901@gmail.com fetched 16 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:36:54.273Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:36:54.350Z] [INFO]: User baraawael7901@gmail.com fetched 17 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:37:07.480Z] [ERROR]: Send message error: Cannot destructure property 'content' of 'req.body' as it is undefined.
+[2025-10-20T14:37:16.036Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by baraawael7901@gmail.com
+[2025-10-20T14:37:16.140Z] [INFO]: User baraawael7901@gmail.com fetched 18 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:37:19.463Z] [INFO]: User baraawael7901@gmail.com fetched 18 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:37:38.943Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-20T14:37:38.950Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-10-20T14:37:38.956Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-10-20T14:37:38.963Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-20T14:37:39.036Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-20T14:37:39.085Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-20T14:37:39.086Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T14:37:39.086Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-20T14:37:39.090Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-20T14:37:39.104Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (14ms)
+[2025-10-20T14:37:39.156Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-20T14:37:39.201Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-20T14:37:39.203Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T14:37:39.532Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-20T14:37:39.532Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-20T14:37:39.581Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-20T14:37:39.583Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-20T14:37:39.635Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-20T14:37:39.681Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-20T14:37:39.683Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-20T14:37:39.684Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (741ms)
+[2025-10-20T14:37:58.187Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T14:38:00.955Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T14:38:01.041Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T14:38:02.144Z] [INFO]: User monlykingstore@gmail.com fetched 18 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-20T14:40:34.942Z] [INFO]: ✅ Redis Connected
+[2025-10-20T14:40:34.963Z] [INFO]: 🚀 Redis Ready
+[2025-10-20T14:40:34.965Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-20T14:40:35.304Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-20T14:40:35.305Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-20T14:40:35.321Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-20T14:40:35.322Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-20T14:40:35.328Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-20T14:40:35.335Z] [INFO]: ✅ Cleanup complete in 30ms
+[2025-10-20T14:40:35.336Z] [INFO]:    Users removed: 0
+[2025-10-20T14:40:35.336Z] [INFO]:    Cached users before: 1
+[2025-10-20T14:40:35.336Z] [INFO]:    Cached users after: 1
+[2025-10-20T14:40:35.337Z] [INFO]:    Memory before: 1.39M
+[2025-10-20T14:40:35.337Z] [INFO]:    Memory after: 1.45M
+[2025-10-22T10:11:53.852Z] [ERROR]: Redis Error:
+[2025-10-22T10:11:53.854Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-22T10:11:53.855Z] [INFO]: 📝 Server will continue without caching
+[2025-10-22T10:11:54.095Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-22T10:11:54.096Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-22T10:11:54.097Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-22T10:11:54.097Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-22T10:11:54.105Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-22T10:11:54.106Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-22T10:13:13.508Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T10:13:21.910Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T10:13:21.983Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T10:13:22.059Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:13:22.127Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:13:35.700Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T10:13:35.830Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:13:36.023Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:13:36.068Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T10:13:47.016Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T10:13:49.667Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T10:13:49.704Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T10:13:50.930Z] [INFO]: User monlykingstore@gmail.com fetched 18 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-22T10:13:58.929Z] [INFO]: Message sent in chat 68e289afcfe238a77a2a6c8d by monlykingstore@gmail.com
+[2025-10-22T10:13:58.970Z] [INFO]: User monlykingstore@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-22T10:18:43.108Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T10:18:43.227Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:18:43.397Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T10:18:43.436Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T11:19:59.113Z] [ERROR]: Redis Error:
+[2025-10-22T11:19:59.118Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-22T11:19:59.119Z] [INFO]: 📝 Server will continue without caching
+[2025-10-22T11:20:00.001Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-22T11:20:00.005Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-22T11:20:00.015Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-22T11:20:00.020Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-22T11:20:00.059Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-22T11:20:00.061Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-22T11:21:56.328Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T11:22:07.311Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T11:22:07.503Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T11:22:07.830Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T11:22:08.065Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T11:22:24.542Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T11:22:39.433Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T11:22:39.537Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T11:22:41.713Z] [INFO]: User monlykingstore@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-22T18:39:21.132Z] [INFO]: ✅ Redis Connected
+[2025-10-22T18:39:21.187Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-22T18:39:21.190Z] [INFO]: 📝 Server will continue without caching
+[2025-10-22T18:39:21.653Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-22T18:39:21.654Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-22T18:39:21.656Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-22T18:39:21.657Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-22T18:39:21.677Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: WRONGPASS invalid username-password pair or user is disabled.. Running in standalone mode.
+[2025-10-22T18:39:21.678Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-22T18:39:37.675Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T18:39:48.253Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T18:39:48.418Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T18:39:48.530Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T18:39:48.753Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T18:40:05.350Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T18:40:05.546Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T18:40:05.665Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-22T18:40:05.669Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-22T18:40:15.080Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-22T18:40:24.599Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T18:40:24.631Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-22T18:40:31.381Z] [INFO]: User monlykingstore@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-22T18:40:33.170Z] [INFO]: User monlykingstore@gmail.com fetched 2 messages from chat 68e28999cfe238a77a2a69a1
+[2025-10-22T18:41:02.811Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-22T18:41:14.073Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-22T18:41:14.075Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-22T18:41:14.079Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-22T18:41:14.145Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-22T18:41:14.147Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:14.149Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-22T18:41:14.154Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-22T18:41:14.175Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (20ms)
+[2025-10-22T18:41:14.182Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-22T18:41:14.184Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:14.612Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2025-10-22T18:41:14.613Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-22T18:41:14.651Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-22T18:41:14.653Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-22T18:41:14.654Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:14.654Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (581ms)
+[2025-10-22T18:41:20.325Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-22T18:41:25.253Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-22T18:41:25.254Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-22T18:41:25.255Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-22T18:41:25.286Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-22T18:41:25.287Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:25.288Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-22T18:41:25.291Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-22T18:41:25.318Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (23ms)
+[2025-10-22T18:41:25.321Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-22T18:41:25.322Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:25.730Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2025-10-22T18:41:25.732Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-22T18:41:25.787Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-22T18:41:25.791Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-10-22T18:41:25.793Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-22T18:41:25.795Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (542ms)
+[2025-10-22T18:41:34.601Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-22T18:41:34.927Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-22T18:41:34.999Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-22T18:41:36.315Z] [INFO]: User baraawael7901@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-24T16:27:25.433Z] [ERROR]: Redis Error:
+[2025-10-24T16:27:25.435Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-24T16:27:25.436Z] [INFO]: 📝 Server will continue without caching
+[2025-10-24T16:27:25.673Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T16:27:25.673Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T16:27:25.674Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-24T16:27:25.675Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-24T16:27:25.684Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-24T16:27:25.685Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T16:28:58.896Z] [INFO]: ✅ Redis Connected
+[2025-10-24T16:28:58.912Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-24T16:28:58.913Z] [INFO]: 📝 Server will continue without caching
+[2025-10-24T16:28:59.123Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T16:28:59.124Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T16:28:59.125Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-24T16:28:59.126Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-24T16:28:59.141Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: WRONGPASS invalid username-password pair or user is disabled.. Running in standalone mode.
+[2025-10-24T16:28:59.142Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T16:36:52.825Z] [INFO]: ✅ Redis Connected
+[2025-10-24T16:36:52.853Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T16:36:52.857Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T16:36:53.130Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T16:36:53.131Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T16:36:53.145Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T16:36:53.146Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T16:36:53.155Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T16:36:53.162Z] [INFO]: ✅ Cleanup complete in 31ms
+[2025-10-24T16:36:53.163Z] [INFO]:    Users removed: 0
+[2025-10-24T16:36:53.165Z] [INFO]:    Cached users before: 0
+[2025-10-24T16:36:53.165Z] [INFO]:    Cached users after: 0
+[2025-10-24T16:36:53.166Z] [INFO]:    Memory before: 1.05M
+[2025-10-24T16:36:53.166Z] [INFO]:    Memory after: 1.20M
+[2025-10-24T16:37:05.862Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-24T16:37:25.555Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:37:25.635Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:37:25.760Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:37:25.894Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:45:42.978Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-24T16:45:49.106Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-24T16:46:05.975Z] [INFO]: ✅ Redis Connected
+[2025-10-24T16:46:05.997Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T16:46:05.999Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T16:46:06.245Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T16:46:06.246Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T16:46:06.260Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T16:46:06.261Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T16:46:06.266Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T16:46:06.271Z] [INFO]: ✅ Cleanup complete in 25ms
+[2025-10-24T16:46:06.272Z] [INFO]:    Users removed: 0
+[2025-10-24T16:46:06.272Z] [INFO]:    Cached users before: 0
+[2025-10-24T16:46:06.272Z] [INFO]:    Cached users after: 0
+[2025-10-24T16:46:06.273Z] [INFO]:    Memory before: 1.12M
+[2025-10-24T16:46:06.273Z] [INFO]:    Memory after: 1.20M
+[2025-10-24T16:46:31.151Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-24T16:46:31.168Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-10-24T16:46:31.183Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-10-24T16:46:31.185Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-24T16:46:31.313Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-24T16:46:31.363Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-24T16:46:31.363Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:46:31.364Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-24T16:46:31.367Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-24T16:46:31.389Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (22ms)
+[2025-10-24T16:46:31.444Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-24T16:46:31.491Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-24T16:46:31.492Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:46:31.866Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-24T16:46:31.867Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-24T16:46:31.911Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-24T16:46:31.911Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-24T16:46:31.964Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-24T16:46:32.012Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-24T16:46:32.012Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:46:32.013Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (862ms)
+[2025-10-24T16:46:35.049Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:46:35.155Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:46:35.288Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:46:35.500Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:49:08.552Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-24T16:52:36.358Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-24T16:52:41.131Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-24T16:52:43.521Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-24T16:52:54.572Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T16:52:54.591Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-10-24T16:52:54.599Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-10-24T16:52:54.601Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-24T16:52:54.682Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T16:52:54.734Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T16:52:54.735Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:52:54.736Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-24T16:52:54.737Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T16:52:54.748Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (10ms)
+[2025-10-24T16:52:54.799Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T16:52:54.845Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T16:52:54.846Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:52:55.134Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T16:52:55.136Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T16:52:55.171Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T16:52:55.172Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T16:52:55.223Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T16:52:55.269Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T16:52:55.270Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T16:52:55.270Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (698ms)
+[2025-10-24T16:52:56.791Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:52:56.935Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:52:57.109Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T16:52:57.158Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T16:53:03.844Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:09:57.125Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:12:36.209Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T17:12:36.238Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-24T17:12:36.240Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-24T17:12:36.241Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T17:12:36.316Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (75ms)
+[2025-10-24T17:12:36.377Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:12:36.424Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:12:36.425Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:12:36.844Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T17:12:36.844Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:12:36.891Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T17:12:36.891Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:12:36.940Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:12:36.986Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:12:36.987Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:12:36.988Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (779ms)
+[2025-10-24T17:12:59.369Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:12:59.637Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:12:59.808Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:12:59.868Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:17:32.531Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:17:40.060Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-24T17:17:46.704Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T17:17:46.758Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-24T17:17:46.773Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-24T17:17:46.775Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T17:17:46.965Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (189ms)
+[2025-10-24T17:17:47.101Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:17:47.162Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:17:47.164Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:17:47.653Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T17:17:47.654Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:17:47.714Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T17:17:47.716Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:17:47.766Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:17:47.811Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:17:47.811Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:17:47.812Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (1108ms)
+[2025-10-24T17:17:49.310Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:17:49.618Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:17:49.687Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:17:49.895Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:20:31.486Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-24T17:20:40.002Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T17:20:40.026Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-24T17:20:40.029Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-24T17:20:40.030Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T17:20:40.052Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (21ms)
+[2025-10-24T17:20:40.109Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:20:40.153Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:20:40.155Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:20:40.519Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T17:20:40.520Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:20:40.560Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T17:20:40.561Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:20:40.609Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:20:40.656Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:20:40.657Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:20:40.657Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (655ms)
+[2025-10-24T17:20:42.506Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:20:42.785Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:20:42.823Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-24T17:20:42.919Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:20:49.253Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:21:05.424Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:24:04.070Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@test.com
+[2025-10-24T17:24:04.088Z] [INFO]: 📊 Cache MISS: user:email:admin@test.com
+[2025-10-24T17:24:04.095Z] [INFO]: 📊 Cache HGETALL MISS: user:admin@test.com
+[2025-10-24T17:24:04.096Z] [INFO]: 📊 USER CACHE MISS: admin@test.com - Querying database
+[2025-10-24T17:24:04.118Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: admin@test.com
+[2025-10-24T17:24:04.128Z] [WARN]: ❌ [NOT FOUND] User not found: admin@test.com (9ms)
+[2025-10-24T17:24:04.130Z] [ERROR]: ❌ [LOGIN ERROR] admin@test.com: Invalid credentials (61ms)
+[2025-10-24T17:25:01.256Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-24T17:25:13.646Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:25:13.659Z] [INFO]: 📊 Cache MISS: user:email:admin@admin.com
+[2025-10-24T17:25:13.666Z] [INFO]: 📊 Cache HGETALL MISS: user:admin@admin.com
+[2025-10-24T17:25:13.668Z] [INFO]: 📊 USER CACHE MISS: admin@admin.com - Querying database
+[2025-10-24T17:25:13.708Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:13.712Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:13.713Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:13.714Z] [INFO]: 💾 USER CACHED from DB: admin@admin.com
+[2025-10-24T17:25:13.716Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:25:13.728Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (12ms)
+[2025-10-24T17:25:13.739Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:13.744Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:13.746Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:13.748Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:25:13.749Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (103ms)
+[2025-10-24T17:25:16.035Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:25:16.041Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:25:16.042Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:25:16.043Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:25:16.060Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (16ms)
+[2025-10-24T17:25:16.077Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:16.085Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:16.086Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:16.087Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:25:16.088Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (53ms)
+[2025-10-24T17:25:16.799Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:25:16.803Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:25:16.804Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:25:16.804Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:25:16.814Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (9ms)
+[2025-10-24T17:25:16.822Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:16.826Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:16.826Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:16.826Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:25:16.827Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (28ms)
+[2025-10-24T17:25:16.937Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:25:16.940Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:25:16.942Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:25:16.942Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:25:16.951Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (8ms)
+[2025-10-24T17:25:16.958Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:16.961Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:16.962Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:16.963Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:25:16.964Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (27ms)
+[2025-10-24T17:25:30.514Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:25:30.518Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:25:30.519Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:25:30.519Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:25:30.531Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (11ms)
+[2025-10-24T17:25:30.535Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:25:30.539Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:25:30.540Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:25:30.540Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:25:30.541Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (27ms)
+[2025-10-24T17:26:13.969Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:26:14.039Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:26:14.048Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:26:35.118Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:26:35.130Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:26:35.135Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:29:35.238Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:29:35.328Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:29:35.337Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:30:58.104Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:30:58.111Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:30:58.117Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:30:58.391Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T17:30:58.392Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T17:30:58.411Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T17:30:58.412Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T17:30:58.423Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T17:30:58.429Z] [INFO]: ✅ Cleanup complete in 37ms
+[2025-10-24T17:30:58.430Z] [INFO]:    Users removed: 0
+[2025-10-24T17:30:58.430Z] [INFO]:    Cached users before: 3
+[2025-10-24T17:30:58.430Z] [INFO]:    Cached users after: 3
+[2025-10-24T17:30:58.430Z] [INFO]:    Memory before: 1.52M
+[2025-10-24T17:30:58.431Z] [INFO]:    Memory after: 1.52M
+[2025-10-24T17:31:51.392Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:31:51.405Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:31:51.406Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:31:51.406Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:31:51.490Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (83ms)
+[2025-10-24T17:31:51.505Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:31:51.512Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:31:51.513Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:31:51.515Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:31:51.516Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (124ms)
+[2025-10-24T17:31:52.939Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:31:52.942Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:31:52.944Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:31:52.946Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:31:52.966Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (19ms)
+[2025-10-24T17:31:52.979Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:31:52.984Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:31:52.989Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:31:52.992Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:31:52.993Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (54ms)
+[2025-10-24T17:34:03.059Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T17:34:03.127Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-24T17:34:03.136Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-24T17:34:03.141Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T17:34:03.252Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (109ms)
+[2025-10-24T17:34:03.282Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:34:03.335Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:34:03.336Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:34:03.802Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T17:34:03.804Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:34:03.883Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T17:34:03.886Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:34:03.943Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:34:03.995Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:34:04.001Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:34:04.008Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (949ms)
+[2025-10-24T17:34:17.922Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T17:34:18.300Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T17:34:18.326Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:34:18.502Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:34:24.961Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:34:25.046Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:41:15.564Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:41:15.594Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:41:15.598Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:41:15.849Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T17:41:15.850Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T17:41:15.872Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T17:41:15.874Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T17:41:15.887Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T17:41:15.897Z] [INFO]: ✅ Cleanup complete in 47ms
+[2025-10-24T17:41:15.898Z] [INFO]:    Users removed: 0
+[2025-10-24T17:41:15.899Z] [INFO]:    Cached users before: 3
+[2025-10-24T17:41:15.899Z] [INFO]:    Cached users after: 3
+[2025-10-24T17:41:15.900Z] [INFO]:    Memory before: 1.51M
+[2025-10-24T17:41:15.900Z] [INFO]:    Memory after: 1.53M
+[2025-10-24T17:41:25.947Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-24T17:41:27.570Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-24T17:41:45.880Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:41:45.903Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:41:45.904Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:41:45.905Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:41:45.928Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (22ms)
+[2025-10-24T17:41:45.951Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:41:45.956Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:41:45.958Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:41:45.963Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:41:45.971Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (91ms)
+[2025-10-24T17:41:51.053Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T17:41:51.059Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T17:41:51.060Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T17:41:51.060Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T17:41:51.072Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (11ms)
+[2025-10-24T17:41:51.080Z] [INFO]: 💾 Cache HSET: user:68fbb64da399a228fd524e96.data (TTL: 3600s)
+[2025-10-24T17:41:51.082Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T17:41:51.082Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:41:51.083Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:41:51.084Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (31ms)
+[2025-10-24T17:44:39.375Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-24T17:44:39.415Z] [INFO]: 🎯 Cache HIT: user:email:monlykingstore@gmail.com
+[2025-10-24T17:44:39.420Z] [INFO]: ⚡ USER CACHE HIT (by email): monlykingstore@gmail.com
+[2025-10-24T17:44:39.423Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-24T17:44:39.492Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (67ms)
+[2025-10-24T17:44:39.517Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:44:39.568Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:44:39.570Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:44:40.164Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-24T17:44:40.167Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:44:40.251Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-24T17:44:40.252Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-24T17:44:40.310Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-24T17:44:40.358Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-24T17:44:40.361Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-24T17:44:40.362Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (987ms)
+[2025-10-24T17:44:47.895Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T17:44:48.035Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T17:44:48.194Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:44:48.450Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T17:45:04.896Z] [INFO]: 📊 Cache HGET MISS: user:68e29f628f463e13c693bf2e.data
+[2025-10-24T17:45:04.903Z] [INFO]: 🗑️ Cache DELETE: user:68e29f628f463e13c693bf2e
+[2025-10-24T17:45:04.904Z] [INFO]: 🗑️ User 68e29f628f463e13c693bf2e removed from cache
+[2025-10-24T17:45:04.905Z] [INFO]: Admin monlykingstore@gmail.com deleted user baraaweal24@gmail.com
+[2025-10-24T17:45:04.968Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-24T17:45:12.165Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-24T17:45:20.693Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-24T17:45:20.699Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2025-10-24T17:45:20.704Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2025-10-24T17:45:20.705Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2025-10-24T17:45:20.712Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2025-10-24T17:45:20.717Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (4ms)
+[2025-10-24T17:45:20.718Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (25ms)
+[2025-10-24T17:45:20.934Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-24T17:45:20.936Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2025-10-24T17:45:20.939Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2025-10-24T17:45:20.939Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2025-10-24T17:45:20.943Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2025-10-24T17:45:20.949Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (5ms)
+[2025-10-24T17:45:20.949Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (15ms)
+[2025-10-24T17:45:21.498Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-24T17:45:21.501Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2025-10-24T17:45:21.503Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2025-10-24T17:45:21.504Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2025-10-24T17:45:21.511Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2025-10-24T17:45:21.517Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (5ms)
+[2025-10-24T17:45:21.518Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (20ms)
+[2025-10-24T17:45:21.658Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-24T17:45:21.661Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2025-10-24T17:45:21.663Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2025-10-24T17:45:21.664Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2025-10-24T17:45:21.669Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2025-10-24T17:45:21.673Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (3ms)
+[2025-10-24T17:45:21.675Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (17ms)
+[2025-10-24T17:45:51.336Z] [INFO]: User registered: baraaweal24@gmail.com
+[2025-10-24T17:46:19.558Z] [INFO]: Email verified for user: baraaweal24@gmail.com
+[2025-10-24T17:51:38.668Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:51:38.786Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:51:38.818Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:51:39.274Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T17:51:39.276Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T17:51:39.361Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T17:51:39.362Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T17:51:39.381Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T17:51:39.402Z] [INFO]: ✅ Cleanup complete in 126ms
+[2025-10-24T17:51:39.403Z] [INFO]:    Users removed: 0
+[2025-10-24T17:51:39.404Z] [INFO]:    Cached users before: 2
+[2025-10-24T17:51:39.404Z] [INFO]:    Cached users after: 2
+[2025-10-24T17:51:39.405Z] [INFO]:    Memory before: 1.47M
+[2025-10-24T17:51:39.406Z] [INFO]:    Memory after: 1.47M
+[2025-10-24T17:53:41.831Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-24T17:53:42.527Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2025-10-24T17:54:01.164Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:01.183Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:01.184Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:01.188Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (24ms)
+[2025-10-24T17:54:01.958Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:01.966Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:01.967Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:01.968Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (10ms)
+[2025-10-24T17:54:02.116Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:02.123Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:02.124Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:02.125Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (9ms)
+[2025-10-24T17:54:02.259Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:02.270Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:02.272Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:02.273Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (14ms)
+[2025-10-24T17:54:02.416Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:02.426Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:02.427Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:02.428Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (12ms)
+[2025-10-24T17:54:02.571Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:02.577Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:02.579Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:02.580Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (9ms)
+[2025-10-24T17:54:02.708Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:54:02.714Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:54:02.716Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:54:02.717Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (9ms)
+[2025-10-24T17:57:47.162Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:57:47.183Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:57:47.183Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: admin@admin.com
+[2025-10-24T17:57:47.185Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: Invalid credentials (23ms)
+[2025-10-24T17:59:51.677Z] [INFO]: ✅ Redis Connected
+[2025-10-24T17:59:51.706Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T17:59:51.709Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T17:59:51.959Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T17:59:51.960Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T17:59:51.975Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T17:59:51.976Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T17:59:51.984Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T17:59:51.990Z] [INFO]: ✅ Cleanup complete in 30ms
+[2025-10-24T17:59:51.990Z] [INFO]:    Users removed: 0
+[2025-10-24T17:59:51.990Z] [INFO]:    Cached users before: 2
+[2025-10-24T17:59:51.991Z] [INFO]:    Cached users after: 2
+[2025-10-24T17:59:51.991Z] [INFO]:    Memory before: 1.47M
+[2025-10-24T17:59:51.991Z] [INFO]:    Memory after: 1.47M
+[2025-10-24T17:59:54.061Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:59:54.109Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:59:54.623Z] [INFO]: 💾 Cache SET: session:68fbb64da399a228fd524e96 (TTL: 86400s)
+[2025-10-24T17:59:54.624Z] [INFO]: ✅ Session cached for user 68fbb64da399a228fd524e96
+[2025-10-24T17:59:54.647Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbb64da399a228fd524e96
+[2025-10-24T17:59:54.650Z] [INFO]: ✅ Auth log added to cache for user 68fbb64da399a228fd524e96
+[2025-10-24T17:59:54.652Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: userCacheService.createUserCache is not a function (591ms)
+[2025-10-24T17:59:55.910Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T17:59:55.940Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T17:59:56.384Z] [INFO]: 💾 Cache SET: session:68fbb64da399a228fd524e96 (TTL: 86400s)
+[2025-10-24T17:59:56.386Z] [INFO]: ✅ Session cached for user 68fbb64da399a228fd524e96
+[2025-10-24T17:59:56.428Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbb64da399a228fd524e96
+[2025-10-24T17:59:56.429Z] [INFO]: ✅ Auth log added to cache for user 68fbb64da399a228fd524e96
+[2025-10-24T17:59:56.432Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: userCacheService.createUserCache is not a function (522ms)
+[2025-10-24T18:10:31.232Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:10:31.366Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:10:31.385Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:10:31.739Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:10:31.739Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:10:31.759Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:10:31.761Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:10:31.766Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:10:31.779Z] [INFO]: ✅ Cleanup complete in 40ms
+[2025-10-24T18:10:31.780Z] [INFO]:    Users removed: 0
+[2025-10-24T18:10:31.780Z] [INFO]:    Cached users before: 2
+[2025-10-24T18:10:31.781Z] [INFO]:    Cached users after: 2
+[2025-10-24T18:10:31.781Z] [INFO]:    Memory before: 1.39M
+[2025-10-24T18:10:31.781Z] [INFO]:    Memory after: 1.47M
+[2025-10-24T18:11:13.718Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T18:11:13.790Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T18:11:14.128Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: userCacheService.cacheSession is not a function (410ms)
+[2025-10-24T18:11:25.198Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T18:11:25.212Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T18:11:25.542Z] [ERROR]: ❌ [LOGIN ERROR] admin@admin.com: userCacheService.cacheSession is not a function (344ms)
+[2025-10-24T18:13:01.497Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:13:01.523Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:13:01.526Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:13:01.814Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:13:01.815Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:13:01.834Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:13:01.835Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:13:01.844Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:13:01.851Z] [INFO]: ✅ Cleanup complete in 36ms
+[2025-10-24T18:13:01.851Z] [INFO]:    Users removed: 0
+[2025-10-24T18:13:01.852Z] [INFO]:    Cached users before: 2
+[2025-10-24T18:13:01.852Z] [INFO]:    Cached users after: 2
+[2025-10-24T18:13:01.853Z] [INFO]:    Memory before: 1.47M
+[2025-10-24T18:13:01.853Z] [INFO]:    Memory after: 1.47M
+[2025-10-24T18:13:45.505Z] [INFO]: 🔍 [LOGIN START] Attempting login for: admin@admin.com
+[2025-10-24T18:13:45.589Z] [INFO]: 🔐 [AUTH CHECK] User found in DB: admin@admin.com
+[2025-10-24T18:13:45.956Z] [ERROR]: ❌ Cache session error:
+[2025-10-24T18:13:45.965Z] [ERROR]: ❌ Add auth log error:
+[2025-10-24T18:13:45.984Z] [INFO]: 💾 Cache updated: user:68fbb64da399a228fd524e96
+[2025-10-24T18:13:45.985Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached after creation
+[2025-10-24T18:13:45.986Z] [INFO]: ✅ [LOGIN SUCCESS] admin@admin.com (481ms)
+[2025-10-24T18:15:03.211Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:15:03.331Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:15:03.474Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:15:03.575Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:15:06.289Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:15:24.195Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:15:32.050Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:20:32.976Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:20:33.006Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:20:33.010Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:20:33.277Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:20:33.278Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:20:33.291Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:20:33.292Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:20:33.305Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:20:33.319Z] [INFO]: ✅ Cleanup complete in 41ms
+[2025-10-24T18:20:33.320Z] [INFO]:    Users removed: 0
+[2025-10-24T18:20:33.320Z] [INFO]:    Cached users before: 2.5
+[2025-10-24T18:20:33.320Z] [INFO]:    Cached users after: 2.5
+[2025-10-24T18:20:33.321Z] [INFO]:    Memory before: 1.44M
+[2025-10-24T18:20:33.321Z] [INFO]:    Memory after: 1.49M
+[2025-10-24T18:20:44.922Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:20:51.572Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:20:51.713Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:20:51.862Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:20:52.032Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:22:14.711Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:22:14.721Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:22:14.725Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:22:14.964Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:22:14.965Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:22:14.979Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:22:14.980Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:22:14.988Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:22:14.994Z] [INFO]: ✅ Cleanup complete in 29ms
+[2025-10-24T18:22:14.995Z] [INFO]:    Users removed: 0
+[2025-10-24T18:22:14.995Z] [INFO]:    Cached users before: 2.5
+[2025-10-24T18:22:14.995Z] [INFO]:    Cached users after: 2.5
+[2025-10-24T18:22:14.995Z] [INFO]:    Memory before: 1.49M
+[2025-10-24T18:22:14.996Z] [INFO]:    Memory after: 1.49M
+[2025-10-24T18:22:28.049Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:22:36.718Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:22:36.832Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:22:36.994Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:22:37.154Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:22:52.903Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:23:03.099Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:23:03.120Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:23:03.127Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:23:03.631Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:23:03.632Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:23:03.661Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:23:03.661Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:23:03.747Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:23:03.763Z] [INFO]: ✅ Cleanup complete in 131ms
+[2025-10-24T18:23:03.764Z] [INFO]:    Users removed: 0
+[2025-10-24T18:23:03.765Z] [INFO]:    Cached users before: 2.5
+[2025-10-24T18:23:03.766Z] [INFO]:    Cached users after: 2.5
+[2025-10-24T18:23:03.766Z] [INFO]:    Memory before: 1.49M
+[2025-10-24T18:23:03.767Z] [INFO]:    Memory after: 1.49M
+[2025-10-24T18:23:11.070Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:41:02.771Z] [INFO]: User logged out, refresh token revoked: admin@admin.com
+[2025-10-24T18:41:23.120Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: admin@admin.com
+[2025-10-24T18:41:23.140Z] [INFO]: 🎯 Cache HIT: user:email:admin@admin.com
+[2025-10-24T18:41:23.141Z] [INFO]: ⚡ USER CACHE HIT (by email): admin@admin.com
+[2025-10-24T18:41:23.142Z] [INFO]: ⚡ [CACHE HIT] User found in cache: admin@admin.com
+[2025-10-24T18:41:23.176Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: admin@admin.com (34ms)
+[2025-10-24T18:41:23.195Z] [ERROR]: Redis HSET error for key user:68fbb64da399a228fd524e96:
+[2025-10-24T18:41:23.204Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T18:41:23.206Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T18:41:23.586Z] [INFO]: 💾 Cache SET: session:68fbb64da399a228fd524e96 (TTL: 86400s)
+[2025-10-24T18:41:23.586Z] [INFO]: ✅ Session cached for user 68fbb64da399a228fd524e96
+[2025-10-24T18:41:23.632Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbb64da399a228fd524e96
+[2025-10-24T18:41:23.633Z] [INFO]: ✅ Auth log added to cache for user 68fbb64da399a228fd524e96
+[2025-10-24T18:41:23.645Z] [ERROR]: Redis HSET error for key user:68fbb64da399a228fd524e96:
+[2025-10-24T18:41:23.653Z] [INFO]: 💾 Cache SET: user:email:admin@admin.com (TTL: 3600s)
+[2025-10-24T18:41:23.655Z] [INFO]: ✅ User 68fbb64da399a228fd524e96 cached for 3600 seconds (without sensitive data)
+[2025-10-24T18:41:23.656Z] [INFO]: ✅ [LOGIN SUCCESS] admin@admin.com from CACHE→DB (536ms)
+[2025-10-24T18:43:42.186Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:43:42.560Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:43:42.574Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:43:47.055Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:43:47.167Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:43:47.423Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:43:47.630Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:46:54.119Z] [INFO]: ✅ Redis Connected
+[2025-10-24T18:46:54.130Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T18:46:54.140Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T18:46:54.403Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T18:46:54.403Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T18:46:54.424Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T18:46:54.424Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T18:46:54.432Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T18:46:54.437Z] [INFO]: ✅ Cleanup complete in 34ms
+[2025-10-24T18:46:54.438Z] [INFO]:    Users removed: 0
+[2025-10-24T18:46:54.438Z] [INFO]:    Cached users before: 1.5
+[2025-10-24T18:46:54.438Z] [INFO]:    Cached users after: 1.5
+[2025-10-24T18:46:54.438Z] [INFO]:    Memory before: 1.40M
+[2025-10-24T18:46:54.439Z] [INFO]:    Memory after: 1.44M
+[2025-10-24T18:48:26.107Z] [INFO]: Refresh token rotated for user: admin@admin.com
+[2025-10-24T18:48:26.149Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:48:26.262Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:48:26.359Z] [INFO]: Admin fetched stats: 5 total users
+[2025-10-24T18:48:26.361Z] [INFO]: Admin fetched users: page 1, 5 users
+[2025-10-24T18:58:26.363Z] [INFO]: User logged out, refresh token revoked: admin@admin.com
+[2025-10-24T18:59:10.699Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: superadmin@example.com
+[2025-10-24T18:59:10.722Z] [INFO]: 📊 Cache MISS: user:email:superadmin@example.com
+[2025-10-24T18:59:10.732Z] [INFO]: 📊 Cache HGETALL MISS: user:superadmin@example.com
+[2025-10-24T18:59:10.733Z] [INFO]: 📊 USER CACHE MISS: superadmin@example.com - Querying database
+[2025-10-24T18:59:10.768Z] [INFO]: 💾 Cache HSET: user:68fbcbbb6ce5d4695ae6b9f1.data (TTL: 3600s)
+[2025-10-24T18:59:10.774Z] [INFO]: 💾 Cache SET: user:email:superadmin@example.com (TTL: 3600s)
+[2025-10-24T18:59:10.775Z] [INFO]: ✅ User 68fbcbbb6ce5d4695ae6b9f1 cached for 3600 seconds (without sensitive data)
+[2025-10-24T18:59:10.776Z] [INFO]: 💾 USER CACHED from DB: superadmin@example.com
+[2025-10-24T18:59:10.777Z] [INFO]: ⚡ [CACHE HIT] User found in cache: superadmin@example.com
+[2025-10-24T18:59:10.792Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: superadmin@example.com (14ms)
+[2025-10-24T18:59:10.806Z] [INFO]: 💾 Cache HSET: user:68fbcbbb6ce5d4695ae6b9f1.data (TTL: 3600s)
+[2025-10-24T18:59:10.810Z] [INFO]: 💾 Cache SET: user:email:superadmin@example.com (TTL: 3600s)
+[2025-10-24T18:59:10.811Z] [INFO]: ✅ User 68fbcbbb6ce5d4695ae6b9f1 cached for 3600 seconds (without sensitive data)
+[2025-10-24T18:59:10.812Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: superadmin@example.com
+[2025-10-24T18:59:10.813Z] [ERROR]: ❌ [LOGIN ERROR] superadmin@example.com: Invalid credentials (114ms)
+[2025-10-24T19:01:29.645Z] [INFO]: ✅ Redis Connected
+[2025-10-24T19:01:29.688Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T19:01:29.695Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T19:01:30.173Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T19:01:30.174Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T19:01:30.205Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T19:01:30.207Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T19:01:30.225Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T19:01:30.240Z] [INFO]: ✅ Cleanup complete in 66ms
+[2025-10-24T19:01:30.241Z] [INFO]:    Users removed: 0
+[2025-10-24T19:01:30.242Z] [INFO]:    Cached users before: 2.5
+[2025-10-24T19:01:30.242Z] [INFO]:    Cached users after: 2.5
+[2025-10-24T19:01:30.243Z] [INFO]:    Memory before: 1.44M
+[2025-10-24T19:01:30.243Z] [INFO]:    Memory after: 1.44M
+[2025-10-24T19:02:02.626Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: superadmin@example.com
+[2025-10-24T19:02:02.630Z] [INFO]: 🎯 Cache HIT: user:email:superadmin@example.com
+[2025-10-24T19:02:02.633Z] [INFO]: ⚡ USER CACHE HIT (by email): superadmin@example.com
+[2025-10-24T19:02:02.634Z] [INFO]: ⚡ [CACHE HIT] User found in cache: superadmin@example.com
+[2025-10-24T19:02:02.699Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: superadmin@example.com (63ms)
+[2025-10-24T19:02:02.716Z] [INFO]: 💾 Cache HSET: user:68fbcbbb6ce5d4695ae6b9f1.data (TTL: 3600s)
+[2025-10-24T19:02:02.725Z] [INFO]: 💾 Cache SET: user:email:superadmin@example.com (TTL: 3600s)
+[2025-10-24T19:02:02.727Z] [INFO]: ✅ User 68fbcbbb6ce5d4695ae6b9f1 cached for 3600 seconds (without sensitive data)
+[2025-10-24T19:02:02.728Z] [ERROR]: ❌ [NO PASSWORD HASH] Missing password hash for user: superadmin@example.com
+[2025-10-24T19:02:02.729Z] [ERROR]: ❌ [LOGIN ERROR] superadmin@example.com: Invalid credentials (103ms)
+[2025-10-24T19:03:31.841Z] [INFO]: ✅ Redis Connected
+[2025-10-24T19:03:31.858Z] [INFO]: 🚀 Redis Ready
+[2025-10-24T19:03:31.863Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-24T19:03:32.137Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-24T19:03:32.138Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-24T19:03:32.150Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-24T19:03:32.151Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-24T19:03:32.162Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-24T19:03:32.167Z] [INFO]: ✅ Cleanup complete in 29ms
+[2025-10-24T19:03:32.168Z] [INFO]:    Users removed: 0
+[2025-10-24T19:03:32.168Z] [INFO]:    Cached users before: 2.5
+[2025-10-24T19:03:32.168Z] [INFO]:    Cached users after: 2.5
+[2025-10-24T19:03:32.168Z] [INFO]:    Memory before: 1.44M
+[2025-10-24T19:03:32.169Z] [INFO]:    Memory after: 1.44M
+[2025-10-24T19:04:11.758Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: superadmin@example.com
+[2025-10-24T19:04:11.766Z] [INFO]: 🎯 Cache HIT: user:email:superadmin@example.com
+[2025-10-24T19:04:11.767Z] [INFO]: ⚡ USER CACHE HIT (by email): superadmin@example.com
+[2025-10-24T19:04:11.769Z] [INFO]: ⚡ [CACHE HIT] User found in cache: superadmin@example.com
+[2025-10-24T19:04:11.871Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: superadmin@example.com (100ms)
+[2025-10-24T19:04:11.885Z] [INFO]: 💾 Cache HSET: user:68fbcbbb6ce5d4695ae6b9f1.data (TTL: 3600s)
+[2025-10-24T19:04:11.887Z] [INFO]: 💾 Cache SET: user:email:superadmin@example.com (TTL: 3600s)
+[2025-10-24T19:04:11.888Z] [INFO]: ✅ User 68fbcbbb6ce5d4695ae6b9f1 cached for 3600 seconds (without sensitive data)
+[2025-10-24T19:04:12.259Z] [INFO]: 💾 Cache SET: session:68fbcbbb6ce5d4695ae6b9f1 (TTL: 86400s)
+[2025-10-24T19:04:12.260Z] [INFO]: ✅ Session cached for user 68fbcbbb6ce5d4695ae6b9f1
+[2025-10-24T19:04:12.278Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbcbbb6ce5d4695ae6b9f1
+[2025-10-24T19:04:12.280Z] [INFO]: ✅ Auth log added to cache for user 68fbcbbb6ce5d4695ae6b9f1
+[2025-10-24T19:04:12.287Z] [INFO]: 💾 Cache HSET: user:68fbcbbb6ce5d4695ae6b9f1.data (TTL: 3600s)
+[2025-10-24T19:04:12.290Z] [INFO]: 💾 Cache SET: user:email:superadmin@example.com (TTL: 3600s)
+[2025-10-24T19:04:12.291Z] [INFO]: ✅ User 68fbcbbb6ce5d4695ae6b9f1 cached for 3600 seconds (without sensitive data)
+[2025-10-24T19:04:12.292Z] [INFO]: ✅ [LOGIN SUCCESS] superadmin@example.com from CACHE→DB (534ms)
+[2025-10-24T19:04:23.738Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:04:24.004Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:04:24.507Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:04:24.563Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:07:17.802Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:07:18.017Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:07:18.065Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:07:18.107Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:19:16.252Z] [INFO]: Refresh token rotated for user: superadmin@example.com
+[2025-10-24T19:20:59.675Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:20:59.767Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-24T19:20:59.856Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:20:59.994Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:21:01.020Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:21:01.112Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-24T19:28:41.257Z] [INFO]: Admin fetched users: page 1, 1 users
+[2025-10-24T19:28:43.916Z] [INFO]: Admin fetched users: page 1, 1 users
+[2025-10-24T19:28:46.485Z] [INFO]: Admin fetched users: page 1, 1 users
+[2025-10-24T19:28:47.685Z] [INFO]: Admin fetched users: page 1, 0 users
+[2025-10-24T19:28:49.061Z] [INFO]: Admin fetched users: page 1, 1 users
+[2025-10-25T14:12:22.599Z] [ERROR]: Redis Error:
+[2025-10-25T14:12:22.601Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-25T14:12:22.602Z] [INFO]: 📝 Server will continue without caching
+[2025-10-25T14:12:22.939Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T14:12:22.940Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T14:12:22.942Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2025-10-25T14:12:22.942Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2025-10-25T14:12:22.957Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-25T14:12:22.958Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T14:16:56.506Z] [INFO]: ✅ Redis Connected
+[2025-10-25T14:16:56.546Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T14:16:56.549Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T14:16:56.855Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T14:16:56.855Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T14:16:56.875Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T14:16:56.876Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T14:16:56.883Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T14:16:56.890Z] [INFO]: ✅ Cleanup complete in 35ms
+[2025-10-25T14:16:56.891Z] [INFO]:    Users removed: 0
+[2025-10-25T14:16:56.892Z] [INFO]:    Cached users before: 0.5
+[2025-10-25T14:16:56.892Z] [INFO]:    Cached users after: 0.5
+[2025-10-25T14:16:56.893Z] [INFO]:    Memory before: 1.07M
+[2025-10-25T14:16:56.893Z] [INFO]:    Memory after: 1.22M
+[2025-10-25T14:17:28.331Z] [INFO]: Refresh token rotated for user: superadmin@example.com
+[2025-10-25T14:17:39.476Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T14:17:39.580Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T14:17:39.705Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T14:17:39.889Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T14:17:45.771Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T14:17:45.879Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:06:43.677Z] [INFO]: ✅ Redis Connected
+[2025-10-25T15:06:43.754Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T15:06:43.760Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T15:06:44.370Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T15:06:44.370Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T15:06:44.394Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T15:06:44.397Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T15:06:44.419Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T15:06:44.439Z] [INFO]: ✅ Cleanup complete in 69ms
+[2025-10-25T15:06:44.440Z] [INFO]:    Users removed: 0
+[2025-10-25T15:06:44.441Z] [INFO]:    Cached users before: 0.5
+[2025-10-25T15:06:44.442Z] [INFO]:    Cached users after: 0.5
+[2025-10-25T15:06:44.443Z] [INFO]:    Memory before: 1.22M
+[2025-10-25T15:06:44.444Z] [INFO]:    Memory after: 1.22M
+[2025-10-25T15:06:45.525Z] [INFO]: User logged out, refresh token revoked: superadmin@example.com
+[2025-10-25T15:07:15.077Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T15:07:15.084Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-10-25T15:07:15.094Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-10-25T15:07:15.096Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-25T15:07:15.281Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:07:15.331Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:07:15.332Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:07:15.332Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-25T15:07:15.340Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T15:07:15.389Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (48ms)
+[2025-10-25T15:07:15.443Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:07:15.490Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:07:15.491Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:07:15.970Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T15:07:15.972Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:07:16.082Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T15:07:16.083Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:07:16.137Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:07:16.185Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:07:16.187Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:07:16.187Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1110ms)
+[2025-10-25T15:07:42.143Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:07:42.505Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:07:42.539Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:07:42.822Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:18:57.685Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:18:57.791Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:28:33.465Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T15:28:36.427Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-25T15:28:44.151Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T15:28:44.229Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-10-25T15:28:44.232Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-10-25T15:28:44.240Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T15:28:44.419Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (177ms)
+[2025-10-25T15:28:44.531Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:28:44.587Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:28:44.589Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:28:45.149Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T15:28:45.150Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:28:45.266Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T15:28:45.266Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:28:45.324Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:28:45.371Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:28:45.372Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:28:45.372Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1221ms)
+[2025-10-25T15:28:51.508Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:28:51.890Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:28:52.112Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:28:52.183Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:28:57.856Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:28:57.966Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:29:22.096Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T15:31:46.991Z] [INFO]: ✅ Redis Connected
+[2025-10-25T15:31:47.028Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T15:31:47.031Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T15:31:47.343Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T15:31:47.344Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T15:31:47.369Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T15:31:47.370Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T15:31:47.378Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T15:31:47.383Z] [INFO]: ✅ Cleanup complete in 39ms
+[2025-10-25T15:31:47.384Z] [INFO]:    Users removed: 0
+[2025-10-25T15:31:47.384Z] [INFO]:    Cached users before: 1.5
+[2025-10-25T15:31:47.385Z] [INFO]:    Cached users after: 1.5
+[2025-10-25T15:31:47.385Z] [INFO]:    Memory before: 1.41M
+[2025-10-25T15:31:47.385Z] [INFO]:    Memory after: 1.49M
+[2025-10-25T15:32:45.911Z] [INFO]: ✅ Redis Connected
+[2025-10-25T15:32:45.933Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T15:32:45.935Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T15:32:46.353Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T15:32:46.354Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T15:32:46.386Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T15:32:46.387Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T15:32:46.397Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T15:32:46.406Z] [INFO]: ✅ Cleanup complete in 52ms
+[2025-10-25T15:32:46.407Z] [INFO]:    Users removed: 0
+[2025-10-25T15:32:46.407Z] [INFO]:    Cached users before: 1.5
+[2025-10-25T15:32:46.408Z] [INFO]:    Cached users after: 1.5
+[2025-10-25T15:32:46.408Z] [INFO]:    Memory before: 1.41M
+[2025-10-25T15:32:46.409Z] [INFO]:    Memory after: 1.49M
+[2025-10-25T15:34:38.621Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-25T15:34:52.973Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T15:34:52.996Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-10-25T15:34:52.998Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-10-25T15:34:53.001Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T15:34:53.096Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (93ms)
+[2025-10-25T15:34:53.205Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:34:53.257Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:34:53.258Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:34:53.653Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T15:34:53.654Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:34:53.710Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T15:34:53.712Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T15:34:53.770Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T15:34:53.815Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T15:34:53.817Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:34:53.818Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (845ms)
+[2025-10-25T15:35:02.548Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:35:02.850Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:35:02.909Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:35:03.039Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:35:08.266Z] [INFO]: Admin baraawael7901@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:35:08.327Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T15:35:08.335Z] [INFO]: Admin baraawael7901@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:35:08.391Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:35:08.446Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:35:08.449Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T15:35:17.418Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2025-10-25T15:35:21.746Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68def23b0cc030df58db6b02 with 14 messages
+[2025-10-25T15:39:29.298Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2025-10-25T15:39:30.433Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:39:31.207Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2025-10-25T15:39:52.294Z] [INFO]: Admin baraawael7901@gmail.com fetched 2 chats for monitoring
+[2025-10-25T15:48:34.786Z] [INFO]: ✅ Redis Connected
+[2025-10-25T15:48:34.811Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T15:48:34.814Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T15:48:35.236Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T15:48:35.237Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T15:48:35.267Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T15:48:35.268Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T15:48:35.283Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T15:48:35.290Z] [INFO]: ✅ Cleanup complete in 53ms
+[2025-10-25T15:48:35.291Z] [INFO]:    Users removed: 0
+[2025-10-25T15:48:35.291Z] [INFO]:    Cached users before: 1.5
+[2025-10-25T15:48:35.292Z] [INFO]:    Cached users after: 1.5
+[2025-10-25T15:48:35.292Z] [INFO]:    Memory before: 1.49M
+[2025-10-25T15:48:35.293Z] [INFO]:    Memory after: 1.49M
+[2025-10-25T15:49:20.745Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T15:49:20.784Z] [INFO]: Admin baraawael7901@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:49:20.883Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T15:49:20.962Z] [INFO]: Admin baraawael7901@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:49:21.010Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:49:21.098Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:49:21.120Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T15:49:31.482Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2025-10-25T15:49:32.883Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68def23b0cc030df58db6b02 with 14 messages
+[2025-10-25T15:49:47.003Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-25T15:49:54.152Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-25T15:49:54.165Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2025-10-25T15:49:54.170Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2025-10-25T15:49:54.171Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2025-10-25T15:49:54.200Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T15:49:54.207Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T15:49:54.211Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:49:54.213Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2025-10-25T15:49:54.214Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2025-10-25T15:49:54.234Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (19ms)
+[2025-10-25T15:49:54.245Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T15:49:54.249Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T15:49:54.250Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:49:54.633Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2025-10-25T15:49:54.635Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T15:49:54.650Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2025-10-25T15:49:54.652Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T15:49:54.659Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T15:49:54.665Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T15:49:54.667Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:49:54.667Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (515ms)
+[2025-10-25T15:50:14.428Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T15:50:20.885Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T15:50:20.921Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T15:50:32.547Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T15:50:32.588Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T15:50:58.000Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-25T15:50:58.014Z] [INFO]: 📊 Cache MISS: user:email:monlykingstore@gmail.com
+[2025-10-25T15:50:58.024Z] [INFO]: 📊 Cache HGETALL MISS: user:monlykingstore@gmail.com
+[2025-10-25T15:50:58.026Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-25T15:50:58.164Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-25T15:50:58.263Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-25T15:50:58.263Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:50:58.264Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-25T15:50:58.270Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-25T15:50:58.306Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (35ms)
+[2025-10-25T15:50:58.368Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-25T15:50:58.414Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-25T15:50:58.415Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:50:58.804Z] [INFO]: 💾 Cache SET: session:68dc6297ea6649ef04ed569c (TTL: 86400s)
+[2025-10-25T15:50:58.805Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-25T15:50:58.853Z] [INFO]: 📝 Cache LPUSH: auth_logs:68dc6297ea6649ef04ed569c
+[2025-10-25T15:50:58.854Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-25T15:50:58.903Z] [INFO]: 💾 Cache HSET: user:68dc6297ea6649ef04ed569c.data (TTL: 3600s)
+[2025-10-25T15:50:58.949Z] [INFO]: 💾 Cache SET: user:email:monlykingstore@gmail.com (TTL: 3600s)
+[2025-10-25T15:50:58.950Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T15:50:58.950Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (950ms)
+[2025-10-25T15:51:06.419Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-25T15:51:06.923Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-25T15:51:07.022Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-25T15:51:08.618Z] [INFO]: User monlykingstore@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-25T15:51:31.169Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:51:31.428Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:51:31.764Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T15:51:31.807Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T15:51:36.944Z] [INFO]: Admin monlykingstore@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:51:37.034Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2025-10-25T15:51:37.046Z] [INFO]: Admin monlykingstore@gmail.com fetched 3 chats for monitoring
+[2025-10-25T15:51:37.057Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:51:37.159Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T15:51:37.179Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2025-10-25T15:51:39.925Z] [INFO]: Admin monlykingstore@gmail.com fetched 0 chats for monitoring
+[2025-10-25T15:51:42.338Z] [INFO]: Admin monlykingstore@gmail.com fetched 1 chats for monitoring
+[2025-10-25T16:05:27.348Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:05:27.518Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:05:27.522Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:05:28.055Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T16:05:28.056Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T16:05:28.091Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T16:05:28.092Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T16:05:28.104Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T16:05:28.115Z] [INFO]: ✅ Cleanup complete in 59ms
+[2025-10-25T16:05:28.117Z] [INFO]:    Users removed: 0
+[2025-10-25T16:05:28.119Z] [INFO]:    Cached users before: 3.5
+[2025-10-25T16:05:28.121Z] [INFO]:    Cached users after: 3.5
+[2025-10-25T16:05:28.121Z] [INFO]:    Memory before: 1.47M
+[2025-10-25T16:05:28.122Z] [INFO]:    Memory after: 1.55M
+[2025-10-25T16:12:34.819Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-10-25T16:20:14.643Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-25T16:20:14.679Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
+[2025-10-25T16:20:14.683Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
+[2025-10-25T16:20:14.684Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2025-10-25T16:20:14.751Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (67ms)
+[2025-10-25T16:20:14.769Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T16:20:14.774Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T16:20:14.774Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T16:20:15.160Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2025-10-25T16:20:15.161Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T16:20:15.175Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2025-10-25T16:20:15.176Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T16:20:15.179Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T16:20:15.182Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T16:20:15.182Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T16:20:15.182Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (539ms)
+[2025-10-25T16:20:26.599Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:20:29.421Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:20:29.468Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:22:21.798Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:22:21.843Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:24:53.682Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:24:53.707Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:27:07.878Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:27:07.971Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:27:07.973Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:29:09.068Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:29:09.103Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:29:09.107Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:29:09.421Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T16:29:09.422Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T16:29:09.461Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T16:29:09.462Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T16:29:09.484Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T16:29:09.490Z] [INFO]: ✅ Cleanup complete in 68ms
+[2025-10-25T16:29:09.491Z] [INFO]:    Users removed: 0
+[2025-10-25T16:29:09.491Z] [INFO]:    Cached users before: 3.5
+[2025-10-25T16:29:09.492Z] [INFO]:    Cached users after: 3.5
+[2025-10-25T16:29:09.492Z] [INFO]:    Memory before: 1.47M
+[2025-10-25T16:29:09.492Z] [INFO]:    Memory after: 1.55M
+[2025-10-25T16:29:40.926Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:29:40.980Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:29:41.086Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:29:51.954Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:29:57.222Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:29:57.985Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:29:58.171Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:29:58.376Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:29:59.792Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:30:00.030Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:30:00.145Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:30:00.268Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:02.878Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:03.021Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:03.359Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:03.595Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:11.521Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:11.681Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:11.850Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:12.244Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:12.421Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:12.604Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:12.811Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:37.931Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:38.257Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:38.415Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:32:38.562Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:01.116Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:38:01.135Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:38:01.155Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:38:07.327Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:07.973Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:08.149Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:08.320Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:08.489Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:08.990Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:09.204Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:09.418Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:09.625Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:10.850Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:11.117Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:11.306Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:38:39.199Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:38:39.274Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:38:39.308Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:38:40.163Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T16:38:40.166Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T16:38:40.283Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T16:38:40.289Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T16:38:40.412Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T16:38:40.438Z] [INFO]: ✅ Cleanup complete in 272ms
+[2025-10-25T16:38:40.440Z] [INFO]:    Users removed: 0
+[2025-10-25T16:38:40.442Z] [INFO]:    Cached users before: 3
+[2025-10-25T16:38:40.444Z] [INFO]:    Cached users after: 3
+[2025-10-25T16:38:40.447Z] [INFO]:    Memory before: 1.45M
+[2025-10-25T16:38:40.448Z] [INFO]:    Memory after: 1.42M
+[2025-10-25T16:38:49.439Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:38:49.452Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:38:49.480Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:39:21.360Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:39:39.682Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:40:20.364Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:40:20.392Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:40:20.395Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:40:20.756Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T16:40:20.757Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T16:40:20.783Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T16:40:20.784Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T16:40:20.806Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T16:40:20.826Z] [INFO]: ✅ Cleanup complete in 69ms
+[2025-10-25T16:40:20.827Z] [INFO]:    Users removed: 0
+[2025-10-25T16:40:20.827Z] [INFO]:    Cached users before: 3
+[2025-10-25T16:40:20.828Z] [INFO]:    Cached users after: 3
+[2025-10-25T16:40:20.828Z] [INFO]:    Memory before: 1.37M
+[2025-10-25T16:40:20.829Z] [INFO]:    Memory after: 1.45M
+[2025-10-25T16:41:35.421Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:41:35.454Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:41:35.480Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:41:45.038Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:41:55.771Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:20.025Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:43:20.049Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:43:20.105Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:43:29.383Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:30.507Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:30.662Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:30.843Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.002Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.151Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.341Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.520Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.668Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.824Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:31.989Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:32.165Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:32.339Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:32.571Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:33.247Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:33.514Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:38.798Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:38.958Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:41.031Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:41.204Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:43:41.384Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:43.681Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T16:47:43.738Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:47:43.796Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2025-10-25T16:47:48.411Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:49.057Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:49.244Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:49.365Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:50.321Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:50.488Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:50.689Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:50.901Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:51.093Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:51.320Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:51.507Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:51.715Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.182Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.310Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.500Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.636Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.716Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.847Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:52.987Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.109Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.224Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.366Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.501Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.658Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.818Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:53.919Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.063Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.158Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.284Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.406Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.548Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.651Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.787Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:54.989Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.174Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.308Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.431Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.559Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.682Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:55.831Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.218Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.362Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.494Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.601Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.731Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:56.873Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.009Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.118Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.239Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.375Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.508Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.613Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.737Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:57.868Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:58.000Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:58.109Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:47:58.292Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:08.424Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:08.655Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:08.864Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:09.066Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:09.270Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:26.641Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T16:48:26.647Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2025-10-25T16:48:26.654Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2025-10-25T16:48:26.655Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-10-25T16:48:26.789Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T16:48:26.841Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T16:48:26.842Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T16:48:26.843Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-10-25T16:48:26.851Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T16:48:26.893Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (42ms)
+[2025-10-25T16:48:26.957Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T16:48:27.009Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T16:48:27.010Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T16:48:27.450Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T16:48:27.452Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T16:48:27.539Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T16:48:27.540Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T16:48:27.595Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T16:48:27.642Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T16:48:27.643Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T16:48:27.643Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1002ms)
+[2025-10-25T16:48:43.493Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T16:48:43.919Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T16:48:44.063Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T16:48:44.187Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T16:48:51.169Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T16:48:51.918Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:48:52.039Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:48:53.392Z] [INFO]: User baraawael7901@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-25T16:48:59.451Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:48:59.986Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:49:00.158Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:49:03.848Z] [INFO]: User baraawael7901@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2025-10-25T16:51:29.898Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T16:51:29.918Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:51:30.003Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:51:35.460Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:36.233Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:36.418Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:36.566Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.106Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.254Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.392Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.519Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.679Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.845Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:37.991Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.141Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.240Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.412Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.800Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.864Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:38.895Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.018Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.125Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.231Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.361Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.520Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.657Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.811Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:39.928Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.067Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.208Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.343Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.468Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.610Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.728Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:40.868Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.022Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.210Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.305Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.451Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.576Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.710Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.843Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:41.991Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.102Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.246Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.385Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.543Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.683Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.834Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:42.971Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.103Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.226Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.371Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.496Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.721Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.793Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:43.913Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:44.054Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:44.163Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:44.288Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:51:44.471Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:55:07.108Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T16:55:07.161Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:55:07.212Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:55:11.448Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:55:12.580Z] [ERROR]: Create chat error: Chat validation failed: chatNumber: Path `chatNumber` is required.
+[2025-10-25T16:58:22.216Z] [INFO]: ✅ Redis Connected
+[2025-10-25T16:58:22.422Z] [INFO]: 🚀 Redis Ready
+[2025-10-25T16:58:22.431Z] [INFO]: 🏓 Redis Ping Successful
+[2025-10-25T16:58:23.345Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2025-10-25T16:58:23.347Z] [INFO]: 🧹 Starting cache cleanup...
+[2025-10-25T16:58:23.438Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2025-10-25T16:58:23.440Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T16:58:23.488Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2025-10-25T16:58:23.502Z] [INFO]: ✅ Cleanup complete in 155ms
+[2025-10-25T16:58:23.503Z] [INFO]:    Users removed: 0
+[2025-10-25T16:58:23.505Z] [INFO]:    Cached users before: 3.5
+[2025-10-25T16:58:23.507Z] [INFO]:    Cached users after: 3.5
+[2025-10-25T16:58:23.510Z] [INFO]:    Memory before: 1.44M
+[2025-10-25T16:58:23.512Z] [INFO]:    Memory after: 1.52M
+[2025-10-25T16:59:56.890Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T16:59:56.926Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T16:59:57.198Z] [INFO]: User baraawael7901@gmail.com fetched 2 chats
+[2025-10-25T17:00:07.387Z] [INFO]: ✅ New chat created with participants: 68d8ff2507dbca5b8253d47c (creator) and 68fbbb4d0fc3acd4c7581b95 (recipient)
+[2025-10-25T17:00:07.391Z] [INFO]: 👥 Chat participants: baraa7 (68d8ff2507dbca5b8253d47c), baraa (68fbbb4d0fc3acd4c7581b95)
+[2025-10-25T17:00:07.393Z] [INFO]: Chat created/retrieved between 68d8ff2507dbca5b8253d47c and 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T17:00:07.457Z] [INFO]: User baraawael7901@gmail.com fetched 0 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:00:07.519Z] [INFO]: User baraawael7901@gmail.com fetched 0 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:00:14.678Z] [INFO]: Message sent in chat 68fd0217fcb035606fce8e3d by baraawael7901@gmail.com
+[2025-10-25T17:00:14.751Z] [INFO]: User baraawael7901@gmail.com fetched 1 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:00:38.096Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2025-10-25T17:00:38.102Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
+[2025-10-25T17:00:38.103Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
+[2025-10-25T17:00:38.104Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2025-10-25T17:00:38.117Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (13ms)
+[2025-10-25T17:00:38.128Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T17:00:38.137Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T17:00:38.138Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:00:38.487Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2025-10-25T17:00:38.488Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T17:00:38.513Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2025-10-25T17:00:38.515Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2025-10-25T17:00:38.522Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2025-10-25T17:00:38.528Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2025-10-25T17:00:38.529Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:00:38.531Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (435ms)
+[2025-10-25T17:01:02.968Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2025-10-25T17:01:04.991Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2025-10-25T17:01:05.077Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2025-10-25T17:01:05.814Z] [INFO]: User baraaweal24@gmail.com fetched 1 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:01:11.503Z] [INFO]: Message sent in chat 68fd0217fcb035606fce8e3d by baraaweal24@gmail.com
+[2025-10-25T17:01:11.574Z] [INFO]: User baraaweal24@gmail.com fetched 2 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:01:34.056Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T17:01:34.072Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-10-25T17:01:34.075Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-10-25T17:01:34.077Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T17:01:34.161Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (84ms)
+[2025-10-25T17:01:34.229Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T17:01:34.281Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T17:01:34.282Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:01:34.660Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T17:01:34.660Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T17:01:34.724Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T17:01:34.727Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T17:01:34.797Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T17:01:34.844Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T17:01:34.845Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:01:34.846Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (790ms)
+[2025-10-25T17:01:39.986Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:01:40.587Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:01:40.638Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:01:40.715Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:01:45.852Z] [INFO]: Admin baraawael7901@gmail.com fetched 4 chats for monitoring
+[2025-10-25T17:01:45.904Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T17:01:45.936Z] [INFO]: Admin baraawael7901@gmail.com fetched 4 chats for monitoring
+[2025-10-25T17:01:45.943Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:01:46.029Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:01:46.054Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T17:01:49.613Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T17:01:50.574Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2025-10-25T17:01:51.633Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68def23b0cc030df58db6b02 with 14 messages
+[2025-10-25T17:01:52.735Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:34:44.553Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-10-25T17:36:06.629Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-10-25T17:36:06.683Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2025-10-25T17:36:06.686Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2025-10-25T17:36:06.688Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-10-25T17:36:06.790Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (100ms)
+[2025-10-25T17:36:06.864Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T17:36:06.919Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T17:36:06.920Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:36:07.447Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2025-10-25T17:36:07.448Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T17:36:07.546Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2025-10-25T17:36:07.546Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-10-25T17:36:07.612Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2025-10-25T17:36:07.716Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2025-10-25T17:36:07.717Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-10-25T17:36:07.717Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1088ms)
+[2025-10-25T17:36:46.213Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-10-25T17:38:31.402Z] [INFO]: User baraawael7901@gmail.com fetched 3 chats
+[2025-10-25T17:38:31.573Z] [INFO]: User baraawael7901@gmail.com fetched 3 chats
+[2025-10-25T17:38:34.625Z] [INFO]: User baraawael7901@gmail.com fetched 2 messages from chat 68fd0217fcb035606fce8e3d
+[2025-10-25T17:38:36.270Z] [INFO]: User baraawael7901@gmail.com fetched 19 messages from chat 68e289afcfe238a77a2a6c8d
+[2025-10-25T17:38:37.008Z] [INFO]: User baraawael7901@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2025-10-25T17:39:02.661Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:39:02.879Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:39:02.948Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:39:03.083Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:39:07.472Z] [INFO]: Admin baraawael7901@gmail.com fetched 4 chats for monitoring
+[2025-10-25T17:39:07.541Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T17:39:07.561Z] [INFO]: Admin baraawael7901@gmail.com fetched 4 chats for monitoring
+[2025-10-25T17:39:07.571Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:39:07.649Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:39:07.671Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2025-10-25T17:39:09.161Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T17:39:15.043Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 2 messages
+[2025-10-25T17:41:04.105Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2025-10-25T17:42:04.814Z] [INFO]: Admin baraawael7901@gmail.com fetched 1 chats for monitoring
+[2025-10-25T17:43:32.769Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:43:32.857Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:01.152Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:44:01.429Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:01.494Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:44:01.605Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:38.901Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:38.983Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:41.579Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:44:41.747Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:44:41.876Z] [INFO]: Admin fetched stats: 6 total users
+[2025-10-25T17:44:41.883Z] [INFO]: Admin fetched users: page 1, 6 users
+[2025-10-25T17:46:01.269Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
