@@ -2,21 +2,24 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { UserPlus, LogOut, User } from 'lucide-react';
+import { UserPlus, LogOut, User, Store, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '../logo';
 import { useAuth } from '@/lib/auth-context';
 import { useEffect, useState } from 'react';
+import { BecomeSellerModal } from '@/components/become-seller-modal';
 
 export function Header() {
   const [activeSection, setActiveSection] = useState('home');
   const { user, logout, isAuthenticated, loading } = useAuth();
+  const [sellerModalOpen, setSellerModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { name: 'Home', href: '#home' },
     { name: 'Features', href: '#features' },
     { name: 'Games', href: '#games' },
-    { name: 'Sell', href: '/sell' },
+    ...(user?.isSeller ? [{ name: 'My Store', href: '/user/store' }] : []),
     { name: 'Support', href: '#support' },
   ];
 
@@ -49,14 +52,17 @@ export function Header() {
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-white/5">
       <nav className="container mx-auto flex items-center justify-between px-4 py-3">
-        <div className="flex-1 flex justify-start">
+        {/* Logo */}
+        <div className="flex-shrink-0">
           <Logo />
         </div>
-        <ul className="hidden md:flex items-center justify-center space-x-2 md:space-x-4 lg:space-x-8">
+
+        {/* Desktop Nav */}
+        <ul className="hidden lg:flex items-center justify-center space-x-1 xl:space-x-2">
           {navItems.map((item) => {
-            const isActive = item.href === `#${activeSection}` || (item.href === '/sell' && activeSection === 'sell-page');
+            const isActive = item.href === `#${activeSection}`;
             return (
               <li key={item.name}>
                 <Link
@@ -64,8 +70,8 @@ export function Header() {
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                     isActive
-                      ? "bg-[#8A704D]/80 text-white"
-                      : "text-foreground/70 hover:text-white"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-foreground/70 hover:text-white hover:bg-white/5"
                   )}
                 >
                   {item.name}
@@ -74,57 +80,143 @@ export function Header() {
             )
           })}
         </ul>
-        <div className="flex-1 flex justify-end">
+
+        {/* Right Section */}
+        <div className="flex items-center gap-2 sm:gap-3">
           {loading ? (
-            <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-              <span className="text-sm text-muted-foreground">Loading...</span>
+            <div className="flex items-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
             </div>
           ) : isAuthenticated && user ? (
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-sm">
-                <User className="h-4 w-4 text-primary" />
-                <span className="text-white">Welcome, {user.username}</span>
-              </div>
+            <>
+              {/* Become Seller */}
+              {!user.isSeller && (
+                <button
+                  onClick={() => setSellerModalOpen(true)}
+                  className="relative group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+                  title="Become a Seller"
+                >
+                  <Store className="h-4 w-4 text-cyan-400" />
+                  <span className="hidden xl:inline text-xs font-medium text-cyan-300">Become Seller</span>
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 border-2 border-background animate-pulse" />
+                </button>
+              )}
+              {user.isSeller && (
+                <Link href="/user/store">
+                  <button className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 hover:border-green-500/50 transition-all duration-300">
+                    <Store className="h-4 w-4 text-green-400" />
+                    <span className="hidden xl:inline text-xs font-medium text-green-300">My Store</span>
+                  </button>
+                </Link>
+              )}
+
+              {/* User Info - Desktop */}
+              <Link href="/user/dashboard" className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-all">
+                <User className="h-3.5 w-3.5 text-primary" />
+                <span className="text-white text-xs font-medium max-w-[100px] truncate">{user.username}</span>
+              </Link>
+
               {user.role === 'admin' && (
-                <Link href="/admin">
+                <Link href="/admin" className="hidden sm:block">
                   <Button 
                     variant="outline"
-                    className="font-bold rounded-full border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300"
+                    size="sm"
+                    className="font-bold rounded-full border-purple-500/50 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300 text-xs h-8 px-3"
                   >
-                    🎮 Admin Panel
+                    Admin
                   </Button>
                 </Link>
               )}
               <Button 
                 onClick={handleLogout}
-                variant="outline"
-                className="font-bold rounded-full border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+                variant="ghost"
+                size="sm"
+                className="hidden sm:flex rounded-full text-red-400 hover:bg-red-500/10 hover:text-red-300 h-8 w-8 p-0"
               >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                <LogOut className="h-4 w-4" />
               </Button>
-            </div>
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </>
           ) : (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Link href="/login">
-                <Button 
-                  variant="ghost"
-                  className="font-bold rounded-full text-white hover:bg-white/10 transition-all duration-300"
-                >
+                <Button variant="ghost" size="sm" className="font-bold rounded-full text-white hover:bg-white/10 text-xs sm:text-sm h-8 sm:h-9">
                   Login
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="font-bold rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all duration-300">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Create Account
+                <Button size="sm" className="font-bold rounded-full bg-primary hover:bg-primary/80 text-white text-xs sm:text-sm h-8 sm:h-9">
+                  <UserPlus className="mr-1.5 h-3.5 w-3.5 hidden sm:inline" />
+                  Sign Up
                 </Button>
               </Link>
+              {/* Mobile hamburger for non-auth */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           )}
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+          <div className="container mx-auto px-4 py-4 space-y-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all"
+              >
+                {item.name}
+              </Link>
+            ))}
+            {isAuthenticated && user && (
+              <>
+                <div className="border-t border-white/10 my-2" />
+                <Link
+                  href="/user/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all"
+                >
+                  <User className="h-4 w-4 text-primary" />
+                  Dashboard
+                </Link>
+                {user.role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-purple-400 hover:bg-purple-500/10 transition-all"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+                <button
+                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-all text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      <BecomeSellerModal isOpen={sellerModalOpen} onClose={() => setSellerModalOpen(false)} />
     </header>
   );
 }

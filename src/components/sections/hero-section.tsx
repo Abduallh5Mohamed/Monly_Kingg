@@ -30,27 +30,27 @@ export function HeroSection() {
       <CircuitBackground />
       <Header />
       <main className="relative container mx-auto px-4 z-20">
-        <section className="min-h-screen flex items-center pt-24 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+        <section className="min-h-screen flex items-center pt-28 sm:pt-24 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-              <h1 className="text-6xl md:text-8xl font-bold text-white uppercase font-headline" style={{ transform: 'scaleY(0.88)' }}>
+              <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white uppercase font-headline leading-[0.9]" style={{ transform: 'scaleY(0.88)' }}>
                 Dominate <br/> Of Ranks
               </h1>
-              <div className="space-y-2 -mt-4">
+              <div className="space-y-4 mt-2 sm:mt-0 sm:-mt-4">
                 <p className="text-sm md:text-base max-w-md text-foreground/70 lg:pl-4">
                   Your Gateway to the Premium Game Accounts & Unmatched Powers.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 items-center lg:items-start">
-                  <Button size="lg" className="text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-6 pr-1 group">
+                  <Button size="lg" className="text-sm sm:text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-5 sm:pl-6 pr-1 group">
                     EXPLORE THE UNIVERSE
-                    <span className="ml-3 h-10 w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
+                    <span className="ml-2 sm:ml-3 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
                       <PlayIcon />
                     </span>
                   </Button>
                 </div>
               </div>
-              <div className="pt-12 w-full max-w-2xl">
-                <h2 className="text-xl font-bold font-headline text-white mb-4 text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
+              <div className="pt-8 sm:pt-12 w-full max-w-2xl">
+                <h2 className="text-lg sm:text-xl font-bold font-headline text-white mb-4 text-center lg:text-left uppercase tracking-wide">TRENDING ACCOUNTS</h2>
                 <AccountCarousel />
               </div>
             </div>

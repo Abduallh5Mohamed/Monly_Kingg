@@ -60,8 +60,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           variant: 'default',
         });
         
-        // Redirect user to home page
-        router.push('/');
+        // Redirect user to dashboard
+        router.push('/user/dashboard');
         return true;
       } else {
         toast({
@@ -133,8 +133,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           variant: 'default',
         });
         
-        // Redirect user to home page
-        router.push('/');
+        // Redirect user to dashboard
+        router.push('/user/dashboard');
         return true;
       } else {
         toast({

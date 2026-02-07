@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, MessageSquare, LogOut, User, FileText } from 'lucide-react';
+import { Home, MessageSquare, LogOut, User, FileText, Store } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 
 interface SidebarItem {
   icon: any;
@@ -15,11 +16,13 @@ export function UserSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const menuItems: SidebarItem[] = [
   { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
   { icon: MessageSquare, label: 'Messages', path: '/user/chat', badge: 3 },
     { icon: FileText, label: 'Payments', path: '/user/payments' },
+    ...(user?.isSeller ? [{ icon: Store, label: 'My Store', path: '/user/store' }] : []),
     { icon: User, label: 'Profile', path: '/user/profile' }
   ];
 

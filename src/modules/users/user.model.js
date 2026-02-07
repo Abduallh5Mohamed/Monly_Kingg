@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
 
   role: { type: String, enum: ["user", "admin"], default: "user" },
 
+  isSeller: { type: Boolean, default: false },
+  sellerApprovedAt: { type: Date },
+
   twoFA: {
     enabled: { type: Boolean, default: false },
     secret: { type: String },

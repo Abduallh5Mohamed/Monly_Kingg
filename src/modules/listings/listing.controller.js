@@ -1,0 +1,112 @@
+import Listing from "./listing.model.js";
+import User from "../users/user.model.js";
+
+// Create a new listing (seller only)
+export const createListing = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user || !user.isSeller) {
+      return res.status(403).json({ message: "Only approved sellers can create listings" });
+    }
+
+    const listing = new Listing({
+      seller: req.user._id,
+      title: req.body.title,
+      game: req.body.game,
+      description: req.body.description || "",
+      price: req.body.price,
+      details: req.body.details || {},
+      status: "available",
+    });
+
+    await listing.save();
+    return res.status(201).json({ message: "Listing created successfully", data: listing });
+  } catch (error) {
+    console.error("Create listing error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get my listings (seller)
+export const getMyListings = async (req, res) => {
+  try {
+    const { status = "all", page = 1, limit = 20 } = req.query;
+    const filter = { seller: req.user._id };
+    if (status !== "all") filter.status = status;
+
+    const listings = await Listing.find(filter)
+      .populate("game", "name")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await Listing.countDocuments(filter);
+
+    return res.status(200).json({
+      data: listings,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error("Get my listings error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update a listing
+export const updateListing = async (req, res) => {
+  try {
+    const listing = await Listing.findOne({ _id: req.params.id, seller: req.user._id });
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    if (req.body.title) listing.title = req.body.title;
+    if (req.body.description !== undefined) listing.description = req.body.description;
+    if (req.body.price) listing.price = req.body.price;
+    if (req.body.details) listing.details = req.body.details;
+    if (req.body.status) listing.status = req.body.status;
+
+    await listing.save();
+    return res.status(200).json({ message: "Listing updated", data: listing });
+  } catch (error) {
+    console.error("Update listing error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Delete a listing
+export const deleteListing = async (req, res) => {
+  try {
+    const listing = await Listing.findOneAndDelete({ _id: req.params.id, seller: req.user._id });
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+    return res.status(200).json({ message: "Listing deleted" });
+  } catch (error) {
+    console.error("Delete listing error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get seller stats
+export const getSellerStats = async (req, res) => {
+  try {
+    const sellerId = req.user._id;
+    const totalListings = await Listing.countDocuments({ seller: sellerId });
+    const activeListings = await Listing.countDocuments({ seller: sellerId, status: "available" });
+    const soldListings = await Listing.countDocuments({ seller: sellerId, status: "sold" });
+
+    return res.status(200).json({
+      data: {
+        totalListings,
+        activeListings,
+        soldListings,
+      },
+    });
+  } catch (error) {
+    console.error("Get seller stats error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};

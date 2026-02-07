@@ -95,7 +95,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     // Get user data (lean for performance)
-    const userData = await User.findOne({ email }).select('_id username email role').lean();
+    const userData = await User.findOne({ email }).select('_id username email role isSeller').lean();
 
     res.status(200).json({
       message: "Email verified and logged in",
@@ -103,7 +103,8 @@ export const verifyEmail = async (req, res) => {
         id: userData._id,
         username: userData.username,
         email: userData.email,
-        role: userData.role
+        role: userData.role,
+        isSeller: userData.isSeller || false
       },
       expiresIn: 15 * 60
     });
@@ -158,7 +159,7 @@ export const login = async (req, res) => {
     });
 
     // Get user data from auth.service (lean for performance)
-    const user = await User.findOne({ email }).select('_id username email role').lean();
+    const user = await User.findOne({ email }).select('_id username email role isSeller').lean();
 
     // Return user data in response (without exposing tokens)
     res.status(200).json({
@@ -167,7 +168,8 @@ export const login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role
+        role: user.role,
+        isSeller: user.isSeller || false
       },
       expiresIn: 15 * 60
     });
@@ -203,7 +205,7 @@ export const refresh = async (req, res) => {
     // Decode JWT to get user ID
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     // Get user data (lean for performance)
-    const userData = await User.findById(decoded.id).select('_id username email role').lean();
+    const userData = await User.findById(decoded.id).select('_id username email role isSeller').lean();
 
     res.status(200).json({
       message: "Tokens refreshed",
@@ -211,7 +213,8 @@ export const refresh = async (req, res) => {
         id: userData._id,
         username: userData.username,
         email: userData.email,
-        role: userData.role
+        role: userData.role,
+        isSeller: userData.isSeller || false
       },
       expiresIn: 15 * 60
     });

@@ -4114,3 +4114,228 @@
 [2025-10-20T09:39:25.329Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
 [2025-10-20T09:39:25.375Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
 [2025-10-20T09:39:26.683Z] [INFO]: User monlykingstore@gmail.com fetched 1 messages from chat 68e2f2aa987be6d104147808
+[2025-10-20T09:51:35.370Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:35.422Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:36.050Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:36.118Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:36.562Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:36.627Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:37.243Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:37.306Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:37.769Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:37.838Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:38.224Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:38.293Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:38.796Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:38.845Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:40.310Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:40.364Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:41.071Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:41.139Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:41.623Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:41.691Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:41.996Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:42.066Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:42.563Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:42.628Z] [INFO]: User monlykingstore@gmail.com fetched 2 chats
+[2025-10-20T09:51:44.636Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:51:52.746Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-20T09:51:55.225Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-21T08:22:31.786Z] [ERROR]: Redis Error:
+[2025-10-21T08:22:31.789Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-21T08:22:31.791Z] [INFO]: 📝 Server will continue without caching
+[2025-10-21T08:22:31.976Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-21T08:22:31.977Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-21T08:22:44.647Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-21T08:23:01.830Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2025-10-25T14:43:11.525Z] [ERROR]: Redis Error:
+[2025-10-25T14:43:11.527Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-10-25T14:43:11.528Z] [INFO]: 📝 Server will continue without caching
+[2025-10-25T14:43:11.990Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2025-10-25T14:43:11.991Z] [INFO]: ✅ Socket.IO initialized
+[2025-10-25T14:47:01.845Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-10-25T14:47:01.847Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-25T14:47:01.848Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-10-25T14:47:01.944Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-25T14:47:01.946Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T14:47:01.948Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-10-25T14:47:01.955Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-10-25T14:47:01.992Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (36ms)
+[2025-10-25T14:47:01.998Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-25T14:47:02.000Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T14:47:02.431Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2025-10-25T14:47:02.433Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-10-25T14:47:02.512Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-10-25T14:47:02.526Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-10-25T14:47:02.528Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-10-25T14:47:02.531Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (686ms)
+[2025-10-25T14:47:05.175Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-25T14:47:05.466Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-25T14:47:05.633Z] [INFO]: Admin fetched stats: 4 total users
+[2025-10-25T14:47:05.711Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-10-25T14:47:37.334Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-12-19T19:49:20.932Z] [ERROR]: Redis Error:
+[2025-12-19T19:49:20.937Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-12-19T19:49:20.941Z] [INFO]: 📝 Server will continue without caching
+[2025-12-19T19:51:09.439Z] [ERROR]: Redis Error:
+[2025-12-19T19:51:09.444Z] [ERROR]: ❌ Redis Connection Failed:
+[2025-12-19T19:51:09.447Z] [INFO]: 📝 Server will continue without caching
+[2025-12-19T19:58:18.194Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2025-12-19T19:58:18.199Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-12-19T19:58:18.202Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2025-12-19T19:58:18.349Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-12-19T19:58:18.352Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-12-19T19:58:18.356Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2025-12-19T19:58:18.372Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2025-12-19T19:58:18.426Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (51ms)
+[2025-12-19T19:58:18.440Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-12-19T19:58:18.444Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-12-19T19:58:19.171Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2025-12-19T19:58:19.175Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2025-12-19T19:58:19.273Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2025-12-19T19:58:19.288Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2025-12-19T19:58:19.293Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2025-12-19T19:58:19.297Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (1104ms)
+[2025-12-19T19:59:19.220Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2025-12-19T20:00:39.623Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-12-19T20:00:39.625Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:00:39.627Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-12-19T20:00:39.660Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:00:39.664Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:00:39.666Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-12-19T20:00:39.672Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-12-19T20:00:39.710Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (34ms)
+[2025-12-19T20:00:39.726Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:00:39.732Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:00:40.344Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2025-12-19T20:00:40.346Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-12-19T20:00:40.385Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-12-19T20:00:40.390Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:00:40.393Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:00:40.395Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (772ms)
+[2025-12-19T20:00:47.220Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2025-12-19T20:01:06.945Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2025-12-19T20:01:06.946Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:01:06.949Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2025-12-19T20:01:06.999Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:01:07.003Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:01:07.006Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2025-12-19T20:01:07.015Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2025-12-19T20:01:07.053Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (35ms)
+[2025-12-19T20:01:07.063Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:01:07.065Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:01:07.644Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2025-12-19T20:01:07.647Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2025-12-19T20:01:07.690Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2025-12-19T20:01:07.697Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2025-12-19T20:01:07.699Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2025-12-19T20:01:07.700Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (755ms)
+[2025-12-19T20:05:46.661Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-12-19T20:05:46.789Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:05:46.892Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:05:47.033Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:05:47.148Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:06:05.940Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:06:06.133Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:06:06.172Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:06:06.284Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:07:38.760Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:07:38.934Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:07:39.012Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:07:39.158Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:07:43.454Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-12-19T20:07:46.239Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2025-12-19T20:07:46.308Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:07:46.393Z] [INFO]: Admin fetched stats: 4 total users
+[2025-12-19T20:07:46.441Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:07:46.542Z] [INFO]: Admin fetched users: page 1, 4 users
+[2025-12-19T20:07:54.427Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-07T21:29:18.577Z] [ERROR]: Redis Error:
+[2026-02-07T21:29:18.585Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-07T21:29:18.594Z] [INFO]: 📝 Server will continue without caching
+[2026-02-07T21:29:20.182Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-07T21:29:20.186Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-07T21:29:20.255Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-07T21:29:20.260Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-07T21:29:20.387Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2026-02-07T21:29:20.400Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-07T21:45:08.896Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: monlykingstore@gmail.com
+[2026-02-07T21:45:08.899Z] [WARN]: Cache miss - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2026-02-07T21:45:08.904Z] [INFO]: 📊 USER CACHE MISS: monlykingstore@gmail.com - Querying database
+[2026-02-07T21:45:09.055Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2026-02-07T21:45:09.057Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2026-02-07T21:45:09.057Z] [INFO]: 💾 USER CACHED from DB: monlykingstore@gmail.com
+[2026-02-07T21:45:09.067Z] [INFO]: ⚡ [CACHE HIT] User found in cache: monlykingstore@gmail.com
+[2026-02-07T21:45:09.108Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: monlykingstore@gmail.com (37ms)
+[2026-02-07T21:45:09.117Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2026-02-07T21:45:09.121Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2026-02-07T21:45:09.556Z] [WARN]: Cache skip - Redis not ready for key: session:68dc6297ea6649ef04ed569c
+[2026-02-07T21:45:09.558Z] [INFO]: ✅ Session cached for user 68dc6297ea6649ef04ed569c
+[2026-02-07T21:45:09.604Z] [INFO]: ✅ Auth log added to cache for user 68dc6297ea6649ef04ed569c
+[2026-02-07T21:45:09.611Z] [WARN]: Cache skip - Redis not ready for key: user:email:monlykingstore@gmail.com
+[2026-02-07T21:45:09.614Z] [INFO]: ✅ User 68dc6297ea6649ef04ed569c cached for 3600 seconds (without sensitive data)
+[2026-02-07T21:45:09.615Z] [INFO]: ✅ [LOGIN SUCCESS] monlykingstore@gmail.com from CACHE→DB (720ms)
+[2026-02-07T21:45:23.011Z] [INFO]: Admin fetched stats: 4 total users
+[2026-02-07T21:45:23.290Z] [INFO]: Admin fetched stats: 4 total users
+[2026-02-07T21:45:23.343Z] [INFO]: Admin fetched users: page 1, 4 users
+[2026-02-07T21:45:23.441Z] [INFO]: Admin fetched users: page 1, 4 users
+[2026-02-07T22:07:36.844Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2026-02-07T22:07:39.036Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-07T22:16:13.473Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-07T22:16:13.477Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-07T22:16:13.479Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-07T22:16:13.504Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-07T22:16:13.509Z] [INFO]: ✅ User 68de79e5ad1be2e1bc91702e cached for 3600 seconds (without sensitive data)
+[2026-02-07T22:16:13.513Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-07T22:16:13.518Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-07T22:16:13.539Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (18ms)
+[2026-02-07T22:16:13.546Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-07T22:16:13.552Z] [INFO]: ✅ User 68de79e5ad1be2e1bc91702e cached for 3600 seconds (without sensitive data)
+[2026-02-07T22:16:13.903Z] [WARN]: Cache skip - Redis not ready for key: session:68de79e5ad1be2e1bc91702e
+[2026-02-07T22:16:13.905Z] [INFO]: ✅ Session cached for user 68de79e5ad1be2e1bc91702e
+[2026-02-07T22:16:13.920Z] [INFO]: ✅ Auth log added to cache for user 68de79e5ad1be2e1bc91702e
+[2026-02-07T22:16:13.924Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-07T22:16:13.928Z] [INFO]: ✅ User 68de79e5ad1be2e1bc91702e cached for 3600 seconds (without sensitive data)
+[2026-02-07T22:16:13.930Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (457ms)
+[2026-02-07T22:16:52.413Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:17:02.932Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:17:33.069Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:17:47.601Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2026-02-07T22:17:47.636Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2026-02-07T22:35:09.803Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:35:10.331Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:41:06.884Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:42:20.477Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:42:41.537Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:43:13.503Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:44:05.524Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:45:56.319Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:48:04.828Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:49:25.631Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:49:34.737Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:49:36.273Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:50:34.422Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:51:29.995Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:52:00.454Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:52:27.502Z] [ERROR]: Redis Error:
+[2026-02-07T22:52:27.508Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-07T22:52:27.510Z] [INFO]: 📝 Server will continue without caching
+[2026-02-07T22:52:27.864Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-07T22:52:27.867Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-07T22:52:27.869Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-07T22:52:27.870Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-07T22:52:27.905Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2026-02-07T22:52:27.906Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-07T22:54:25.966Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:58:37.595Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:59:10.724Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T22:59:58.401Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-07T23:08:55.094Z] [ERROR]: Redis Error:
+[2026-02-07T23:08:55.098Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-07T23:08:55.100Z] [INFO]: 📝 Server will continue without caching
+[2026-02-07T23:08:55.438Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-07T23:08:55.440Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-07T23:08:55.444Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-07T23:08:55.448Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-07T23:08:55.482Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2026-02-07T23:08:55.485Z] [INFO]: ✅ Socket.IO initialized

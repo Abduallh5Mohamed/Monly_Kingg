@@ -1,7 +1,6 @@
 // Admin API service for frontend
-const API_BASE = process.env.NODE_ENV === 'production'
-    ? 'https://your-domain.com/api/v1'
-    : 'http://localhost:5000/api/v1';
+// استخدام relative URL للمرور من خلال Next.js proxy
+const API_BASE = '/api/v1';
 
 interface UserFilters {
     page?: number;
@@ -40,6 +39,18 @@ class AdminApiService {
         };
     }
 
+    // Get request options with credentials
+    getRequestOptions(options: RequestInit = {}): RequestInit {
+        return {
+            ...options,
+            credentials: 'include', // إرسال الكوكيز
+            headers: {
+                ...this.getHeaders(),
+                ...(options.headers || {})
+            }
+        };
+    }
+
     // Handle API response
     async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
         if (!response.ok) {
@@ -65,58 +76,57 @@ class AdminApiService {
             role
         });
 
-        const response = await fetch(`${this.baseUrl}/users?${queryParams}`, {
-            headers: this.getHeaders()
-        });
+        const response = await fetch(`${this.baseUrl}/users?${queryParams}`, 
+            this.getRequestOptions()
+        );
 
         return this.handleResponse(response);
     }
 
     // Get admin dashboard statistics
     async getStats(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/stats`, {
-            headers: this.getHeaders()
-        });
+        const response = await fetch(`${this.baseUrl}/stats`, 
+            this.getRequestOptions()
+        );
 
         return this.handleResponse(response);
     }
 
     // Update user role
     async updateUserRole(userId: string, role: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}/role`, {
-            method: 'PUT',
-            headers: this.getHeaders(),
-            body: JSON.stringify({ role })
-        });
+        const response = await fetch(`${this.baseUrl}/users/${userId}/role`, 
+            this.getRequestOptions({
+                method: 'PUT',
+                body: JSON.stringify({ role })
+            })
+        );
 
         return this.handleResponse(response);
     }
 
     // Delete user
     async deleteUser(userId: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}`, {
-            method: 'DELETE',
-            headers: this.getHeaders()
-        });
+        const response = await fetch(`${this.baseUrl}/users/${userId}`, 
+            this.getRequestOptions({ method: 'DELETE' })
+        );
 
         return this.handleResponse(response);
     }
 
     // Toggle user active status
     async toggleUserStatus(userId: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}/toggle-status`, {
-            method: 'PUT',
-            headers: this.getHeaders()
-        });
+        const response = await fetch(`${this.baseUrl}/users/${userId}/toggle-status`, 
+            this.getRequestOptions({ method: 'PUT' })
+        );
 
         return this.handleResponse(response);
     }
 
     // Get recent activity
     async getRecentActivity(limit: number = 10): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/activity?limit=${limit}`, {
-            headers: this.getHeaders()
-        });
+        const response = await fetch(`${this.baseUrl}/activity?limit=${limit}`, 
+            this.getRequestOptions()
+        );
 
         return this.handleResponse(response);
     }

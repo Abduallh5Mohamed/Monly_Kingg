@@ -14,7 +14,8 @@ import {
   BarChart3,
   Gamepad2,
   Shield,
-  Bell
+  Bell,
+  Store
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -22,6 +23,7 @@ const sidebarItems = [
   { icon: Users, label: 'Users', href: '/admin/users' },
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
+  { icon: Store, label: 'Sellers', href: '/admin/sellers' },
   { icon: MessageSquare, label: 'Chats', href: '/admin/chats' },
   { icon: BarChart3, label: 'Analytics', href: '/admin/analytics' },
   { icon: Gamepad2, label: 'Games', href: '/admin/games' },

@@ -57,7 +57,7 @@ async function initializeServices() {
 }
 
 const dev = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 // Initialize Next.js app
 const nextApp = next({ dev });
@@ -127,11 +127,13 @@ nextApp.prepare().then(async () => {
           imgSrc: [
             "'self'",
             "data:",
+            "blob:",
             "https://placehold.co",
             "https://images.unsplash.com",
             "https://picsum.photos",
             "https://upload.wikimedia.org",
-            "https://www.clipartmax.com"
+            "https://www.clipartmax.com",
+            "https://api.dicebear.com"
           ],
           fontSrc: [
             "'self'",
@@ -195,10 +197,28 @@ nextApp.prepare().then(async () => {
   // Admin routes (load dynamically to avoid import issues)
   try {
     const { default: adminRoutes } = await import("./src/modules/admin/admin.routes.js");
-    app.use("/api/v1/admin", adminRoutes); // No CSRF for admin routes (protected by JWT)
-    app.use("/api/admin", adminRoutes); // Keep both for compatibility
+    app.use("/api/v1/admin", adminRoutes);
+    app.use("/api/admin", adminRoutes);
   } catch (error) {
     console.warn('⚠️ Admin routes not loaded:', error.message);
+  }
+
+  // Seller routes
+  try {
+    const { default: sellerRoutes } = await import("./src/modules/sellers/seller.routes.js");
+    app.use("/api/v1/seller", sellerRoutes);
+    console.log('✅ Seller routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Seller routes not loaded:', error.message);
+  }
+
+  // Listing routes
+  try {
+    const { default: listingRoutes } = await import("./src/modules/listings/listing.routes.js");
+    app.use("/api/v1/listings", listingRoutes);
+    console.log('✅ Listing routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Listing routes not loaded:', error.message);
   }
 
   // Health check endpoint

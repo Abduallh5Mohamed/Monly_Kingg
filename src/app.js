@@ -4,6 +4,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import sellerRoutes from "./modules/sellers/seller.routes.js";
+import listingRoutes from "./modules/listings/listing.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import helmet from "helmet";
 import cors from "cors";
@@ -78,6 +80,8 @@ app.use(globalLimiter);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/seller", sellerRoutes);
+app.use("/api/v1/listings", listingRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

@@ -26,6 +26,7 @@ interface UserData {
   username: string;
   email: string;
   role: string;
+  isSeller?: boolean;
 }
 
 interface AuthResponse {
