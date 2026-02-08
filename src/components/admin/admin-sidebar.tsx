@@ -15,7 +15,8 @@ import {
   Gamepad2,
   Shield,
   Bell,
-  Store
+  Store,
+  Megaphone
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -24,6 +25,7 @@ const sidebarItems = [
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
   { icon: Store, label: 'Sellers', href: '/admin/sellers' },
+  { icon: Megaphone, label: 'Promotions', href: '/admin/promotions' },
   { icon: MessageSquare, label: 'Chats', href: '/admin/chats' },
   { icon: BarChart3, label: 'Analytics', href: '/admin/analytics' },
   { icon: Gamepad2, label: 'Games', href: '/admin/games' },

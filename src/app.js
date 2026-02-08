@@ -6,6 +6,7 @@ import userRoutes from "./modules/users/user.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import sellerRoutes from "./modules/sellers/seller.routes.js";
 import listingRoutes from "./modules/listings/listing.routes.js";
+import promotionRoutes from "./modules/promotions/promotion.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import helmet from "helmet";
 import cors from "cors";
@@ -90,6 +91,7 @@ app.use("/api/v1/users", csrfProtection, userRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/seller", sellerRoutes);
 app.use("/api/v1/listings", listingRoutes);
+app.use("/api/v1/promotions", promotionRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");
