@@ -6353,3 +6353,204 @@
 [2026-02-08T00:19:42.449Z] [INFO]: Admin fetched stats: 6 total users
 [2026-02-08T00:19:42.584Z] [INFO]: Admin fetched users: page 1, 6 users
 [2026-02-08T00:33:12.440Z] [ERROR]: Redis Error:
+[2026-02-08T20:34:17.891Z] [ERROR]: Redis Error:
+[2026-02-08T20:34:17.894Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-08T20:34:17.894Z] [INFO]: 📝 Server will continue without caching
+[2026-02-08T20:34:18.308Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T20:34:18.309Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T20:34:18.311Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-08T20:34:18.311Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-08T20:34:18.322Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2026-02-08T20:34:18.322Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T20:48:52.948Z] [INFO]: ✅ Redis Connected
+[2026-02-08T20:48:53.019Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T20:48:53.021Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T20:48:53.281Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T20:48:53.282Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T20:48:53.309Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2026-02-08T20:48:53.310Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T20:48:53.316Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-08T20:48:53.328Z] [INFO]: ✅ Cleanup complete in 46ms
+[2026-02-08T20:48:53.328Z] [INFO]:    Users removed: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Cached users before: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Cached users after: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Memory before: 1.05M
+[2026-02-08T20:48:53.330Z] [INFO]:    Memory after: 1.20M
+[2026-02-08T21:10:35.756Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2026-02-08T21:10:42.099Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:10:42.213Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:10:42.508Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:10:42.942Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:10:57.066Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-08T21:11:07.497Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T21:11:07.523Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2026-02-08T21:11:07.529Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2026-02-08T21:11:07.530Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-08T21:11:07.590Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:07.594Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:07.595Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:07.596Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-08T21:11:07.598Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T21:11:07.608Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (9ms)
+[2026-02-08T21:11:07.621Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:07.628Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:07.630Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:08.018Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T21:11:08.021Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.052Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.055Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.069Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:08.080Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:08.081Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:08.083Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (586ms)
+[2026-02-08T21:11:19.132Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-08T21:11:41.864Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-08T21:12:57.253Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-08T21:12:57.361Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-08T21:14:05.499Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T21:14:05.779Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2026-02-08T21:14:05.788Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2026-02-08T21:14:05.791Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-08T21:14:06.173Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:06.225Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:06.226Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:06.228Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-08T21:14:06.246Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T21:14:06.291Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (42ms)
+[2026-02-08T21:14:06.378Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:06.432Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:06.433Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:07.112Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T21:14:07.113Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.223Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.224Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.301Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:07.354Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:07.355Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:07.356Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1857ms)
+[2026-02-08T21:14:12.892Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T21:14:16.670Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T21:14:16.703Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T21:14:16.706Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T21:14:16.707Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T21:14:16.742Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (35ms)
+[2026-02-08T21:14:16.829Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:16.876Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:16.877Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:17.285Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T21:14:17.286Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.369Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.370Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.433Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:17.480Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:17.480Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:17.481Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (811ms)
+[2026-02-08T21:14:23.978Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:14:24.161Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:14:24.275Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:14:24.316Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:21.448Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-08T22:06:21.985Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:31.756Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T22:06:38.997Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T22:06:39.020Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T22:06:39.021Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T22:06:39.022Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T22:06:39.055Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (33ms)
+[2026-02-08T22:06:39.126Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:06:39.174Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:06:39.175Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:06:39.640Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T22:06:39.641Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.745Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.745Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.812Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:06:39.862Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:06:39.863Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:06:39.863Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (866ms)
+[2026-02-08T22:06:45.136Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:45.305Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:45.420Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:45.478Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:52.761Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:52.889Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:07:49.062Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-08T22:37:55.177Z] [INFO]: ✅ Redis Connected
+[2026-02-08T22:37:55.255Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T22:37:55.258Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T22:39:03.694Z] [INFO]: ✅ Redis Connected
+[2026-02-08T22:39:03.730Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T22:39:03.740Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T22:39:04.139Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T22:39:04.140Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T22:39:04.172Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2026-02-08T22:39:04.173Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T22:39:04.193Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-08T22:39:04.208Z] [INFO]: ✅ Cleanup complete in 68ms
+[2026-02-08T22:39:04.209Z] [INFO]:    Users removed: 0
+[2026-02-08T22:39:04.209Z] [INFO]:    Cached users before: 1
+[2026-02-08T22:39:04.210Z] [INFO]:    Cached users after: 1
+[2026-02-08T22:39:04.210Z] [INFO]:    Memory before: 1.48M
+[2026-02-08T22:39:04.211Z] [INFO]:    Memory after: 1.52M
+[2026-02-08T22:39:44.525Z] [INFO]: 📊 Cache stats retrieved: 12 total keys
+[2026-02-08T22:40:08.671Z] [INFO]: 📊 Cache stats retrieved: 12 total keys
+[2026-02-08T22:41:59.592Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T22:42:07.943Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T22:42:07.992Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2026-02-08T22:42:08.005Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2026-02-08T22:42:08.009Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-08T22:42:08.092Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.098Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.101Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.102Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-08T22:42:08.105Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T22:42:08.136Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (28ms)
+[2026-02-08T22:42:08.158Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.168Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.170Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.671Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T22:42:08.673Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.718Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.721Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.735Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.743Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.744Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.745Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (802ms)
+[2026-02-08T22:44:03.153Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-08T22:44:09.894Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T22:44:09.920Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T22:44:09.923Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T22:44:09.925Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T22:44:10.006Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (79ms)
+[2026-02-08T22:44:10.079Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:44:10.131Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:44:10.133Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:44:10.565Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T22:44:10.567Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.649Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.652Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.709Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:44:10.758Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:44:10.760Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:44:10.762Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (868ms)
+[2026-02-08T22:44:25.481Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:44:25.688Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:44:25.791Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:44:25.810Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T23:18:30.396Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T23:18:40.114Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T23:18:40.139Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
+[2026-02-08T23:18:40.141Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
+[2026-02-08T23:18:40.143Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T23:18:40.166Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (23ms)
+[2026-02-08T23:18:40.184Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T23:18:40.186Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T23:18:40.187Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T23:18:40.616Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T23:18:40.617Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.650Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.651Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.660Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T23:18:40.662Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T23:18:40.663Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T23:18:40.663Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (549ms)
