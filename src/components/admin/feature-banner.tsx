@@ -1,94 +1,49 @@
-'use client';
+﻿'use client';
 
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
+import { BarChart3, Users, ShoppingCart, TrendingUp } from 'lucide-react';
 
 export function FeatureBanner() {
   return (
-    <Card className="relative overflow-hidden border-0 bg-gradient-to-r from-[#1a1d2e] via-[#2a2d4e] to-[#1a1d2e] min-h-[200px] md:min-h-[280px]">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
-      </div>
+    <Card className="relative overflow-hidden border border-white/[0.06] bg-[#131620]">
+      {/* Subtle background grid */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+        backgroundSize: '40px 40px'
+      }} />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full p-4 md:p-8 gap-4">
-        {/* Left Side - Character/Image Placeholder - Hidden on mobile */}
-        <div className="hidden lg:flex flex-shrink-0 w-1/3">
-          <div className="relative w-full h-48 flex items-center justify-center">
-            {/* Placeholder for character image */}
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center backdrop-blur-sm border-2 border-purple-500/30">
-              <span className="text-4xl md:text-6xl">🎮</span>
-            </div>
-            {/* Decorative elements */}
-            <div className="absolute top-4 right-4 w-8 h-8 md:w-12 md:h-12 bg-orange-500/20 rounded-lg rotate-12 animate-pulse" />
-            <div className="absolute bottom-4 left-4 w-6 h-6 md:w-8 md:h-8 bg-blue-500/20 rounded-lg -rotate-12 animate-pulse" />
+      <div className="relative z-10 px-6 md:px-8 py-6 md:py-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Left - Text */}
+          <div className="flex-1">
+            <p className="text-white/40 text-xs font-medium uppercase tracking-widest mb-2">Overview</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-1.5">
+              Admin Control Center
+            </h2>
+            <p className="text-white/50 text-sm max-w-lg">
+              Monitor platform performance, manage users, and oversee all marketplace operations from a single dashboard.
+            </p>
           </div>
-        </div>
 
-        {/* Center - Main Content */}
-        <div className="flex-1 text-center px-2 md:px-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-3">
-            Admin Dashboard
-          </h2>
-          <p className="text-white/70 text-sm md:text-lg mb-4 md:mb-6">
-            Manage your gaming marketplace and get insights of{' '}
-            <span className="text-purple-400 font-semibold">unlimited control</span>
-            {' '}in your Admin Dashboard
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold rounded-full px-6 md:px-8 shadow-lg shadow-yellow-500/50 w-full sm:w-auto"
-            >
-              <Play className="mr-2 h-4 w-4 md:h-5 md:w-5 fill-current" />
-              Quick Actions
-            </Button>
-            
-            {/* Timer/Stats Display */}
-            <div className="flex items-center gap-2 md:gap-3 text-white">
-              <span className="text-xs md:text-sm text-white/60">Don't miss</span>
-              <div className="flex gap-1 md:gap-2">
-                {[
-                  { value: '15', label: 'h' },
-                  { value: '24', label: 'm' },
-                  { value: '55', label: 's' }
-                ].map((time, idx) => (
-                  <div 
-                    key={idx}
-                    className="bg-white/10 backdrop-blur-sm rounded-full px-2 md:px-3 py-1 border border-white/20"
-                  >
-                    <span className="font-bold text-sm md:text-base">{time.value}</span>
-                    <span className="text-xs text-white/60 ml-0.5 md:ml-1">{time.label}</span>
-                  </div>
-                ))}
+          {/* Right - Quick stats */}
+          <div className="flex items-center gap-4 md:gap-6">
+            {[
+              { icon: Users, label: 'Users', value: 'Active', color: 'text-blue-400' },
+              { icon: ShoppingCart, label: 'Orders', value: 'Live', color: 'text-emerald-400' },
+              { icon: BarChart3, label: 'Revenue', value: 'Growing', color: 'text-violet-400' },
+              { icon: TrendingUp, label: 'Growth', value: 'Positive', color: 'text-amber-400' },
+            ].map((stat, i) => (
+              <div key={i} className="text-center hidden sm:block">
+                <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-1.5">
+                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                </div>
+                <p className="text-white/30 text-[10px] uppercase tracking-wider">{stat.label}</p>
+                <p className={`text-xs font-medium ${stat.color}`}>{stat.value}</p>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - Decorative - Hidden on mobile/tablet */}
-        <div className="hidden xl:flex flex-shrink-0 w-1/4">
-          <div className="relative h-48">
-            {/* Floating elements */}
-            <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-purple-500/30 to-blue-500/30 rounded-2xl rotate-12 animate-float" />
-            <div className="absolute bottom-12 right-16 w-12 h-12 bg-gradient-to-br from-pink-500/30 to-red-500/30 rounded-xl -rotate-12 animate-float" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-16 right-4 w-10 h-10 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-lg rotate-45 animate-float" style={{ animationDelay: '2s' }} />
+            ))}
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(var(--rotate, 12deg)); }
-          50% { transform: translateY(-20px) rotate(var(--rotate, 12deg)); }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
     </Card>
   );
 }

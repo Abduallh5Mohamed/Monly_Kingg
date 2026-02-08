@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { StatCard } from '@/components/admin/stat-card';
@@ -55,12 +55,12 @@ export default function AdminDashboard() {
     return (
       <div className="space-y-8">
         <div className="animate-pulse">
-          <div className="h-8 bg-white/10 rounded w-48 mb-2"></div>
-          <div className="h-4 bg-white/10 rounded w-96"></div>
+          <div className="h-7 bg-white/[0.04] rounded-md w-40 mb-2"></div>
+          <div className="h-4 bg-white/[0.04] rounded w-72"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-white/10 rounded-lg animate-pulse"></div>
+            <div key={i} className="h-32 bg-white/[0.04] rounded-lg animate-pulse border border-white/[0.04]"></div>
           ))}
         </div>
       </div>
@@ -71,11 +71,11 @@ export default function AdminDashboard() {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-red-400">Error: {error}</p>
+          <h1 className="text-2xl font-bold text-white mb-1">Dashboard</h1>
+          <p className="text-red-400 text-sm">{error}</p>
           <button
             onClick={fetchStats}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="mt-4 px-4 py-2 bg-white/[0.06] text-white text-sm rounded-lg hover:bg-white/[0.1] transition-colors border border-white/[0.06]"
           >
             Retry
           </button>
@@ -85,18 +85,18 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-white/60">Welcome back, Admin! Here's what's happening today.</p>
+        <h1 className="text-2xl font-bold text-white mb-1">Dashboard</h1>
+        <p className="text-white/40 text-sm">Platform overview and recent activity</p>
       </div>
 
       {/* Feature Banner */}
       <FeatureBanner />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Users"
           value={stats?.totalUsers.toLocaleString() || '0'}
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
             value: stats?.userGrowth || 0,
             isPositive: (stats?.userGrowth || 0) >= 0
           }}
-          gradient="from-blue-500 to-cyan-600"
+          gradient="from-blue-500 to-indigo-600"
         />
         <StatCard
           title="Verified Users"
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
             value: stats?.verificationRate || 0,
             isPositive: (stats?.verificationRate || 0) > 80
           }}
-          gradient="from-green-500 to-emerald-600"
+          gradient="from-emerald-500 to-green-600"
         />
         <StatCard
           title="New Today"
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             value: stats?.userGrowth || 0,
             isPositive: (stats?.userGrowth || 0) >= 0
           }}
-          gradient="from-purple-500 to-pink-600"
+          gradient="from-violet-500 to-purple-600"
         />
         <StatCard
           title="Admin Users"
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
             value: stats?.adminUsers ? (stats.adminUsers / stats.totalUsers * 100) : 0,
             isPositive: true
           }}
-          gradient="from-orange-500 to-red-600"
+          gradient="from-amber-500 to-orange-600"
         />
       </div>
 
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Additional Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="Verification Rate"
           value={`${stats?.verificationRate || 0}%`}
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
             value: stats?.userGrowth || 0,
             isPositive: (stats?.userGrowth || 0) >= 0
           }}
-          gradient="from-teal-500 to-green-600"
+          gradient="from-teal-500 to-emerald-600"
         />
         <StatCard
           title="Active Ratio"
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
             value: stats?.totalUsers ? ((stats.verifiedUsers / stats.totalUsers) * 100) : 0,
             isPositive: stats?.totalUsers ? ((stats.verifiedUsers / stats.totalUsers) * 100) > 70 : false
           }}
-          gradient="from-pink-500 to-rose-600"
+          gradient="from-rose-500 to-pink-600"
         />
       </div>
     </div>

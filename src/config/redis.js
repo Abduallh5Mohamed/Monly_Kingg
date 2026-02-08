@@ -20,54 +20,61 @@ class RedisService {
         } catch (err) {
           // Ignore quit errors
         }
+        this.client = null;
       }
 
-      this.client = createClient({
-        url: `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`,
-        password: process.env.REDIS_PASSWORD || undefined,
-        database: process.env.REDIS_DB || 0,
+      // Build Redis URL
+      const redisHost = process.env.REDIS_HOST || 'localhost';
+      const redisPort = process.env.REDIS_PORT || 6379;
+      const redisDb = parseInt(process.env.REDIS_DB || '0');
+      
+      // Create config without password
+      const redisConfig = {
         socket: {
-          connectTimeout: 5000, // Reduced timeout for faster failure
-          lazyConnect: false,
-          reconnectStrategy: false // Disable auto-reconnect to prevent loops
-        }
-      });
+          host: redisHost,
+          port: parseInt(redisPort)
+        },
+        database: redisDb
+      };
+      
+      logger.info(`Redis: Connecting to ${redisHost}:${redisPort} (DB: ${redisDb})`);
 
-      // Single error handler
+      this.client = createClient(redisConfig);
+
+      // Set up event handlers for ongoing connection
       this.client.on('error', (err) => {
-        // Suppress error logs after initial connection attempt
-        if (!this.isConnected) {
-          logger.error('Redis Error:', err.message);
+        if (err && err.message) {
+          logger.warn(`Redis error: ${err.message}`);
         }
-        this.isConnected = false;
-      });
-
-      this.client.on('connect', () => {
-        logger.info('✅ Redis Connected');
-        this.isConnected = true;
-      });
-
-      this.client.on('ready', () => {
-        logger.info('🚀 Redis Ready');
-        this.isConnected = true;
       });
 
       this.client.on('end', () => {
         this.isConnected = false;
       });
 
+      // Connect
       await this.client.connect();
-
-      // Test connection
+      
+      // Test with ping
       await this.client.ping();
+      
+      this.isConnected = true;
+      logger.info('✅ Redis Connected and Ready');
       logger.info('🏓 Redis Ping Successful');
 
       return true;
     } catch (error) {
-      logger.error('❌ Redis Connection Failed:', error.message);
+      logger.error('❌ Redis Connection Failed:', error.message || error);
       logger.info('📝 Server will continue without caching');
       this.isConnected = false;
-      this.client = null; // Clear client on failure
+      if (this.client) {
+        try {
+          await this.client.quit();
+        } catch (e) {
+          // Ignore
+        }
+        this.client = null;
+      }
       return false;
     }
   }

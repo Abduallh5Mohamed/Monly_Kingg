@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -132,7 +132,7 @@ export default function AnalyticsPage() {
 
       {/* Secondary Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -146,7 +146,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -160,7 +160,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -174,7 +174,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -190,7 +190,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* User Registration Trend */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white">User Registration Trend (Last 7 Days)</CardTitle>
         </CardHeader>

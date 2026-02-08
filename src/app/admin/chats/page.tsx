@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -243,7 +243,7 @@ export default function ChatsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -257,7 +257,7 @@ export default function ChatsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -271,7 +271,7 @@ export default function ChatsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -285,7 +285,7 @@ export default function ChatsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -303,8 +303,8 @@ export default function ChatsPage() {
       {/* Chat Interface */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[600px]">
         {/* Chat List - Left Side */}
-        <Card className="lg:col-span-4 bg-[#1e2236] border-white/10 flex flex-col">
-          <CardHeader className="border-b border-white/10 pb-4">
+        <Card className="lg:col-span-4 bg-[#131620] border-white/[0.06] flex flex-col">
+          <CardHeader className="border-b border-white/[0.06] pb-4">
             <form onSubmit={handleSearch} className="space-y-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -312,13 +312,13 @@ export default function ChatsPage() {
                   placeholder="Search by email or chat number (9 digits)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white"
+                  className="pl-10 bg-white/5 border-white/[0.06] text-white"
                 />
               </div>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 bg-white/5 border border-white/[0.06] rounded-lg text-white text-sm focus:outline-none focus:border-blue-500"
               >
                 <option value="all">All Types</option>
                 <option value="direct">Direct</option>
@@ -383,11 +383,11 @@ export default function ChatsPage() {
         </Card>
 
         {/* Chat Messages - Right Side */}
-        <Card className="lg:col-span-8 bg-[#1e2236] border-white/10 flex flex-col">
+        <Card className="lg:col-span-8 bg-[#131620] border-white/[0.06] flex flex-col">
           {selectedChat && chatDetails ? (
             <>
               {/* Chat Header */}
-              <CardHeader className="border-b border-white/10">
+              <CardHeader className="border-b border-white/[0.06]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -482,7 +482,7 @@ export default function ChatsPage() {
               </ScrollArea>
 
               {/* Info Footer - Read Only */}
-              <div className="border-t border-white/10 p-4 bg-yellow-500/10">
+              <div className="border-t border-white/[0.06] p-4 bg-yellow-500/10">
                 <div className="flex items-center gap-2 text-yellow-400 text-sm">
                   <Shield className="h-4 w-4" />
                   <span>Admin monitoring mode - Read-only view</span>

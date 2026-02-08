@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -42,7 +42,7 @@ export default function SettingsPage() {
 
       {/* Settings Tabs */}
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="bg-[#1e2236] border border-white/10 p-1 flex flex-wrap h-auto">
+        <TabsList className="bg-[#131620] border border-white/[0.06] p-1 flex flex-wrap h-auto">
           <TabsTrigger value="general" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500">
             <Globe className="mr-2 h-4 w-4" />
             General
@@ -67,7 +67,7 @@ export default function SettingsPage() {
 
         {/* General Settings */}
         <TabsContent value="general" className="space-y-4">
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Platform Information</CardTitle>
               <CardDescription className="text-white/60">Update your platform's basic information</CardDescription>
@@ -76,31 +76,31 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="siteName" className="text-white">Site Name</Label>
-                  <Input id="siteName" defaultValue="Monly King" className="bg-white/5 border-white/10 text-white" />
+                  <Input id="siteName" defaultValue="Monly King" className="bg-white/5 border-white/[0.06] text-white" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="siteUrl" className="text-white">Site URL</Label>
-                  <Input id="siteUrl" defaultValue="https://monlyking.com" className="bg-white/5 border-white/10 text-white" />
+                  <Input id="siteUrl" defaultValue="https://monlyking.com" className="bg-white/5 border-white/[0.06] text-white" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="siteDescription" className="text-white">Site Description</Label>
-                <Input id="siteDescription" defaultValue="Premium gaming accounts marketplace" className="bg-white/5 border-white/10 text-white" />
+                <Input id="siteDescription" defaultValue="Premium gaming accounts marketplace" className="bg-white/5 border-white/[0.06] text-white" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="supportEmail" className="text-white">Support Email</Label>
-                  <Input id="supportEmail" type="email" defaultValue="support@monlyking.com" className="bg-white/5 border-white/10 text-white" />
+                  <Input id="supportEmail" type="email" defaultValue="support@monlyking.com" className="bg-white/5 border-white/[0.06] text-white" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="supportPhone" className="text-white">Support Phone</Label>
-                  <Input id="supportPhone" defaultValue="+20 123 456 7890" className="bg-white/5 border-white/10 text-white" />
+                  <Input id="supportPhone" defaultValue="+20 123 456 7890" className="bg-white/5 border-white/[0.06] text-white" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">System Settings</CardTitle>
               <CardDescription className="text-white/60">Configure system behavior</CardDescription>
@@ -133,7 +133,7 @@ export default function SettingsPage() {
 
         {/* Notifications Settings */}
         <TabsContent value="notifications" className="space-y-4">
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Email Notifications</CardTitle>
               <CardDescription className="text-white/60">Manage email notification preferences</CardDescription>
@@ -163,7 +163,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Push Notifications</CardTitle>
               <CardDescription className="text-white/60">Configure push notification settings</CardDescription>
@@ -189,7 +189,7 @@ export default function SettingsPage() {
 
         {/* Security Settings */}
         <TabsContent value="security" className="space-y-4">
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Authentication</CardTitle>
               <CardDescription className="text-white/60">Manage authentication settings</CardDescription>
@@ -212,7 +212,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Change Password</CardTitle>
               <CardDescription className="text-white/60">Update your admin password</CardDescription>
@@ -220,15 +220,15 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="currentPassword" className="text-white">Current Password</Label>
-                <Input id="currentPassword" type="password" className="bg-white/5 border-white/10 text-white" />
+                <Input id="currentPassword" type="password" className="bg-white/5 border-white/[0.06] text-white" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="newPassword" className="text-white">New Password</Label>
-                <Input id="newPassword" type="password" className="bg-white/5 border-white/10 text-white" />
+                <Input id="newPassword" type="password" className="bg-white/5 border-white/[0.06] text-white" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
-                <Input id="confirmPassword" type="password" className="bg-white/5 border-white/10 text-white" />
+                <Input id="confirmPassword" type="password" className="bg-white/5 border-white/[0.06] text-white" />
               </div>
               <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
                 Update Password
@@ -239,7 +239,7 @@ export default function SettingsPage() {
 
         {/* Appearance Settings */}
         <TabsContent value="appearance" className="space-y-4">
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Theme Settings</CardTitle>
               <CardDescription className="text-white/60">Customize the look and feel</CardDescription>
@@ -269,7 +269,7 @@ export default function SettingsPage() {
 
         {/* Payment Settings */}
         <TabsContent value="payment" className="space-y-4">
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Payment Methods</CardTitle>
               <CardDescription className="text-white/60">Configure payment gateways</CardDescription>
@@ -299,7 +299,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#1e2236] border-white/10">
+          <Card className="bg-[#131620] border-white/[0.06]">
             <CardHeader>
               <CardTitle className="text-white">Commission Settings</CardTitle>
               <CardDescription className="text-white/60">Set platform commission rates</CardDescription>
@@ -307,7 +307,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="commission" className="text-white">Platform Commission (%)</Label>
-                <Input id="commission" type="number" defaultValue="10" className="bg-white/5 border-white/10 text-white" />
+                <Input id="commission" type="number" defaultValue="10" className="bg-white/5 border-white/[0.06] text-white" />
               </div>
             </CardContent>
           </Card>

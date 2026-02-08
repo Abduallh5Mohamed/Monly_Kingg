@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,25 +49,25 @@ export default function OrdersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-white">{totalOrders}</div>
             <p className="text-white/60 text-sm">Total Orders</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-green-400">{completedOrders}</div>
             <p className="text-white/60 text-sm">Completed</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-yellow-400">{pendingOrders}</div>
             <p className="text-white/60 text-sm">Pending</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-blue-400">${totalRevenue.toFixed(2)}</div>
             <p className="text-white/60 text-sm">Revenue</p>
@@ -76,17 +76,17 @@ export default function OrdersPage() {
       </div>
 
       {/* Filters */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 placeholder="Search orders..."
-                className="pl-10 bg-white/5 border-white/10 text-white"
+                className="pl-10 bg-white/5 border-white/[0.06] text-white"
               />
             </div>
-            <Button variant="outline" className="border-white/10 text-white hover:bg-white/10">
+            <Button variant="outline" className="border-white/[0.06] text-white hover:bg-white/10">
               <Filter className="mr-2 h-4 w-4" />
               Filters
             </Button>
@@ -95,14 +95,14 @@ export default function OrdersPage() {
       </Card>
 
       {/* Orders Table */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white">Recent Orders</CardTitle>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
+              <TableRow className="border-white/[0.06] hover:bg-transparent">
                 <TableHead className="text-white/60">Order ID</TableHead>
                 <TableHead className="text-white/60 hidden md:table-cell">Customer</TableHead>
                 <TableHead className="text-white/60 hidden lg:table-cell">Product</TableHead>
@@ -114,7 +114,7 @@ export default function OrdersPage() {
             </TableHeader>
             <TableBody>
               {orders.map((order) => (
-                <TableRow key={order.id} className="border-white/10 hover:bg-white/5">
+                <TableRow key={order.id} className="border-white/[0.06] hover:bg-white/5">
                   <TableCell className="text-white font-medium">{order.id}</TableCell>
                   <TableCell className="text-white/70 hidden md:table-cell">{order.customer}</TableCell>
                   <TableCell className="text-white/70 hidden lg:table-cell">{order.product}</TableCell>
@@ -146,7 +146,7 @@ export default function OrdersPage() {
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-[#1a1d2e] border-white/10">
+                      <DropdownMenuContent align="end" className="bg-[#131620] border-white/[0.06]">
                         <DropdownMenuItem className="text-white hover:bg-white/10">
                           <Eye className="mr-2 h-4 w-4" />
                           View Details

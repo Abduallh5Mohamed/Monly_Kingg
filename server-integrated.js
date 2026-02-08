@@ -221,6 +221,15 @@ nextApp.prepare().then(async () => {
     console.warn('⚠️ Listing routes not loaded:', error.message);
   }
 
+  // Withdrawal routes
+  try {
+    const { default: withdrawalRoutes } = await import("./src/modules/withdrawals/withdrawal.routes.js");
+    app.use("/api/v1/withdrawals", withdrawalRoutes);
+    console.log('✅ Withdrawal routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Withdrawal routes not loaded:', error.message);
+  }
+
   // Health check endpoint
   app.get("/api/health", async (req, res) => {
     const cacheStats = await userCacheService.getCacheStats();
