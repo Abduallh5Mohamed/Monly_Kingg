@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
     try {
+        console.log('🔄 Attempting to connect to MongoDB...');
+
         // Production-ready connection options with pooling
         const options = {
             connectTimeoutMS: 10000,
@@ -25,8 +27,8 @@ const connectDB = async () => {
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
         console.log(`📊 Connection Pool Size: ${options.maxPoolSize}`);
 
-        // Create indexes for common queries
-        await createIndexes();
+        // Note: Indexes will be created automatically by Mongoose schemas
+        // or can be created later after models are registered
 
         return true;
     } catch (error) {
@@ -37,8 +39,8 @@ const connectDB = async () => {
     }
 };
 
-// Create database indexes for performance
-async function createIndexes() {
+// Export function to create indexes after models are registered
+export async function createIndexes() {
     try {
         const User = mongoose.model('User');
         const Chat = mongoose.model('Chat');
@@ -53,6 +55,7 @@ async function createIndexes() {
         await Chat.collection.createIndex({ participants: 1 });
         await Chat.collection.createIndex({ 'lastMessage.timestamp': -1 });
         await Chat.collection.createIndex({ participants: 1, 'lastMessage.timestamp': -1 });
+        await Chat.collection.createIndex({ type: 1, isActive: 1, updatedAt: -1 });
 
         console.log('✅ Database indexes created');
     } catch (error) {

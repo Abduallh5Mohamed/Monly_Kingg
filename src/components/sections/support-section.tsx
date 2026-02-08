@@ -62,7 +62,7 @@ export function SupportSection() {
               // Have a problem?
             </h2>
             <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-                Our support team is always on standby, ready to assist you 24/7. Let us know how we can help.
+              Our support team is always on standby, ready to assist you 24/7. Let us know how we can help.
             </p>
           </div>
           <Form {...form}>

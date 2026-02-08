@@ -235,12 +235,15 @@ export const createChat = async (req, res) => {
 
         if (!chat) {
             // Create new chat
-            chat = await Chat.create({
+            chat = new Chat({
                 type,
                 participants: [userId, otherUserId],
                 messages: [],
                 isActive: true
             });
+
+            // Save to trigger pre-save hook for chatNumber generation
+            await chat.save();
 
             await chat.populate('participants', 'username email avatar role');
 
@@ -263,9 +266,12 @@ export const createChat = async (req, res) => {
         });
     } catch (error) {
         logger.error(`Create chat error: ${error.message}`);
+        logger.error(`Error stack: ${error.stack}`);
+        console.error('Full error:', error);
         res.status(500).json({
             success: false,
-            message: "Failed to create chat"
+            message: "Failed to create chat",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };

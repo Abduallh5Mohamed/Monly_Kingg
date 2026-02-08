@@ -1,4 +1,5 @@
 import User from "../users/user.model.js";
+import Chat from "../chats/chat.model.js";
 import logger from "../../utils/logger.js";
 import userCacheService from "../../services/userCacheService.js";
 
@@ -324,6 +325,204 @@ export const toggleUserStatus = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to toggle user status"
+        });
+    }
+};
+
+/* ---------------- Get All Chats (Admin Monitoring) ---------------- */
+export const getAllChats = async (req, res) => {
+    try {
+        const { page = 1, limit = 20, type = 'all', search = '' } = req.query;
+
+        // Build filter
+        const filter = { isActive: true };
+        if (type !== 'all') {
+            filter.type = type;
+        }
+
+        // Search by chat number, participant email/username
+        if (search) {
+            // Check if search is a 9-digit number (chat number)
+            if (/^\d{9}$/.test(search)) {
+                filter.chatNumber = search;
+            } else {
+                // Search by participant email/username
+                const users = await User.find({
+                    $or: [
+                        { email: { $regex: search, $options: 'i' } },
+                        { username: { $regex: search, $options: 'i' } }
+                    ]
+                }).select('_id');
+
+                const userIds = users.map(u => u._id);
+                filter.participants = { $in: userIds };
+            }
+        }
+
+        const skip = (page - 1) * limit;
+
+        const chats = await Chat.find(filter)
+            .populate('participants', 'username email avatar role verified')
+            .populate('lastMessage.sender', 'username email avatar')
+            .sort({ 'lastMessage.timestamp': -1, updatedAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit))
+            .select('-messages') // Don't load messages for list view
+            .lean();
+
+        const total = await Chat.countDocuments(filter);
+
+        // Add message count and participant info
+        const chatsWithStats = chats.map(chat => {
+            const participantNames = chat.participants
+                .map(p => p.username || p.email)
+                .join(' & ');
+
+            return {
+                ...chat,
+                participantNames,
+                messageCount: 0 // Will be loaded when viewing specific chat
+            };
+        });
+
+        logger.info(`Admin ${req.user.email} fetched ${chats.length} chats for monitoring`);
+
+        res.json({
+            success: true,
+            data: {
+                chats: chatsWithStats,
+                pagination: {
+                    currentPage: parseInt(page),
+                    totalPages: Math.ceil(total / limit),
+                    totalChats: total,
+                    hasNext: page * limit < total,
+                    hasPrev: page > 1
+                }
+            }
+        });
+    } catch (error) {
+        logger.error(`Admin get all chats error: ${error.message}`);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch chats"
+        });
+    }
+};
+
+/* ---------------- Get Chat Details (Admin Monitoring) ---------------- */
+export const getChatDetails = async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const { page = 1, limit = 50 } = req.query;
+
+        const chat = await Chat.findById(chatId)
+            .populate('participants', 'username email avatar role verified createdAt')
+            .populate('messages.sender', 'username email avatar role')
+            .lean();
+
+        if (!chat) {
+            return res.status(404).json({
+                success: false,
+                message: "Chat not found"
+            });
+        }
+
+        // Paginate messages
+        const allMessages = chat.messages || [];
+        const totalMessages = allMessages.length;
+        const messages = allMessages
+            .slice((page - 1) * limit, page * limit);
+
+        logger.info(`Admin ${req.user.email} viewed chat ${chatId} with ${totalMessages} messages`);
+
+        res.json({
+            success: true,
+            data: {
+                chat: {
+                    _id: chat._id,
+                    chatNumber: chat.chatNumber,
+                    type: chat.type,
+                    participants: chat.participants,
+                    lastMessage: chat.lastMessage,
+                    isActive: chat.isActive,
+                    createdAt: chat.createdAt,
+                    updatedAt: chat.updatedAt
+                },
+                messages,
+                stats: {
+                    totalMessages,
+                    participantCount: chat.participants.length,
+                    createdAt: chat.createdAt,
+                    lastActivity: chat.lastMessage?.timestamp || chat.updatedAt
+                },
+                pagination: {
+                    currentPage: parseInt(page),
+                    totalPages: Math.ceil(totalMessages / limit),
+                    totalMessages,
+                    hasNext: page * limit < totalMessages,
+                    hasPrev: page > 1
+                }
+            }
+        });
+    } catch (error) {
+        logger.error(`Admin get chat details error: ${error.message}`);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch chat details"
+        });
+    }
+};
+
+/* ---------------- Get Chat Statistics (Admin) ---------------- */
+export const getChatStatistics = async (req, res) => {
+    try {
+        const totalChats = await Chat.countDocuments({ isActive: true });
+        const directChats = await Chat.countDocuments({ type: 'direct', isActive: true });
+        const supportChats = await Chat.countDocuments({ type: 'support', isActive: true });
+        const groupChats = await Chat.countDocuments({ type: 'group', isActive: true });
+
+        // Get chats with activity in last 24 hours
+        const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const activeChatsToday = await Chat.countDocuments({
+            isActive: true,
+            'lastMessage.timestamp': { $gte: last24Hours }
+        });
+
+        // Get most active chats
+        const mostActiveChats = await Chat.find({ isActive: true })
+            .populate('participants', 'username email avatar')
+            .sort({ 'lastMessage.timestamp': -1 })
+            .limit(5)
+            .select('-messages')
+            .lean();
+
+        logger.info(`Admin ${req.user.email} fetched chat statistics`);
+
+        res.json({
+            success: true,
+            data: {
+                totalChats,
+                chatsByType: {
+                    direct: directChats,
+                    support: supportChats,
+                    group: groupChats
+                },
+                activeChatsToday,
+                activityRate: totalChats > 0 ? ((activeChatsToday / totalChats) * 100).toFixed(1) : 0,
+                mostActiveChats: mostActiveChats.map(chat => ({
+                    _id: chat._id,
+                    participants: chat.participants,
+                    participantNames: chat.participants.map(p => p.username || p.email).join(' & '),
+                    lastMessage: chat.lastMessage,
+                    type: chat.type
+                }))
+            }
+        });
+    } catch (error) {
+        logger.error(`Admin get chat statistics error: ${error.message}`);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch chat statistics"
         });
     }
 };

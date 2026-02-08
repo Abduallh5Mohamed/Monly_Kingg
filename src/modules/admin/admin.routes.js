@@ -5,7 +5,10 @@ import {
     updateUserRole,
     deleteUser,
     getRecentActivity,
-    toggleUserStatus
+    toggleUserStatus,
+    getAllChats,
+    getChatDetails,
+    getChatStatistics
 } from "./admin.controller.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
@@ -26,6 +29,11 @@ router.put("/users/:userId/toggle-status", toggleUserStatus);
 // Statistics and analytics routes
 router.get("/stats", getAdminStats);
 router.get("/activity", getRecentActivity);
+
+// Chat monitoring routes (IMPORTANT: specific routes before dynamic params)
+router.get("/chats/statistics", getChatStatistics);
+router.get("/chats/:chatId", getChatDetails);
+router.get("/chats", getAllChats);
 
 // Cache management routes
 router.use("/cache", cacheRoutes);

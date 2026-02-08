@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import connectDB, { createIndexes } from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
@@ -14,8 +14,16 @@ import { globalLimiter } from "./middlewares/rateLimiter.js";
 import csrfProtection from "./middlewares/csrf.js";
 import compression from "compression";
 
+// Import models to ensure they are registered with Mongoose
+import "./modules/chats/chat.model.js";
+import "./modules/users/user.model.js";
+
 dotenv.config();
-connectDB();
+
+// Connect to database and create indexes after models are registered
+connectDB().then(() => {
+  createIndexes();
+});
 
 const app = express();
 

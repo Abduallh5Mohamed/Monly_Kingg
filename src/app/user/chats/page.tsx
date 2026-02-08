@@ -41,6 +41,7 @@ interface Message {
 
 interface Chat {
   _id: string;
+  chatNumber: string;
   type: string;
   participants: Array<{
     _id: string;
@@ -71,6 +72,7 @@ export default function SupportPage() {
   const [currentUserId, setCurrentUserId] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Chat[]>([]);
+  const [userSearchResults, setUserSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -572,17 +574,20 @@ export default function SupportPage() {
     setShowEmojiPicker(false);
   };
 
-  const handleSearch = (value: string) => {
+  const handleSearch = async (value: string) => {
     setSearchQuery(value);
 
     if (!value.trim()) {
       setIsSearching(false);
       setSearchResults([]);
+      setUserSearchResults([]);
       return;
     }
 
     setIsSearching(true);
     const normalized = value.toLowerCase();
+
+    // Search in existing chats
     const filtered = chats.filter(chat => {
       const partner = getChatPartner(chat);
       const partnerName = partner?.username || partner?.email || '';
@@ -590,7 +595,117 @@ export default function SupportPage() {
     });
 
     setSearchResults(filtered);
+
+    // Search for new users to chat with
+    try {
+      const token = getToken();
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`http://localhost:5000/api/v1/users/search?q=${encodeURIComponent(value)}`, {
+        headers,
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Filter out current user and users already in chats
+          const existingUserIds = chats.flatMap(chat =>
+            chat.participants.map(p => p._id)
+          );
+
+          const newUsers = data.data.filter((user: any) =>
+            user._id !== currentUserId && !existingUserIds.includes(user._id)
+          );
+
+          setUserSearchResults(newUsers);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to search users:', error);
+    }
+
     setIsSearching(false);
+  };
+
+  const startNewChat = async (userId: string) => {
+    try {
+      const token = getToken();
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch('http://localhost:5000/api/v1/chats', {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify({
+          participantId: userId,
+          type: 'direct'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Create chat response:', data);
+
+        if (data.success) {
+          // The API returns the chat directly in data.data
+          const newChat = data.data;
+          console.log('📝 New chat created:', newChat._id);
+
+          // Check if chat already exists in list
+          const existingChat = chats.find(c => c._id === newChat._id);
+
+          if (!existingChat) {
+            console.log('➕ Adding new chat to list');
+            setChats(prev => [newChat, ...prev]);
+          } else {
+            console.log('🔄 Chat already exists in list');
+          }
+
+          // Set the selected chat FIRST
+          console.log('🎯 Setting selected chat:', newChat._id);
+          setSelectedChat(newChat);
+          setMessages([]); // Clear old messages
+
+          // Join the chat room via socket BEFORE loading messages
+          if (socket?.connected) {
+            console.log('🔌 Joining chat room via socket');
+            socket.emit('join_chat', newChat._id);
+          } else {
+            console.warn('⚠️ Socket not connected');
+          }
+
+          // Load messages for this chat
+          console.log('📨 Loading messages for chat:', newChat._id);
+          await loadMessages(newChat._id);
+
+          // Clear search
+          setSearchQuery('');
+          setUserSearchResults([]);
+          setSearchResults([]);
+
+          console.log('✅ Chat opened successfully!');
+        }
+      } else {
+        console.error('❌ Failed to create chat:', response.status, response.statusText);
+        const errorData = await response.json();
+        console.error('Error details:', errorData);
+      }
+    } catch (error) {
+      console.error('Failed to start new chat:', error);
+    }
   };
 
   const handleFileAttachmentClick = () => {
@@ -813,9 +928,8 @@ export default function SupportPage() {
           href={isLink ? message.content : undefined}
           target={isLink ? '_blank' : undefined}
           rel={isLink ? 'noopener noreferrer' : undefined}
-          className={`mt-2 inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 ${
-            isLink ? 'hover:text-cyan-100' : ''
-          }`}
+          className={`mt-2 inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 ${isLink ? 'hover:text-cyan-100' : ''
+            }`}
         >
           <Paperclip className="h-4 w-4" />
           <span className="truncate">{displayName}</span>
@@ -904,6 +1018,44 @@ export default function SupportPage() {
             )}
 
             <div className="space-y-2">
+              {/* New users to chat with */}
+              {searchQuery && userSearchResults.length > 0 && (
+                <>
+                  <div className="mb-2 mt-4 px-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-cyan-400/70">New Conversations</p>
+                  </div>
+                  {userSearchResults.map(user => (
+                    <button
+                      key={user._id}
+                      onClick={() => startNewChat(user._id)}
+                      className="w-full rounded-2xl border border-transparent bg-white/5 p-4 text-left transition-all hover:border-cyan-400/30 hover:bg-cyan-500/10"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                          {user.avatar ? (
+                            <img src={user.avatar} alt={user.username} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-white/80">
+                              {getInitials(user.username || user.email)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-white">{user.username || user.email}</p>
+                          <p className="mt-1 text-xs text-white/50">Click to start chatting</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                  {displayedChats.length > 0 && (
+                    <div className="mb-2 mt-4 px-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-white/50">Existing Chats</p>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Existing chats */}
               {displayedChats.map(chat => {
                 const partner = getChatPartner(chat);
                 const active = selectedChat?._id === chat._id;
@@ -913,11 +1065,10 @@ export default function SupportPage() {
                   <button
                     key={chat._id}
                     onClick={() => handleSelectChat(chat)}
-                    className={`w-full rounded-2xl border border-transparent p-4 text-left transition-all ${
-                      active
+                    className={`w-full rounded-2xl border border-transparent p-4 text-left transition-all ${active
                         ? 'border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-transparent to-transparent shadow-lg shadow-cyan-500/10'
                         : 'bg-white/5 hover:border-white/10 hover:bg-white/10'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-4">
                       <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
@@ -1002,8 +1153,11 @@ export default function SupportPage() {
                     )}
                   </div>
                   <div>
-                    <p className="text-base font-semibold text-white">
+                    <p className="text-base font-semibold text-white flex items-center gap-2">
                       {getChatPartner(selectedChat)?.username || 'Support Team'}
+                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 font-mono">
+                        #{selectedChat.chatNumber}
+                      </span>
                     </p>
                     <p className="text-xs text-white/50">
                       {isPartnerOnline(selectedChat) ? 'Online now' : 'Offline'}
@@ -1026,11 +1180,10 @@ export default function SupportPage() {
                     return (
                       <div key={message._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                         <div
-                          className={`max-w-[75%] rounded-3xl border px-5 py-4 shadow-lg ${
-                            isOwn
+                          className={`max-w-[75%] rounded-3xl border px-5 py-4 shadow-lg ${isOwn
                               ? 'border-cyan-400/40 bg-cyan-500/10 text-white'
                               : 'border-white/10 bg-white/5 text-white/90'
-                          }`}
+                            }`}
                         >
                           {!isOwn && (
                             <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/60">
