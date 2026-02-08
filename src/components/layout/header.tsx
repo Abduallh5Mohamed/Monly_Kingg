@@ -2,24 +2,24 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { UserPlus, LogOut, User, Store, Menu, X } from 'lucide-react';
+import { UserPlus, LogOut, User, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '../logo';
 import { useAuth } from '@/lib/auth-context';
 import { useEffect, useState } from 'react';
-import { BecomeSellerModal } from '@/components/become-seller-modal';
+
 
 export function Header() {
   const [activeSection, setActiveSection] = useState('home');
   const { user, logout, isAuthenticated, loading } = useAuth();
-  const [sellerModalOpen, setSellerModalOpen] = useState(false);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { name: 'Home', href: '#home' },
     { name: 'Features', href: '#features' },
     { name: 'Games', href: '#games' },
-    ...(user?.isSeller ? [{ name: 'My Store', href: '/user/store' }] : []),
+
     { name: 'Support', href: '#support' },
   ];
 
@@ -89,27 +89,6 @@ export function Header() {
             </div>
           ) : isAuthenticated && user ? (
             <>
-              {/* Become Seller */}
-              {!user.isSeller && (
-                <button
-                  onClick={() => setSellerModalOpen(true)}
-                  className="relative group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-                  title="Become a Seller"
-                >
-                  <Store className="h-4 w-4 text-cyan-400" />
-                  <span className="hidden xl:inline text-xs font-medium text-cyan-300">Become Seller</span>
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 border-2 border-background animate-pulse" />
-                </button>
-              )}
-              {user.isSeller && (
-                <Link href="/user/store">
-                  <button className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 hover:border-green-500/50 transition-all duration-300">
-                    <Store className="h-4 w-4 text-green-400" />
-                    <span className="hidden xl:inline text-xs font-medium text-green-300">My Store</span>
-                  </button>
-                </Link>
-              )}
-
               {/* User Info - Desktop */}
               <Link href="/user/dashboard" className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-all">
                 <User className="h-3.5 w-3.5 text-primary" />
@@ -216,7 +195,6 @@ export function Header() {
         </div>
       )}
 
-      <BecomeSellerModal isOpen={sellerModalOpen} onClose={() => setSellerModalOpen(false)} />
     </header>
   );
 }

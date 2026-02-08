@@ -1,10 +1,13 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
+import { useState } from 'react';
+import { BecomeSellerModal } from '@/components/become-seller-modal';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -12,6 +15,8 @@ interface UserDashboardLayoutProps {
 
 export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const router = useRouter();
+  const { user } = useAuth();
+  const [sellerModalOpen, setSellerModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0b14] via-[#0e1118] to-[#1a1d2e]">
@@ -38,6 +43,30 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+              {/* Become Seller / My Store */}
+              {user && !user.isSeller && (
+                <button
+                  onClick={() => setSellerModalOpen(true)}
+                  className="relative group flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20 hover:scale-[1.03]"
+                  title="Become a Seller"
+                >
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Store className="h-4 w-4 text-cyan-400 group-hover:text-cyan-300 transition-colors relative z-10" />
+                  <span className="hidden sm:inline text-xs font-semibold text-cyan-300 group-hover:text-cyan-200 transition-colors relative z-10">Become Seller</span>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-r from-cyan-400 to-purple-400 border-2 border-[#131720] animate-pulse shadow-lg shadow-cyan-400/50" />
+                </button>
+              )}
+              {user?.isSeller && (
+                <button
+                  onClick={() => router.push('/user/store')}
+                  className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-green-500/15 to-emerald-500/15 border border-green-500/30 hover:border-green-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-[1.03]"
+                  title="My Store"
+                >
+                  <Store className="h-4 w-4 text-green-400" />
+                  <span className="hidden sm:inline text-xs font-semibold text-green-300">My Store</span>
+                </button>
+              )}
+
               {/* Level Badge - hidden on very small screens */}
               <div className="relative group hidden sm:block">
                 <div
@@ -128,6 +157,9 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
           {children}
         </main>
       </div>
+
+      {/* Become Seller Modal */}
+      <BecomeSellerModal isOpen={sellerModalOpen} onClose={() => setSellerModalOpen(false)} />
     </div>
   );
 }
