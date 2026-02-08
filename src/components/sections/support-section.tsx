@@ -52,10 +52,8 @@ export function SupportSection() {
 
   return (
     <section id="support" className="py-24 sm:py-32 bg-background/90 relative">
-        <div 
-            className="absolute inset-0 bg-gradient-to-b from-background to-transparent"
-        />
-       <div className="container mx-auto px-4 relative z-10">
+      <div className="absolute inset-0 bg-gradient-to-b from-background to-transparent" />
+      <div className="container mx-auto px-4 relative z-10">
         <div className="w-full max-w-3xl mx-auto holographic-border bg-card/50 backdrop-blur-sm p-8 md:p-12 rounded-lg">
           <div className="text-center mb-8">
             <h2 className="text-4xl md:text-5xl font-headline font-bold text-white text-glow uppercase">
