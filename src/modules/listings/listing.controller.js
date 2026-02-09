@@ -15,6 +15,8 @@ export const createListing = async (req, res) => {
       game: req.body.game,
       description: req.body.description || "",
       price: req.body.price,
+      images: req.body.images || [],
+      coverImage: req.body.coverImage || "",
       details: req.body.details || {},
       status: "available",
     });
@@ -65,6 +67,8 @@ export const updateListing = async (req, res) => {
     if (req.body.title) listing.title = req.body.title;
     if (req.body.description !== undefined) listing.description = req.body.description;
     if (req.body.price) listing.price = req.body.price;
+    if (req.body.images) listing.images = req.body.images;
+    if (req.body.coverImage !== undefined) listing.coverImage = req.body.coverImage;
     if (req.body.details) listing.details = req.body.details;
     if (req.body.status) listing.status = req.body.status;
 

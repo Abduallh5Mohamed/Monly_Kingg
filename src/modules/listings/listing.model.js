@@ -6,6 +6,8 @@ const listingSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
+  images: [{ type: String }], // مصفوفة URLs للصور
+  coverImage: { type: String }, // صورة الغلاف
   details: { type: Object }, // الفورم الخاصة باللعبة
   status: { type: String, enum: ["available", "sold"], default: "available" }
 }, { timestamps: true });
