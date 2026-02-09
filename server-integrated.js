@@ -13,11 +13,11 @@ import compression from "compression";
 import { globalLimiter } from "./src/middlewares/rateLimiter.js";
 import csrfProtection from "./src/middlewares/csrf.js";
 import userCacheService from "./src/services/userCacheService.js";
-import { 
-  responseTimeTracker, 
-  optimizationHeaders, 
+import {
+  responseTimeTracker,
+  optimizationHeaders,
   keepAlive,
-  memoryMonitor 
+  memoryMonitor
 } from "./src/middlewares/performanceMiddleware.js";
 
 dotenv.config();
@@ -357,32 +357,32 @@ nextApp.prepare().then(async () => {
   // Graceful shutdown
   const shutdown = async (signal) => {
     console.log(`\n\n[${signal}] Received shutdown signal...`);
-    
+
     try {
       console.log('🔌 Closing Socket.IO connections...');
       const socketService = (await import("./src/services/socketService.js")).default;
       if (socketService && socketService.io) {
         socketService.io.close();
       }
-      
+
       console.log('🛑 Stopping cache cleanup job...');
       const cacheCleanupJob = (await import("./src/jobs/cacheCleanupJob.js")).default;
       if (cacheCleanupJob) {
         cacheCleanupJob.stop();
       }
-      
+
       console.log('📡 Closing server...');
       server.close(() => {
         console.log('✅ Server closed successfully');
         process.exit(0);
       });
-      
+
       // Force close after 10 seconds
       setTimeout(() => {
         console.error('⚠️  Forced shutdown after timeout');
         process.exit(1);
       }, 10000);
-      
+
     } catch (error) {
       console.error('❌ Error during shutdown:', error);
       process.exit(1);

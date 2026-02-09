@@ -334,8 +334,8 @@ export default function ChatsPage() {
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
                   className={`p-3 rounded-lg cursor-pointer transition-all ${selectedChat?._id === chat._id
-                      ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30'
-                      : 'bg-white/5 hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30'
+                    : 'bg-white/5 hover:bg-white/10'
                     }`}
                 >
                   <div className="flex items-start gap-3">
@@ -467,8 +467,8 @@ export default function ChatsPage() {
                             </div>
                             <div
                               className={`rounded-2xl px-4 py-2 ${!isFromSender
-                                  ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white'
-                                  : 'bg-white/10 text-white'
+                                ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white'
+                                : 'bg-white/10 text-white'
                                 }`}
                             >
                               <p className="text-sm break-words">{message.content}</p>

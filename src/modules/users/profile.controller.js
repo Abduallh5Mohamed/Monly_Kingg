@@ -226,8 +226,8 @@ export const completeProfile = async (req, res) => {
 
         // Check if profile is already completed
         if (user.profileCompleted) {
-            return res.status(400).json({ 
-                message: "Profile already completed. Use update profile instead." 
+            return res.status(400).json({
+                message: "Profile already completed. Use update profile instead."
             });
         }
 
@@ -237,27 +237,27 @@ export const completeProfile = async (req, res) => {
 
         // Full Name is required for profile completion
         if (!fullName || fullName.trim().length === 0) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Full name is required",
-                field: "fullName" 
+                field: "fullName"
             });
         }
         updates.fullName = fullName.trim();
 
         // Phone is required
         if (!phone || phone.trim().length === 0) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Phone number is required",
-                field: "phone" 
+                field: "phone"
             });
         }
         updates.phone = phone.trim();
 
         // Address is required
         if (!address || address.trim().length === 0) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Address is required",
-                field: "address" 
+                field: "address"
             });
         }
         updates.address = address.trim();

@@ -429,13 +429,13 @@ export const getChatDetails = async (req, res) => {
 
         // Get all sender IDs from messages
         const senderIds = [...new Set((chat.messages || []).map(m => m.sender).filter(Boolean))];
-        
+
         // Populate senders
         const User = mongoose.model('User');
         const senders = await User.find({ _id: { $in: senderIds } })
             .select('username email avatar role')
             .lean();
-        
+
         // Create sender map for quick lookup
         const senderMap = new Map(senders.map(s => [s._id.toString(), s]));
 
