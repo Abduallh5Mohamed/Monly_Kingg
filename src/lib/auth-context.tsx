@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiClient, UserData, ApiResponse, AuthResponse } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
   user: UserData | null;
@@ -27,8 +27,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Cache the auth check to prevent multiple calls
+  const [lastAuthCheck, setLastAuthCheck] = useState<number>(0);
+  const AUTH_CACHE_DURATION = 30000; // 30 seconds
 
   useEffect(() => {
+    // Skip auth check during navigation if recently checked
+    const now = Date.now();
+    if (user && (now - lastAuthCheck) < AUTH_CACHE_DURATION) {
+      setLoading(false);
+      return;
+    }
+
     // Check authentication status on page load
     // Only check if we might have a session (cookie exists)
     const hasCookie = document.cookie.includes('access_token') || document.cookie.includes('refresh_token');
@@ -37,13 +49,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [pathname]); // Only re-check on route change
 
   const checkAuthStatus = async () => {
     try {
       const response = await apiClient.refreshToken();
       if (response.success && response.data) {
         setUser(response.data.userData);
+        setLastAuthCheck(Date.now());
       }
     } catch (error) {
       // No active session - silent
@@ -60,14 +73,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (response.success && response.data) {
         setUser(response.data.userData);
+        
+        console.log('🔍 Login Response:', {
+          username: response.data.userData.username,
+          profileCompleted: response.data.userData.profileCompleted,
+          type: typeof response.data.userData.profileCompleted
+        });
+        
         toast({
           title: 'Login Successful!',
           description: `Welcome back, ${response.data.userData.username}`,
           variant: 'default',
         });
 
-        // Redirect user to dashboard
-        router.push('/user/dashboard');
+        // Check if profile needs to be completed
+        if (response.data.userData.profileCompleted !== true) {
+          console.log('➡️ Redirecting to /complete-profile');
+          router.push('/complete-profile');
+        } else if (response.data.userData.role === 'admin') {
+          console.log('➡️ Redirecting to /admin/dashboard');
+          router.push('/admin/dashboard');
+        } else {
+          console.log('➡️ Redirecting to /user/dashboard');
+          router.push('/user/dashboard');
+        }
         return true;
       } else {
         toast({
@@ -133,14 +162,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (response.success && response.data) {
         setUser(response.data.userData);
+        
+        console.log('🔍 Verify Email Response:', {
+          username: response.data.userData.username,
+          profileCompleted: response.data.userData.profileCompleted,
+          type: typeof response.data.userData.profileCompleted
+        });
+        
         toast({
           title: 'Account Verified Successfully!',
           description: `Welcome, ${response.data.userData.username}`,
           variant: 'default',
         });
 
-        // Redirect user to dashboard
-        router.push('/user/dashboard');
+        // Check if profile needs to be completed
+        // Redirect to complete-profile if profileCompleted is false, undefined, or null
+        if (response.data.userData.profileCompleted !== true) {
+          console.log('➡️ Redirecting to /complete-profile');
+          router.push('/complete-profile');
+        } else {
+          // Redirect user to dashboard
+          console.log('➡️ Redirecting to /user/dashboard');
+          router.push('/user/dashboard');
+        }
         return true;
       } else {
         toast({

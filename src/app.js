@@ -1,5 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import connectDB, { createIndexes } from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
@@ -18,6 +21,9 @@ import compression from "compression";
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
 import "./modules/users/user.model.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -81,6 +87,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet.hsts({ maxAge: 31536000 }));
 }
 app.use(cookieParser());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health checks (before rate limiting)
 app.use("/", healthRoutes);

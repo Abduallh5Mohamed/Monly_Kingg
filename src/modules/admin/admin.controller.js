@@ -2,6 +2,7 @@ import User from "../users/user.model.js";
 import Chat from "../chats/chat.model.js";
 import logger from "../../utils/logger.js";
 import userCacheService from "../../services/userCacheService.js";
+import mongoose from "mongoose";
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
@@ -417,7 +418,6 @@ export const getChatDetails = async (req, res) => {
 
         const chat = await Chat.findById(chatId)
             .populate('participants', 'username email avatar role verified createdAt')
-            .populate('messages.sender', 'username email avatar role')
             .lean();
 
         if (!chat) {
@@ -427,8 +427,23 @@ export const getChatDetails = async (req, res) => {
             });
         }
 
-        // Paginate messages
-        const allMessages = chat.messages || [];
+        // Get all sender IDs from messages
+        const senderIds = [...new Set((chat.messages || []).map(m => m.sender).filter(Boolean))];
+        
+        // Populate senders
+        const User = mongoose.model('User');
+        const senders = await User.find({ _id: { $in: senderIds } })
+            .select('username email avatar role')
+            .lean();
+        
+        // Create sender map for quick lookup
+        const senderMap = new Map(senders.map(s => [s._id.toString(), s]));
+
+        // Paginate messages and populate sender data
+        const allMessages = (chat.messages || []).map(msg => ({
+            ...msg,
+            sender: msg.sender ? senderMap.get(msg.sender.toString()) || null : null
+        }));
         const totalMessages = allMessages.length;
         const messages = allMessages
             .slice((page - 1) * limit, page * limit);

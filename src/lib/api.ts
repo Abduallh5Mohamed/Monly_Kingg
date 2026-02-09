@@ -27,6 +27,12 @@ interface UserData {
   email: string;
   role: string;
   isSeller?: boolean;
+  fullName?: string;
+  phone?: string;
+  address?: string;
+  avatar?: string;
+  bio?: string;
+  profileCompleted?: boolean;
 }
 
 interface AuthResponse {

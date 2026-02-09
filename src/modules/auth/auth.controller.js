@@ -95,7 +95,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     // Get user data (lean for performance)
-    const userData = await User.findOne({ email }).select('_id username email role isSeller').lean();
+    const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
 
     res.status(200).json({
       message: "Email verified and logged in",
@@ -104,7 +104,8 @@ export const verifyEmail = async (req, res) => {
         username: userData.username,
         email: userData.email,
         role: userData.role,
-        isSeller: userData.isSeller || false
+        isSeller: userData.isSeller || false,
+        profileCompleted: userData.profileCompleted === true // Ensure boolean
       },
       expiresIn: 15 * 60
     });
@@ -160,7 +161,7 @@ export const login = async (req, res) => {
     });
 
     // Get user data from auth.service (lean for performance)
-    const user = await User.findOne({ email }).select('_id username email role isSeller').lean();
+    const user = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
 
     // Return user data in response (without exposing tokens)
     res.status(200).json({
@@ -170,7 +171,8 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        isSeller: user.isSeller || false
+        isSeller: user.isSeller || false,
+        profileCompleted: user.profileCompleted === true // Ensure boolean
       },
       expiresIn: 15 * 60
     });
@@ -206,7 +208,7 @@ export const refresh = async (req, res) => {
     // Decode JWT to get user ID
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     // Get user data (lean for performance)
-    const userData = await User.findById(decoded.id).select('_id username email role isSeller').lean();
+    const userData = await User.findById(decoded.id).select('_id username email role isSeller profileCompleted').lean();
 
     res.status(200).json({
       message: "Tokens refreshed",
@@ -215,7 +217,8 @@ export const refresh = async (req, res) => {
         username: userData.username,
         email: userData.email,
         role: userData.role,
-        isSeller: userData.isSeller || false
+        isSeller: userData.isSeller || false,
+        profileCompleted: userData.profileCompleted === true // Ensure boolean
       },
       expiresIn: 15 * 60
     });

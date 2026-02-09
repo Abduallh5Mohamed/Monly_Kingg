@@ -4,10 +4,11 @@ import { UserSidebar } from './user-sidebar';
 import { Search, Bell, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { BecomeSellerModal } from '@/components/become-seller-modal';
+import Link from 'next/link';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -15,8 +16,25 @@ interface UserDashboardLayoutProps {
 
 export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user } = useAuth();
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
+
+  // Check if profile is completed
+  useEffect(() => {
+    // Don't redirect if already on complete-profile page
+    if (pathname === '/complete-profile') return;
+    
+    // Only check once on mount, not on every navigation
+    if (!user) return;
+    
+    // Redirect to complete-profile if profile is not completed
+    // Check for false, undefined, or null
+    if (user.profileCompleted !== true) {
+      console.log('➡️ Dashboard redirecting to /complete-profile');
+      router.push('/complete-profile');
+    }
+  }, [user]); // Only depend on user, not pathname
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0b14] via-[#0e1118] to-[#1a1d2e]">
@@ -56,21 +74,21 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                 </button>
               )}
               {user?.isSeller && (
-                <button
-                  onClick={() => router.push('/user/store')}
+                <Link
+                  href="/user/store"
                   className="flex items-center gap-1.5 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-green-500/15 to-emerald-500/15 border border-green-500/30 hover:border-green-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-[1.03]"
                   title="My Store"
                 >
                   <Store className="h-4 w-4 text-green-400" />
                   <span className="hidden sm:inline text-xs font-semibold text-green-300">My Store</span>
-                </button>
+                </Link>
               )}
 
               {/* Level Badge - hidden on very small screens */}
               <div className="relative group hidden sm:block">
-                <div
-                  onClick={() => router.push('/user/profile')}
-                  className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl px-2.5 py-1.5 border border-purple-400/30 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all cursor-pointer"
+                <Link
+                  href="/user/profile"
+                  className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl px-2.5 py-1.5 border border-purple-400/30 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all cursor-pointer block"
                   title="Go to Profile"
                 >
                   <div className="flex items-center gap-1.5">
@@ -82,14 +100,14 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                       <p className="text-sm font-bold text-white leading-none">VIP</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Balance Badge */}
               <div className="relative group hidden sm:block">
-                <div
-                  onClick={() => router.push('/user/payments')}
-                  className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl px-2.5 py-1.5 border border-emerald-400/30 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-105 transition-all cursor-pointer"
+                <Link
+                  href="/user/payments"
+                  className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl px-2.5 py-1.5 border border-emerald-400/30 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-105 transition-all cursor-pointer block"
                   title="Go to Payments"
                 >
                   <div className="flex items-center gap-1.5">
@@ -101,7 +119,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                       <p className="text-sm font-bold text-white leading-none">2,480</p>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Notifications */}
@@ -115,13 +133,13 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               </Button>
 
               {/* User Avatar */}
-              <button
-                onClick={() => router.push('/user/profile')}
+              <Link
+                href="/user/profile"
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-cyan-500 hover:border-cyan-400 hover:scale-110 transition-all cursor-pointer flex-shrink-0 bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center"
                 title="Go to Profile"
               >
                 <span className="text-white font-bold text-sm">{user?.username?.[0]?.toUpperCase() || 'U'}</span>
-              </button>
+              </Link>
             </div>
           </div>
         </header>
@@ -135,14 +153,14 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               { icon: '💳', label: 'Pay', path: '/user/payments' },
               { icon: '👤', label: 'Profile', path: '/user/profile' },
             ].map((item) => (
-              <button
+              <Link
                 key={item.path}
-                onClick={() => router.push(item.path)}
+                href={item.path}
                 className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-white/50 hover:text-white transition-all"
               >
                 <span className="text-lg">{item.icon}</span>
                 <span className="text-[10px] font-medium">{item.label}</span>
-              </button>
+              </Link>
             ))}
           </div>
         </div>

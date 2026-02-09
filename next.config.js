@@ -4,6 +4,27 @@ const nextConfig = {
   reactStrictMode: false, // Avoid double renders in dev
   poweredByHeader: false,
   compress: true,
+  swcMinify: true, // Use SWC for faster builds
+  
+  // Production optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  
+  // Reduce bundle size
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+    },
+  },
+
+  // Enable experimental features for better performance
+  experimental: {
+    optimizeCss: true, // Enable CSS optimization
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+  },
 
   async redirects() {
     return [

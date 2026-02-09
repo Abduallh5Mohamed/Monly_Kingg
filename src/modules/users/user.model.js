@@ -37,10 +37,12 @@ const userSchema = new mongoose.Schema({
   sellerApprovedAt: { type: Date },
 
   // Profile info
+  fullName: { type: String, trim: true },
   phone: { type: String },
   address: { type: String },
   avatar: { type: String, default: null },
   bio: { type: String, maxlength: 500 },
+  profileCompleted: { type: Boolean, default: false },
 
   // Track username/phone changes (every 20 days)
   lastUsernameChange: { type: Date, default: null },

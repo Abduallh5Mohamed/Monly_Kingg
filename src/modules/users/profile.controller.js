@@ -83,7 +83,7 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { username, phone, address, avatar, bio } = req.body;
+        const { fullName, username, phone, address, avatar, bio } = req.body;
 
         const user = await User.findById(userId);
         if (!user) {
@@ -91,6 +91,9 @@ export const updateProfile = async (req, res) => {
         }
 
         const updates = {};
+
+        // Full Name - can be updated anytime
+        if (fullName !== undefined) updates.fullName = fullName;
 
         // Username - can change every 20 days
         if (username && username !== user.username) {
@@ -206,6 +209,82 @@ export const removeFromFavorites = async (req, res) => {
         });
     } catch (error) {
         console.error("Remove from favorites error:", error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Complete user profile (first-time setup after verification)
+export const completeProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { fullName, phone, address, bio } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if profile is already completed
+        if (user.profileCompleted) {
+            return res.status(400).json({ 
+                message: "Profile already completed. Use update profile instead." 
+            });
+        }
+
+        const updates = {
+            profileCompleted: true
+        };
+
+        // Full Name is required for profile completion
+        if (!fullName || fullName.trim().length === 0) {
+            return res.status(400).json({ 
+                message: "Full name is required",
+                field: "fullName" 
+            });
+        }
+        updates.fullName = fullName.trim();
+
+        // Phone is required
+        if (!phone || phone.trim().length === 0) {
+            return res.status(400).json({ 
+                message: "Phone number is required",
+                field: "phone" 
+            });
+        }
+        updates.phone = phone.trim();
+
+        // Address is required
+        if (!address || address.trim().length === 0) {
+            return res.status(400).json({ 
+                message: "Address is required",
+                field: "address" 
+            });
+        }
+        updates.address = address.trim();
+
+        // Bio is optional
+        if (bio) updates.bio = bio;
+
+        // Handle avatar upload if file is present
+        if (req.file) {
+            // Save the file path as avatar URL
+            const avatarUrl = `/uploads/${req.file.filename}`;
+            updates.avatar = avatarUrl;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updates },
+            { new: true, runValidators: true }
+        ).select("-passwordHash -verificationCode -forgotPasswordCode -passwordResetToken -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret");
+
+        return res.json({
+            success: true,
+            message: "Profile completed successfully",
+            data: updatedUser
+        });
+    } catch (error) {
+        console.error("Complete profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

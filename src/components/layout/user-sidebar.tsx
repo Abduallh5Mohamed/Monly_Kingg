@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { Home, MessageSquare, LogOut, User, FileText, Store, Wallet, Megaphone } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
@@ -14,9 +15,8 @@ interface SidebarItem {
 
 export function UserSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const menuItems: SidebarItem[] = [
     { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
@@ -30,20 +30,8 @@ export function UserSidebar() {
     { icon: User, label: 'Profile', path: '/user/profile' }
   ];
 
-  const handleNavigation = (path: string) => {
-    router.push(path);
-  };
-
-  const handleLogout = () => {
-    // Clear tokens
-    localStorage.removeItem('accessToken');
-    sessionStorage.removeItem('accessToken');
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-    router.push('/login');
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -71,9 +59,10 @@ export function UserSidebar() {
             const isActive = pathname === item.path;
 
             return (
-              <button
+              <Link
                 key={index}
-                onClick={() => handleNavigation(item.path)}
+                href={item.path}
+                prefetch={true}
                 className={`w-full flex items-center justify-center p-3.5 rounded-2xl transition-all duration-300 group relative ${isActive
                     ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-xl shadow-cyan-500/50 scale-105 border border-cyan-400/50'
                     : 'text-gray-400 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-purple-500/10 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30'
@@ -101,7 +90,7 @@ export function UserSidebar() {
                 {isActive && (
                   <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-r-full shadow-lg shadow-cyan-500/50" />
                 )}
-              </button>
+              </Link>
             );
           })}
         </div>
