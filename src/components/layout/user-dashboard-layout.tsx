@@ -28,7 +28,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       {/* Main Content */}
       <div className="md:ml-20 min-h-screen">
         {/* Top Header */}
-        <header className="bg-gradient-to-r from-[#131720]/95 to-[#1a1d2e]/95 backdrop-blur-xl border-b border-white/5 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 sticky top-0 z-40">
+        <header className="bg-gradient-to-r from-[#131720] to-[#1a1d2e] border-b border-white/5 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 sticky top-0 z-40">
           <div className="flex items-center justify-between gap-3">
             {/* Search Bar */}
             <div className="flex-1 max-w-xl">
@@ -53,7 +53,6 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Store className="h-4 w-4 text-cyan-400 group-hover:text-cyan-300 transition-colors relative z-10" />
                   <span className="hidden sm:inline text-xs font-semibold text-cyan-300 group-hover:text-cyan-200 transition-colors relative z-10">Become Seller</span>
-                  <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-r from-cyan-400 to-purple-400 border-2 border-[#131720] animate-pulse shadow-lg shadow-cyan-400/50" />
                 </button>
               )}
               {user?.isSeller && (
@@ -71,7 +70,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               <div className="relative group hidden sm:block">
                 <div
                   onClick={() => router.push('/user/profile')}
-                  className="bg-gradient-to-br from-purple-600/90 to-purple-800/90 backdrop-blur-sm rounded-xl px-2.5 py-1.5 border border-purple-400/30 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all cursor-pointer"
+                  className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl px-2.5 py-1.5 border border-purple-400/30 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all cursor-pointer"
                   title="Go to Profile"
                 >
                   <div className="flex items-center gap-1.5">
@@ -90,7 +89,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               <div className="relative group hidden sm:block">
                 <div
                   onClick={() => router.push('/user/payments')}
-                  className="bg-gradient-to-br from-emerald-600/90 to-emerald-800/90 backdrop-blur-sm rounded-xl px-2.5 py-1.5 border border-emerald-400/30 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-105 transition-all cursor-pointer"
+                  className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl px-2.5 py-1.5 border border-emerald-400/30 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-105 transition-all cursor-pointer"
                   title="Go to Payments"
                 >
                   <div className="flex items-center gap-1.5">
@@ -112,27 +111,23 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                 className="rounded-full hover:bg-white/10 text-white/60 hover:text-white relative h-9 w-9 sm:h-10 sm:w-10"
               >
                 <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full animate-pulse" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full" />
               </Button>
 
               {/* User Avatar */}
               <button
                 onClick={() => router.push('/user/profile')}
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-cyan-500 hover:border-cyan-400 hover:scale-110 transition-all cursor-pointer flex-shrink-0"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-cyan-500 hover:border-cyan-400 hover:scale-110 transition-all cursor-pointer flex-shrink-0 bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center"
                 title="Go to Profile"
               >
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=user"
-                  alt="User"
-                  className="w-full h-full object-cover"
-                />
+                <span className="text-white font-bold text-sm">{user?.username?.[0]?.toUpperCase() || 'U'}</span>
               </button>
             </div>
           </div>
         </header>
 
         {/* Mobile Bottom Nav */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f1419]/95 backdrop-blur-xl border-t border-white/10 px-4 py-2 safe-area-bottom">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0f1419] border-t border-white/10 px-4 py-2 safe-area-bottom">
           <div className="flex items-center justify-around">
             {[
               { icon: '🏠', label: 'Home', path: '/user/dashboard' },

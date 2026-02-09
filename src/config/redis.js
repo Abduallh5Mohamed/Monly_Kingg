@@ -27,8 +27,9 @@ class RedisService {
       const redisHost = process.env.REDIS_HOST || 'localhost';
       const redisPort = process.env.REDIS_PORT || 6379;
       const redisDb = parseInt(process.env.REDIS_DB || '0');
-      
-      // Create config without password
+      const redisPassword = process.env.REDIS_PASSWORD || '';
+
+      // Create config with password if available
       const redisConfig = {
         socket: {
           host: redisHost,
@@ -36,7 +37,12 @@ class RedisService {
         },
         database: redisDb
       };
-      
+
+      // Add password if provided
+      if (redisPassword) {
+        redisConfig.password = redisPassword;
+      }
+
       logger.info(`Redis: Connecting to ${redisHost}:${redisPort} (DB: ${redisDb})`);
 
       this.client = createClient(redisConfig);
@@ -54,10 +60,10 @@ class RedisService {
 
       // Connect
       await this.client.connect();
-      
+
       // Test with ping
       await this.client.ping();
-      
+
       this.isConnected = true;
       logger.info('✅ Redis Connected and Ready');
       logger.info('🏓 Redis Ping Successful');

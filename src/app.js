@@ -36,10 +36,11 @@ app.use(compression({
     }
     return compression.filter(req, res);
   },
-  level: 6 // Balanced compression level
+  level: 4, // Fast compression
+  threshold: 1024, // Only compress responses > 1KB
 }));
 
-// Increase payload limit for image uploads (base64)
+// Payload limit
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 

@@ -43,7 +43,8 @@ const chatSchema = new mongoose.Schema({
   // Metadata
   isActive: { type: Boolean, default: true, index: true },
   archived: { type: Boolean, default: false },
-  unreadCount: { type: Map, of: Number, default: {} } // userId -> count
+  unreadCount: { type: Map, of: Number, default: {} }, // userId -> count
+  hiddenFor: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // Users who hid this chat
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

@@ -84,14 +84,26 @@ export const register = async ({ email, username, password }) => {
       lastVerificationSentAt: new Date()
     });
 
-    // send email (in prod use queue)
-    await sendEmail(user.email, "Email Verification", `Your code: ${rawCode}`);
+    // Try to send email (but don't fail registration if email fails)
+    try {
+      await sendEmail(user.email, "Email Verification", `Your code: ${rawCode}`);
+      logger.info(`📧 Verification email sent to ${email}`);
+    } catch (emailError) {
+      logger.warn(`⚠️ Email sending failed for ${email}: ${emailError.message}`);
+      logger.info(`\n${'='.repeat(60)}`);
+      logger.info(`📋 VERIFICATION CODE (Email failed - showing in console):`);
+      logger.info(`   Email: ${email}`);
+      logger.info(`   Code: ${rawCode}`);
+      logger.info(`   Expires: ${new Date(Date.now() + 10 * 60 * 1000).toLocaleString()}`);
+      logger.info(`${'='.repeat(60)}\n`);
+      // Continue registration even if email fails
+    }
 
     // log
     user.authLogs.push({ action: "register", success: true, ip: null, userAgent: null });
 
     await user.save();
-    logger.info(`User registered: ${email}`); // هنا log
+    logger.info(`User registered: ${email}`);
     return user;
   } catch (err) {
     logger.error(`Register failed for ${email}: ${err.message}`);

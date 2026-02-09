@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server-integrated.js",
+    "dev": "powershell -ExecutionPolicy Bypass -File start-all.ps1",
+    "dev:only": "node server-integrated.js",
     "dev:server": "nodemon src/server.js",
     "dev:next": "next dev -p 3000",
     "dev:separate": "concurrently \"npm run dev:server\" \"npm run dev:next\"",

@@ -21,7 +21,8 @@ import {
   Zap,
   Loader2,
   MessageCircle,
-  X
+  X,
+  Trash2
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -78,6 +79,8 @@ export default function SupportPage() {
   const [recordingTime, setRecordingTime] = useState(0);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [recentEmojis, setRecentEmojis] = useState<string[]>([]);
+  const [deletingChatId, setDeletingChatId] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -574,6 +577,55 @@ export default function SupportPage() {
     setShowEmojiPicker(false);
   };
 
+  const handleDeleteChat = async (chatId: string) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        console.error('No authentication token found');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:5000/api/v1/chats/${chatId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete chat');
+      }
+
+      // Remove chat from list
+      setChats(prev => prev.filter(c => c._id !== chatId));
+
+      // Clear selected chat if it was deleted
+      if (selectedChat?._id === chatId) {
+        setSelectedChat(null);
+        setMessages([]);
+      }
+
+      setShowDeleteConfirm(false);
+      setDeletingChatId(null);
+
+      console.log('✅ Chat deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete chat:', error);
+    }
+  };
+
+  const confirmDeleteChat = (chatId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent chat selection
+    setDeletingChatId(chatId);
+    setShowDeleteConfirm(true);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setDeletingChatId(null);
+  };
+
   const handleSearch = async (value: string) => {
     setSearchQuery(value);
 
@@ -1062,53 +1114,63 @@ export default function SupportPage() {
                 const unread = chat.unreadCount ?? 0;
 
                 return (
-                  <button
-                    key={chat._id}
-                    onClick={() => handleSelectChat(chat)}
-                    className={`w-full rounded-2xl border border-transparent p-4 text-left transition-all ${active
-                        ? 'border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-transparent to-transparent shadow-lg shadow-cyan-500/10'
-                        : 'bg-white/5 hover:border-white/10 hover:bg-white/10'
-                      }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                        {partner?.avatar ? (
-                          <img src={partner.avatar} alt={partner.username} className="h-full w-full object-cover" />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-white/80">
-                            {getInitials(partner?.username || partner?.email)}
-                          </div>
-                        )}
-                        {isPartnerOnline(chat) && (
-                          <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#0a0b14] bg-emerald-400" />
-                        )}
-                      </div>
-
-                      <div className="flex flex-1 items-start justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-white">
-                            {partner?.username || 'Support Team'}
-                          </p>
-                          <p className="mt-1 line-clamp-1 text-sm text-white/50">
-                            {typingUsers.has(chat._id)
-                              ? 'typing...'
-                              : chat.lastMessage?.content || 'No messages yet'}
-                          </p>
-                        </div>
-
-                        <div className="text-right">
-                          <p className="text-xs uppercase tracking-wide text-white/40">
-                            {formatRelativeTime(chat.lastMessage?.timestamp)}
-                          </p>
-                          {unread > 0 && (
-                            <span className="mt-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-cyan-500/80 px-2 text-xs font-semibold text-white">
-                              {unread}
-                            </span>
+                  <div key={chat._id} className="relative">
+                    <button
+                      onClick={() => handleSelectChat(chat)}
+                      className={`w-full rounded-2xl border border-transparent p-4 text-left transition-all ${active
+                          ? 'border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-transparent to-transparent shadow-lg shadow-cyan-500/10'
+                          : 'bg-white/5 hover:border-white/10 hover:bg-white/10'
+                        }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                          {partner?.avatar ? (
+                            <img src={partner.avatar} alt={partner.username} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-white/80">
+                              {getInitials(partner?.username || partner?.email)}
+                            </div>
+                          )}
+                          {isPartnerOnline(chat) && (
+                            <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#0a0b14] bg-emerald-400" />
                           )}
                         </div>
+
+                        <div className="flex flex-1 items-start justify-between">
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-white">
+                              {partner?.username || 'Support Team'}
+                            </p>
+                            <p className="mt-1 line-clamp-1 text-sm text-white/50">
+                              {typingUsers.has(chat._id)
+                                ? 'typing...'
+                                : chat.lastMessage?.content || 'No messages yet'}
+                            </p>
+                          </div>
+
+                          <div className="text-right">
+                            <p className="text-xs uppercase tracking-wide text-white/40">
+                              {formatRelativeTime(chat.lastMessage?.timestamp)}
+                            </p>
+                            {unread > 0 && (
+                              <span className="mt-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-cyan-500/80 px-2 text-xs font-semibold text-white">
+                                {unread}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+
+                    {/* Delete button - always visible */}
+                    <button
+                      onClick={(e) => confirmDeleteChat(chat._id, e)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border border-red-500/30 bg-red-500/10 p-2 transition-all hover:border-red-500/50 hover:bg-red-500/20"
+                      title="حذف المحادثة"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-400" />
+                    </button>
+                  </div>
                 );
               })}
             </div>
@@ -1388,6 +1450,43 @@ export default function SupportPage() {
           />
         </section>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && deletingChatId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="relative mx-4 w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0a0b14] via-[#0f1119] to-[#0a0b14] p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-400">
+                <Trash2 className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">حذف المحادثة</h3>
+                <p className="text-sm text-white/60">سيتم إخفاء المحادثة من قائمتك فقط</p>
+              </div>
+            </div>
+
+            <p className="mb-6 text-sm text-white/70">
+              المحادثة سيتم إخفاؤها من عندك فقط. الشخص الآخر سيظل يراها، والرسائل ستبقى محفوظة في قاعدة البيانات.
+            </p>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={cancelDelete}
+                variant="outline"
+                className="flex-1 border-white/10 bg-white/5 text-white hover:bg-white/10"
+              >
+                إلغاء
+              </Button>
+              <Button
+                onClick={() => deletingChatId && handleDeleteChat(deletingChatId)}
+                className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+              >
+                حذف المحادثة
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </UserDashboardLayout>
   );
 }

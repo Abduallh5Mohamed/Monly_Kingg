@@ -553,15 +553,6 @@ export default function UserDashboardPage() {
       <div className="space-y-10 pb-12">
         {/* Hero Section */}
         <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#060910] via-[#101526] to-[#090d16] shadow-2xl">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover opacity-20"
-          >
-            <source src="/assets/Hero-Background.mp4" type="video/mp4" />
-          </video>
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-transparent" />
 
           <div className="relative z-10 grid gap-10 p-8 md:p-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:p-16">
@@ -627,9 +618,8 @@ export default function UserDashboardPage() {
                   <button
                     key={slide.title}
                     onClick={() => setCurrentSlide(index)}
-                    className={`h-1.5 flex-1 rounded-full transition ${
-                      currentSlide === index ? 'bg-gradient-to-r ' + slide.accent : 'bg-white/10 hover:bg-white/20'
-                    }`}
+                    className={`h-1.5 flex-1 rounded-full transition ${currentSlide === index ? 'bg-gradient-to-r ' + slide.accent : 'bg-white/10 hover:bg-white/20'
+                      }`}
                     aria-label={`Activate slide ${slide.title}`}
                   />
                 ))}
@@ -784,9 +774,8 @@ export default function UserDashboardPage() {
               return (
                 <div
                   key={category.name}
-                  className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0f1419]/90 to-[#181f31]/90 p-6 transition hover:-translate-y-2 hover:border-yellow-500/50 hover:shadow-2xl hover:shadow-yellow-500/20 ${
-                    category.special ? 'border-yellow-500/40 bg-gradient-to-br from-amber-900/30 to-yellow-900/20' : ''
-                  }`}
+                  className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0f1419]/90 to-[#181f31]/90 p-6 transition hover:-translate-y-2 hover:border-yellow-500/50 hover:shadow-2xl hover:shadow-yellow-500/20 ${category.special ? 'border-yellow-500/40 bg-gradient-to-br from-amber-900/30 to-yellow-900/20' : ''
+                    }`}
                 >
                   <div className={`mb-5 inline-flex rounded-2xl bg-gradient-to-br ${category.gradient} p-3 text-white transition group-hover:scale-105`}>
                     <Icon className="h-6 w-6" />
@@ -823,11 +812,10 @@ export default function UserDashboardPage() {
                     key={key}
                     type="button"
                     onClick={() => setActivePortfolioView(key)}
-                    className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
-                      activePortfolioView === key
+                    className={`rounded-full px-4 py-2 text-xs font-semibold transition ${activePortfolioView === key
                         ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
                         : 'text-white/60 hover:text-white'
-                    }`}
+                      }`}
                   >
                     {view.label}
                   </button>
@@ -1019,13 +1007,12 @@ export default function UserDashboardPage() {
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <h3 className="text-sm font-semibold text-white">{item.title}</h3>
                         <span
-                          className={`text-sm font-semibold ${
-                            item.type === 'credit'
+                          className={`text-sm font-semibold ${item.type === 'credit'
                               ? 'text-emerald-400'
                               : item.type === 'debit'
-                              ? 'text-rose-400'
-                              : 'text-cyan-300'
-                          }`}
+                                ? 'text-rose-400'
+                                : 'text-cyan-300'
+                            }`}
                         >
                           {item.value}
                         </span>

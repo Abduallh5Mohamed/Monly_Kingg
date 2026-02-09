@@ -30,7 +30,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     // Check authentication status on page load
-    checkAuthStatus();
+    // Only check if we might have a session (cookie exists)
+    const hasCookie = document.cookie.includes('access_token') || document.cookie.includes('refresh_token');
+    if (hasCookie) {
+      checkAuthStatus();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const checkAuthStatus = async () => {
@@ -40,7 +46,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(response.data.userData);
       }
     } catch (error) {
-      console.log('No active session');
+      // No active session - silent
     } finally {
       setLoading(false);
     }
@@ -49,9 +55,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setLoading(true);
-      
+
       const response = await apiClient.login({ email, password });
-      
+
       if (response.success && response.data) {
         setUser(response.data.userData);
         toast({
@@ -59,7 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           description: `Welcome back, ${response.data.userData.username}`,
           variant: 'default',
         });
-        
+
         // Redirect user to dashboard
         router.push('/user/dashboard');
         return true;
@@ -86,16 +92,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     try {
       setLoading(true);
-      
+
       const response = await apiClient.register({ username, email, password });
-      
+
       if (response.success && response.data) {
         toast({
           title: 'Account Created Successfully!',
           description: 'Please check your email to verify your account',
           variant: 'default',
         });
-        
+
         // Redirect user to email verification page
         router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         return true;
@@ -122,9 +128,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const verifyEmail = async (email: string, code: string): Promise<boolean> => {
     try {
       setLoading(true);
-      
+
       const response = await apiClient.verifyEmail(email, code);
-      
+
       if (response.success && response.data) {
         setUser(response.data.userData);
         toast({
@@ -132,7 +138,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           description: `Welcome, ${response.data.userData.username}`,
           variant: 'default',
         });
-        
+
         // Redirect user to dashboard
         router.push('/user/dashboard');
         return true;
@@ -159,9 +165,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const resendCode = async (email: string, password: string): Promise<boolean> => {
     try {
       setLoading(true);
-      
+
       const response = await apiClient.resendCode(email, password);
-      
+
       if (response.success) {
         toast({
           title: 'Code Sent',
@@ -192,16 +198,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = async (): Promise<void> => {
     try {
       setLoading(true);
-      
+
       await apiClient.logout();
       setUser(null);
-      
+
       toast({
         title: 'Logged Out',
         description: 'You have been logged out successfully',
         variant: 'default',
       });
-      
+
       // Redirect user to login page
       router.push('/login');
     } catch (error) {

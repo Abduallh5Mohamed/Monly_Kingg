@@ -6610,3 +6610,595 @@
 [2026-02-09T01:58:58.505Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (572ms)
 [2026-02-09T01:59:17.359Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
 [2026-02-09T01:59:17.391Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-09T02:22:23.673Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:22:23.765Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:22:23.765Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:22:24.174Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T02:22:24.178Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T02:22:24.179Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T02:22:24.180Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T02:22:24.181Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T02:37:38.480Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:37:38.660Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:37:38.662Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:39:10.699Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:39:10.792Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:39:10.793Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:39:11.100Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T02:39:11.102Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T02:39:11.103Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T02:39:11.105Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T02:39:11.106Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T02:59:03.153Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:59:03.248Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:59:03.249Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:00:00.127Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:00:00.234Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:00:00.235Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:00:00.573Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:00:00.575Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:00:00.576Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:00:00.578Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:00:00.578Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:01:15.455Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:01:15.537Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:01:15.537Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:16:41.555Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:16:41.687Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:16:41.688Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:16:42.234Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:16:42.236Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:16:42.238Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:16:42.242Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:16:42.245Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:18:51.236Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:18:51.331Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:18:51.332Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:20:35.183Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:20:35.281Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:20:35.282Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:20:35.660Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:20:35.663Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:20:35.665Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:20:35.666Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:20:35.667Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:21:53.368Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:21:53.472Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:21:53.472Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:24:54.902Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:24:54.989Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:24:54.990Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:24:55.305Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:24:55.307Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:24:55.309Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:24:55.312Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:24:55.313Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:26:26.450Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T03:26:26.455Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:26:26.456Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T03:26:26.564Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2026-02-09T03:26:26.574Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (9ms)
+[2026-02-09T03:26:26.577Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (126ms)
+[2026-02-09T03:26:40.348Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T03:26:40.349Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:26:40.350Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T03:26:40.363Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraawael7901@gmail.com
+[2026-02-09T03:26:40.375Z] [WARN]: ❌ [NOT FOUND] User not found: baraawael7901@gmail.com (10ms)
+[2026-02-09T03:26:40.377Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (29ms)
+[2026-02-09T03:32:32.113Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:32:32.407Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:32:32.408Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:32:32.736Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:32:32.738Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:32:32.739Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:32:32.741Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:32:32.742Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:33:11.981Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T03:33:11.986Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:11.987Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T03:33:12.066Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.067Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.067Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T03:33:12.068Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T03:33:12.078Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (9ms)
+[2026-02-09T03:33:12.079Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.080Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.478Z] [WARN]: Cache skip - Redis not ready for key: session:68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.479Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.493Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.495Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.496Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.497Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (515ms)
+[2026-02-09T03:33:57.158Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T03:33:57.168Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.168Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T03:33:57.367Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.369Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:57.370Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T03:33:57.376Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T03:33:57.412Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (35ms)
+[2026-02-09T03:33:57.424Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.427Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:57.969Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:57.971Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:58.088Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:58.102Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:58.104Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:58.105Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (947ms)
+[2026-02-09T03:34:18.694Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T03:34:18.844Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:08:36.852Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:08:36.854Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:36.859Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:08:36.992Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:36.993Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:36.994Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:08:37.000Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:08:37.044Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (43ms)
+[2026-02-09T04:08:37.052Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:37.053Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:37.861Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.864Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.971Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.976Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:37.978Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:37.978Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1126ms)
+[2026-02-09T04:08:44.441Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:08:44.619Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:08:45.651Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:09:13.388Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:09:13.402Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:09:13.445Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:15:15.344Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:30.228Z] [INFO]: Admin fetched users: page 1, 0 users
+[2026-02-09T04:15:35.836Z] [INFO]: Admin fetched users: page 1, 2 users
+[2026-02-09T04:15:46.696Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:15:46.823Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:47.924Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:50.200Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:15:50.231Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:15:50.272Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:15:52.599Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:15:54.190Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:19:53.646Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:19:53.656Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.657Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:19:53.725Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.726Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:19:53.727Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:19:53.728Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:19:53.747Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (18ms)
+[2026-02-09T04:19:53.750Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.754Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:19:54.201Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:19:54.203Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (558ms)
+[2026-02-09T04:19:54.204Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (559ms)
+[2026-02-09T04:20:00.526Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:20:00.528Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.529Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:20:00.556Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.558Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:00.559Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:20:00.563Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:20:00.626Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (61ms)
+[2026-02-09T04:20:00.631Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.641Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:01.081Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:20:01.082Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (556ms)
+[2026-02-09T04:20:01.083Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (557ms)
+[2026-02-09T04:20:05.241Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.243Z] [WARN]: Cache miss - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.244Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T04:20:05.255Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.258Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.260Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.263Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.278Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (15ms)
+[2026-02-09T04:20:05.284Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.286Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.719Z] [WARN]: Cache skip - Redis not ready for key: session:68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.719Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.740Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.744Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.745Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.746Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (505ms)
+[2026-02-09T04:20:14.350Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T04:20:16.019Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T04:20:16.591Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-09T04:20:47.103Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:20:47.107Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.108Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:20:47.130Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.131Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:47.132Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:20:47.137Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:20:47.159Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (21ms)
+[2026-02-09T04:20:47.164Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.166Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:47.554Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:20:47.554Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (451ms)
+[2026-02-09T04:20:47.555Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (452ms)
+[2026-02-09T04:20:53.153Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:20:53.155Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.157Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:20:53.223Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.226Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.228Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:20:53.236Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:20:53.276Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (38ms)
+[2026-02-09T04:20:53.285Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.288Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.778Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.780Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.889Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.894Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.897Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.899Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (746ms)
+[2026-02-09T04:21:02.380Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:21:02.510Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:21:21.010Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:21:21.037Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:21:21.067Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:21:24.479Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:21:50.219Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:10.793Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:26.667Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:26.669Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:26.730Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:28.478Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:28.479Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:28.544Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:32.658Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:32.659Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:32.747Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:33.716Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:33.719Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:33.774Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:36.884Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:36.885Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:36.939Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:38.708Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:38.709Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:38.770Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:40.050Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:22:45.490Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:22:45.491Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.494Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:22:45.513Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.514Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:45.515Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:22:45.517Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:22:45.546Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (28ms)
+[2026-02-09T04:22:45.549Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.553Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:46.028Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:22:46.030Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (540ms)
+[2026-02-09T04:22:46.031Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (541ms)
+[2026-02-09T04:22:51.524Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:22:51.525Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.526Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:22:51.546Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.548Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:51.548Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:22:51.550Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:22:51.565Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (15ms)
+[2026-02-09T04:22:51.568Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.571Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:51.925Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:22:51.927Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (403ms)
+[2026-02-09T04:22:51.928Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (404ms)
+[2026-02-09T04:22:56.149Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:22:56.150Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.153Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:22:56.198Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.202Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.203Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:22:56.210Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:22:56.245Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (34ms)
+[2026-02-09T04:22:56.251Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.253Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.760Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.761Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.890Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.895Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.897Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.899Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (750ms)
+[2026-02-09T04:23:05.056Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:23:05.322Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:23:10.658Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:23:15.506Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:23:15.507Z] [INFO]: Admin baraawael7901@gmail.com deleted user baraaweal24@gmail.com
+[2026-02-09T04:23:15.584Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-09T04:23:18.893Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:23:21.688Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:23:21.690Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:23:21.692Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:23:21.703Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2026-02-09T04:23:21.714Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
+[2026-02-09T04:23:21.716Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (28ms)
+[2026-02-09T04:23:43.436Z] [ERROR]: Register failed for baraaweal24@gmail.com: E11000 duplicate key error collection: accountstore.users index: username_1 dup key: { username: "baraa7" }
+[2026-02-09T04:23:59.378Z] [ERROR]: Register failed for baraaweal24@gmail.com: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-43768d07fa7sm10640020f8f.35 - gsmtp
+[2026-02-09T04:26:25.348Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:26:25.549Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:26:25.550Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:26:26.108Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:26:26.110Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:26:26.112Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:26:26.114Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:26:26.115Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:29:59.992Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:30:00.106Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:30:00.107Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:30:00.434Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:30:00.436Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:30:00.436Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:30:00.437Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:30:00.438Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:32:18.945Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:32:19.070Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:32:19.071Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:32:19.562Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:32:19.565Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:32:19.566Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:32:19.568Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:32:19.568Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:32:59.044Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:32:59.169Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:32:59.170Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:33:35.273Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:33:35.353Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:33:35.353Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:33:35.661Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:33:35.663Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:33:35.664Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:33:35.666Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:33:35.666Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:34:35.559Z] [WARN]: Email sending failed for uniquetest@example.com, but registration continued: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4832a38425asm150639495e9.7 - gsmtp
+[2026-02-09T04:34:35.586Z] [INFO]: User registered: uniquetest@example.com
+[2026-02-09T04:38:18.755Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:38:18.904Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:38:18.905Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:38:19.235Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:38:19.237Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:38:19.239Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:38:19.241Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:38:19.242Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:39:00.091Z] [WARN]: ⚠️ Email sending failed for testmail1359@example.com: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-437699bc1cdsm9634268f8f.7 - gsmtp
+[2026-02-09T04:39:00.096Z] [INFO]: 
+============================================================
+[2026-02-09T04:39:00.096Z] [INFO]: 📋 VERIFICATION CODE (Email failed - showing in console):
+[2026-02-09T04:39:00.097Z] [INFO]:    Email: testmail1359@example.com
+[2026-02-09T04:39:00.097Z] [INFO]:    Code: 110242
+[2026-02-09T04:39:00.173Z] [INFO]:    Expires: 2/9/2026, 6:49:00 AM
+[2026-02-09T04:39:00.174Z] [INFO]: ============================================================
+
+[2026-02-09T04:39:00.204Z] [INFO]: User registered: testmail1359@example.com
+[2026-02-09T04:39:19.730Z] [INFO]: Email verified for user: testmail1359@example.com
+[2026-02-09T04:49:28.114Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:49:28.254Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:49:28.255Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:49:28.731Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:49:28.733Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:49:28.735Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:49:28.738Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:49:28.738Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:51:09.901Z] [INFO]: 📧 Verification email sent to test77910@gmail.com
+[2026-02-09T04:51:09.933Z] [INFO]: User registered: test77910@gmail.com
+[2026-02-09T04:52:44.727Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:52:44.860Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:52:44.861Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:59:20.074Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:59:20.246Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:59:20.247Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:59:20.763Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:59:20.765Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:59:20.767Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:59:20.769Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:59:20.770Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T05:01:28.028Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:01:28.159Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T05:01:28.160Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T05:01:28.645Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:01:28.647Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:01:28.649Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:01:28.650Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T05:01:28.651Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T05:03:22.818Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:03:22.928Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:03:22.929Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:03:23.257Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:03:23.259Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:03:23.260Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:03:23.280Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:03:23.286Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-09T05:03:23.286Z] [INFO]:    Users removed: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Cached users before: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Cached users after: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Memory before: 1.31M
+[2026-02-09T05:03:23.288Z] [INFO]:    Memory after: 1.31M
+[2026-02-09T05:04:04.825Z] [INFO]: 📊 Cache stats retrieved: 9 total keys
+[2026-02-09T05:04:31.684Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:04:31.787Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:04:31.788Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:05:04.971Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T05:05:05.018Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2026-02-09T05:05:05.026Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2026-02-09T05:05:05.029Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T05:05:05.288Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:05.371Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:05.373Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:05.375Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T05:05:05.387Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T05:05:05.469Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (80ms)
+[2026-02-09T05:05:05.530Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:05.578Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:05.581Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:06.491Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-09T05:05:06.517Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.718Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.720Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.799Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:06.853Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:06.856Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:06.877Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1891ms)
+[2026-02-09T05:05:23.703Z] [INFO]: User baraawael7901@gmail.com fetched 3 chats
+[2026-02-09T05:05:33.257Z] [INFO]: User baraawael7901@gmail.com fetched 3 messages from chat 68fd0217fcb035606fce8e3d
+[2026-02-09T05:07:08.557Z] [INFO]: 📧 Verification email sent to babo78@gmail.com
+[2026-02-09T05:07:08.702Z] [INFO]: User registered: babo78@gmail.com
+[2026-02-09T05:08:36.143Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.166Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2026-02-09T05:08:36.172Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2026-02-09T05:08:36.172Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T05:08:36.266Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.270Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.272Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.273Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.275Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.290Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (14ms)
+[2026-02-09T05:08:36.298Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.302Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.304Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.705Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T05:08:36.706Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.721Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.722Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.730Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.733Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.734Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.734Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (591ms)
+[2026-02-09T05:08:40.220Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:08:43.107Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:09:35.083Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:09:35.232Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:09:35.232Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:09:35.777Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:09:35.779Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:09:35.781Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:09:35.823Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:09:35.836Z] [INFO]: ✅ Cleanup complete in 55ms
+[2026-02-09T05:09:35.837Z] [INFO]:    Users removed: 0
+[2026-02-09T05:09:35.838Z] [INFO]:    Cached users before: 2
+[2026-02-09T05:09:35.838Z] [INFO]:    Cached users after: 2
+[2026-02-09T05:09:35.839Z] [INFO]:    Memory before: 1.49M
+[2026-02-09T05:09:35.839Z] [INFO]:    Memory after: 1.49M
+[2026-02-09T05:10:40.580Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:42.585Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:10:45.145Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:46.004Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:10:50.376Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:51.909Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-09T05:11:45.855Z] [INFO]: ✅ New chat created with participants: 68d9b957e9a319acf7221479 (creator) and 69896b77986e4c49e574e4b0 (recipient)
+[2026-02-09T05:11:45.864Z] [INFO]: 👥 Chat participants: abduallh (68d9b957e9a319acf7221479), baraaaa (69896b77986e4c49e574e4b0)
+[2026-02-09T05:11:45.865Z] [INFO]: Chat created/retrieved between 68d9b957e9a319acf7221479 and 69896b77986e4c49e574e4b0
+[2026-02-09T05:11:45.930Z] [INFO]: User abduallhshadow@gmail.com fetched 0 messages from chat 69896c916fc918d29657e643
+[2026-02-09T05:11:45.970Z] [INFO]: User abduallhshadow@gmail.com fetched 0 messages from chat 69896c916fc918d29657e643
+[2026-02-09T05:12:25.879Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:12:48.945Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:13:30.064Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:13:56.552Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:15:43.882Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:15:50.269Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:15:58.653Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:16:30.318Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T05:16:30.504Z] [INFO]: 🎯 Cache HIT: user:email:abduallhshadow@gmail.com
+[2026-02-09T05:16:30.507Z] [INFO]: ⚡ USER CACHE HIT (by email): abduallhshadow@gmail.com
+[2026-02-09T05:16:30.508Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T05:16:31.375Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (867ms)
+[2026-02-09T05:16:31.522Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:16:31.543Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:16:31.547Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:16:32.225Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T05:16:32.227Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.289Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.292Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.305Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:16:32.311Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:16:32.313Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:16:32.316Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (2001ms)
+[2026-02-09T05:16:35.273Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:17:33.574Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:18:06.136Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:20:52.762Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:20:52.904Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:20:52.905Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:20:53.339Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:20:53.341Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:20:53.342Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:20:53.370Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:20:53.376Z] [INFO]: ✅ Cleanup complete in 34ms
+[2026-02-09T05:20:53.376Z] [INFO]:    Users removed: 0
+[2026-02-09T05:20:53.377Z] [INFO]:    Cached users before: 2.5
+[2026-02-09T05:20:53.377Z] [INFO]:    Cached users after: 2.5
+[2026-02-09T05:20:53.377Z] [INFO]:    Memory before: 1.51M
+[2026-02-09T05:20:53.378Z] [INFO]:    Memory after: 1.51M
+[2026-02-09T05:21:35.078Z] [INFO]: 📊 Cache stats retrieved: 15 total keys
+[2026-02-09T05:24:12.971Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:24:13.046Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:24:13.047Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:24:13.298Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:24:13.300Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:24:13.300Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:24:13.317Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:24:13.322Z] [INFO]: ✅ Cleanup complete in 22ms
+[2026-02-09T05:24:13.323Z] [INFO]:    Users removed: 0
+[2026-02-09T05:24:13.323Z] [INFO]:    Cached users before: 2.5
+[2026-02-09T05:24:13.324Z] [INFO]:    Cached users after: 2.5
+[2026-02-09T05:24:13.324Z] [INFO]:    Memory before: 1.51M
+[2026-02-09T05:24:13.325Z] [INFO]:    Memory after: 1.51M
+[2026-02-09T13:19:58.823Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:24:20.220Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:25:45.921Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:28:08.785Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T13:28:08.797Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T13:28:09.249Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T13:28:09.250Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T13:28:09.251Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T13:28:09.281Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T13:28:09.290Z] [INFO]: ✅ Cleanup complete in 39ms
+[2026-02-09T13:28:09.291Z] [INFO]:    Users removed: 0
+[2026-02-09T13:28:09.291Z] [INFO]:    Cached users before: 0
+[2026-02-09T13:28:09.291Z] [INFO]:    Cached users after: 0
+[2026-02-09T13:28:09.292Z] [INFO]:    Memory before: 1.03M
+[2026-02-09T13:28:09.292Z] [INFO]:    Memory after: 1.06M
+[2026-02-09T13:29:32.154Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:29:32.245Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T13:29:32.246Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T13:29:32.630Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T13:29:32.632Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T13:29:32.633Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T13:29:32.649Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T13:29:32.654Z] [INFO]: ✅ Cleanup complete in 21ms
+[2026-02-09T13:29:32.656Z] [INFO]:    Users removed: 0
+[2026-02-09T13:29:32.656Z] [INFO]:    Cached users before: 0
+[2026-02-09T13:29:32.656Z] [INFO]:    Cached users after: 0
+[2026-02-09T13:29:32.657Z] [INFO]:    Memory before: 1.06M
+[2026-02-09T13:29:32.658Z] [INFO]:    Memory after: 1.06M
+[2026-02-09T13:30:10.333Z] [INFO]: 📊 Cache stats retrieved: 9 total keys
+[2026-02-09T13:32:57.812Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T13:32:57.856Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2026-02-09T13:32:57.876Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2026-02-09T13:32:57.880Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T13:32:58.452Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.465Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.465Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.466Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T13:32:58.470Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T13:32:58.508Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (36ms)
+[2026-02-09T13:32:58.522Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.529Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.530Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.926Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T13:32:58.926Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.947Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.949Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.964Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.970Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.972Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.973Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (1161ms)
+[2026-02-09T13:33:05.987Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:35:50.148Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:36:46.908Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:37:00.786Z] [INFO]: User abduallhshadow@gmail.com hid chat 690a21f15e15078e6a635171
