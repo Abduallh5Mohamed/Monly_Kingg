@@ -1118,8 +1118,8 @@ export default function SupportPage() {
                     <button
                       onClick={() => handleSelectChat(chat)}
                       className={`w-full rounded-2xl border border-transparent p-4 text-left transition-all ${active
-                          ? 'border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-transparent to-transparent shadow-lg shadow-cyan-500/10'
-                          : 'bg-white/5 hover:border-white/10 hover:bg-white/10'
+                        ? 'border-cyan-400/40 bg-gradient-to-r from-cyan-500/10 via-transparent to-transparent shadow-lg shadow-cyan-500/10'
+                        : 'bg-white/5 hover:border-white/10 hover:bg-white/10'
                         }`}
                     >
                       <div className="flex items-center gap-4">
@@ -1243,8 +1243,8 @@ export default function SupportPage() {
                       <div key={message._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
                         <div
                           className={`max-w-[75%] rounded-3xl border px-5 py-4 shadow-lg ${isOwn
-                              ? 'border-cyan-400/40 bg-cyan-500/10 text-white'
-                              : 'border-white/10 bg-white/5 text-white/90'
+                            ? 'border-cyan-400/40 bg-cyan-500/10 text-white'
+                            : 'border-white/10 bg-white/5 text-white/90'
                             }`}
                         >
                           {!isOwn && (
