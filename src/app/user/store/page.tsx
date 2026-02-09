@@ -20,6 +20,10 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Megaphone,
+  Zap,
+  Calendar,
+  CheckCircle,
 } from 'lucide-react';
 
 interface Listing {
@@ -56,6 +60,14 @@ export default function SellerStorePage() {
   const [totalPages, setTotalPages] = useState(1);
   const [createLoading, setCreateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+
+  // Promote modal state
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
+  const [promoteListing, setPromoteListing] = useState<Listing | null>(null);
+  const [promoteDays, setPromoteDays] = useState(3);
+  const [promoteLoading, setPromoteLoading] = useState(false);
+  const [promoteSuccess, setPromoteSuccess] = useState(false);
+  const PRICE_PER_DAY = 2;
 
   // Form state
   const [form, setForm] = useState({
@@ -146,6 +158,44 @@ export default function SellerStorePage() {
       console.error(err);
     } finally {
       setDeleteLoading(null);
+    }
+  };
+
+  const openPromoteModal = (listing: Listing) => {
+    setPromoteListing(listing);
+    setPromoteDays(3);
+    setPromoteSuccess(false);
+    setShowPromoteModal(true);
+  };
+
+  const handlePromote = async () => {
+    if (!promoteListing) return;
+    setPromoteLoading(true);
+    try {
+      const res = await fetch('/api/v1/promotions/request', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId: promoteListing._id,
+          days: promoteDays,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPromoteSuccess(true);
+        setTimeout(() => {
+          setShowPromoteModal(false);
+          setPromoteSuccess(false);
+        }, 2000);
+      } else {
+        alert(data.message || 'Failed to submit promotion request');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit promotion request');
+    } finally {
+      setPromoteLoading(false);
     }
   };
 
@@ -257,6 +307,15 @@ export default function SellerStorePage() {
                 <div className="flex items-center justify-between pt-3 border-t border-white/5">
                   <span className="text-xl font-bold text-cyan-400">${listing.price}</span>
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {listing.status === 'available' && (
+                      <button
+                        onClick={() => openPromoteModal(listing)}
+                        className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 transition-all"
+                        title="Promote"
+                      >
+                        <Megaphone className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(listing._id)}
                       disabled={deleteLoading === listing._id}
@@ -395,6 +454,126 @@ export default function SellerStorePage() {
                   Create Listing
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Promote Listing Modal */}
+      {showPromoteModal && promoteListing && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowPromoteModal(false)} />
+          <div className="relative w-full max-w-md mx-4 rounded-2xl border border-white/10 bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl">
+            <button onClick={() => setShowPromoteModal(false)} className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center">
+              <X className="w-4 h-4 text-white/60" />
+            </button>
+
+            <div className="p-8">
+              {promoteSuccess ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Request Submitted</h3>
+                  <p className="text-white/50 text-sm">Your promotion request has been sent to admin for review</p>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                      <Megaphone className="w-5 h-5 text-white" />
+                    </div>
+                    Promote Listing
+                  </h2>
+                  <p className="text-white/40 text-sm mb-6">Boost your listing visibility to more buyers</p>
+
+                  {/* Listing Preview */}
+                  <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4 mb-6">
+                    <h3 className="text-white font-semibold text-sm">{promoteListing.title}</h3>
+                    <div className="flex items-center gap-3 mt-1.5 text-xs text-white/40">
+                      <span className="flex items-center gap-1">
+                        <Gamepad2 className="w-3 h-3" />
+                        {typeof promoteListing.game === 'object' ? promoteListing.game.name : promoteListing.game}
+                      </span>
+                      <span>${promoteListing.price}</span>
+                    </div>
+                  </div>
+
+                  {/* Days Selector */}
+                  <div className="mb-6">
+                    <label className="text-xs text-white/50 mb-3 block">Promotion Duration</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[1, 3, 7, 14].map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => setPromoteDays(d)}
+                          className={`py-3 rounded-xl text-sm font-bold transition-all ${
+                            promoteDays === d
+                              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-lg shadow-cyan-500/10'
+                              : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                          }`}
+                        >
+                          {d}d
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Custom days slider */}
+                    <div className="mt-4">
+                      <input
+                        type="range"
+                        min="1"
+                        max="30"
+                        value={promoteDays}
+                        onChange={(e) => setPromoteDays(Number(e.target.value))}
+                        className="w-full accent-cyan-500"
+                      />
+                      <div className="flex justify-between text-[10px] text-white/30 mt-1">
+                        <span>1 day</span>
+                        <span>{promoteDays} days</span>
+                        <span>30 days</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Cost Breakdown */}
+                  <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4 mb-6 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/50">Duration</span>
+                      <span className="text-white">{promoteDays} days</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/50">Price per day</span>
+                      <span className="text-white">${PRICE_PER_DAY}</span>
+                    </div>
+                    <div className="border-t border-white/10 pt-2 mt-2 flex justify-between">
+                      <span className="text-white font-medium">Total Cost</span>
+                      <span className="text-xl font-bold text-cyan-400">${promoteDays * PRICE_PER_DAY}</span>
+                    </div>
+                  </div>
+
+                  {/* Info Note */}
+                  <div className="rounded-xl bg-cyan-500/5 border border-cyan-500/10 p-3 mb-6">
+                    <p className="text-xs text-cyan-400/70 leading-relaxed">
+                      Your promotion request will be sent to admin for approval. Once approved, your listing will be featured and reach more buyers for the selected duration.
+                    </p>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    onClick={handlePromote}
+                    disabled={promoteLoading}
+                    className="w-full h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                  >
+                    {promoteLoading ? (
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    ) : (
+                      <Zap className="w-5 h-5 mr-2" />
+                    )}
+                    Submit Promotion Request - ${promoteDays * PRICE_PER_DAY}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

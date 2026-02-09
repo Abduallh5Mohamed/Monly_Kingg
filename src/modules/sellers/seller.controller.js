@@ -17,8 +17,10 @@ export const submitSellerRequest = async (req, res) => {
       }
       // If rejected, allow resubmission — update the existing record
       existing.idType = req.body.idType;
-      existing.idImageFront = req.body.idImageFront;
-      existing.idImageBack = req.body.idImageBack || null;
+      existing.idImage = req.body.idImage;
+      existing.faceImageFront = req.body.faceImageFront;
+      existing.faceImageLeft = req.body.faceImageLeft;
+      existing.faceImageRight = req.body.faceImageRight;
       existing.fullName = req.body.fullName;
       existing.status = "pending";
       existing.rejectionReason = null;
@@ -31,8 +33,10 @@ export const submitSellerRequest = async (req, res) => {
     const sellerRequest = new SellerRequest({
       user: userId,
       idType: req.body.idType,
-      idImageFront: req.body.idImageFront,
-      idImageBack: req.body.idImageBack || null,
+      idImage: req.body.idImage,
+      faceImageFront: req.body.faceImageFront,
+      faceImageLeft: req.body.faceImageLeft,
+      faceImageRight: req.body.faceImageRight,
       fullName: req.body.fullName,
     });
 

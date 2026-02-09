@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
@@ -36,7 +36,7 @@ export default function AdminLayout({
   */
 
   return (
-    <div className="min-h-screen bg-[#0f1117]">
+    <div className="min-h-screen bg-[#0a0c10]">
       <AdminSidebar />
       <div className="md:ml-20 ml-0">
         <AdminHeader />

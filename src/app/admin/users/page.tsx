@@ -217,25 +217,25 @@ export default function UsersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-white">{totalUsers}</div>
             <p className="text-white/60 text-sm">Total Users</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-green-400">{users.filter(u => u.active).length}</div>
             <p className="text-white/60 text-sm">Active Users</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-purple-400">{users.filter(u => u.role === 'admin').length}</div>
             <p className="text-white/60 text-sm">Admins</p>
           </CardContent>
         </Card>
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-yellow-400">{users.filter(u => !u.verified).length}</div>
             <p className="text-white/60 text-sm">Unverified</p>
@@ -244,7 +244,7 @@ export default function UsersPage() {
       </div>
 
       {/* Filters and Search */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardContent className="pt-6">
           <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -253,7 +253,7 @@ export default function UsersPage() {
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white/5 border-white/10 text-white"
+                className="pl-10 bg-white/5 border-white/[0.06] text-white"
               />
             </div>
             <select
@@ -262,7 +262,7 @@ export default function UsersPage() {
                 setRoleFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500"
+              className="px-4 py-2 bg-white/5 border border-white/[0.06] rounded-lg text-white focus:outline-none focus:border-blue-500"
             >
               <option value="all">All Roles</option>
               <option value="user">User</option>
@@ -276,14 +276,14 @@ export default function UsersPage() {
       </Card>
 
       {/* Users Table */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white">All Users</CardTitle>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
+              <TableRow className="border-white/[0.06] hover:bg-transparent">
                 <TableHead className="text-white/60">User</TableHead>
                 <TableHead className="text-white/60 hidden md:table-cell">Email</TableHead>
                 <TableHead className="text-white/60">Role</TableHead>
@@ -294,7 +294,7 @@ export default function UsersPage() {
             </TableHeader>
             <TableBody>
               {users.map((user) => (
-                <TableRow key={user._id} className="border-white/10 hover:bg-white/5">
+                <TableRow key={user._id} className="border-white/[0.06] hover:bg-white/5">
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -316,7 +316,7 @@ export default function UsersPage() {
                     <select
                       value={user.role}
                       onChange={(e) => handleUpdateRole(user._id, e.target.value)}
-                      className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-500"
+                      className="px-2 py-1 bg-white/5 border border-white/[0.06] rounded text-white text-sm focus:outline-none focus:border-blue-500"
                     >
                       <option value="user">User</option>
                       <option value="admin">Admin</option>
@@ -343,7 +343,7 @@ export default function UsersPage() {
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-[#1a1d2e] border-white/10">
+                      <DropdownMenuContent align="end" className="bg-[#131620] border-white/[0.06]">
                         <DropdownMenuItem
                           onClick={() => handleToggleStatus(user._id)}
                           className="text-white hover:bg-white/10"
@@ -379,7 +379,7 @@ export default function UsersPage() {
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
               variant="outline"
-              className="border-white/10 text-white hover:bg-white/10 disabled:opacity-50"
+              className="border-white/[0.06] text-white hover:bg-white/10 disabled:opacity-50"
             >
               Previous
             </Button>
@@ -387,7 +387,7 @@ export default function UsersPage() {
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
               variant="outline"
-              className="border-white/10 text-white hover:bg-white/10 disabled:opacity-50"
+              className="border-white/[0.06] text-white hover:bg-white/10 disabled:opacity-50"
             >
               Next
             </Button>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import {
@@ -139,13 +139,13 @@ export function UsersTable() {
 
   if (loading && !usersData) {
     return (
-      <Card className="bg-[#1e2236] border-white/10">
-        <CardHeader className="border-b border-white/10">
-          <CardTitle className="text-white">Users Management</CardTitle>
+      <Card className="bg-[#131620] border-white/[0.06]">
+        <CardHeader className="border-b border-white/[0.06] py-4">
+          <CardTitle className="text-white text-sm font-semibold">Users Management</CardTitle>
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-white/60" />
+            <Loader2 className="h-6 w-6 animate-spin text-white/30" />
           </div>
         </CardContent>
       </Card>
@@ -154,10 +154,10 @@ export function UsersTable() {
 
   return (
     <>
-      <Card className="bg-[#1e2236] border-white/10">
-        <CardHeader className="border-b border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
+        <CardHeader className="border-b border-white/[0.06] py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="text-white">Users Management</CardTitle>
+            <CardTitle className="text-white text-sm font-semibold">Users Management</CardTitle>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -165,11 +165,11 @@ export function UsersTable() {
                   placeholder="Search users..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  className="pl-10 bg-white/[0.04] border-white/[0.06] text-white placeholder:text-white/30 text-sm h-9 rounded-lg"
                 />
               </div>
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-32 bg-white/5 border-white/10 text-white">
+                <SelectTrigger className="w-32 bg-white/[0.04] border-white/[0.06] text-white text-sm h-9 rounded-lg">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -185,7 +185,7 @@ export function UsersTable() {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
+              <TableRow className="border-white/[0.06] hover:bg-transparent">
                 <TableHead className="text-white/60">User</TableHead>
                 <TableHead className="text-white/60">Email</TableHead>
                 <TableHead className="text-white/60">Role</TableHead>
@@ -196,10 +196,10 @@ export function UsersTable() {
             </TableHeader>
             <TableBody>
               {usersData?.users.map((user) => (
-                <TableRow key={user._id} className="border-white/10 hover:bg-white/5">
+                <TableRow key={user._id} className="border-white/[0.06] hover:bg-white/5">
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-8 h-8 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-semibold text-xs">
                         {getUserInitials(user.username)}
                       </div>
                       <span className="text-white font-medium">{user.username}</span>
@@ -259,7 +259,7 @@ export function UsersTable() {
                           )}
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-[#1e2236] border-white/10">
+                      <DropdownMenuContent align="end" className="bg-[#131620] border-white/[0.06]">
                         <DropdownMenuItem
                           onClick={() => handleRoleUpdate(user._id, user.role === 'admin' ? 'user' : 'admin')}
                           className="text-white hover:bg-white/10"
@@ -300,7 +300,7 @@ export function UsersTable() {
 
           {/* Pagination */}
           {usersData?.pagination && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.06]">
               <div className="text-white/60 text-sm">
                 Showing {((usersData.pagination.currentPage - 1) * 10) + 1} to {Math.min(usersData.pagination.currentPage * 10, usersData.pagination.totalUsers)} of {usersData.pagination.totalUsers} users
               </div>
@@ -310,7 +310,7 @@ export function UsersTable() {
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={!usersData.pagination.hasPrev || loading}
-                  className="bg-transparent border-white/10 text-white hover:bg-white/10"
+                  className="bg-transparent border-white/[0.06] text-white hover:bg-white/10"
                 >
                   Previous
                 </Button>
@@ -322,7 +322,7 @@ export function UsersTable() {
                   size="sm"
                   onClick={() => setCurrentPage(prev => prev + 1)}
                   disabled={!usersData.pagination.hasNext || loading}
-                  className="bg-transparent border-white/10 text-white hover:bg-white/10"
+                  className="bg-transparent border-white/[0.06] text-white hover:bg-white/10"
                 >
                   Next
                 </Button>
@@ -334,7 +334,7 @@ export function UsersTable() {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
-        <AlertDialogContent className="bg-[#1e2236] border-white/10">
+        <AlertDialogContent className="bg-[#131620] border-white/[0.06]">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription className="text-white/60">
@@ -342,7 +342,7 @@ export function UsersTable() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/10">
+            <AlertDialogCancel className="bg-transparent border-white/[0.06] text-white hover:bg-white/10">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction

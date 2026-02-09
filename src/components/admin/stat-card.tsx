@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -17,32 +17,30 @@ interface StatCardProps {
 
 export function StatCard({ title, value, icon: Icon, trend, gradient }: StatCardProps) {
   return (
-    <Card className={cn(
-      "relative overflow-hidden border-0 bg-gradient-to-br p-6",
-      gradient
-    )}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-black/20" />
-      
+    <Card className="relative overflow-hidden border border-white/[0.06] bg-[#131620] p-5">
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
-          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <Icon className="h-6 w-6 text-white" />
+          <div className={cn(
+            "w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br",
+            gradient
+          )}>
+            <Icon className="h-5 w-5 text-white" />
           </div>
           
           {trend && (
             <div className={cn(
-              "flex items-center gap-1 text-sm font-semibold px-2 py-1 rounded-full",
-              trend.isPositive ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"
+              "flex items-center gap-0.5 text-xs font-medium px-2 py-1 rounded-md",
+              trend.isPositive ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"
             )}>
-              {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
+              {trend.isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+              {Math.abs(trend.value).toFixed(1)}%
             </div>
           )}
         </div>
         
         <div>
-          <p className="text-white/70 text-sm mb-1">{title}</p>
-          <p className="text-3xl font-bold text-white">{value}</p>
+          <p className="text-white/40 text-xs font-medium uppercase tracking-wider mb-1">{title}</p>
+          <p className="text-2xl font-bold text-white">{value}</p>
         </div>
       </div>
     </Card>

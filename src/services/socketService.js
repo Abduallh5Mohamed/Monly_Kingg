@@ -33,25 +33,31 @@ class SocketService {
             }
         });
 
-        // Setup Redis Adapter for horizontal scaling
-        try {
-            const pubClient = createClient({
-                url: process.env.REDIS_URL || 'redis://localhost:6379',
-                password: process.env.REDIS_PASSWORD
-            });
-            const subClient = pubClient.duplicate();
+        // Setup Redis Adapter for horizontal scaling (temporarily disabled)
+        // try {
+        //     const redisConfig = {
+        //         url: process.env.REDIS_URL || 'redis://localhost:6379'
+        //     };
+            
+        //     // Only add password if provided
+        //     if (process.env.REDIS_PASSWORD) {
+        //         redisConfig.password = process.env.REDIS_PASSWORD;
+        //     }
+            
+        //     const pubClient = createClient(redisConfig);
+        //     const subClient = pubClient.duplicate();
 
-            await Promise.all([
-                pubClient.connect(),
-                subClient.connect()
-            ]);
+        //     await Promise.all([
+        //         pubClient.connect(),
+        //         subClient.connect()
+        //     ]);
 
-            this.io.adapter(createAdapter(pubClient, subClient));
-            this.redisAdapter = { pubClient, subClient };
-            logger.info('✅ Socket.IO Redis Adapter initialized');
-        } catch (error) {
-            logger.warn(`⚠️  Socket.IO Redis Adapter failed: ${error.message}. Running in standalone mode.`);
-        }
+        //     this.io.adapter(createAdapter(pubClient, subClient));
+        //     this.redisAdapter = { pubClient, subClient };
+        //     logger.info('✅ Socket.IO Redis Adapter initialized');
+        // } catch (error) {
+        //     logger.warn(`⚠️  Socket.IO Redis Adapter failed: ${error.message}. Running in standalone mode.`);
+        // }
 
         // Authentication middleware
         this.io.use(async (socket, next) => {

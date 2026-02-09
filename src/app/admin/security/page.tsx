@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -46,7 +46,7 @@ export default function SecurityPage() {
 
       {/* Security Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -64,7 +64,7 @@ export default function SecurityPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -79,7 +79,7 @@ export default function SecurityPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -94,7 +94,7 @@ export default function SecurityPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
@@ -111,7 +111,7 @@ export default function SecurityPage() {
       </div>
 
       {/* Security Features */}
-      <Card className="bg-[#1e2236] border-white/10">
+      <Card className="bg-[#131620] border-white/[0.06]">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Shield className="h-5 w-5 text-green-400" />
@@ -121,7 +121,7 @@ export default function SecurityPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-green-400" />
@@ -134,7 +134,7 @@ export default function SecurityPage() {
               <p className="text-white/60 text-sm">HTTPS enabled on all pages</p>
             </div>
 
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-green-400" />
@@ -147,7 +147,7 @@ export default function SecurityPage() {
               <p className="text-white/60 text-sm">DDoS protection enabled</p>
             </div>
 
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-green-400" />
@@ -160,7 +160,7 @@ export default function SecurityPage() {
               <p className="text-white/60 text-sm">Two-factor authentication</p>
             </div>
 
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-green-400" />
@@ -173,7 +173,7 @@ export default function SecurityPage() {
               <p className="text-white/60 text-sm">API request throttling</p>
             </div>
 
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <CheckCircle className="h-5 w-5 text-green-400" />
@@ -186,7 +186,7 @@ export default function SecurityPage() {
               <p className="text-white/60 text-sm">Daily database backups</p>
             </div>
 
-            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/[0.06]">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                   <AlertTriangle className="h-5 w-5 text-yellow-400" />
@@ -204,7 +204,7 @@ export default function SecurityPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Security Logs */}
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Eye className="h-5 w-5" />
@@ -215,7 +215,7 @@ export default function SecurityPage() {
           <CardContent>
             <div className="space-y-3">
               {securityLogs.map((log) => (
-                <div key={log.id} className="p-3 rounded-lg bg-white/5 border border-white/10">
+                <div key={log.id} className="p-3 rounded-lg bg-white/5 border border-white/[0.06]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       {log.status === 'success' ? (
@@ -241,7 +241,7 @@ export default function SecurityPage() {
         </Card>
 
         {/* Blocked IPs */}
-        <Card className="bg-[#1e2236] border-white/10">
+        <Card className="bg-[#131620] border-white/[0.06]">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Lock className="h-5 w-5 text-red-400" />
@@ -266,7 +266,7 @@ export default function SecurityPage() {
                     <p className="text-white/60 text-xs">{blocked.reason}</p>
                     <div className="flex items-center gap-3 text-white/40 text-xs">
                       <span>Blocked: {blocked.blocked}</span>
-                      <span>•</span>
+                      <span>â€¢</span>
                       <span>Attempts: {blocked.attempts}</span>
                     </div>
                   </div>

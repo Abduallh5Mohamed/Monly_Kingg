@@ -15,10 +15,7 @@ import {
   Shield,
   Wallet,
   Trophy,
-  Clock,
-  Lock,
-  Eye,
-  EyeOff
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -38,10 +35,6 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
 
   const [profile, setProfile] = useState<UserProfile>({
@@ -59,11 +52,6 @@ export default function ProfilePage() {
   });
 
   const [editedProfile, setEditedProfile] = useState(profile);
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
 
   useEffect(() => {
     // TODO: Fetch user profile from API
@@ -102,32 +90,6 @@ export default function ProfilePage() {
     }
   };
 
-  const handlePasswordChange = async () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert('New passwords do not match!');
-      return;
-    }
-    if (passwordData.newPassword.length < 8) {
-      alert('Password must be at least 8 characters!');
-      return;
-    }
-
-    try {
-      // TODO: Change password via API
-      console.log('Changing password...');
-      alert('Password changed successfully!');
-      setIsChangingPassword(false);
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
-    } catch (error) {
-      console.error('Error changing password:', error);
-      alert('Failed to change password');
-    }
-  };
-
   return (
     <UserDashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-[#0a0e14] via-[#1a1f2e] to-[#0f1419] p-6">
@@ -139,7 +101,7 @@ export default function ProfilePage() {
             </h1>
             <p className="text-gray-400 mt-1">Manage your account information and settings</p>
           </div>
-          {!isEditing && !isChangingPassword && (
+          {!isEditing && (
             <Button
               onClick={handleEditToggle}
               className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-lg shadow-cyan-500/30 transition-all"
@@ -330,130 +292,6 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Security Settings Card */}
-            <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-[#f5f5dc]">
-                  <Lock className="w-5 h-5 inline mr-2" />
-                  Security Settings
-                </h3>
-                {!isChangingPassword && !isEditing && (
-                  <Button
-                    onClick={() => setIsChangingPassword(true)}
-                    className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg shadow-orange-500/30"
-                  >
-                    Change Password
-                  </Button>
-                )}
-              </div>
-
-              {isChangingPassword ? (
-                <div className="space-y-4">
-                  {/* Current Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                      Current Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showCurrentPassword ? 'text' : 'password'}
-                        value={passwordData.currentPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all"
-                        placeholder="Enter current password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f5f5dc]"
-                      >
-                        {showCurrentPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* New Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                      New Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showNewPassword ? 'text' : 'password'}
-                        value={passwordData.newPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all"
-                        placeholder="Enter new password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f5f5dc]"
-                      >
-                        {showNewPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                      Confirm New Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={passwordData.confirmPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all"
-                        placeholder="Confirm new password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#f5f5dc]"
-                      >
-                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <Button
-                      onClick={handlePasswordChange}
-                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/30"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Update Password
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        setIsChangingPassword(false);
-                        setPasswordData({
-                          currentPassword: '',
-                          newPassword: '',
-                          confirmPassword: ''
-                        });
-                      }}
-                      variant="outline"
-                      className="border-white/10 text-gray-300 hover:bg-white/5"
-                    >
-                      <X className="w-4 h-4 mr-2" />
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-                  <div>
-                    <p className="text-[#f5f5dc] font-medium">Password</p>
-                    <p className="text-sm text-gray-400 mt-1">Last changed 30 days ago</p>
-                  </div>
-                  <div className="text-gray-400">••••••••</div>
-                </div>
-              )}
             </div>
           </div>
         </div>

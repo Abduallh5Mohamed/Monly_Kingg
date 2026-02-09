@@ -130,7 +130,8 @@ export const resendCode = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email?.toLowerCase().trim();
+    const password = req.body.password;
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
 

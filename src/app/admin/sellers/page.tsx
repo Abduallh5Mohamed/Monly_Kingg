@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -23,8 +23,10 @@ interface SellerRequest {
   _id: string;
   user: { _id: string; username: string; email: string };
   idType: string;
-  idImageFront: string;
-  idImageBack?: string;
+  idImage: string;
+  faceImageFront: string;
+  faceImageLeft: string;
+  faceImageRight: string;
   fullName: string;
   status: 'pending' | 'approved' | 'rejected';
   rejectionReason?: string;
@@ -147,7 +149,7 @@ export default function AdminSellerRequests() {
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
               filter === f
                 ? 'bg-primary/20 text-primary border border-primary/30'
-                : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                : 'bg-white/5 text-white/60 border border-white/[0.06] hover:bg-white/10'
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -166,10 +168,10 @@ export default function AdminSellerRequests() {
           <p>No seller requests found</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+        <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10 bg-white/[0.03]">
+              <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                 <th className="text-left text-xs font-medium text-white/50 uppercase tracking-wider px-6 py-4">User</th>
                 <th className="text-left text-xs font-medium text-white/50 uppercase tracking-wider px-6 py-4">Full Name</th>
                 <th className="text-left text-xs font-medium text-white/50 uppercase tracking-wider px-6 py-4">Doc Type</th>
@@ -211,7 +213,7 @@ export default function AdminSellerRequests() {
                   <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => setSelectedRequest(req)}
-                      className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs font-medium transition-all border border-white/10 hover:border-white/20"
+                      className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white text-xs font-medium transition-all border border-white/[0.06] hover:border-white/20"
                     >
                       <Eye className="w-3.5 h-3.5 inline mr-1" /> View
                     </button>
@@ -240,20 +242,20 @@ export default function AdminSellerRequests() {
       {selectedRequest && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => { setSelectedRequest(null); setShowRejectInput(false); }} />
-          <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl">
+          <div className="relative w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto rounded-2xl border border-white/[0.06] bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl">
             <button onClick={() => { setSelectedRequest(null); setShowRejectInput(false); }} className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center">
               <X className="w-4 h-4 text-white/60" />
             </button>
 
             <div className="p-8">
               {/* User Info */}
-              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+              <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/[0.06]">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <User className="w-7 h-7 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">{selectedRequest.fullName}</h3>
-                  <p className="text-sm text-muted-foreground">@{selectedRequest.user?.username} · {selectedRequest.user?.email}</p>
+                  <p className="text-sm text-muted-foreground">@{selectedRequest.user?.username} Â· {selectedRequest.user?.email}</p>
                 </div>
                 <span className={`ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${statusColors[selectedRequest.status]}`}>
                   {statusIcons[selectedRequest.status]}
@@ -261,39 +263,55 @@ export default function AdminSellerRequests() {
                 </span>
               </div>
 
-              {/* ID Images */}
-              <div className="space-y-4 mb-6">
-                <h4 className="text-sm font-medium text-white/70 flex items-center gap-2">
-                  <FileImage className="w-4 h-4" />
-                  {selectedRequest.idType === 'national_id' ? 'National ID' : 'Passport'} Document
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-white/40 mb-2">Front Side</p>
-                    <img src={selectedRequest.idImageFront} alt="Front" className="w-full rounded-xl border border-white/10 object-cover max-h-64" />
+              {/* ID & Face Images */}
+              <div className="space-y-6 mb-6">
+                {/* ID Document */}
+                <div>
+                  <h4 className="text-sm font-medium text-white/70 flex items-center gap-2 mb-3">
+                    <FileImage className="w-4 h-4" />
+                    {selectedRequest.idType === 'national_id' ? 'National ID' : 'Passport'} Document
+                  </h4>
+                  <div className="w-full">
+                    <img src={selectedRequest.idImage} alt="ID" className="w-full rounded-xl border border-white/[0.06] object-cover max-h-80" />
                   </div>
-                  {selectedRequest.idImageBack && (
+                </div>
+
+                {/* Face Verification Photos */}
+                <div>
+                  <h4 className="text-sm font-medium text-white/70 flex items-center gap-2 mb-3">
+                    <User className="w-4 h-4" />
+                    Face Verification (3 Angles)
+                  </h4>
+                  <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <p className="text-xs text-white/40 mb-2">Back Side</p>
-                      <img src={selectedRequest.idImageBack} alt="Back" className="w-full rounded-xl border border-white/10 object-cover max-h-64" />
+                      <p className="text-xs text-white/40 mb-2">Front</p>
+                      <img src={selectedRequest.faceImageFront} alt="Face Front" className="w-full rounded-xl border border-white/[0.06] object-cover aspect-square" />
                     </div>
-                  )}
+                    <div>
+                      <p className="text-xs text-white/40 mb-2">Left Side</p>
+                      <img src={selectedRequest.faceImageLeft} alt="Face Left" className="w-full rounded-xl border border-white/[0.06] object-cover aspect-square" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/40 mb-2">Right Side</p>
+                      <img src={selectedRequest.faceImageRight} alt="Face Right" className="w-full rounded-xl border border-white/[0.06] object-cover aspect-square" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Actions */}
               {selectedRequest.status === 'pending' && (
-                <div className="pt-4 border-t border-white/10">
+                <div className="pt-4 border-t border-white/[0.06]">
                   {showRejectInput ? (
                     <div className="space-y-3">
                       <textarea
                         value={rejectReason}
                         onChange={(e) => setRejectReason(e.target.value)}
                         placeholder="Enter rejection reason..."
-                        className="w-full h-24 rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-400/50 resize-none"
+                        className="w-full h-24 rounded-xl bg-white/5 border border-white/[0.06] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-400/50 resize-none"
                       />
                       <div className="flex gap-3">
-                        <Button onClick={() => setShowRejectInput(false)} variant="outline" className="flex-1 rounded-xl border-white/10 text-white/60">
+                        <Button onClick={() => setShowRejectInput(false)} variant="outline" className="flex-1 rounded-xl border-white/[0.06] text-white/60">
                           Cancel
                         </Button>
                         <Button

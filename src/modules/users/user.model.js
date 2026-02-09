@@ -12,7 +12,7 @@ const refreshTokenSubSchema = new mongoose.Schema({
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: [true, 'Email is required'], sparse: true, trim: true, lowercase: true },
+  email: { type: String, required: [true, 'Email is required'], trim: true, lowercase: true },
   username: { type: String, unique: true, required: [true, 'Username is required!'], minLength: [5, "Username must have 5 characters!"], lowercase: true, trim: true },
   passwordHash: { type: String, required: [true, "Password must be provided!"], trim: true, select: false },
 

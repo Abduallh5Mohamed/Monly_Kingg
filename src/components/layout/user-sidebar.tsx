@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, MessageSquare, LogOut, User, FileText, Store } from 'lucide-react';
+import { Home, MessageSquare, LogOut, User, FileText, Store, Wallet, Megaphone } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 interface SidebarItem {
@@ -22,7 +22,11 @@ export function UserSidebar() {
   { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
   { icon: MessageSquare, label: 'Messages', path: '/user/chat', badge: 3 },
     { icon: FileText, label: 'Payments', path: '/user/payments' },
-    ...(user?.isSeller ? [{ icon: Store, label: 'My Store', path: '/user/store' }] : []),
+    { icon: Wallet, label: 'Withdraw', path: '/user/withdraw' },
+    ...(user?.isSeller ? [
+      { icon: Store, label: 'My Store', path: '/user/store' },
+      { icon: Megaphone, label: 'Promotions', path: '/user/promotions' },
+    ] : []),
     { icon: User, label: 'Profile', path: '/user/profile' }
   ];
 

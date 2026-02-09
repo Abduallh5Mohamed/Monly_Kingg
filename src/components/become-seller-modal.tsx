@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +16,9 @@ import {
   CreditCard,
   FileImage,
   Loader2,
-  AlertTriangle
+  AlertTriangle,
+  Camera,
+  RotateCcw
 } from 'lucide-react';
 
 interface SellerRequestData {
@@ -35,11 +37,31 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
   const [formData, setFormData] = useState({
     fullName: '',
     idType: 'national_id' as 'national_id' | 'passport',
-    idImageFront: null as File | null,
-    idImageBack: null as File | null,
+    idImage: null as File | null,
+    faceImageFront: null as File | null,
+    faceImageLeft: null as File | null,
+    faceImageRight: null as File | null,
   });
-  const [frontPreview, setFrontPreview] = useState('');
-  const [backPreview, setBackPreview] = useState('');
+  const [idPreview, setIdPreview] = useState('');
+  const [faceFrontPreview, setFaceFrontPreview] = useState('');
+  const [faceLeftPreview, setFaceLeftPreview] = useState('');
+  const [faceRightPreview, setFaceRightPreview] = useState('');
+  
+  // Camera states
+  const [cameraActive, setCameraActive] = useState(false);
+  const [currentFaceCapture, setCurrentFaceCapture] = useState<'front' | 'left' | 'right' | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  // Cleanup camera on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (isOpen && user) {
@@ -65,7 +87,7 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, side: 'front' | 'back') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'id') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -77,15 +99,62 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
     const reader = new FileReader();
     reader.onload = (ev) => {
       const base64 = ev.target?.result as string;
-      if (side === 'front') {
-        setFormData(p => ({ ...p, idImageFront: file }));
-        setFrontPreview(base64);
-      } else {
-        setFormData(p => ({ ...p, idImageBack: file }));
-        setBackPreview(base64);
-      }
+      setFormData(p => ({ ...p, idImage: file }));
+      setIdPreview(base64);
     };
     reader.readAsDataURL(file);
+  };
+
+  const startCamera = async (face: 'front' | 'left' | 'right') => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'user', width: 640, height: 480 } 
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setCurrentFaceCapture(face);
+      setCameraActive(true);
+    } catch (err) {
+      toast({ title: 'Camera Error', description: 'Could not access camera', variant: 'destructive' });
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setCameraActive(false);
+    setCurrentFaceCapture(null);
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current || !currentFaceCapture) return;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    ctx.drawImage(videoRef.current, 0, 0);
+    const base64 = canvas.toDataURL('image/jpeg', 0.8);
+    
+    if (currentFaceCapture === 'front') {
+      setFaceFrontPreview(base64);
+    } else if (currentFaceCapture === 'left') {
+      setFaceLeftPreview(base64);
+    } else if (currentFaceCapture === 'right') {
+      setFaceRightPreview(base64);
+    }
+    
+    stopCamera();
+    toast({ title: 'Photo Captured!', description: 'Face photo saved successfully' });
   };
 
   const handleSubmit = async () => {
@@ -93,8 +162,12 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
       toast({ title: 'Missing Info', description: 'Please enter your full name', variant: 'destructive' });
       return;
     }
-    if (!formData.idImageFront) {
-      toast({ title: 'Missing Document', description: 'Please upload front side of your ID', variant: 'destructive' });
+    if (!formData.idImage) {
+      toast({ title: 'Missing Document', description: 'Please upload your ID/Passport', variant: 'destructive' });
+      return;
+    }
+    if (!formData.faceImageFront || !formData.faceImageLeft || !formData.faceImageRight) {
+      toast({ title: 'Missing Face Photos', description: 'Please upload all 3 face photos (front, left, right)', variant: 'destructive' });
       return;
     }
 
@@ -107,8 +180,10 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
         body: JSON.stringify({
           fullName: formData.fullName,
           idType: formData.idType,
-          idImageFront: frontPreview,
-          idImageBack: backPreview || null,
+          idImage: idPreview,
+          faceImageFront: faceFrontPreview,
+          faceImageLeft: faceLeftPreview,
+          faceImageRight: faceRightPreview,
         }),
       });
       const data = await res.json();
@@ -213,7 +288,8 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
             <div>
               <div className="space-y-4 mb-8">
                 {[
-                  { icon: <CreditCard className="w-5 h-5" />, title: 'Identity Verification', desc: 'Upload a photo of your national ID or passport' },
+                  { icon: <CreditCard className="w-5 h-5" />, title: 'ID/Passport Photo', desc: 'Upload clear photo of national ID or passport (single photo)' },
+                  { icon: <FileImage className="w-5 h-5" />, title: 'Face Verification', desc: 'Upload 3 clear selfies: front, left side, and right side' },
                   { icon: <ShieldCheck className="w-5 h-5" />, title: 'Admin Review', desc: 'Our team verifies your documents within 24-48h' },
                   { icon: <Store className="w-5 h-5" />, title: 'Start Selling', desc: 'Once approved, list your gaming accounts instantly' },
                 ].map((item, i) => (
@@ -271,16 +347,16 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
                 </div>
               </div>
 
-              {/* Upload Front */}
+              {/* Upload ID/Passport */}
               <div>
                 <label className="block text-sm font-medium text-white/70 mb-2">
-                  Front Side <span className="text-red-400">*</span>
+                  {formData.idType === 'passport' ? 'Passport Photo' : 'ID Card'} <span className="text-red-400">*</span>
                 </label>
                 <label className="block cursor-pointer">
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, 'front')} />
-                  {frontPreview ? (
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, 'id')} />
+                  {idPreview ? (
                     <div className="relative rounded-xl overflow-hidden border border-primary/30 group">
-                      <img src={frontPreview} alt="Front" className="w-full h-40 object-cover" />
+                      <img src={idPreview} alt="ID" className="w-full h-40 object-cover" />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <p className="text-white text-sm font-medium">Click to change</p>
                       </div>
@@ -288,33 +364,118 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   ) : (
                     <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/15 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/25 transition-all">
                       <Upload className="w-6 h-6 text-white/30 mb-2" />
-                      <p className="text-xs text-white/40">Click to upload front side</p>
+                      <p className="text-xs text-white/40">Clear photo of {formData.idType === 'passport' ? 'passport' : 'ID card'}</p>
                     </div>
                   )}
                 </label>
               </div>
 
-              {/* Upload Back (optional) */}
+              {/* Face Photos Header */}
+              <div className="pt-2">
+                <h4 className="text-sm font-medium text-white/70 mb-1">Face Verification Photos <span className="text-red-400">*</span></h4>
+                <p className="text-xs text-white/40 mb-3">Take live selfies from 3 angles using your camera</p>
+              </div>
+
+              {/* Camera Modal */}
+              {cameraActive && (
+                <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90">
+                  <div className="relative w-full max-w-2xl mx-4 bg-[#0f1419] rounded-2xl border border-white/10 overflow-hidden">
+                    <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-white">
+                        Capture {currentFaceCapture === 'front' ? 'Front' : currentFaceCapture === 'left' ? 'Left Side' : 'Right Side'} Selfie
+                      </h3>
+                      <button onClick={stopCamera} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="relative aspect-video bg-black">
+                      <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-6 flex gap-3">
+                      <Button onClick={stopCamera} variant="outline" className="flex-1 rounded-xl border-white/10">
+                        Cancel
+                      </Button>
+                      <Button onClick={capturePhoto} className="flex-[2] rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500">
+                        <Camera className="w-4 h-4 mr-2" />
+                        Capture Photo
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Front Selfie */}
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">
-                  Back Side <span className="text-white/30">(optional)</span>
-                </label>
-                <label className="block cursor-pointer">
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, 'back')} />
-                  {backPreview ? (
-                    <div className="relative rounded-xl overflow-hidden border border-primary/30 group">
-                      <img src={backPreview} alt="Back" className="w-full h-40 object-cover" />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <p className="text-white text-sm font-medium">Click to change</p>
-                      </div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Front Selfie</label>
+                {faceFrontPreview ? (
+                  <div className="relative rounded-xl overflow-hidden border border-primary/30">
+                    <img src={faceFrontPreview} alt="Face Front" className="w-full h-32 object-cover" />
+                    <button
+                      onClick={() => startCamera('front')}
+                      className="absolute inset-0 bg-black/50 hover:bg-black/60 transition-colors flex items-center justify-center"
+                    >
+                      <RotateCcw className="w-5 h-5 text-white mr-2" />
+                      <span className="text-white text-sm font-medium">Retake</span>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => startCamera('front')}
+                    className="w-full flex flex-col items-center justify-center h-24 border-2 border-dashed border-white/15 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] hover:border-primary/30 transition-all"
+                  >
+                    <Camera className="w-6 h-6 text-primary mb-1" />
+                    <p className="text-xs text-white/60">Open Camera - Face Forward</p>
+                  </button>
+                )}
+              </div>
+
+              {/* Left & Right Selfies */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Left Side</label>
+                  {faceLeftPreview ? (
+                    <div className="relative rounded-xl overflow-hidden border border-primary/30">
+                      <img src={faceLeftPreview} alt="Face Left" className="w-full h-28 object-cover" />
+                      <button
+                        onClick={() => startCamera('left')}
+                        className="absolute inset-0 bg-black/50 hover:bg-black/60 transition-colors flex items-center justify-center"
+                      >
+                        <RotateCcw className="w-4 h-4 text-white" />
+                      </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/10 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/20 transition-all">
-                      <Upload className="w-5 h-5 text-white/20 mb-1" />
-                      <p className="text-[10px] text-white/30">Click to upload back side</p>
-                    </div>
+                    <button
+                      onClick={() => startCamera('left')}
+                      className="w-full flex flex-col items-center justify-center h-20 border-2 border-dashed border-white/10 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] hover:border-primary/30 transition-all"
+                    >
+                      <Camera className="w-4 h-4 text-primary mb-1" />
+                      <p className="text-[9px] text-white/50">Left Profile</p>
+                    </button>
                   )}
-                </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Right Side</label>
+                  {faceRightPreview ? (
+                    <div className="relative rounded-xl overflow-hidden border border-primary/30">
+                      <img src={faceRightPreview} alt="Face Right" className="w-full h-28 object-cover" />
+                      <button
+                        onClick={() => startCamera('right')}
+                        className="absolute inset-0 bg-black/50 hover:bg-black/60 transition-colors flex items-center justify-center"
+                      >
+                        <RotateCcw className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => startCamera('right')}
+                      className="w-full flex flex-col items-center justify-center h-20 border-2 border-dashed border-white/10 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] hover:border-primary/30 transition-all"
+                    >
+                      <Camera className="w-4 h-4 text-primary mb-1" />
+                      <p className="text-[9px] text-white/50">Right Profile</p>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Submit */}
