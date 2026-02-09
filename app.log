@@ -6353,910 +6353,852 @@
 [2026-02-08T00:19:42.449Z] [INFO]: Admin fetched stats: 6 total users
 [2026-02-08T00:19:42.584Z] [INFO]: Admin fetched users: page 1, 6 users
 [2026-02-08T00:33:12.440Z] [ERROR]: Redis Error:
-[2026-02-08T20:39:42.874Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
-[2026-02-08T21:13:57.141Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
-[2026-02-08T21:37:52.817Z] [ERROR]: Redis Error:
-[2026-02-08T21:37:52.820Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:37:52.821Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:37:53.067Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T21:37:53.069Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T21:37:53.071Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T21:37:53.072Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T21:37:53.093Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
-[2026-02-08T21:37:53.096Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T21:40:58.912Z] [ERROR]: Redis Error:
-[2026-02-08T21:40:58.918Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:40:58.920Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:40:59.222Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T21:40:59.224Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T21:40:59.226Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T21:40:59.226Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T21:40:59.255Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
-[2026-02-08T21:40:59.256Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T21:43:33.284Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
-[2026-02-08T21:43:33.288Z] [WARN]: Cache miss - Redis not ready for key: user:email:abduallhshadow@gmail.com
-[2026-02-08T21:43:33.293Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
-[2026-02-08T21:43:33.330Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: abduallhshadow@gmail.com
-[2026-02-08T21:43:33.353Z] [WARN]: ❌ [NOT FOUND] User not found: abduallhshadow@gmail.com (8ms)
-[2026-02-08T21:43:33.355Z] [ERROR]: ❌ [LOGIN ERROR] abduallhshadow@gmail.com: Invalid credentials (71ms)
-[2026-02-08T21:44:32.166Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:44:32.168Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:44:32.169Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:44:32.192Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:44:32.206Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (9ms)
-[2026-02-08T21:44:32.210Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (44ms)
-[2026-02-08T21:44:37.144Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:44:37.147Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:44:37.149Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:44:37.165Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:44:37.179Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (12ms)
-[2026-02-08T21:44:37.182Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (38ms)
-[2026-02-08T21:44:37.746Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:44:37.748Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:44:37.751Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:44:37.763Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:44:37.777Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
-[2026-02-08T21:44:37.780Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (34ms)
-[2026-02-08T21:44:38.287Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:44:38.292Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:44:38.295Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:44:38.308Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:44:38.323Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
-[2026-02-08T21:44:38.325Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (38ms)
-[2026-02-08T21:44:38.760Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:44:38.764Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:44:38.765Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:44:38.781Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:44:38.797Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (14ms)
-[2026-02-08T21:44:38.799Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (39ms)
-[2026-02-08T21:45:10.703Z] [ERROR]: Redis Error:
-[2026-02-08T21:45:10.709Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:45:10.710Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:45:13.110Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:45:13.125Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:45:13.166Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:45:13.197Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:45:13.214Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (15ms)
-[2026-02-08T21:45:13.218Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (108ms)
-[2026-02-08T21:45:14.065Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:45:14.072Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:45:14.074Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:45:14.093Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:45:14.108Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (13ms)
-[2026-02-08T21:45:14.111Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (46ms)
-[2026-02-08T21:45:28.502Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:45:28.506Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:45:28.508Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:45:28.525Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:45:28.540Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (12ms)
-[2026-02-08T21:45:28.545Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (43ms)
-[2026-02-08T21:45:29.034Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:45:29.038Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:45:29.040Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:45:29.054Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:45:29.074Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (17ms)
-[2026-02-08T21:45:29.078Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (44ms)
-[2026-02-08T21:45:29.440Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T21:45:29.444Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
-[2026-02-08T21:45:29.446Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T21:45:29.461Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T21:45:29.476Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
-[2026-02-08T21:45:29.479Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (39ms)
-[2026-02-08T21:54:49.993Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:54:50.008Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:54:50.010Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:54:50.313Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T21:54:50.315Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T21:54:50.317Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T21:54:50.318Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T21:54:50.354Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?. Running in standalone mode.
-[2026-02-08T21:54:50.357Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T21:56:52.935Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:56:52.952Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:56:52.955Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:56:53.417Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T21:56:53.421Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T21:56:53.432Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T21:56:53.443Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T21:56:53.532Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?. Running in standalone mode.
-[2026-02-08T21:56:53.564Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T21:57:54.757Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:57:54.773Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:57:54.775Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T21:57:55.072Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T21:57:55.075Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T21:57:55.077Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T21:57:55.077Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T21:57:55.123Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?. Running in standalone mode.
-[2026-02-08T21:57:55.125Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T21:59:28.990Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.000Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.007Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.019Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.022Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.073Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.076Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.079Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.180Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.183Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.188Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.341Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.344Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.349Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.552Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.556Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.562Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.816Z] [INFO]: Redis reconnecting...
-[2026-02-08T21:59:29.820Z] [INFO]: ✅ Redis Connected
-[2026-02-08T21:59:29.826Z] [ERROR]: Redis Error:
-[2026-02-08T21:59:29.829Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T21:59:29.830Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T22:00:30.420Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.430Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:30.436Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:30.446Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.449Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:30.500Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:30.504Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.508Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:30.609Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:30.613Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.619Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:30.771Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:30.778Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.782Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:30.984Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:30.987Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:30.991Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:31.243Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:00:31.247Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:00:31.252Z] [ERROR]: Redis Error:
-[2026-02-08T22:00:31.256Z] [ERROR]: ❌ Redis Connection Failed:
-[2026-02-08T22:00:31.257Z] [INFO]: 📝 Server will continue without caching
-[2026-02-08T22:00:31.560Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:00:31.563Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:00:31.567Z] [WARN]: ⚠️ Redis not ready for cleanup
-[2026-02-08T22:00:31.569Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
-[2026-02-08T22:00:31.595Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?. Running in standalone mode.
-[2026-02-08T22:00:31.597Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:02:02.836Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:02.859Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:03.061Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:03.067Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:03.073Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:03.275Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:03.301Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:03.369Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:03.739Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:03.762Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:03.774Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:04.336Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:04.339Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:04.348Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:05.245Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:05.250Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:05.257Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:06.961Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:06.966Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:06.972Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:09.124Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:09.129Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:09.135Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:11.143Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:11.147Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:11.151Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:13.203Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:13.210Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:13.215Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:15.299Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:15.305Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:15.311Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:17.481Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:17.485Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:17.490Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:19.506Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:19.511Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:19.516Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:21.537Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:21.540Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:21.546Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:23.626Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:23.646Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:23.663Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:25.725Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:25.728Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:25.733Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:27.840Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:27.845Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:27.849Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:29.928Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:29.930Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:29.936Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:32.131Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:32.136Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:32.140Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:34.163Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:34.171Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:34.177Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:36.263Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:36.268Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:36.286Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:38.425Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:38.430Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:38.434Z] [ERROR]: Redis Error:
-[2026-02-08T22:02:40.546Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:02:40.550Z] [INFO]: ✅ Redis Connected
-[2026-02-08T22:02:40.554Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:28.217Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:28.228Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:28.466Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:28.471Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:28.477Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:28.772Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:28.777Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:28.782Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:29.005Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:29.010Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:29.016Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:29.612Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:29.615Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:29.622Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:30.446Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:30.451Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:30.456Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:32.242Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:32.246Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:32.251Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:34.295Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:34.310Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:34.319Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:36.378Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:36.393Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:36.402Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:38.471Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:38.476Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:38.491Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:40.497Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:40.502Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:40.509Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:42.621Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:42.626Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:42.630Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:44.720Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:44.724Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:44.729Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:46.797Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:46.801Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:46.805Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:48.911Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:48.915Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:48.919Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:50.996Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:50.999Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:51.004Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:53.100Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:53.105Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:53.108Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:55.238Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:55.242Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:55.244Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:57.382Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:57.387Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:57.393Z] [ERROR]: Redis Error:
-[2026-02-08T22:03:59.401Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:03:59.404Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:03:59.408Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:01.510Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:01.517Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:01.523Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:03.718Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:03.850Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:03.899Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:05.922Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:05.932Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:05.941Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:07.959Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:07.963Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:07.968Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:10.061Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:10.065Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:10.067Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:12.103Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:12.109Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:12.115Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:14.263Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:14.266Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:14.269Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:16.381Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:16.390Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:16.430Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:18.537Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:18.540Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:18.546Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:20.654Z] [INFO]: Redis reconnecting...
-[2026-02-08T22:04:20.657Z] [INFO]: ✅ Redis socket connected
-[2026-02-08T22:04:20.663Z] [ERROR]: Redis Error:
-[2026-02-08T22:04:30.247Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:30.333Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:30.616Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:31.002Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:31.480Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:32.346Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:34.097Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:36.302Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:38.336Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:40.501Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:42.669Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:44.822Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:47.018Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:49.152Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:51.292Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:53.362Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:55.422Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:57.493Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:04:59.584Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:01.610Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:03.761Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:05.967Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:08.135Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:10.150Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:12.206Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:14.328Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:16.392Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:18.579Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:20.678Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:30.863Z] [INFO]: Redis: Using password authentication
-[2026-02-08T22:05:30.865Z] [INFO]: Redis: Connecting to redis://localhost:6379
-[2026-02-08T22:05:30.904Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:31.098Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:31.243Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:31.464Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:31.883Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:32.752Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:34.468Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:36.540Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:38.563Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:40.651Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:42.722Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:44.798Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:46.847Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:48.893Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:50.943Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:53.114Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:55.311Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:57.379Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:05:59.521Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:01.667Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:03.857Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:05.973Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:08.089Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:10.158Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:12.323Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:14.572Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:16.712Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:18.752Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:20.871Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:22.996Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:25.012Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:27.168Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:29.316Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:31.453Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:33.620Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:35.706Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:37.894Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:39.991Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:42.183Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:44.338Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:46.554Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:48.688Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:50.773Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:52.813Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:54.902Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:56.993Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:06:59.099Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:01.249Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:03.336Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:05.433Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:07.636Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:09.677Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:11.754Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:13.941Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:16.085Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:18.192Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:20.303Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:22.396Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:24.511Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:26.534Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:28.642Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:30.696Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:31.634Z] [INFO]: Redis: Using password authentication
-[2026-02-08T22:07:31.638Z] [INFO]: Redis: Connecting to redis://localhost:6379
-[2026-02-08T22:07:31.705Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:31.770Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:32.003Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:32.371Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:32.867Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:32.952Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:33.816Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:35.013Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:35.562Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:37.130Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:37.602Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:39.328Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:39.798Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:41.361Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:41.945Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:43.425Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:43.993Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:45.492Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:46.189Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:47.597Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:48.334Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:49.701Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:50.403Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:51.864Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:52.540Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:53.904Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:54.559Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:55.998Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:56.647Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:58.035Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:07:58.801Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:00.238Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:00.873Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:02.322Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:02.969Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:04.492Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:05.081Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:06.592Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:07.296Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:08.741Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:09.394Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:10.859Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:11.514Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:13.048Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:13.710Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:15.223Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:15.770Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:17.382Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:17.814Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:19.467Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:19.884Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:21.639Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:22.028Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:23.720Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:24.111Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:25.852Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:26.317Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:27.974Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:28.480Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:30.069Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:30.682Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:32.269Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:32.768Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:34.345Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:34.784Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:36.381Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:36.933Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:38.520Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:39.083Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:40.703Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:41.261Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:42.861Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:43.351Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:45.056Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:45.455Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:47.228Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:47.634Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:49.396Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:49.651Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:51.471Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:51.709Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:53.572Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:53.901Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:55.652Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:56.080Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:57.801Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:58.269Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:08:59.823Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:00.403Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:01.908Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:02.430Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:03.949Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:04.499Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:05.979Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:06.621Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:07.996Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:08.688Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:10.083Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:10.855Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:12.156Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:12.916Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:14.343Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:14.955Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:16.543Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:17.113Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:18.654Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:19.292Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:20.753Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:21.465Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:22.865Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:23.529Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:25.030Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:25.692Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:27.113Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:27.834Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:29.238Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:29.915Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:31.348Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:32.087Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:33.529Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:34.109Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:35.555Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:36.210Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:37.683Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:38.269Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:39.833Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:40.325Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:42.000Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:42.510Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:44.118Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:44.627Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:46.208Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:46.744Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:48.227Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:48.788Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:50.428Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:50.954Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:52.499Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:53.082Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:54.641Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:55.219Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:56.766Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:57.299Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:58.874Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:09:59.345Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:00.954Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:01.508Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:03.054Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:03.656Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:05.132Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:05.789Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:07.209Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:07.863Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:09.329Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:09.909Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:11.436Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:11.975Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:13.524Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:14.068Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:15.587Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:16.105Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:17.758Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:18.257Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:19.859Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:20.409Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:22.044Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:22.517Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:24.124Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:24.546Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:26.306Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:26.569Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:28.431Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:28.644Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:30.566Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:30.719Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:32.745Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:32.791Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:34.805Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:34.921Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:36.938Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:37.094Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:39.041Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:39.145Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:41.166Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:41.260Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:43.185Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:43.377Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:45.198Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:45.509Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:47.390Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:47.649Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:49.525Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:49.794Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:51.613Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:51.952Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:53.804Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:54.099Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:55.911Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:56.187Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:57.944Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:10:58.236Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:00.114Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:00.385Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:02.210Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:02.462Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:04.388Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:04.603Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:06.507Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:06.723Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:08.614Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:08.898Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:10.714Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:11.025Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:12.783Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:13.107Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:14.798Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:15.270Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:16.935Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:17.284Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:19.125Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:19.402Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:21.262Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:21.426Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:23.350Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:23.529Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:25.431Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:25.633Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:27.531Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:27.693Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:29.730Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:29.750Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:31.868Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:31.898Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:34.038Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:34.072Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:36.117Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:36.282Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:38.303Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:38.313Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:40.427Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:40.500Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:42.521Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:42.564Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:44.559Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:44.655Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:46.676Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:46.858Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:48.783Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:11:49.046Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:03.043Z] [INFO]: Redis: Using password authentication
-[2026-02-08T22:12:03.045Z] [INFO]: Redis: Connecting to redis://localhost:6379
-[2026-02-08T22:12:03.107Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:03.326Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:03.495Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:03.807Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:04.400Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:05.346Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:07.015Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:09.204Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:11.268Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:13.458Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:15.608Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:17.723Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:19.880Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:21.986Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:24.098Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:26.206Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:28.263Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:30.456Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:32.605Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:34.739Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:36.927Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:38.939Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:41.116Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:43.227Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:12:45.342Z] [WARN]: Redis error: ERR AUTH <password> called without any password configured for the default user. Are you sure your configuration is correct?
-[2026-02-08T22:13:06.725Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:13:06.812Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:13:06.813Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:13:07.017Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:13:07.019Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:13:07.021Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:13:07.074Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:13:07.089Z] [INFO]: ✅ Cleanup complete in 68ms
-[2026-02-08T22:13:07.090Z] [INFO]:    Users removed: 0
-[2026-02-08T22:13:07.091Z] [INFO]:    Cached users before: 0
-[2026-02-08T22:13:07.092Z] [INFO]:    Cached users after: 0
-[2026-02-08T22:13:07.092Z] [INFO]:    Memory before: 1.14M
-[2026-02-08T22:13:07.093Z] [INFO]:    Memory after: 1.16M
-[2026-02-08T22:14:00.815Z] [INFO]: 📊 Cache stats retrieved: 1 total keys
-[2026-02-08T22:14:46.395Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:14:46.409Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:14:46.420Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:14:46.424Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:14:46.481Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:14:46.501Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (17ms)
-[2026-02-08T22:14:46.504Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (109ms)
-[2026-02-08T22:32:28.644Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:32:28.663Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:32:28.675Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:32:28.677Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:32:28.755Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:32:28.773Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (15ms)
-[2026-02-08T22:32:28.776Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (132ms)
-[2026-02-08T22:32:29.543Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:32:29.560Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:32:29.582Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:32:29.587Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:32:29.630Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:32:29.656Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (19ms)
-[2026-02-08T22:32:29.660Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (117ms)
-[2026-02-08T22:33:56.203Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:33:56.208Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:33:56.212Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:33:56.214Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:33:56.237Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:33:56.248Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
-[2026-02-08T22:33:56.252Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (49ms)
-[2026-02-08T22:35:49.576Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:35:49.584Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:35:49.589Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:35:49.591Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:35:49.605Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:35:49.618Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (11ms)
-[2026-02-08T22:35:49.620Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (44ms)
-[2026-02-08T22:36:22.889Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:36:22.993Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:36:22.994Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:36:23.262Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:36:23.264Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:36:23.266Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:36:23.347Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:36:23.366Z] [INFO]: ✅ Cleanup complete in 100ms
-[2026-02-08T22:36:23.368Z] [INFO]:    Users removed: 0
-[2026-02-08T22:36:23.369Z] [INFO]:    Cached users before: 0
-[2026-02-08T22:36:23.371Z] [INFO]:    Cached users after: 0
-[2026-02-08T22:36:23.371Z] [INFO]:    Memory before: 1.19M
-[2026-02-08T22:36:23.372Z] [INFO]:    Memory after: 1.19M
-[2026-02-08T22:36:55.387Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:36:55.396Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:36:55.403Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:36:55.406Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:36:55.431Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:36:55.441Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (8ms)
-[2026-02-08T22:36:55.443Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (56ms)
-[2026-02-08T22:38:03.953Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:38:04.007Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:38:04.008Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:38:04.227Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:38:04.230Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:38:04.231Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:38:04.283Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:38:04.306Z] [INFO]: ✅ Cleanup complete in 75ms
-[2026-02-08T22:38:04.309Z] [INFO]:    Users removed: 0
-[2026-02-08T22:38:04.312Z] [INFO]:    Cached users before: 0
-[2026-02-08T22:38:04.316Z] [INFO]:    Cached users after: 0
-[2026-02-08T22:38:04.317Z] [INFO]:    Memory before: 1.19M
-[2026-02-08T22:38:04.317Z] [INFO]:    Memory after: 1.19M
-[2026-02-08T22:38:31.396Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:38:31.402Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:38:31.408Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:38:31.410Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:38:31.433Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
-[2026-02-08T22:38:31.442Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (8ms)
-[2026-02-08T22:38:31.444Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (48ms)
-[2026-02-08T22:39:42.198Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:39:42.350Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:39:42.352Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:39:42.692Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:39:42.696Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:39:42.698Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:39:42.776Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:39:42.797Z] [INFO]: ✅ Cleanup complete in 99ms
-[2026-02-08T22:39:42.800Z] [INFO]:    Users removed: 0
-[2026-02-08T22:39:42.801Z] [INFO]:    Cached users before: 0
-[2026-02-08T22:39:42.802Z] [INFO]:    Cached users after: 0
-[2026-02-08T22:39:42.803Z] [INFO]:    Memory before: 1.19M
-[2026-02-08T22:39:42.804Z] [INFO]:    Memory after: 1.19M
-[2026-02-08T22:40:10.632Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:40:10.635Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
-[2026-02-08T22:40:10.638Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
-[2026-02-08T22:40:10.639Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
-[2026-02-08T22:40:10.669Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:40:10.672Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:40:10.673Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:40:10.674Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
-[2026-02-08T22:40:10.675Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
-[2026-02-08T22:40:10.682Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (7ms)
-[2026-02-08T22:40:10.686Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:40:10.688Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:40:10.689Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:40:11.097Z] [INFO]: 💾 Cache SET: session:69890f3d70ec630c78377658 (TTL: 86400s)
-[2026-02-08T22:40:11.099Z] [INFO]: ✅ Session cached for user 69890f3d70ec630c78377658
-[2026-02-08T22:40:11.120Z] [INFO]: 📝 Cache LPUSH: auth_logs:69890f3d70ec630c78377658
-[2026-02-08T22:40:11.121Z] [INFO]: ✅ Auth log added to cache for user 69890f3d70ec630c78377658
-[2026-02-08T22:40:11.125Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:40:11.129Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:40:11.131Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:40:11.132Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (500ms)
-[2026-02-08T22:46:40.416Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:46:40.427Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
-[2026-02-08T22:46:40.429Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
-[2026-02-08T22:46:40.432Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
-[2026-02-08T22:46:40.455Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (22ms)
-[2026-02-08T22:46:40.467Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:46:40.473Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:46:40.475Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:46:40.870Z] [INFO]: 💾 Cache SET: session:69890f3d70ec630c78377658 (TTL: 86400s)
-[2026-02-08T22:46:40.873Z] [INFO]: ✅ Session cached for user 69890f3d70ec630c78377658
-[2026-02-08T22:46:40.895Z] [INFO]: 📝 Cache LPUSH: auth_logs:69890f3d70ec630c78377658
-[2026-02-08T22:46:40.896Z] [INFO]: ✅ Auth log added to cache for user 69890f3d70ec630c78377658
-[2026-02-08T22:46:40.901Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:46:40.903Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:46:40.904Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:46:40.905Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (489ms)
-[2026-02-08T22:46:47.067Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
-[2026-02-08T22:46:47.145Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
-[2026-02-08T22:46:47.150Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
-[2026-02-08T22:46:47.153Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
-[2026-02-08T22:46:47.630Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (472ms)
-[2026-02-08T22:46:48.217Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:46:48.261Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:46:48.263Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:46:49.057Z] [INFO]: 💾 Cache SET: session:69890f3d70ec630c78377658 (TTL: 86400s)
-[2026-02-08T22:46:49.062Z] [INFO]: ✅ Session cached for user 69890f3d70ec630c78377658
-[2026-02-08T22:46:49.335Z] [INFO]: 📝 Cache LPUSH: auth_logs:69890f3d70ec630c78377658
-[2026-02-08T22:46:49.337Z] [INFO]: ✅ Auth log added to cache for user 69890f3d70ec630c78377658
-[2026-02-08T22:46:49.364Z] [INFO]: 💾 Cache HSET: user:69890f3d70ec630c78377658.data (TTL: 3600s)
-[2026-02-08T22:46:49.385Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
-[2026-02-08T22:46:49.388Z] [INFO]: ✅ User 69890f3d70ec630c78377658 cached for 3600 seconds (without sensitive data)
-[2026-02-08T22:46:49.390Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (2323ms)
-[2026-02-08T22:52:10.904Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:52:10.980Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:52:10.981Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:52:11.155Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:52:11.156Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:52:11.158Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:52:11.203Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:52:11.214Z] [INFO]: ✅ Cleanup complete in 56ms
-[2026-02-08T22:52:11.216Z] [INFO]:    Users removed: 0
-[2026-02-08T22:52:11.216Z] [INFO]:    Cached users before: 1
-[2026-02-08T22:52:11.217Z] [INFO]:    Cached users after: 1
-[2026-02-08T22:52:11.217Z] [INFO]:    Memory before: 1.31M
-[2026-02-08T22:52:11.218Z] [INFO]:    Memory after: 1.31M
-[2026-02-08T22:54:39.410Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T22:54:39.444Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T22:54:56.089Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
-[2026-02-08T22:54:56.133Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T22:54:56.214Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T22:59:50.345Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T22:59:50.445Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T22:59:50.447Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T22:59:50.732Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T22:59:50.736Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T22:59:50.737Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T22:59:50.838Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T22:59:50.885Z] [INFO]: ✅ Cleanup complete in 148ms
-[2026-02-08T22:59:50.888Z] [INFO]:    Users removed: 0
-[2026-02-08T22:59:50.889Z] [INFO]:    Cached users before: 1
-[2026-02-08T22:59:50.890Z] [INFO]:    Cached users after: 1
-[2026-02-08T22:59:50.891Z] [INFO]:    Memory before: 1.31M
-[2026-02-08T22:59:50.891Z] [INFO]:    Memory after: 1.31M
-[2026-02-08T23:00:27.843Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
-[2026-02-08T23:00:27.925Z] [INFO]: ✅ Redis Connected and Ready
-[2026-02-08T23:00:27.927Z] [INFO]: 🏓 Redis Ping Successful
-[2026-02-08T23:00:28.221Z] [INFO]: ✅ Socket.IO initialized
-[2026-02-08T23:00:28.223Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
-[2026-02-08T23:00:28.225Z] [INFO]: 🧹 Starting cache cleanup...
-[2026-02-08T23:00:28.311Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
-[2026-02-08T23:00:28.347Z] [INFO]: ✅ Cleanup complete in 122ms
-[2026-02-08T23:00:28.348Z] [INFO]:    Users removed: 0
-[2026-02-08T23:00:28.349Z] [INFO]:    Cached users before: 1
-[2026-02-08T23:00:28.351Z] [INFO]:    Cached users after: 1
-[2026-02-08T23:00:28.352Z] [INFO]:    Memory before: 1.31M
-[2026-02-08T23:00:28.355Z] [INFO]:    Memory after: 1.31M
-[2026-02-08T23:01:56.069Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
-[2026-02-08T23:01:56.143Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:01:56.261Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:01:59.681Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
-[2026-02-08T23:01:59.694Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:01:59.772Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:02:01.576Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
-[2026-02-08T23:02:01.597Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:02:01.692Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:02:53.331Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:02:53.357Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:18:02.577Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
-[2026-02-08T23:18:17.050Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
-[2026-02-08T23:18:17.074Z] [INFO]: User baraaweal24@gmail.com fetched 0 chats
+[2026-02-08T20:34:17.891Z] [ERROR]: Redis Error:
+[2026-02-08T20:34:17.894Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-08T20:34:17.894Z] [INFO]: 📝 Server will continue without caching
+[2026-02-08T20:34:18.308Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T20:34:18.309Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T20:34:18.311Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-08T20:34:18.311Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-08T20:34:18.322Z] [WARN]: ⚠️  Socket.IO Redis Adapter failed: . Running in standalone mode.
+[2026-02-08T20:34:18.322Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T20:48:52.948Z] [INFO]: ✅ Redis Connected
+[2026-02-08T20:48:53.019Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T20:48:53.021Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T20:48:53.281Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T20:48:53.282Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T20:48:53.309Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2026-02-08T20:48:53.310Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T20:48:53.316Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-08T20:48:53.328Z] [INFO]: ✅ Cleanup complete in 46ms
+[2026-02-08T20:48:53.328Z] [INFO]:    Users removed: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Cached users before: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Cached users after: 0
+[2026-02-08T20:48:53.329Z] [INFO]:    Memory before: 1.05M
+[2026-02-08T20:48:53.330Z] [INFO]:    Memory after: 1.20M
+[2026-02-08T21:10:35.756Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2026-02-08T21:10:42.099Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:10:42.213Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:10:42.508Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:10:42.942Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:10:57.066Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-08T21:11:07.497Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T21:11:07.523Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2026-02-08T21:11:07.529Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2026-02-08T21:11:07.530Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-08T21:11:07.590Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:07.594Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:07.595Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:07.596Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-08T21:11:07.598Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T21:11:07.608Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (9ms)
+[2026-02-08T21:11:07.621Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:07.628Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:07.630Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:08.018Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T21:11:08.021Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.052Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.055Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T21:11:08.069Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T21:11:08.080Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T21:11:08.081Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:11:08.083Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (586ms)
+[2026-02-08T21:11:19.132Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-08T21:11:41.864Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-08T21:12:57.253Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-08T21:12:57.361Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-08T21:14:05.499Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T21:14:05.779Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2026-02-08T21:14:05.788Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2026-02-08T21:14:05.791Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-08T21:14:06.173Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:06.225Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:06.226Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:06.228Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-08T21:14:06.246Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T21:14:06.291Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (42ms)
+[2026-02-08T21:14:06.378Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:06.432Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:06.433Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:07.112Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T21:14:07.113Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.223Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.224Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:07.301Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:07.354Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:07.355Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:07.356Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1857ms)
+[2026-02-08T21:14:12.892Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T21:14:16.670Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T21:14:16.703Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T21:14:16.706Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T21:14:16.707Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T21:14:16.742Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (35ms)
+[2026-02-08T21:14:16.829Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:16.876Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:16.877Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:17.285Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T21:14:17.286Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.369Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.370Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T21:14:17.433Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T21:14:17.480Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T21:14:17.480Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T21:14:17.481Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (811ms)
+[2026-02-08T21:14:23.978Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:14:24.161Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T21:14:24.275Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T21:14:24.316Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:21.448Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-08T22:06:21.985Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:31.756Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T22:06:38.997Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T22:06:39.020Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T22:06:39.021Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T22:06:39.022Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T22:06:39.055Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (33ms)
+[2026-02-08T22:06:39.126Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:06:39.174Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:06:39.175Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:06:39.640Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T22:06:39.641Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.745Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.745Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:06:39.812Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:06:39.862Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:06:39.863Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:06:39.863Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (866ms)
+[2026-02-08T22:06:45.136Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:45.305Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:45.420Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:06:45.478Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:52.761Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:06:52.889Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:07:49.062Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-08T22:37:55.177Z] [INFO]: ✅ Redis Connected
+[2026-02-08T22:37:55.255Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T22:37:55.258Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T22:39:03.694Z] [INFO]: ✅ Redis Connected
+[2026-02-08T22:39:03.730Z] [INFO]: 🚀 Redis Ready
+[2026-02-08T22:39:03.740Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-08T22:39:04.139Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-08T22:39:04.140Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-08T22:39:04.172Z] [INFO]: ✅ Socket.IO Redis Adapter initialized
+[2026-02-08T22:39:04.173Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-08T22:39:04.193Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-08T22:39:04.208Z] [INFO]: ✅ Cleanup complete in 68ms
+[2026-02-08T22:39:04.209Z] [INFO]:    Users removed: 0
+[2026-02-08T22:39:04.209Z] [INFO]:    Cached users before: 1
+[2026-02-08T22:39:04.210Z] [INFO]:    Cached users after: 1
+[2026-02-08T22:39:04.210Z] [INFO]:    Memory before: 1.48M
+[2026-02-08T22:39:04.211Z] [INFO]:    Memory after: 1.52M
+[2026-02-08T22:39:44.525Z] [INFO]: 📊 Cache stats retrieved: 12 total keys
+[2026-02-08T22:40:08.671Z] [INFO]: 📊 Cache stats retrieved: 12 total keys
+[2026-02-08T22:41:59.592Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T22:42:07.943Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T22:42:07.992Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2026-02-08T22:42:08.005Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2026-02-08T22:42:08.009Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-08T22:42:08.092Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.098Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.101Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.102Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-08T22:42:08.105Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T22:42:08.136Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (28ms)
+[2026-02-08T22:42:08.158Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.168Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.170Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.671Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T22:42:08.673Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.718Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.721Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T22:42:08.735Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T22:42:08.743Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T22:42:08.744Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:42:08.745Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (802ms)
+[2026-02-08T22:44:03.153Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-08T22:44:09.894Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-08T22:44:09.920Z] [INFO]: 🎯 Cache HIT: user:email:baraawael7901@gmail.com
+[2026-02-08T22:44:09.923Z] [INFO]: ⚡ USER CACHE HIT (by email): baraawael7901@gmail.com
+[2026-02-08T22:44:09.925Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-08T22:44:10.006Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (79ms)
+[2026-02-08T22:44:10.079Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:44:10.131Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:44:10.133Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:44:10.565Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-08T22:44:10.567Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.649Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.652Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-08T22:44:10.709Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-08T22:44:10.758Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-08T22:44:10.760Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-08T22:44:10.762Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (868ms)
+[2026-02-08T22:44:25.481Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T22:44:25.688Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:44:25.791Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-08T22:44:25.810Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-08T23:18:30.396Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-08T23:18:40.114Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-08T23:18:40.139Z] [INFO]: 🎯 Cache HIT: user:email:baraaweal24@gmail.com
+[2026-02-08T23:18:40.141Z] [INFO]: ⚡ USER CACHE HIT (by email): baraaweal24@gmail.com
+[2026-02-08T23:18:40.143Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-08T23:18:40.166Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (23ms)
+[2026-02-08T23:18:40.184Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T23:18:40.186Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T23:18:40.187Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T23:18:40.616Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-08T23:18:40.617Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.650Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.651Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-08T23:18:40.660Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-08T23:18:40.662Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-08T23:18:40.663Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-08T23:18:40.663Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (549ms)
+[2026-02-09T01:58:04.885Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T01:58:04.919Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2026-02-09T01:58:04.928Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2026-02-09T01:58:04.930Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T01:58:05.169Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T01:58:05.218Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:05.220Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:05.221Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T01:58:05.225Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T01:58:05.300Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (71ms)
+[2026-02-09T01:58:05.385Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T01:58:05.455Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:05.458Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:06.061Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-09T01:58:06.062Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T01:58:06.150Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-09T01:58:06.152Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T01:58:06.213Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T01:58:06.264Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:06.265Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:06.266Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1381ms)
+[2026-02-09T01:58:11.049Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T01:58:11.141Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T01:58:11.276Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:11.428Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:19.084Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:19.181Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:49.384Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:49.474Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:50.974Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T01:58:51.104Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:51.241Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T01:58:51.298Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T01:58:57.933Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T01:58:57.942Z] [INFO]: 📊 Cache MISS: user:email:baraaweal24@gmail.com
+[2026-02-09T01:58:57.948Z] [INFO]: 📊 Cache HGETALL MISS: user:baraaweal24@gmail.com
+[2026-02-09T01:58:57.949Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T01:58:57.975Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-09T01:58:57.982Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:57.983Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:57.985Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T01:58:57.987Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T01:58:58.000Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (11ms)
+[2026-02-09T01:58:58.010Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-09T01:58:58.017Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:58.020Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:58.447Z] [INFO]: 💾 Cache SET: session:68fbbb4d0fc3acd4c7581b95 (TTL: 86400s)
+[2026-02-09T01:58:58.448Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T01:58:58.488Z] [INFO]: 📝 Cache LPUSH: auth_logs:68fbbb4d0fc3acd4c7581b95
+[2026-02-09T01:58:58.490Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T01:58:58.499Z] [INFO]: 💾 Cache HSET: user:68fbbb4d0fc3acd4c7581b95.data (TTL: 3600s)
+[2026-02-09T01:58:58.503Z] [INFO]: 💾 Cache SET: user:email:baraaweal24@gmail.com (TTL: 3600s)
+[2026-02-09T01:58:58.504Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T01:58:58.505Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (572ms)
+[2026-02-09T01:59:17.359Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-09T01:59:17.391Z] [INFO]: User baraaweal24@gmail.com fetched 2 chats
+[2026-02-09T02:22:23.673Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:22:23.765Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:22:23.765Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:22:24.174Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T02:22:24.178Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T02:22:24.179Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T02:22:24.180Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T02:22:24.181Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T02:37:38.480Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:37:38.660Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:37:38.662Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:39:10.699Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:39:10.792Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:39:10.793Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T02:39:11.100Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T02:39:11.102Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T02:39:11.103Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T02:39:11.105Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T02:39:11.106Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T02:59:03.153Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T02:59:03.248Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T02:59:03.249Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:00:00.127Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:00:00.234Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:00:00.235Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:00:00.573Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:00:00.575Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:00:00.576Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:00:00.578Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:00:00.578Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:01:15.455Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:01:15.537Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:01:15.537Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:16:41.555Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:16:41.687Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:16:41.688Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:16:42.234Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:16:42.236Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:16:42.238Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:16:42.242Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:16:42.245Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:18:51.236Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:18:51.331Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:18:51.332Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:20:35.183Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:20:35.281Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:20:35.282Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:20:35.660Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:20:35.663Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:20:35.665Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:20:35.666Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:20:35.667Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:21:53.368Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:21:53.472Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:21:53.472Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:24:54.902Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:24:54.989Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:24:54.990Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:24:55.305Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:24:55.307Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:24:55.309Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:24:55.312Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:24:55.313Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:26:26.450Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T03:26:26.455Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:26:26.456Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T03:26:26.564Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2026-02-09T03:26:26.574Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (9ms)
+[2026-02-09T03:26:26.577Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (126ms)
+[2026-02-09T03:26:40.348Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T03:26:40.349Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:26:40.350Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T03:26:40.363Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraawael7901@gmail.com
+[2026-02-09T03:26:40.375Z] [WARN]: ❌ [NOT FOUND] User not found: baraawael7901@gmail.com (10ms)
+[2026-02-09T03:26:40.377Z] [ERROR]: ❌ [LOGIN ERROR] baraawael7901@gmail.com: Invalid credentials (29ms)
+[2026-02-09T03:32:32.113Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T03:32:32.407Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T03:32:32.408Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T03:32:32.736Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T03:32:32.738Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T03:32:32.739Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T03:32:32.741Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T03:32:32.742Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T03:33:11.981Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T03:33:11.986Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:11.987Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T03:33:12.066Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.067Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.067Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T03:33:12.068Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T03:33:12.078Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (9ms)
+[2026-02-09T03:33:12.079Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.080Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.478Z] [WARN]: Cache skip - Redis not ready for key: session:68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.479Z] [INFO]: ✅ Session cached for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.493Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T03:33:12.495Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T03:33:12.496Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:12.497Z] [INFO]: ✅ [LOGIN SUCCESS] baraaweal24@gmail.com from CACHE→DB (515ms)
+[2026-02-09T03:33:57.158Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T03:33:57.168Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.168Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T03:33:57.367Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.369Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:57.370Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T03:33:57.376Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T03:33:57.412Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (35ms)
+[2026-02-09T03:33:57.424Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:57.427Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:57.969Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:57.971Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:58.088Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T03:33:58.102Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T03:33:58.104Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T03:33:58.105Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (947ms)
+[2026-02-09T03:34:18.694Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T03:34:18.844Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:08:36.852Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:08:36.854Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:36.859Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:08:36.992Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:36.993Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:36.994Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:08:37.000Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:08:37.044Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (43ms)
+[2026-02-09T04:08:37.052Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:37.053Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:37.861Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.864Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.971Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:08:37.976Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:08:37.978Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:08:37.978Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1126ms)
+[2026-02-09T04:08:44.441Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:08:44.619Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:08:45.651Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:09:13.388Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:09:13.402Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:09:13.445Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:15:15.344Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:30.228Z] [INFO]: Admin fetched users: page 1, 0 users
+[2026-02-09T04:15:35.836Z] [INFO]: Admin fetched users: page 1, 2 users
+[2026-02-09T04:15:46.696Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:15:46.823Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:47.924Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:15:50.200Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:15:50.231Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:15:50.272Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:15:52.599Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:15:54.190Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:19:53.646Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:19:53.656Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.657Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:19:53.725Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.726Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:19:53.727Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:19:53.728Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:19:53.747Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (18ms)
+[2026-02-09T04:19:53.750Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:19:53.754Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:19:54.201Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:19:54.203Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (558ms)
+[2026-02-09T04:19:54.204Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (559ms)
+[2026-02-09T04:20:00.526Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:20:00.528Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.529Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:20:00.556Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.558Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:00.559Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:20:00.563Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:20:00.626Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (61ms)
+[2026-02-09T04:20:00.631Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:00.641Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:01.081Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:20:01.082Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (556ms)
+[2026-02-09T04:20:01.083Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (557ms)
+[2026-02-09T04:20:05.241Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.243Z] [WARN]: Cache miss - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.244Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T04:20:05.255Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.258Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.260Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.263Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T04:20:05.278Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (15ms)
+[2026-02-09T04:20:05.284Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.286Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.719Z] [WARN]: Cache skip - Redis not ready for key: session:68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.719Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.740Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T04:20:05.744Z] [WARN]: Cache skip - Redis not ready for key: user:email:abduallhshadow@gmail.com
+[2026-02-09T04:20:05.745Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:05.746Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (505ms)
+[2026-02-09T04:20:14.350Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T04:20:16.019Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T04:20:16.591Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-09T04:20:47.103Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:20:47.107Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.108Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:20:47.130Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.131Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:47.132Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:20:47.137Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:20:47.159Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (21ms)
+[2026-02-09T04:20:47.164Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:20:47.166Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:47.554Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:20:47.554Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (451ms)
+[2026-02-09T04:20:47.555Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (452ms)
+[2026-02-09T04:20:53.153Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:20:53.155Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.157Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:20:53.223Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.226Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.228Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:20:53.236Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:20:53.276Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (38ms)
+[2026-02-09T04:20:53.285Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.288Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.778Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.780Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.889Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:20:53.894Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:20:53.897Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:20:53.899Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (746ms)
+[2026-02-09T04:21:02.380Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:21:02.510Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:21:21.010Z] [INFO]: Admin baraawael7901@gmail.com fetched 5 chats for monitoring
+[2026-02-09T04:21:21.037Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-09T04:21:21.067Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-09T04:21:24.479Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:21:50.219Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:10.793Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:26.667Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:26.669Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:26.730Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:28.478Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:28.479Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:28.544Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:32.658Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:32.659Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:32.747Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:33.716Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:33.719Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:33.774Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:36.884Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:36.885Z] [INFO]: Admin baraawael7901@gmail.com deactivated user baraaweal24@gmail.com
+[2026-02-09T04:22:36.939Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:38.708Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:22:38.709Z] [INFO]: Admin baraawael7901@gmail.com activated user baraaweal24@gmail.com
+[2026-02-09T04:22:38.770Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:22:40.050Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:22:45.490Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:22:45.491Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.494Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:22:45.513Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.514Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:45.515Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:22:45.517Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:22:45.546Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (28ms)
+[2026-02-09T04:22:45.549Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:45.553Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:46.028Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:22:46.030Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (540ms)
+[2026-02-09T04:22:46.031Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (541ms)
+[2026-02-09T04:22:51.524Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:22:51.525Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.526Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:22:51.546Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.548Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:51.548Z] [INFO]: 💾 USER CACHED from DB: baraaweal24@gmail.com
+[2026-02-09T04:22:51.550Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraaweal24@gmail.com
+[2026-02-09T04:22:51.565Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraaweal24@gmail.com (15ms)
+[2026-02-09T04:22:51.568Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:22:51.571Z] [INFO]: ✅ User 68fbbb4d0fc3acd4c7581b95 cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:51.925Z] [INFO]: ✅ Auth log added to cache for user 68fbbb4d0fc3acd4c7581b95
+[2026-02-09T04:22:51.927Z] [WARN]: ❌ [LOGIN FAILED] Invalid password for baraaweal24@gmail.com from CACHE→DB (403ms)
+[2026-02-09T04:22:51.928Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (404ms)
+[2026-02-09T04:22:56.149Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T04:22:56.150Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.153Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T04:22:56.198Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.202Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.203Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T04:22:56.210Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T04:22:56.245Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (34ms)
+[2026-02-09T04:22:56.251Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.253Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.760Z] [WARN]: Cache skip - Redis not ready for key: session:68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.761Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.890Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T04:22:56.895Z] [WARN]: Cache skip - Redis not ready for key: user:email:baraawael7901@gmail.com
+[2026-02-09T04:22:56.897Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T04:22:56.899Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (750ms)
+[2026-02-09T04:23:05.056Z] [INFO]: Admin fetched stats: 6 total users
+[2026-02-09T04:23:05.322Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:23:10.658Z] [INFO]: Admin fetched users: page 1, 6 users
+[2026-02-09T04:23:15.506Z] [INFO]: 🗑️ User 68fbbb4d0fc3acd4c7581b95 removed from cache
+[2026-02-09T04:23:15.507Z] [INFO]: Admin baraawael7901@gmail.com deleted user baraaweal24@gmail.com
+[2026-02-09T04:23:15.584Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-09T04:23:18.893Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-09T04:23:21.688Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraaweal24@gmail.com
+[2026-02-09T04:23:21.690Z] [WARN]: Cache miss - Redis not ready for key: user:email:baraaweal24@gmail.com
+[2026-02-09T04:23:21.692Z] [INFO]: 📊 USER CACHE MISS: baraaweal24@gmail.com - Querying database
+[2026-02-09T04:23:21.703Z] [INFO]: 📊 [CACHE MISS] User not in cache, querying database: baraaweal24@gmail.com
+[2026-02-09T04:23:21.714Z] [WARN]: ❌ [NOT FOUND] User not found: baraaweal24@gmail.com (10ms)
+[2026-02-09T04:23:21.716Z] [ERROR]: ❌ [LOGIN ERROR] baraaweal24@gmail.com: Invalid credentials (28ms)
+[2026-02-09T04:23:43.436Z] [ERROR]: Register failed for baraaweal24@gmail.com: E11000 duplicate key error collection: accountstore.users index: username_1 dup key: { username: "baraa7" }
+[2026-02-09T04:23:59.378Z] [ERROR]: Register failed for baraaweal24@gmail.com: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-43768d07fa7sm10640020f8f.35 - gsmtp
+[2026-02-09T04:26:25.348Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:26:25.549Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:26:25.550Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:26:26.108Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:26:26.110Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:26:26.112Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:26:26.114Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:26:26.115Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:29:59.992Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:30:00.106Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:30:00.107Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:30:00.434Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:30:00.436Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:30:00.436Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:30:00.437Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:30:00.438Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:32:18.945Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:32:19.070Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:32:19.071Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:32:19.562Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:32:19.565Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:32:19.566Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:32:19.568Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:32:19.568Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:32:59.044Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:32:59.169Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:32:59.170Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:33:35.273Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:33:35.353Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:33:35.353Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:33:35.661Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:33:35.663Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:33:35.664Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:33:35.666Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:33:35.666Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:34:35.559Z] [WARN]: Email sending failed for uniquetest@example.com, but registration continued: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 5b1f17b1804b1-4832a38425asm150639495e9.7 - gsmtp
+[2026-02-09T04:34:35.586Z] [INFO]: User registered: uniquetest@example.com
+[2026-02-09T04:38:18.755Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:38:18.904Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:38:18.905Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:38:19.235Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:38:19.237Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:38:19.239Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:38:19.241Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:38:19.242Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:39:00.091Z] [WARN]: ⚠️ Email sending failed for testmail1359@example.com: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials ffacd0b85a97d-437699bc1cdsm9634268f8f.7 - gsmtp
+[2026-02-09T04:39:00.096Z] [INFO]: 
+============================================================
+[2026-02-09T04:39:00.096Z] [INFO]: 📋 VERIFICATION CODE (Email failed - showing in console):
+[2026-02-09T04:39:00.097Z] [INFO]:    Email: testmail1359@example.com
+[2026-02-09T04:39:00.097Z] [INFO]:    Code: 110242
+[2026-02-09T04:39:00.173Z] [INFO]:    Expires: 2/9/2026, 6:49:00 AM
+[2026-02-09T04:39:00.174Z] [INFO]: ============================================================
+
+[2026-02-09T04:39:00.204Z] [INFO]: User registered: testmail1359@example.com
+[2026-02-09T04:39:19.730Z] [INFO]: Email verified for user: testmail1359@example.com
+[2026-02-09T04:49:28.114Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:49:28.254Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:49:28.255Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:49:28.731Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:49:28.733Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:49:28.735Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:49:28.738Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:49:28.738Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T04:51:09.901Z] [INFO]: 📧 Verification email sent to test77910@gmail.com
+[2026-02-09T04:51:09.933Z] [INFO]: User registered: test77910@gmail.com
+[2026-02-09T04:52:44.727Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:52:44.860Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:52:44.861Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:59:20.074Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T04:59:20.246Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T04:59:20.247Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T04:59:20.763Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T04:59:20.765Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T04:59:20.767Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T04:59:20.769Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T04:59:20.770Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T05:01:28.028Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:01:28.159Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-09T05:01:28.160Z] [INFO]: 📝 Server will continue without caching
+[2026-02-09T05:01:28.645Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:01:28.647Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:01:28.649Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:01:28.650Z] [WARN]: ⚠️ Redis not ready for cleanup
+[2026-02-09T05:01:28.651Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-09T05:03:22.818Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:03:22.928Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:03:22.929Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:03:23.257Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:03:23.259Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:03:23.260Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:03:23.280Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:03:23.286Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-09T05:03:23.286Z] [INFO]:    Users removed: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Cached users before: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Cached users after: 0
+[2026-02-09T05:03:23.287Z] [INFO]:    Memory before: 1.31M
+[2026-02-09T05:03:23.288Z] [INFO]:    Memory after: 1.31M
+[2026-02-09T05:04:04.825Z] [INFO]: 📊 Cache stats retrieved: 9 total keys
+[2026-02-09T05:04:31.684Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:04:31.787Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:04:31.788Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:05:04.971Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: baraawael7901@gmail.com
+[2026-02-09T05:05:05.018Z] [INFO]: 📊 Cache MISS: user:email:baraawael7901@gmail.com
+[2026-02-09T05:05:05.026Z] [INFO]: 📊 Cache HGETALL MISS: user:baraawael7901@gmail.com
+[2026-02-09T05:05:05.029Z] [INFO]: 📊 USER CACHE MISS: baraawael7901@gmail.com - Querying database
+[2026-02-09T05:05:05.288Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:05.371Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:05.373Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:05.375Z] [INFO]: 💾 USER CACHED from DB: baraawael7901@gmail.com
+[2026-02-09T05:05:05.387Z] [INFO]: ⚡ [CACHE HIT] User found in cache: baraawael7901@gmail.com
+[2026-02-09T05:05:05.469Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: baraawael7901@gmail.com (80ms)
+[2026-02-09T05:05:05.530Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:05.578Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:05.581Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:06.491Z] [INFO]: 💾 Cache SET: session:68d8ff2507dbca5b8253d47c (TTL: 86400s)
+[2026-02-09T05:05:06.517Z] [INFO]: ✅ Session cached for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.718Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.720Z] [INFO]: ✅ Auth log added to cache for user 68d8ff2507dbca5b8253d47c
+[2026-02-09T05:05:06.799Z] [INFO]: 💾 Cache HSET: user:68d8ff2507dbca5b8253d47c.data (TTL: 3600s)
+[2026-02-09T05:05:06.853Z] [INFO]: 💾 Cache SET: user:email:baraawael7901@gmail.com (TTL: 3600s)
+[2026-02-09T05:05:06.856Z] [INFO]: ✅ User 68d8ff2507dbca5b8253d47c cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:05:06.877Z] [INFO]: ✅ [LOGIN SUCCESS] baraawael7901@gmail.com from CACHE→DB (1891ms)
+[2026-02-09T05:05:23.703Z] [INFO]: User baraawael7901@gmail.com fetched 3 chats
+[2026-02-09T05:05:33.257Z] [INFO]: User baraawael7901@gmail.com fetched 3 messages from chat 68fd0217fcb035606fce8e3d
+[2026-02-09T05:07:08.557Z] [INFO]: 📧 Verification email sent to babo78@gmail.com
+[2026-02-09T05:07:08.702Z] [INFO]: User registered: babo78@gmail.com
+[2026-02-09T05:08:36.143Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.166Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2026-02-09T05:08:36.172Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2026-02-09T05:08:36.172Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T05:08:36.266Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.270Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.272Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.273Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.275Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T05:08:36.290Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (14ms)
+[2026-02-09T05:08:36.298Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.302Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.304Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.705Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T05:08:36.706Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.721Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.722Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T05:08:36.730Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:08:36.733Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:08:36.734Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:08:36.734Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (591ms)
+[2026-02-09T05:08:40.220Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:08:43.107Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:09:35.083Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:09:35.232Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:09:35.232Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:09:35.777Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:09:35.779Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:09:35.781Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:09:35.823Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:09:35.836Z] [INFO]: ✅ Cleanup complete in 55ms
+[2026-02-09T05:09:35.837Z] [INFO]:    Users removed: 0
+[2026-02-09T05:09:35.838Z] [INFO]:    Cached users before: 2
+[2026-02-09T05:09:35.838Z] [INFO]:    Cached users after: 2
+[2026-02-09T05:09:35.839Z] [INFO]:    Memory before: 1.49M
+[2026-02-09T05:09:35.839Z] [INFO]:    Memory after: 1.49M
+[2026-02-09T05:10:40.580Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:42.585Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:10:45.145Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:46.004Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:10:50.376Z] [INFO]: User abduallhshadow@gmail.com fetched 2 chats
+[2026-02-09T05:10:51.909Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-09T05:11:45.855Z] [INFO]: ✅ New chat created with participants: 68d9b957e9a319acf7221479 (creator) and 69896b77986e4c49e574e4b0 (recipient)
+[2026-02-09T05:11:45.864Z] [INFO]: 👥 Chat participants: abduallh (68d9b957e9a319acf7221479), baraaaa (69896b77986e4c49e574e4b0)
+[2026-02-09T05:11:45.865Z] [INFO]: Chat created/retrieved between 68d9b957e9a319acf7221479 and 69896b77986e4c49e574e4b0
+[2026-02-09T05:11:45.930Z] [INFO]: User abduallhshadow@gmail.com fetched 0 messages from chat 69896c916fc918d29657e643
+[2026-02-09T05:11:45.970Z] [INFO]: User abduallhshadow@gmail.com fetched 0 messages from chat 69896c916fc918d29657e643
+[2026-02-09T05:12:25.879Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:12:48.945Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:13:30.064Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:13:56.552Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:15:43.882Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:15:50.269Z] [INFO]: User abduallhshadow@gmail.com fetched 1 messages from chat 690a21f15e15078e6a635171
+[2026-02-09T05:15:58.653Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:16:30.318Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T05:16:30.504Z] [INFO]: 🎯 Cache HIT: user:email:abduallhshadow@gmail.com
+[2026-02-09T05:16:30.507Z] [INFO]: ⚡ USER CACHE HIT (by email): abduallhshadow@gmail.com
+[2026-02-09T05:16:30.508Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T05:16:31.375Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (867ms)
+[2026-02-09T05:16:31.522Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:16:31.543Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:16:31.547Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:16:32.225Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T05:16:32.227Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.289Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.292Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T05:16:32.305Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T05:16:32.311Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T05:16:32.313Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T05:16:32.316Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (2001ms)
+[2026-02-09T05:16:35.273Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:17:33.574Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:18:06.136Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T05:20:52.762Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:20:52.904Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:20:52.905Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:20:53.339Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:20:53.341Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:20:53.342Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:20:53.370Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:20:53.376Z] [INFO]: ✅ Cleanup complete in 34ms
+[2026-02-09T05:20:53.376Z] [INFO]:    Users removed: 0
+[2026-02-09T05:20:53.377Z] [INFO]:    Cached users before: 2.5
+[2026-02-09T05:20:53.377Z] [INFO]:    Cached users after: 2.5
+[2026-02-09T05:20:53.377Z] [INFO]:    Memory before: 1.51M
+[2026-02-09T05:20:53.378Z] [INFO]:    Memory after: 1.51M
+[2026-02-09T05:21:35.078Z] [INFO]: 📊 Cache stats retrieved: 15 total keys
+[2026-02-09T05:24:12.971Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T05:24:13.046Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T05:24:13.047Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T05:24:13.298Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T05:24:13.300Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T05:24:13.300Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T05:24:13.317Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T05:24:13.322Z] [INFO]: ✅ Cleanup complete in 22ms
+[2026-02-09T05:24:13.323Z] [INFO]:    Users removed: 0
+[2026-02-09T05:24:13.323Z] [INFO]:    Cached users before: 2.5
+[2026-02-09T05:24:13.324Z] [INFO]:    Cached users after: 2.5
+[2026-02-09T05:24:13.324Z] [INFO]:    Memory before: 1.51M
+[2026-02-09T05:24:13.325Z] [INFO]:    Memory after: 1.51M
+[2026-02-09T13:19:58.823Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:24:20.220Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:25:45.921Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:28:08.785Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T13:28:08.797Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T13:28:09.249Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T13:28:09.250Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T13:28:09.251Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T13:28:09.281Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T13:28:09.290Z] [INFO]: ✅ Cleanup complete in 39ms
+[2026-02-09T13:28:09.291Z] [INFO]:    Users removed: 0
+[2026-02-09T13:28:09.291Z] [INFO]:    Cached users before: 0
+[2026-02-09T13:28:09.291Z] [INFO]:    Cached users after: 0
+[2026-02-09T13:28:09.292Z] [INFO]:    Memory before: 1.03M
+[2026-02-09T13:28:09.292Z] [INFO]:    Memory after: 1.06M
+[2026-02-09T13:29:32.154Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-09T13:29:32.245Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-09T13:29:32.246Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-09T13:29:32.630Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-09T13:29:32.632Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-09T13:29:32.633Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-09T13:29:32.649Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-09T13:29:32.654Z] [INFO]: ✅ Cleanup complete in 21ms
+[2026-02-09T13:29:32.656Z] [INFO]:    Users removed: 0
+[2026-02-09T13:29:32.656Z] [INFO]:    Cached users before: 0
+[2026-02-09T13:29:32.656Z] [INFO]:    Cached users after: 0
+[2026-02-09T13:29:32.657Z] [INFO]:    Memory before: 1.06M
+[2026-02-09T13:29:32.658Z] [INFO]:    Memory after: 1.06M
+[2026-02-09T13:30:10.333Z] [INFO]: 📊 Cache stats retrieved: 9 total keys
+[2026-02-09T13:32:57.812Z] [INFO]: 🔍 [LOGIN START] Checking cache for user: abduallhshadow@gmail.com
+[2026-02-09T13:32:57.856Z] [INFO]: 📊 Cache MISS: user:email:abduallhshadow@gmail.com
+[2026-02-09T13:32:57.876Z] [INFO]: 📊 Cache HGETALL MISS: user:abduallhshadow@gmail.com
+[2026-02-09T13:32:57.880Z] [INFO]: 📊 USER CACHE MISS: abduallhshadow@gmail.com - Querying database
+[2026-02-09T13:32:58.452Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.465Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.465Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.466Z] [INFO]: 💾 USER CACHED from DB: abduallhshadow@gmail.com
+[2026-02-09T13:32:58.470Z] [INFO]: ⚡ [CACHE HIT] User found in cache: abduallhshadow@gmail.com
+[2026-02-09T13:32:58.508Z] [INFO]: 🔐 [PASSWORD CHECK] Got password hash from DB: abduallhshadow@gmail.com (36ms)
+[2026-02-09T13:32:58.522Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.529Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.530Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.926Z] [INFO]: 💾 Cache SET: session:68d9b957e9a319acf7221479 (TTL: 86400s)
+[2026-02-09T13:32:58.926Z] [INFO]: ✅ Session cached for user 68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.947Z] [INFO]: 📝 Cache LPUSH: auth_logs:68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.949Z] [INFO]: ✅ Auth log added to cache for user 68d9b957e9a319acf7221479
+[2026-02-09T13:32:58.964Z] [INFO]: 💾 Cache HSET: user:68d9b957e9a319acf7221479.data (TTL: 3600s)
+[2026-02-09T13:32:58.970Z] [INFO]: 💾 Cache SET: user:email:abduallhshadow@gmail.com (TTL: 3600s)
+[2026-02-09T13:32:58.972Z] [INFO]: ✅ User 68d9b957e9a319acf7221479 cached for 3600 seconds (without sensitive data)
+[2026-02-09T13:32:58.973Z] [INFO]: ✅ [LOGIN SUCCESS] abduallhshadow@gmail.com from CACHE→DB (1161ms)
+[2026-02-09T13:33:05.987Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:35:50.148Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:36:46.908Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-09T13:37:00.786Z] [INFO]: User abduallhshadow@gmail.com hid chat 690a21f15e15078e6a635171

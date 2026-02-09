@@ -36,11 +36,13 @@ app.use(compression({
     }
     return compression.filter(req, res);
   },
-  level: 6 // Balanced compression level
+  level: 4, // Fast compression
+  threshold: 1024, // Only compress responses > 1KB
 }));
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Payload limit
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // NoSQL injection protection
 function sanitizeObject(obj) {

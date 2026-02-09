@@ -1,10 +1,20 @@
 import express from "express";
 import * as userController from "./user.controller.js";
+import * as profileController from "./profile.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../../middlewares/roleMiddleware.js";
 import { cacheUser, invalidateUserCache, trackActivity } from "../../middlewares/cacheMiddleware.js";
 
 const router = express.Router();
+
+// Profile routes
+router.get("/profile", authMiddleware, profileController.getProfile);
+router.get("/profile/:userId", authMiddleware, profileController.getProfile);
+router.put("/profile", authMiddleware, profileController.updateProfile);
+
+// Favorites routes
+router.post("/favorites", authMiddleware, profileController.addToFavorites);
+router.delete("/favorites/:listingId", authMiddleware, profileController.removeFromFavorites);
 
 // Search users (must be authenticated)
 router.get("/search", authMiddleware, trackActivity, userController.searchUsers);

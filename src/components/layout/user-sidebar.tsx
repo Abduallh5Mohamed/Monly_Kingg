@@ -19,8 +19,8 @@ export function UserSidebar() {
   const { user } = useAuth();
 
   const menuItems: SidebarItem[] = [
-  { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
-  { icon: MessageSquare, label: 'Messages', path: '/user/chat', badge: 3 },
+    { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
+    { icon: MessageSquare, label: 'Messages', path: '/user/chat', badge: 3 },
     { icon: FileText, label: 'Payments', path: '/user/payments' },
     { icon: Wallet, label: 'Withdraw', path: '/user/withdraw' },
     ...(user?.isSeller ? [
@@ -48,24 +48,18 @@ export function UserSidebar() {
 
   return (
     <div
-      className={`${
-        isCollapsed ? 'w-20' : 'w-20'
-      } h-screen bg-gradient-to-b from-[#0f1419] via-[#1a1f2e] to-[#0a0e14] flex flex-col transition-all duration-300 fixed left-0 top-0 z-50 shadow-2xl shadow-cyan-500/10 border-r border-cyan-500/20 backdrop-blur-xl`}
+      className={`${isCollapsed ? 'w-20' : 'w-20'
+        } h-screen bg-gradient-to-b from-[#0f1419] via-[#1a1f2e] to-[#0a0e14] flex flex-col transition-all duration-300 fixed left-0 top-0 z-50 shadow-2xl shadow-cyan-500/10 border-r border-cyan-500/20`}
     >
       {/* Logo Section with Glow Effect */}
       <div className="p-4 border-b border-cyan-500/20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
         <div className="text-center relative">
-          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-500/50 mx-auto relative group hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30">
-            <img
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=user"
-              alt="User"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto relative group hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center">
+            <span className="text-white font-bold text-lg">U</span>
           </div>
           {/* Online Status Indicator */}
-          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50 animate-pulse" />
+          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
         </div>
       </div>
 
@@ -80,28 +74,25 @@ export function UserSidebar() {
               <button
                 key={index}
                 onClick={() => handleNavigation(item.path)}
-                className={`w-full flex items-center justify-center p-3.5 rounded-2xl transition-all duration-300 group relative ${
-                  isActive
+                className={`w-full flex items-center justify-center p-3.5 rounded-2xl transition-all duration-300 group relative ${isActive
                     ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-xl shadow-cyan-500/50 scale-105 border border-cyan-400/50'
                     : 'text-gray-400 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-purple-500/10 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30'
-                }`}
+                  }`}
                 title={item.label}
               >
                 {/* Icon Glow Effect */}
                 <div
-                  className={`absolute inset-0 rounded-2xl blur-xl transition-opacity duration-300 ${
-                    isActive ? 'bg-cyan-500/30 opacity-100' : 'opacity-0 group-hover:opacity-50 bg-cyan-500/20'
-                  }`}
+                  className={`absolute inset-0 rounded-2xl blur-xl transition-opacity duration-300 ${isActive ? 'bg-cyan-500/30 opacity-100' : 'opacity-0 group-hover:opacity-50 bg-cyan-500/20'
+                    }`}
                 />
 
                 <Icon
-                  className={`h-6 w-6 relative z-10 transition-transform duration-300 ${
-                    isActive ? 'scale-110' : 'group-hover:scale-110'
-                  }`}
+                  className={`h-6 w-6 relative z-10 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'
+                    }`}
                 />
 
                 {item.badge && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-pink-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg shadow-red-500/50 border-2 border-[#0f1419] animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-pink-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg shadow-red-500/50 border-2 border-[#0f1419]">
                     {item.badge}
                   </span>
                 )}
@@ -122,7 +113,7 @@ export function UserSidebar() {
 
         {/* Logout Button */}
         <div className="relative mb-4">
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center p-3 rounded-2xl text-gray-400 hover:bg-gradient-to-br hover:from-red-500/20 hover:to-pink-500/20 hover:text-red-400 transition-all duration-300 group border border-transparent hover:border-red-500/30 relative overflow-hidden"
             title="Logout"
@@ -131,20 +122,15 @@ export function UserSidebar() {
             <LogOut className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform duration-300" />
           </button>
         </div>
-        
+
         {/* User Avatar */}
         <div className="relative">
-          <button className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-500/50 mx-auto block hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 group relative">
-            <img
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=user"
-              alt="Natalie"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <button className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto block hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 group relative bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center">
+            <span className="text-white font-bold text-lg">N</span>
           </button>
-          
+
           {/* Online Status */}
-          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50 animate-pulse" />
+          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
         </div>
         <p className="text-cyan-100 text-xs text-center mt-2 font-medium">Natalie</p>
       </div>

@@ -70,8 +70,12 @@ nextApp.prepare().then(async () => {
   const app = express();
   const server = createServer(app);
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  // Silence Chrome DevTools .well-known probe
+  app.use('/.well-known', (req, res) => res.status(204).end());
+
+  // Increase payload limit for image uploads (base64)
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   // NoSQL injection protection
   function sanitizeObject(obj) {
@@ -155,19 +159,14 @@ nextApp.prepare().then(async () => {
   // Enable gzip compression for responses (60-80% reduction)
   app.use(compression({
     filter: (req, res) => {
-      if (req.headers['x-no-compression']) {
-        return false;
-      }
+      // Skip compression for Next.js internal requests
+      if (req.url.startsWith('/_next/')) return false;
+      if (req.headers['x-no-compression']) return false;
       return compression.filter(req, res);
     },
-    level: 6 // Compression level (0-9, 6 is good balance)
+    level: 4, // Fast compression (lower = faster, less compression)
+    threshold: 1024, // Only compress responses > 1KB
   }));
-
-  // Add request logging
-  app.use((req, res, next) => {
-    console.log(`📝 ${req.method} ${req.url} - ${new Date().toISOString()}`);
-    next();
-  });
 
   app.use(globalLimiter);
 
@@ -262,6 +261,35 @@ nextApp.prepare().then(async () => {
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
+  });
+
+  // Global error handler middleware (must be before Next.js handler)
+  app.use((err, req, res, next) => {
+    // Log the error
+    console.error('[ERROR]', err.message);
+
+    // Handle MongoDB duplicate key errors
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern || {})[0];
+      return res.status(400).json({
+        message: field === 'email' ? 'Email already registered' : `${field} already exists`
+      });
+    }
+
+    // Handle validation errors
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ message: err.message });
+    }
+
+    // Handle specific error messages
+    const message = err.message || 'An error occurred';
+    const statusCode = err.statusCode || 500;
+
+    // Return JSON error response
+    res.status(statusCode).json({
+      message,
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
   });
 
   // Handle everything else with Next.js

@@ -99,7 +99,8 @@ export const getUserChats = async (req, res) => {
 
         const chats = await Chat.find({
             participants: userId,
-            isActive: true
+            isActive: true,
+            hiddenFor: { $ne: userId } // Exclude chats hidden by this user
         })
             .populate('participants', 'username email avatar role')
             .populate('lastMessage.sender', 'username avatar')
@@ -117,7 +118,8 @@ export const getUserChats = async (req, res) => {
 
         const total = await Chat.countDocuments({
             participants: userId,
-            isActive: true
+            isActive: true,
+            hiddenFor: { $ne: userId }
         });
 
         logger.info(`User ${req.user.email} fetched ${chats.length} chats`);
@@ -346,11 +348,18 @@ export const deleteChat = async (req, res) => {
             });
         }
 
-        // Soft delete
-        chat.isActive = false;
-        await chat.save();
+        // Hide chat for this user only (not delete from database)
+        if (!chat.hiddenFor) {
+            chat.hiddenFor = [];
+        }
 
-        logger.info(`User ${req.user.email} deleted chat ${chatId}`);
+        // Add user to hiddenFor array if not already there
+        if (!chat.hiddenFor.includes(userId)) {
+            chat.hiddenFor.push(userId);
+            await chat.save();
+        }
+
+        logger.info(`User ${req.user.email} hid chat ${chatId}`);
 
         res.json({
             success: true,

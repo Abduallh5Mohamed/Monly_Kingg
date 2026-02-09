@@ -4,24 +4,23 @@ import { Header } from '@/components/layout/header';
 import { AccountCarousel } from '@/components/account-carousel';
 import { CircuitBackground } from '../layout/circuit-background';
 import Image from 'next/image';
-import Snowfall from '../layout/snowfall';
 
 export function HeroSection() {
 
   const PlayIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M5 20V4L19 12L5 20Z" fill="currentColor"/>
+      <path d="M5 20V4L19 12L5 20Z" fill="currentColor" />
     </svg>
   );
 
   return (
     <div id="home" className="relative min-h-screen w-full bg-background overflow-x-hidden">
-       <Snowfall className="hero-snow" />
       <video
         autoPlay
         loop
         muted
         playsInline
+        preload="none"
         className="absolute inset-0 w-full h-full object-cover object-center"
       >
         <source src="/assets/Hero-Background.mp4" type="video/mp4" />
@@ -34,7 +33,7 @@ export function HeroSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold text-white uppercase font-headline leading-[0.9]" style={{ transform: 'scaleY(0.88)' }}>
-                Dominate <br/> Of Ranks
+                Dominate <br /> Of Ranks
               </h1>
               <div className="space-y-4 mt-2 sm:mt-0 sm:-mt-4">
                 <p className="text-sm md:text-base max-w-md text-foreground/70 lg:pl-4">
@@ -54,23 +53,10 @@ export function HeroSection() {
                 <AccountCarousel />
               </div>
             </div>
-            
+
           </div>
         </section>
       </main>
-      <style jsx global>{`
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-          100% { transform: translateY(0px); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .button-glow-hover {
-          box-shadow: 0 0 16px 4px hsl(var(--primary) / 0.7), 0 0 40px 8px hsl(var(--primary) / 0.4);
-        }
-      `}</style>
     </div>
   );
 }
