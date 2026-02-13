@@ -9,18 +9,26 @@ import logger from '../utils/logger.js';
 export const responseTimeTracker = (req, res, next) => {
     const startTime = Date.now();
 
-    // Log when response finishes
-    res.on('finish', () => {
+    // Store original end function
+    const originalEnd = res.end;
+
+    // Override end function to add header before response is sent
+    res.end = function (...args) {
         const duration = Date.now() - startTime;
+
+        // Add response time header BEFORE sending response
+        if (!res.headersSent) {
+            res.setHeader('X-Response-Time', `${duration}ms`);
+        }
 
         // Log slow requests (> 500ms)
         if (duration > 500) {
             logger.warn(`⚠️ Slow Request: ${req.method} ${req.path} - ${duration}ms`);
         }
 
-        // Add response time header
-        res.setHeader('X-Response-Time', `${duration}ms`);
-    });
+        // Call original end function
+        originalEnd.apply(res, args);
+    };
 
     next();
 };

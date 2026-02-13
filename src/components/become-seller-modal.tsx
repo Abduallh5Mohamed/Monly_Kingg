@@ -25,6 +25,8 @@ interface SellerRequestData {
   status: 'pending' | 'approved' | 'rejected' | null;
   rejectionReason?: string;
   createdAt?: string;
+  applicationCount?: number;
+  rejectionHistory?: { reason: string; rejectedAt: string }[];
 }
 
 export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -46,7 +48,7 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
   const [faceFrontPreview, setFaceFrontPreview] = useState('');
   const [faceLeftPreview, setFaceLeftPreview] = useState('');
   const [faceRightPreview, setFaceRightPreview] = useState('');
-  
+
   // Camera states
   const [cameraActive, setCameraActive] = useState(false);
   const [currentFaceCapture, setCurrentFaceCapture] = useState<'front' | 'left' | 'right' | null>(null);
@@ -62,6 +64,13 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
       }
     };
   }, []);
+
+  // Attach stream to video element once camera modal renders
+  useEffect(() => {
+    if (cameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [cameraActive]);
 
   useEffect(() => {
     if (isOpen && user) {
@@ -107,13 +116,12 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
   const startCamera = async (face: 'front' | 'left' | 'right') => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'user', width: 640, height: 480 } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: 640, height: 480 }
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+      // Set state first so the <video> element renders,
+      // then the useEffect will attach the stream to it
       setCurrentFaceCapture(face);
       setCameraActive(true);
     } catch (err) {
@@ -135,16 +143,16 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
   const capturePhoto = () => {
     if (!videoRef.current || !currentFaceCapture) return;
-    
+
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     ctx.drawImage(videoRef.current, 0, 0);
     const base64 = canvas.toDataURL('image/jpeg', 0.8);
-    
+
     if (currentFaceCapture === 'front') {
       setFaceFrontPreview(base64);
     } else if (currentFaceCapture === 'left') {
@@ -152,7 +160,7 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
     } else if (currentFaceCapture === 'right') {
       setFaceRightPreview(base64);
     }
-    
+
     stopCamera();
     toast({ title: 'Photo Captured!', description: 'Face photo saved successfully' });
   };
@@ -166,7 +174,7 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
       toast({ title: 'Missing Document', description: 'Please upload your ID/Passport', variant: 'destructive' });
       return;
     }
-    if (!formData.faceImageFront || !formData.faceImageLeft || !formData.faceImageRight) {
+    if (!formData.faceImageFront && !faceFrontPreview || !formData.faceImageLeft && !faceLeftPreview || !formData.faceImageRight && !faceRightPreview) {
       toast({ title: 'Missing Face Photos', description: 'Please upload all 3 face photos (front, left, right)', variant: 'destructive' });
       return;
     }
@@ -277,6 +285,13 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       Reason: {requestStatus.rejectionReason}
                     </p>
                   )}
+                  {(requestStatus.applicationCount || 1) > 1 && (
+                    <div className="mt-3 px-4 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20 w-full">
+                      <p className="text-xs text-orange-300/80">
+                        This was attempt #{requestStatus.applicationCount}. Please ensure your documents are clear and valid before reapplying.
+                      </p>
+                    </div>
+                  )}
                   <Button onClick={() => { setStep('form'); setRequestStatus({ status: null }); }} className="mt-6 rounded-full bg-gradient-to-r from-cyan-500 to-cyan-600 px-8">
                     Resubmit Application
                   </Button>
@@ -334,11 +349,10 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     <button
                       key={opt.value}
                       onClick={() => setFormData(p => ({ ...p, idType: opt.value as any }))}
-                      className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all ${
-                        formData.idType === opt.value
+                      className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all ${formData.idType === opt.value
                           ? 'border-primary bg-primary/10 text-primary'
                           : 'border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20'
-                      }`}
+                        }`}
                     >
                       {opt.icon}
                       <span className="text-sm font-medium">{opt.label}</span>

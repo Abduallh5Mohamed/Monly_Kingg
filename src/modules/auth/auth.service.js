@@ -202,123 +202,59 @@ export const login = async (email, password, ip = null, userAgent = null) => {
   const startTime = Date.now();
 
   try {
-    // 🎯 CACHE FIRST STRATEGY: Check cache for user data
-    logger.info(`🔍 [LOGIN START] Checking cache for user: ${email}`);
-    let cachedUser = await userCacheService.getUser(email);
-    let user;
-    let fromCache = false;
+    // Single optimized DB query - always need passwordHash for login
+    const user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
 
-    if (cachedUser) {
-      logger.info(`⚡ [CACHE HIT] User found in cache: ${email}`);
-
-      // For login, we MUST get the password hash from database
-      // Cache might not have sensitive data like passwordHash
-      const dbStartTime = Date.now();
-      user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
-      const dbTime = Date.now() - dbStartTime;
-
-      if (user) {
-        logger.info(`🔐 [PASSWORD CHECK] Got password hash from DB: ${email} (${dbTime}ms)`);
-        // Update cache with fresh data (but without password hash for security)
-        const userDataForCache = { ...user.toObject() };
-        delete userDataForCache.passwordHash; // Don't cache password hash
-        await userCacheService.cacheUser(userDataForCache);
-        fromCache = true; // We used cache to find the user initially
-      } else {
-        logger.warn(`❌ [INCONSISTENT DATA] User in cache but not in DB: ${email}`);
-        // Remove from cache if not in DB
-        await userCacheService.removeUser(cachedUser._id);
-        throw new Error("Invalid credentials");
-      }
-    } else {
-      // Cache miss - query database directly
-      logger.info(`📊 [CACHE MISS] User not in cache, querying database: ${email}`);
-      const dbStartTime = Date.now();
-      user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
-      const dbTime = Date.now() - dbStartTime;
-
-      if (user) {
-        logger.info(`📊 [DB QUERY] User found in database: ${email} (${dbTime}ms)`);
-        // Cache the user for future requests (without password hash)
-        const userDataForCache = { ...user.toObject() };
-        delete userDataForCache.passwordHash; // Don't cache password hash
-        await userCacheService.cacheUser(userDataForCache);
-      } else {
-        logger.warn(`❌ [NOT FOUND] User not found: ${email} (${dbTime}ms)`);
-      }
-    }
-
-    if (!user) throw new Error("Invalid credentials");
-    if (!user.verified) throw new Error("Invalid credentials");
-    if (!user.passwordHash) {
-      logger.error(`❌ [NO PASSWORD HASH] Missing password hash for user: ${email}`);
+    if (!user || !user.verified || !user.passwordHash) {
       throw new Error("Invalid credentials");
     }
-
-    // Account lock disabled
-    // if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
-    //   throw new Error("Account locked. Try later.");
-    // }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      // Track failed attempts (but don't lock account)
-      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
-      // Account lock feature disabled
-      // if (user.failedLoginAttempts >= 5) {
-      //   user.lockUntil = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes lock
-      //   user.failedLoginAttempts = 0; // reset counter after locking
-      // }
-
-      // Update database with failed attempt
-      user.authLogs.push({ action: "login", success: false, ip, userAgent });
-      await user.save();
-
-      // Update cache
-      await userCacheService.addAuthLog(user._id, 'login', ip, false);
-
-      const totalTime = Date.now() - startTime;
-      const source = fromCache ? 'CACHE→DB' : 'DATABASE';
-      logger.warn(`❌ [LOGIN FAILED] Invalid password for ${email} from ${source} (${totalTime}ms)`);
+      // Lightweight failed attempt update - use updateOne to avoid loading full doc
+      await User.updateOne(
+        { _id: user._id },
+        {
+          $inc: { failedLoginAttempts: 1 },
+          $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
+        }
+      );
       throw new Error("Invalid credentials");
     }
 
-    // successful login: reset counters
-    user.failedLoginAttempts = 0;
-    user.lockUntil = null;
-
+    // Successful login: generate tokens
     const accessToken = signAccessToken(user);
-    const refreshToken = await createAndStoreRefreshToken(user, ip, userAgent);
+    const refreshTokenString = generateRefreshTokenString();
+    const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
-    // Cache session data
-    await userCacheService.cacheSession(user._id, {
-      accessToken,
-      refreshToken,
-      loginTime: new Date(),
-      ip,
-      userAgent
-    });
+    // Single atomic DB update: reset counters + push refresh token + push audit log
+    await User.updateOne(
+      { _id: user._id },
+      {
+        $set: { failedLoginAttempts: 0, lockUntil: null },
+        $push: {
+          refreshTokens: { token: refreshTokenString, expiresAt, ip, userAgent },
+          authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -50 }
+        }
+      }
+    );
 
-    // audit success - always save to database for important events
-    user.authLogs.push({ action: "login", success: true, ip, userAgent });
-    await user.save();
-
-    // Cache the auth log
-    await userCacheService.addAuthLog(user._id, 'login', ip, true);
-
-    // Update user cache with fresh data (excluding password hash)
-    const userDataForCache = { ...user.toObject() };
-    delete userDataForCache.passwordHash; // Security: don't cache password hash
-    await userCacheService.cacheUser(userDataForCache);
+    // Fire-and-forget: cache session + user data in parallel (don't await)
+    const cacheOps = [
+      userCacheService.cacheSession(user._id, { accessToken, refreshToken: refreshTokenString, loginTime: new Date(), ip, userAgent }),
+      userCacheService.cacheUser(user)
+    ];
+    Promise.allSettled(cacheOps).catch(() => { }); // Non-blocking
 
     const totalTime = Date.now() - startTime;
-    const source = fromCache ? 'CACHE→DB' : 'DATABASE';
-    logger.info(`✅ [LOGIN SUCCESS] ${email} from ${source} (${totalTime}ms)`);
+    logger.info(`✅ [LOGIN] ${email} (${totalTime}ms)`);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: refreshTokenString };
   } catch (err) {
     const totalTime = Date.now() - startTime;
-    logger.error(`❌ [LOGIN ERROR] ${email}: ${err.message} (${totalTime}ms)`);
+    if (err.message !== "Invalid credentials") {
+      logger.error(`❌ [LOGIN ERROR] ${email}: ${err.message} (${totalTime}ms)`);
+    }
     throw err;
   }
 };

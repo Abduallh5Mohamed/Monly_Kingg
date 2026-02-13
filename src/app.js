@@ -9,6 +9,7 @@ import userRoutes from "./modules/users/user.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import sellerRoutes from "./modules/sellers/seller.routes.js";
 import listingRoutes from "./modules/listings/listing.routes.js";
+import notificationRoutes from "./modules/notifications/notification.routes.js";
 import promotionRoutes from "./modules/promotions/promotion.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import helmet from "helmet";
@@ -76,9 +77,11 @@ app.use((req, res, next) => {
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-    : true,
+    : ['http://localhost:3000', 'http://localhost:5000'],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN']
 };
 app.use(cors(corsOptions));
 
@@ -103,6 +106,7 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/seller", sellerRoutes);
 app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

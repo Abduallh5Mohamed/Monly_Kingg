@@ -75,14 +75,16 @@ export const verifyEmail = async (req, res) => {
     res.cookie("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000,
+      path: "/"
     });
 
     // CSRF token (double-submit): store readable cookie for client JS to read and add to headers
@@ -90,14 +92,15 @@ export const verifyEmail = async (req, res) => {
     res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
       httpOnly: false, // client JS must read it
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
 
     // Get user data (lean for performance)
     const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
 
-    res.status(200).json({
+    const responseData = {
       message: "Email verified and logged in",
       userData: {
         id: userData._id,
@@ -105,10 +108,12 @@ export const verifyEmail = async (req, res) => {
         email: userData.email,
         role: userData.role,
         isSeller: userData.isSeller || false,
-        profileCompleted: userData.profileCompleted === true // Ensure boolean
+        profileCompleted: userData.profileCompleted === true
       },
       expiresIn: 15 * 60
-    });
+    };
+
+    res.status(200).json(responseData);
   } catch (err) {
     res.status(400).json({ message: "Invalid code or request" });
   }
@@ -142,28 +147,30 @@ export const login = async (req, res) => {
     res.cookie("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000,
+      path: "/"
     });
 
     const csrfToken = crypto.randomBytes(24).toString("hex");
     res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
 
-    // Get user data from auth.service (lean for performance)
+    // Get user data - use lean() for speed, single query
     const user = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
 
-    // Return user data in response (without exposing tokens)
     res.status(200).json({
       message: "Login successful",
       userData: {
@@ -172,7 +179,7 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
         isSeller: user.isSeller || false,
-        profileCompleted: user.profileCompleted === true // Ensure boolean
+        profileCompleted: user.profileCompleted === true
       },
       expiresIn: 15 * 60
     });
@@ -194,15 +201,27 @@ export const refresh = async (req, res) => {
     res.cookie("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
 
     res.cookie("refresh_token", newRefresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10) * 24 * 60 * 60 * 1000,
+      path: "/"
+    });
+
+    // Generate new CSRF token when refreshing
+    const csrfToken = crypto.randomBytes(24).toString("hex");
+    res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
     });
 
     // Decode JWT to get user ID
@@ -317,5 +336,28 @@ export const resetPassword = async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+};
+
+// Generate new CSRF token endpoint
+export const getCsrfToken = async (req, res) => {
+  try {
+    const csrfToken = crypto.randomBytes(24).toString("hex");
+    res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "CSRF token generated"
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate CSRF token"
+    });
   }
 };

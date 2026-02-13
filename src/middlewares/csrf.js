@@ -16,8 +16,10 @@ export default function csrfProtection(req, res, next) {
 
   const csrfCookie = req.cookies?.[process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN"];
   const csrfHeader = req.get("X-XSRF-TOKEN");
+
   if (!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader) {
     return res.status(403).json({ message: "Invalid CSRF token" });
   }
+
   next();
 }

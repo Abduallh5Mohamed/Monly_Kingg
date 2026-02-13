@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../modules/users/user.model.js";
+import redis from "../config/redis.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -29,9 +30,34 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const user = await User.findById(decoded.id);
+    // Try Redis cache first (avoid DB hit on every request)
+    const cacheKey = `auth:user:${decoded.id}`;
+    let user = null;
+
+    if (redis.isReady()) {
+      try {
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+          user = cached;
+        }
+      } catch (_) {
+        // Cache error - fall through to DB
+      }
+    }
+
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      user = await User.findById(decoded.id)
+        .select('-passwordHash -verificationCode -verificationCodeValidation -refreshTokens -authLogs')
+        .lean();
+
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Cache for 5 minutes (auth context doesn't need long TTL)
+      if (redis.isReady()) {
+        redis.set(cacheKey, user, 300).catch(() => { });
+      }
     }
 
     req.user = user;

@@ -9,18 +9,20 @@ const connectDB = async () => {
             connectTimeoutMS: 10000,
             serverSelectionTimeoutMS: 10000,
             socketTimeoutMS: 45000,
-            // Connection pooling
-            maxPoolSize: 20,
-            minPoolSize: 2,
+            // Connection pooling - optimized for concurrent access
+            maxPoolSize: 50,
+            minPoolSize: 5,
             maxIdleTimeMS: 30000,
             // Performance optimizations
             retryWrites: true,
             retryReads: true,
             w: 'majority',
-            journal: true,
+            journal: false, // Faster writes (trade-off: slight durability risk)
             // Compression
             compressors: ['zlib'],
-            zlibCompressionLevel: 6
+            zlibCompressionLevel: 3, // Faster compression
+            // Auto-index creation disabled for performance
+            autoIndex: false
         };
 
         const conn = await mongoose.connect(process.env.MONGO_URI, options);

@@ -1,12 +1,12 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store } from 'lucide-react';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { BecomeSellerModal } from '@/components/become-seller-modal';
 import Link from 'next/link';
 
@@ -24,10 +24,10 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   useEffect(() => {
     // Don't redirect if already on complete-profile page
     if (pathname === '/complete-profile') return;
-    
+
     // Only check once on mount, not on every navigation
     if (!user) return;
-    
+
     // Redirect to complete-profile if profile is not completed
     // Check for false, undefined, or null
     if (user.profileCompleted !== true) {
@@ -123,14 +123,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
               </div>
 
               {/* Notifications */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full hover:bg-white/10 text-white/60 hover:text-white relative h-9 w-9 sm:h-10 sm:w-10"
-              >
-                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-cyan-500 rounded-full" />
-              </Button>
+              <NotificationBell />
 
               {/* User Avatar */}
               <Link
@@ -175,4 +168,162 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       <BecomeSellerModal isOpen={sellerModalOpen} onClose={() => setSellerModalOpen(false)} />
     </div>
   );
+}
+
+/* ─── Notification Bell Component ─── */
+interface Notification {
+  _id: string;
+  type: string;
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+  metadata?: { rejectionReason?: string };
+}
+
+function NotificationBell() {
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Poll unread count every 30s
+  const fetchUnread = useCallback(async () => {
+    try {
+      const res = await fetch('/api/v1/notifications/unread-count', { credentials: 'include' });
+      const data = await res.json();
+      setUnreadCount(data.unreadCount || 0);
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    fetchUnread();
+    const iv = setInterval(fetchUnread, 30000);
+    return () => clearInterval(iv);
+  }, [fetchUnread]);
+
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/v1/notifications?limit=15', { credentials: 'include' });
+      const data = await res.json();
+      setNotifications(data.data || []);
+      setUnreadCount(data.unreadCount || 0);
+    } catch { /* silent */ }
+    finally { setLoading(false); }
+  };
+
+  const handleOpen = () => {
+    if (!open) fetchNotifications();
+    setOpen(!open);
+  };
+
+  const markAsRead = async (id: string) => {
+    await fetch(`/api/v1/notifications/${id}/read`, { method: 'PUT', credentials: 'include' });
+    setNotifications(prev => prev.map(n => n._id === id ? { ...n, read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - 1));
+  };
+
+  const markAllRead = async () => {
+    await fetch('/api/v1/notifications/read-all', { method: 'PUT', credentials: 'include' });
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setUnreadCount(0);
+  };
+
+  const typeIcons: Record<string, React.ReactNode> = {
+    seller_approved: <CheckCircle2 className="w-4 h-4 text-green-400" />,
+    seller_rejected: <XCircle className="w-4 h-4 text-red-400" />,
+    system: <Info className="w-4 h-4 text-blue-400" />,
+  };
+
+  return (
+    <div className="relative" ref={ref}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleOpen}
+        className="rounded-full hover:bg-white/10 text-white/60 hover:text-white relative h-9 w-9 sm:h-10 sm:w-10"
+      >
+        <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+        {unreadCount > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center px-1 text-[10px] font-bold bg-red-500 text-white rounded-full animate-pulse">
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
+        )}
+      </Button>
+
+      {open && (
+        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.06] bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl shadow-black/40 z-[100]">
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+            <h3 className="text-sm font-bold text-white">Notifications</h3>
+            {unreadCount > 0 && (
+              <button onClick={markAllRead} className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+                Mark all read
+              </button>
+            )}
+          </div>
+
+          {/* List */}
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="text-center py-10 text-white/30">
+              <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
+              <p className="text-xs">No notifications yet</p>
+            </div>
+          ) : (
+            <div>
+              {notifications.map((n) => (
+                <button
+                  key={n._id}
+                  onClick={() => { if (!n.read) markAsRead(n._id); }}
+                  className={`w-full text-left px-5 py-4 border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors ${!n.read ? 'bg-cyan-500/[0.03]' : ''
+                    }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex-shrink-0">
+                      {typeIcons[n.type] || <Info className="w-4 h-4 text-white/40" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-white truncate">{n.title}</p>
+                        {!n.read && <span className="w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0" />}
+                      </div>
+                      <p className="text-xs text-white/50 mt-0.5 line-clamp-2">{n.message}</p>
+                      <p className="text-[10px] text-white/25 mt-1">{timeAgo(n.createdAt)}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function timeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString();
 }

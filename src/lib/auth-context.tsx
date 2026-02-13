@@ -13,6 +13,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<boolean>;
   resendCode: (email: string, password: string) => Promise<boolean>;
+  refreshAuth: () => Promise<void>; // Added to refresh user data
   isAuthenticated: boolean;
 }
 
@@ -73,13 +74,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (response.success && response.data) {
         setUser(response.data.userData);
-        
+
         console.log('🔍 Login Response:', {
           username: response.data.userData.username,
           profileCompleted: response.data.userData.profileCompleted,
           type: typeof response.data.userData.profileCompleted
         });
-        
+
         toast({
           title: 'Login Successful!',
           description: `Welcome back, ${response.data.userData.username}`,
@@ -158,33 +159,57 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setLoading(true);
 
+      console.log('📞 [Frontend] Calling verify email API...');
       const response = await apiClient.verifyEmail(email, code);
 
+      console.log('📥 [Frontend] Full API Response:', {
+        success: response.success,
+        hasData: !!response.data,
+        dataKeys: response.data ? Object.keys(response.data) : [],
+        rawResponse: JSON.stringify(response)
+      });
+
       if (response.success && response.data) {
+        // Update user state first
         setUser(response.data.userData);
-        
-        console.log('🔍 Verify Email Response:', {
-          username: response.data.userData.username,
-          profileCompleted: response.data.userData.profileCompleted,
-          type: typeof response.data.userData.profileCompleted
+
+        console.log('🔍 [Frontend] Verify Email Response:', {
+          username: response.data.userData?.username,
+          profileCompleted: response.data.userData?.profileCompleted,
+          type: typeof response.data.userData?.profileCompleted,
+          hasUserData: !!response.data.userData,
+          userDataKeys: response.data.userData ? Object.keys(response.data.userData) : []
         });
-        
+
         toast({
           title: 'Account Verified Successfully!',
           description: `Welcome, ${response.data.userData.username}`,
           variant: 'default',
         });
 
-        // Check if profile needs to be completed
-        // Redirect to complete-profile if profileCompleted is false, undefined, or null
-        if (response.data.userData.profileCompleted !== true) {
-          console.log('➡️ Redirecting to /complete-profile');
-          router.push('/complete-profile');
-        } else {
-          // Redirect user to dashboard
-          console.log('➡️ Redirecting to /user/dashboard');
-          router.push('/user/dashboard');
-        }
+        // Use setTimeout to ensure state is updated before navigation
+        setTimeout(() => {
+          // Check if profile needs to be completed
+          const shouldCompleteProfile = response.data.userData.profileCompleted !== true;
+
+          console.log('🎯 [Frontend] Redirect Decision:', {
+            profileCompleted: response.data.userData.profileCompleted,
+            shouldCompleteProfile,
+            willRedirectTo: shouldCompleteProfile ? '/complete-profile' : '/user/dashboard'
+          });
+
+          // Redirect to complete-profile if profileCompleted is false, undefined, or null
+          if (shouldCompleteProfile) {
+            console.log('➡️ [Frontend] Redirecting to /complete-profile');
+            // Use replace to prevent back navigation
+            router.replace('/complete-profile');
+          } else {
+            // Redirect user to dashboard
+            console.log('➡️ [Frontend] Redirecting to /user/dashboard');
+            router.replace('/user/dashboard');
+          }
+        }, 100);
+
         return true;
       } else {
         toast({
@@ -271,6 +296,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
     verifyEmail,
     resendCode,
+    refreshAuth: checkAuthStatus,
     isAuthenticated: !!user,
   };
 

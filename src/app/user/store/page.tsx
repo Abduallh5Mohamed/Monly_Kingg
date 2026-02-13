@@ -226,7 +226,7 @@ export default function SellerStorePage() {
             <p className="text-white/50 mt-1">Manage your game account listings</p>
           </div>
           <Button
-            onClick={() => setShowCreateModal(true)}
+            onClick={() => router.push('/user/store/new')}
             className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-6 py-3 shadow-lg shadow-cyan-500/20"
           >
             <Plus className="w-5 h-5 mr-2" /> New Listing
@@ -257,11 +257,10 @@ export default function SellerStorePage() {
             <button
               key={f}
               onClick={() => { setFilter(f); setPage(1); }}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                filter === f
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f
                   ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
                   : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
-              }`}
+                }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
@@ -290,11 +289,10 @@ export default function SellerStorePage() {
                       {typeof listing.game === 'object' ? listing.game.name : listing.game}
                     </span>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full border ${
-                    listing.status === 'available'
+                  <span className={`text-xs px-2 py-0.5 rounded-full border ${listing.status === 'available'
                       ? 'text-green-400 bg-green-400/10 border-green-400/20'
                       : 'text-gray-400 bg-gray-400/10 border-gray-400/20'
-                  }`}>
+                    }`}>
                     {listing.status}
                   </span>
                 </div>
@@ -507,11 +505,10 @@ export default function SellerStorePage() {
                         <button
                           key={d}
                           onClick={() => setPromoteDays(d)}
-                          className={`py-3 rounded-xl text-sm font-bold transition-all ${
-                            promoteDays === d
+                          className={`py-3 rounded-xl text-sm font-bold transition-all ${promoteDays === d
                               ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-lg shadow-cyan-500/10'
                               : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
-                          }`}
+                            }`}
                         >
                           {d}d
                         </button>

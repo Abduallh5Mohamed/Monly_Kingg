@@ -12,35 +12,32 @@ export const getProfile = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const user = await User.findById(userId)
-            .select("-passwordHash -verificationCode -verificationCodeValidation -forgotPasswordCode -forgotPasswordCodeValidation -passwordResetToken -passwordResetExpires -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret");
+        // Run ALL queries in parallel instead of sequentially
+        const [user, myListings, favorites, totalSales] = await Promise.all([
+            User.findById(userId)
+                .select("-passwordHash -verificationCode -verificationCodeValidation -forgotPasswordCode -forgotPasswordCodeValidation -passwordResetToken -passwordResetExpires -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret")
+                .lean(),
+            // Only query listings if we might need them (we'll filter later)
+            Listing.find({ seller: userId })
+                .select('game status createdAt title price')
+                .populate("game", "name icon")
+                .sort({ createdAt: -1 })
+                .limit(20)
+                .lean(),
+            Favorite.find({ user: userId })
+                .populate({
+                    path: "listing",
+                    populate: { path: "game", select: "name icon" }
+                })
+                .sort({ createdAt: -1 })
+                .limit(20)
+                .lean(),
+            Listing.countDocuments({ seller: userId, status: "sold" })
+        ]);
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
-        // Get user's listings if seller
-        let myListings = [];
-        if (user.isSeller) {
-            myListings = await Listing.find({ seller: userId })
-                .populate("game", "name icon")
-                .sort({ createdAt: -1 })
-                .limit(20);
-        }
-
-        // Get user's favorites
-        const favorites = await Favorite.find({ user: userId })
-            .populate({
-                path: "listing",
-                populate: { path: "game", select: "name icon" }
-            })
-            .sort({ createdAt: -1 })
-            .limit(20);
-
-        // Calculate stats
-        const totalPurchases = 0; // TODO: From orders
-        const totalSales = await Listing.countDocuments({ seller: userId, status: "sold" });
-        const rating = 4.5; // TODO: From reviews
 
         return res.json({
             success: true,
@@ -48,7 +45,7 @@ export const getProfile = async (req, res) => {
                 user: {
                     id: user._id,
                     username: user.username,
-                    email: user.email, // Will be hidden in frontend
+                    email: user.email,
                     phone: user.phone,
                     address: user.address,
                     avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`,
@@ -61,9 +58,9 @@ export const getProfile = async (req, res) => {
                     lastPhoneChange: user.lastPhoneChange,
                     stats: {
                         ...user.stats,
-                        totalPurchases,
+                        totalPurchases: 0,
                         totalSales,
-                        rating
+                        rating: 4.5
                     },
                     wallet: user.wallet,
                     isOnline: user.isOnline,
