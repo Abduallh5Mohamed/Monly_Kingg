@@ -7202,3 +7202,373 @@
 [2026-02-09T13:35:50.148Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
 [2026-02-09T13:36:46.908Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
 [2026-02-09T13:37:00.786Z] [INFO]: User abduallhshadow@gmail.com hid chat 690a21f15e15078e6a635171
+[2026-02-13T15:47:06.168Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (448ms)
+[2026-02-13T15:48:08.153Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 4497ms
+[2026-02-13T15:48:08.642Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-13T15:48:46.633Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1221ms
+[2026-02-13T15:49:12.765Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1143ms
+[2026-02-13T15:49:17.533Z] [WARN]: ⚠️ Slow Request: GET /user/store - 608ms
+[2026-02-13T15:49:21.597Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 502ms
+[2026-02-13T15:49:22.443Z] [WARN]: ⚠️ Slow Request: GET /api/v1/games - 745ms
+[2026-02-13T15:50:39.506Z] [WARN]: ⚠️ Slow Request: GET /_next/image - 716ms
+[2026-02-13T15:55:01.513Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 1001ms
+[2026-02-13T15:55:28.492Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (515ms)
+[2026-02-13T15:55:28.525Z] [WARN]: ⚠️ Slow Request: POST /login - 556ms
+[2026-02-13T16:24:07.608Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (553ms)
+[2026-02-13T16:24:07.624Z] [WARN]: ⚠️ Slow Request: POST /login - 573ms
+[2026-02-13T16:24:31.492Z] [WARN]: ⚠️ Slow Request: GET /api/v1/games - 1147ms
+[2026-02-13T16:30:57.878Z] [WARN]: ⚠️ Slow Request: HEAD /api/v1/games - 1128ms
+[2026-02-13T16:32:40.199Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (647ms)
+[2026-02-13T16:32:40.227Z] [WARN]: ⚠️ Slow Request: POST /login - 683ms
+[2026-02-13T16:42:09.849Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T16:42:10.073Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T16:42:10.073Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T16:42:10.501Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T16:42:10.503Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T16:42:10.504Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T16:42:10.545Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T16:42:10.555Z] [INFO]: ✅ Cleanup complete in 51ms
+[2026-02-13T16:42:10.555Z] [INFO]:    Users removed: 0
+[2026-02-13T16:42:10.556Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T16:42:10.556Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T16:42:10.556Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T16:42:10.556Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T16:45:47.896Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 5099ms
+[2026-02-13T16:45:50.341Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1258ms
+[2026-02-13T16:45:55.498Z] [WARN]: ⚠️ Slow Request: GET /login - 1572ms
+[2026-02-13T16:46:03.810Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/app/layout.9d01889f0128b46d.hot-update.js - 501ms
+[2026-02-13T16:46:04.566Z] [WARN]: ⚠️ Slow Request: GET / - 2681ms
+[2026-02-13T16:46:05.634Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/app/page.js - 784ms
+[2026-02-13T16:46:05.743Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 898ms
+[2026-02-13T16:46:06.248Z] [WARN]: ⚠️ Slow Request: GET /_next/image - 705ms
+[2026-02-13T16:46:16.332Z] [WARN]: ⚠️ Slow Request: GET /register - 852ms
+[2026-02-13T16:46:27.269Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (463ms)
+[2026-02-13T16:46:29.706Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1343ms
+[2026-02-13T16:50:21.527Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T16:50:21.618Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T16:50:21.618Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T16:50:21.867Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T16:50:21.868Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T16:50:21.869Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T16:50:21.879Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T16:50:21.883Z] [INFO]: ✅ Cleanup complete in 14ms
+[2026-02-13T16:50:21.883Z] [INFO]:    Users removed: 0
+[2026-02-13T16:50:21.883Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T16:50:21.883Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T16:50:21.883Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T16:50:21.883Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T16:52:54.067Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T16:52:54.229Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T16:52:54.229Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T16:52:54.633Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T16:52:54.634Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T16:52:54.634Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T16:52:54.645Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T16:52:54.650Z] [INFO]: ✅ Cleanup complete in 16ms
+[2026-02-13T16:52:54.650Z] [INFO]:    Users removed: 0
+[2026-02-13T16:52:54.650Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T16:52:54.651Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T16:52:54.651Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T16:52:54.651Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T16:54:43.850Z] [WARN]: ⚠️ Slow Request: GET /user/store - 5863ms
+[2026-02-13T16:54:49.688Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1191ms
+[2026-02-13T16:54:49.691Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 1196ms
+[2026-02-13T16:54:52.823Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T16:54:54.008Z] [WARN]: ⚠️ Slow Request: GET /login - 1161ms
+[2026-02-13T16:55:01.880Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (494ms)
+[2026-02-13T16:55:01.898Z] [WARN]: ⚠️ Slow Request: POST /login - 516ms
+[2026-02-13T16:55:06.285Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 634ms
+[2026-02-13T16:55:55.334Z] [WARN]: ⚠️ Slow Request: GET /user/promotions - 982ms
+[2026-02-13T16:59:34.209Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1075ms
+[2026-02-13T17:02:52.082Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T17:02:52.312Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T17:02:52.312Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T17:02:52.880Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T17:02:52.882Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T17:02:52.882Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T17:02:52.909Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T17:02:52.916Z] [INFO]: ✅ Cleanup complete in 34ms
+[2026-02-13T17:02:52.917Z] [INFO]:    Users removed: 0
+[2026-02-13T17:02:52.918Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T17:02:52.918Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T17:02:52.918Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T17:02:52.918Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T17:03:15.494Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 4421ms
+[2026-02-13T17:03:56.273Z] [WARN]: ⚠️ Slow Request: GET /user/store - 3316ms
+[2026-02-13T17:03:58.981Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1011ms
+[2026-02-13T17:04:02.158Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T17:04:03.579Z] [WARN]: ⚠️ Slow Request: GET /login - 1392ms
+[2026-02-13T17:04:10.333Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (360ms)
+[2026-02-13T17:04:34.089Z] [WARN]: ⚠️ Slow Request: GET /marketplace - 1026ms
+[2026-02-13T17:04:52.115Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 579ms
+[2026-02-13T17:04:54.035Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 686ms
+[2026-02-13T17:07:23.396Z] [WARN]: ⚠️ Slow Request: GET /marketplace - 930ms
+[2026-02-13T17:07:23.994Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1102ms
+[2026-02-13T17:07:24.036Z] [WARN]: ⚠️ Slow Request: GET /my-listings - 723ms
+[2026-02-13T17:07:24.044Z] [WARN]: ⚠️ Slow Request: GET /stats - 695ms
+[2026-02-13T17:07:24.092Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 781ms
+[2026-02-13T17:07:24.100Z] [WARN]: ⚠️ Slow Request: GET /user/store - 736ms
+[2026-02-13T17:07:53.260Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T17:07:59.206Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (338ms)
+[2026-02-13T17:12:52.804Z] [WARN]: ⚠️ Slow Request: GET /stats - 550ms
+[2026-02-13T17:12:52.810Z] [WARN]: ⚠️ Slow Request: GET /my-listings - 579ms
+[2026-02-13T17:12:52.906Z] [WARN]: ⚠️ Slow Request: GET /marketplace - 572ms
+[2026-02-13T17:12:52.932Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 601ms
+[2026-02-13T17:12:52.936Z] [WARN]: ⚠️ Slow Request: GET /user/store - 604ms
+[2026-02-13T17:14:53.921Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T17:14:54.024Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T17:14:54.025Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T17:14:54.363Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T17:14:54.364Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T17:14:54.364Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T17:14:54.384Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T17:14:54.389Z] [INFO]: ✅ Cleanup complete in 25ms
+[2026-02-13T17:14:54.389Z] [INFO]:    Users removed: 0
+[2026-02-13T17:14:54.390Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T17:14:54.390Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T17:14:54.390Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T17:14:54.390Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T17:15:14.447Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 3377ms
+[2026-02-13T17:15:14.847Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 657ms
+[2026-02-13T17:17:58.543Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T17:17:58.630Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T17:17:58.630Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T17:17:58.968Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T17:17:58.969Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T17:17:58.969Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T17:17:58.985Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T17:17:58.990Z] [INFO]: ✅ Cleanup complete in 21ms
+[2026-02-13T17:17:58.990Z] [INFO]:    Users removed: 0
+[2026-02-13T17:17:58.990Z] [INFO]:    Cached users before: 1.5
+[2026-02-13T17:17:58.990Z] [INFO]:    Cached users after: 1.5
+[2026-02-13T17:17:58.990Z] [INFO]:    Memory before: 1.15M
+[2026-02-13T17:17:58.990Z] [INFO]:    Memory after: 1.15M
+[2026-02-13T17:18:13.688Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 2638ms
+[2026-02-13T17:46:02.376Z] [WARN]: ⚠️ Slow Request: GET /marketplace - 2724ms
+[2026-02-13T17:46:20.099Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1964ms
+[2026-02-13T17:46:22.233Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 929ms
+[2026-02-13T17:46:25.130Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T17:46:26.486Z] [WARN]: ⚠️ Slow Request: GET /login - 1334ms
+[2026-02-13T17:46:35.236Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (407ms)
+[2026-02-13T17:48:15.455Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T17:48:22.956Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (288ms)
+[2026-02-13T17:48:50.839Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 1297ms
+[2026-02-13T17:48:56.208Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 783ms
+[2026-02-13T17:48:58.301Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1188ms
+[2026-02-13T18:52:11.310Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (342ms)
+[2026-02-13T18:54:59.415Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 598ms
+[2026-02-13T19:03:34.220Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1964ms
+[2026-02-13T19:03:38.286Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T19:03:43.796Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (310ms)
+[2026-02-13T19:03:52.858Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1624ms
+[2026-02-13T19:11:03.815Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T19:11:11.890Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (427ms)
+[2026-02-13T19:14:59.824Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-13T19:15:06.587Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (307ms)
+[2026-02-13T19:15:10.650Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (751ms)
+[2026-02-13T19:15:10.787Z] [WARN]: ⚠️ Slow Request: POST /login - 890ms
+[2026-02-13T19:15:11.147Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 4541ms
+[2026-02-13T19:15:13.923Z] [WARN]: ⚠️ Slow Request: GET /admin - 2413ms
+[2026-02-13T19:15:14.190Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T19:15:14.279Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T19:15:29.396Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 1165ms
+[2026-02-13T19:18:18.591Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T19:18:27.040Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (340ms)
+[2026-02-13T19:30:12.159Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 656ms
+[2026-02-13T19:31:12.164Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 598ms
+[2026-02-13T19:31:35.573Z] [WARN]: ⚠️ Slow Request: GET /my-requests - 577ms
+[2026-02-13T19:37:18.506Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T19:37:29.230Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (404ms)
+[2026-02-13T19:37:30.388Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1118ms
+[2026-02-13T19:37:31.851Z] [WARN]: ⚠️ Slow Request: GET /admin - 1363ms
+[2026-02-13T19:37:32.046Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T19:37:32.145Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T19:38:31.017Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-13T19:38:38.350Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (318ms)
+[2026-02-13T19:39:31.369Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 517ms
+[2026-02-13T19:40:44.128Z] [INFO]: 📊 Cache MISS: User me - Fetching from DB
+[2026-02-13T19:40:44.140Z] [ERROR]: ❌ Read-Through failed for user me:
+[2026-02-13T19:40:45.807Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 2125ms
+[2026-02-13T19:40:45.874Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 565ms
+[2026-02-13T19:41:02.283Z] [INFO]: 📊 Cache MISS: User me - Fetching from DB
+[2026-02-13T19:41:02.295Z] [ERROR]: ❌ Read-Through failed for user me:
+[2026-02-13T19:41:02.783Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 633ms
+[2026-02-13T19:41:34.445Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 1107ms
+[2026-02-13T19:41:46.239Z] [WARN]: ⚠️ Slow Request: GET /profile - 1563ms
+[2026-02-13T19:41:46.255Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 1592ms
+[2026-02-13T19:41:46.310Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1607ms
+[2026-02-13T19:42:16.968Z] [WARN]: ⚠️ Slow Request: GET /api/v1/notifications/unread-count - 1743ms
+[2026-02-13T19:42:29.775Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 2501ms
+[2026-02-13T19:42:33.328Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 796ms
+[2026-02-13T19:42:36.307Z] [WARN]: ⚠️ Slow Request: GET /my-requests - 594ms
+[2026-02-13T19:48:11.969Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T19:48:12.101Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T19:48:12.101Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T19:48:12.417Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T19:48:12.418Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T19:48:12.418Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T19:48:12.441Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T19:48:12.449Z] [INFO]: ✅ Cleanup complete in 31ms
+[2026-02-13T19:48:12.450Z] [INFO]:    Users removed: 0
+[2026-02-13T19:48:12.450Z] [INFO]:    Cached users before: 4.5
+[2026-02-13T19:48:12.450Z] [INFO]:    Cached users after: 4.5
+[2026-02-13T19:48:12.450Z] [INFO]:    Memory before: 1.18M
+[2026-02-13T19:48:12.450Z] [INFO]:    Memory after: 1.18M
+[2026-02-13T19:48:57.314Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T19:48:57.427Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T19:48:57.427Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T19:48:57.827Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T19:48:57.828Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T19:48:57.828Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T19:48:57.842Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T19:48:57.847Z] [INFO]: ✅ Cleanup complete in 19ms
+[2026-02-13T19:48:57.847Z] [INFO]:    Users removed: 0
+[2026-02-13T19:48:57.847Z] [INFO]:    Cached users before: 4.5
+[2026-02-13T19:48:57.847Z] [INFO]:    Cached users after: 4.5
+[2026-02-13T19:48:57.847Z] [INFO]:    Memory before: 1.18M
+[2026-02-13T19:48:57.848Z] [INFO]:    Memory after: 1.18M
+[2026-02-13T19:51:11.553Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T19:51:16.921Z] [WARN]: ⚠️ Slow Request: GET /login - 5345ms
+[2026-02-13T19:51:38.209Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (416ms)
+[2026-02-13T19:51:40.306Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2063ms
+[2026-02-13T19:51:44.260Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 1739ms
+[2026-02-13T19:51:44.525Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-13T19:51:49.837Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1518ms
+[2026-02-13T19:51:55.158Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-13T19:51:58.655Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (279ms)
+[2026-02-13T19:52:02.177Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1440ms
+[2026-02-13T20:03:36.467Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-13T20:03:42.465Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (412ms)
+[2026-02-13T20:03:46.112Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 3619ms
+[2026-02-13T20:03:49.363Z] [WARN]: ⚠️ Slow Request: GET /admin - 3559ms
+[2026-02-13T20:03:49.730Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T20:03:49.931Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T20:03:53.224Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 638ms
+[2026-02-13T20:03:55.967Z] [WARN]: ⚠️ Slow Request: GET /admin/products - 553ms
+[2026-02-13T20:04:13.369Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 771ms
+[2026-02-13T20:04:20.117Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T20:04:24.521Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-13T20:04:27.833Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (323ms)
+[2026-02-13T20:04:28.087Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T20:04:28.167Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T20:14:38.677Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-13T20:15:05.271Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T20:15:05.364Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T20:15:05.365Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T20:15:05.631Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T20:15:05.632Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T20:15:05.632Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T20:15:05.651Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T20:15:05.661Z] [INFO]: ✅ Cleanup complete in 29ms
+[2026-02-13T20:15:05.661Z] [INFO]:    Users removed: 0
+[2026-02-13T20:15:05.661Z] [INFO]:    Cached users before: 4.5
+[2026-02-13T20:15:05.661Z] [INFO]:    Cached users after: 4.5
+[2026-02-13T20:15:05.662Z] [INFO]:    Memory before: 1.18M
+[2026-02-13T20:15:05.662Z] [INFO]:    Memory after: 1.18M
+[2026-02-13T20:17:39.946Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T20:17:44.284Z] [WARN]: ⚠️ Slow Request: GET /login - 4287ms
+[2026-02-13T20:18:01.244Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (356ms)
+[2026-02-13T20:18:02.679Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1411ms
+[2026-02-13T20:18:03.612Z] [WARN]: ⚠️ Slow Request: GET /admin - 780ms
+[2026-02-13T20:18:03.914Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T20:18:04.044Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T20:18:05.026Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T20:18:12.318Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (304ms)
+[2026-02-13T20:18:13.462Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1131ms
+[2026-02-13T20:18:16.174Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1302ms
+[2026-02-13T20:24:44.148Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 6000ms
+[2026-02-13T20:25:22.464Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1750ms
+[2026-02-13T20:25:53.389Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-13T20:25:53.532Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-13T20:25:53.533Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-13T20:25:53.879Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-13T20:25:53.880Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-13T20:25:53.881Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-13T20:25:53.900Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-13T20:25:53.908Z] [INFO]: ✅ Cleanup complete in 27ms
+[2026-02-13T20:25:53.908Z] [INFO]:    Users removed: 0
+[2026-02-13T20:25:53.909Z] [INFO]:    Cached users before: 4.5
+[2026-02-13T20:25:53.909Z] [INFO]:    Cached users after: 4.5
+[2026-02-13T20:25:53.909Z] [INFO]:    Memory before: 1.19M
+[2026-02-13T20:25:53.909Z] [INFO]:    Memory after: 1.19M
+[2026-02-13T20:26:00.657Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 5553ms
+[2026-02-13T20:29:33.204Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1882ms
+[2026-02-13T20:29:40.128Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 551ms
+[2026-02-13T20:35:15.958Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1409ms
+[2026-02-13T20:35:16.011Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1459ms
+[2026-02-13T20:54:08.489Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1230ms
+[2026-02-13T20:54:19.380Z] [WARN]: ⚠️ Slow Request: GET /login - 4760ms
+[2026-02-13T20:56:20.342Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (600ms)
+[2026-02-13T20:56:20.367Z] [WARN]: ⚠️ Slow Request: POST /login - 634ms
+[2026-02-13T20:56:31.318Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (362ms)
+[2026-02-13T20:56:34.864Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 605ms
+[2026-02-13T20:56:36.016Z] [WARN]: ⚠️ Slow Request: GET /assets/pubg-battlegrounds.png - 1040ms
+[2026-02-13T20:56:36.368Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 535ms
+[2026-02-13T20:56:45.281Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 3398ms
+[2026-02-13T20:56:45.960Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-13T20:57:50.957Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-13T20:57:58.105Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (335ms)
+[2026-02-13T20:57:59.867Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1742ms
+[2026-02-13T20:58:01.604Z] [WARN]: ⚠️ Slow Request: GET /admin - 1548ms
+[2026-02-13T20:58:01.840Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T20:58:01.936Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T20:58:25.171Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 1633ms
+[2026-02-13T20:58:26.484Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 1095ms
+[2026-02-13T21:02:25.195Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T21:02:35.910Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (438ms)
+[2026-02-13T21:03:38.303Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 3533ms
+[2026-02-13T21:04:04.208Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-13T21:04:10.809Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (371ms)
+[2026-02-13T21:04:16.734Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-13T21:04:22.271Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (302ms)
+[2026-02-13T21:04:22.795Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 505ms
+[2026-02-13T21:04:23.026Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T21:04:23.139Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T21:08:59.991Z] [WARN]: ⚠️ Slow Request: GET /admin/chats - 2295ms
+[2026-02-13T21:09:00.557Z] [WARN]: ⚠️ Slow Request: GET /admin/chats - 554ms
+[2026-02-13T21:09:00.793Z] [INFO]: Admin monlykingstore@gmail.com fetched 7 chats for monitoring
+[2026-02-13T21:09:00.834Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2026-02-13T21:09:00.856Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-13T21:09:04.051Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 3 messages
+[2026-02-13T21:09:07.919Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2026-02-13T21:09:17.727Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68e28999cfe238a77a2a69a1 with 2 messages
+[2026-02-13T21:09:19.999Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68def23b0cc030df58db6b02 with 14 messages
+[2026-02-13T21:09:34.505Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 698dee4845e40bd6e1b6e7f9 with 0 messages
+[2026-02-13T21:09:37.354Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68fd0217fcb035606fce8e3d with 3 messages
+[2026-02-13T21:09:38.663Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 68e289afcfe238a77a2a6c8d with 19 messages
+[2026-02-13T21:09:57.553Z] [INFO]: Admin monlykingstore@gmail.com fetched 1 chats for monitoring
+[2026-02-13T21:09:57.572Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2026-02-13T21:09:59.243Z] [INFO]: Admin monlykingstore@gmail.com fetched 6 chats for monitoring
+[2026-02-13T21:09:59.264Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2026-02-13T21:10:01.700Z] [INFO]: Admin monlykingstore@gmail.com fetched 7 chats for monitoring
+[2026-02-13T21:10:01.723Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2026-02-13T21:10:04.648Z] [WARN]: ⚠️ Slow Request: GET /admin/analytics - 1362ms
+[2026-02-13T21:10:05.000Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T21:10:17.999Z] [WARN]: ⚠️ Slow Request: GET /admin/games - 1167ms
+[2026-02-13T21:10:27.117Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T21:10:27.208Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T21:18:58.168Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 2287ms
+[2026-02-13T21:19:09.995Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 562ms
+[2026-02-13T21:19:15.105Z] [INFO]: Admin monlykingstore@gmail.com fetched 7 chats for monitoring
+[2026-02-13T21:19:15.140Z] [INFO]: Admin monlykingstore@gmail.com fetched chat statistics
+[2026-02-13T21:19:15.143Z] [INFO]: Admin monlykingstore@gmail.com viewed chat 690a21f15e15078e6a635171 with 1 messages
+[2026-02-13T21:19:36.619Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T21:19:44.607Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (323ms)
+[2026-02-13T21:19:45.706Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1077ms
+[2026-02-13T21:19:46.033Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T21:19:46.130Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T21:29:19.958Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 526ms
+[2026-02-13T21:42:36.654Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 1383ms
+[2026-02-13T21:42:38.161Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 730ms
+[2026-02-13T21:42:40.830Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T21:42:46.776Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (352ms)
+[2026-02-13T21:42:47.695Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 902ms
+[2026-02-13T21:42:48.003Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T21:42:48.096Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T21:42:56.761Z] [WARN]: ⚠️ Slow Request: GET /admin/users - 1898ms
+[2026-02-13T21:42:56.960Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-13T21:43:02.883Z] [WARN]: ⚠️ Slow Request: GET /admin/products - 687ms
+[2026-02-13T21:46:03.546Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 1381ms
+[2026-02-13T21:53:02.325Z] [WARN]: ⚠️ Slow Request: GET /admin/promotions - 2886ms
+[2026-02-13T21:53:03.788Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/all - 1225ms
+[2026-02-13T21:53:03.791Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/stats - 1211ms

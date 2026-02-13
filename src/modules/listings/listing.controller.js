@@ -11,9 +11,23 @@ const __dirname = dirname(__filename);
 // Create a new listing (seller only)
 export const createListing = async (req, res) => {
   try {
+    console.log('📝 Creating listing with data:', {
+      title: req.body.title,
+      game: req.body.game,
+      price: req.body.price,
+      hasFiles: !!req.files,
+      accountImagesCount: req.files?.accountImages?.length || 0,
+      hasCoverImage: !!req.files?.coverImage
+    });
+
     const user = await User.findById(req.user._id);
     if (!user || !user.isSeller) {
       return res.status(403).json({ message: "Only approved sellers can create listings" });
+    }
+
+    // Validation
+    if (!req.body.title || !req.body.game || !req.body.price) {
+      return res.status(400).json({ message: "Title, game, and price are required" });
     }
 
     // Handle file uploads
@@ -47,6 +61,7 @@ export const createListing = async (req, res) => {
           ? JSON.parse(req.body.details)
           : req.body.details;
       } catch (e) {
+        console.error('Failed to parse details:', e);
         details = req.body.details;
       }
     }
@@ -64,10 +79,18 @@ export const createListing = async (req, res) => {
     });
 
     await listing.save();
+    console.log('✅ Listing created successfully:', listing._id);
     return res.status(201).json({ message: "Listing created successfully", data: listing });
   } catch (error) {
-    console.error("Create listing error:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error("❌ Create listing error:", error);
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join(', ') });
+    }
+
+    return res.status(500).json({ message: error.message || "Server error" });
   }
 };
 
@@ -153,6 +176,68 @@ export const getSellerStats = async (req, res) => {
     });
   } catch (error) {
     console.error("Get seller stats error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get all public listings (for marketplace)
+export const getAllListings = async (req, res) => {
+  try {
+    const {
+      status = "available",
+      game,
+      page = 1,
+      limit = 20,
+      sort = "createdAt",
+      order = "desc"
+    } = req.query;
+
+    const filter = { status };
+    if (game && game !== "all") {
+      filter.game = game;
+    }
+
+    const sortOrder = order === "asc" ? 1 : -1;
+    const sortOptions = { [sort]: sortOrder };
+
+    const listings = await Listing.find(filter)
+      .populate("game", "name slug icon")
+      .populate("seller", "username")
+      .sort(sortOptions)
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .lean();
+
+    const total = await Listing.countDocuments(filter);
+
+    return res.status(200).json({
+      success: true,
+      data: listings,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error("Get all listings error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get single listing by ID (public)
+export const getListingById = async (req, res) => {
+  try {
+    const listing = await Listing.findById(req.params.id)
+      .populate("game", "name slug icon category")
+      .populate("seller", "username email isSeller")
+      .lean();
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    return res.status(200).json({ success: true, data: listing });
+  } catch (error) {
+    console.error("Get listing by ID error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

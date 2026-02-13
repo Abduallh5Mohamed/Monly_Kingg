@@ -6,11 +6,9 @@ const listingSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
-  images: [{ type: String }], // مصفوفة URLs للصور
-  coverImage: { type: String }, // صورة الغلاف
-  details: { type: Object }, // الفورم الخاصة باللعبة
-  images: [{ type: String }], // صور الأكونت
-  coverImage: { type: String }, // صورة الكوفر (اختياري)
+  details: { type: Object },
+  images: [{ type: String }],
+  coverImage: { type: String },
   status: { type: String, enum: ["available", "sold"], default: "available" }
 }, { timestamps: true });
 

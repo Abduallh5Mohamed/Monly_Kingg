@@ -10,16 +10,26 @@ const withdrawalSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
-      min: 10,
+      min: 500,
     },
     method: {
       type: String,
       required: true,
-      enum: ["vodafone_cash", "instapay", "paypal", "bank_transfer"],
+      enum: ["vodafone_cash", "instapay"],
     },
-    accountDetails: {
+    countryCode: {
       type: String,
       required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (v) {
+          return /^\d{11}$/.test(v);
+        },
+        message: 'Phone number must be exactly 11 digits'
+      }
     },
     status: {
       type: String,

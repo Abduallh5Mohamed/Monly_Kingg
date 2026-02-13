@@ -12,6 +12,8 @@ import {
   updateListing,
   deleteListing,
   getSellerStats,
+  getAllListings,
+  getListingById,
 } from "./listing.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,11 +39,26 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedMimes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
-  if (allowedMimes.includes(file.mimetype)) {
+  // Allow common image MIME types
+  const allowedMimes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/heic",
+    "image/heif"
+  ];
+
+  // Also check file extension as fallback
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic', '.heif'];
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP are allowed."));
+    console.error(`❌ Invalid file: ${file.originalname} (type: ${file.mimetype})`);
+    cb(new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP images are allowed."));
   }
 };
 
@@ -51,7 +68,28 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
 });
 
-// All routes require authentication
+// Multer error handler middleware
+const handleMulterError = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File too large. Maximum size is 10MB.' });
+    }
+    if (err.code === 'LIMIT_FILE_COUNT') {
+      return res.status(400).json({ message: 'Too many files. Maximum is 10 images.' });
+    }
+    return res.status(400).json({ message: 'File upload error: ' + err.message });
+  }
+  if (err) {
+    return res.status(400).json({ message: err.message });
+  }
+  next();
+};
+
+// Public routes (no auth required)
+router.get("/public", cacheResponse(120), getAllListings); // Get all available listings
+router.get("/:id/public", cacheResponse(300), getListingById); // Get single listing details
+
+// Protected routes (require authentication)
 router.post(
   "/",
   authMiddleware,
@@ -59,6 +97,7 @@ router.post(
     { name: 'accountImages', maxCount: 10 },
     { name: 'coverImage', maxCount: 1 }
   ]),
+  handleMulterError,
   invalidateCache('api_cache:/api/v1/listings/*'),
   createListing
 );

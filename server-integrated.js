@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import next from "next";
 import { createServer } from "http";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import connectDB from "./src/config/db.js";
 import redis from "./src/config/redis.js";
 import authRoutes from "./src/modules/auth/auth.routes.js";
@@ -19,6 +22,9 @@ import {
   keepAlive,
   memoryMonitor
 } from "./src/middlewares/performanceMiddleware.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -119,7 +125,7 @@ nextApp.prepare().then(async () => {
   };
   app.use(cors(corsOptions));
 
-  // Configure helmet for Next.js compatibility
+  // ✅ SECURITY: Configure helmet for comprehensive security headers
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -155,13 +161,26 @@ nextApp.prepare().then(async () => {
             "https://fonts.gstatic.com"
           ],
           connectSrc: ["'self'"],
+          frameSrc: ["'none'"], // Prevent embedding in iframes
+          objectSrc: ["'none'"], // Prevent Flash and other plugins
+          upgradeInsecureRequests: [], // Upgrade HTTP to HTTPS
         },
       },
+      frameguard: { action: 'deny' }, // X-Frame-Options: DENY - prevent clickjacking
+      noSniff: true, // X-Content-Type-Options: nosniff - prevent MIME sniffing
+      xssFilter: true, // X-XSS-Protection: 1; mode=block
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' }, // Control referrer information
+      hsts: {
+        maxAge: 31536000, // 1 year
+        includeSubDomains: true,
+        preload: true
+      },
+      hidePoweredBy: true, // Hide X-Powered-By header
     })
   );
 
   if (process.env.NODE_ENV === "production") {
-    app.use(helmet.hsts({ maxAge: 31536000 }));
+    app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true, preload: true }));
   }
 
   app.use(cookieParser());
@@ -182,6 +201,11 @@ nextApp.prepare().then(async () => {
     level: 4, // Fast compression (lower = faster, less compression)
     threshold: 1024, // Only compress responses > 1KB
   }));
+
+  // Serve static files from uploads directory
+  const uploadsPath = path.join(__dirname, 'uploads');
+  app.use('/uploads', express.static(uploadsPath));
+  console.log('✅ Serving static uploads from:', uploadsPath);
 
   app.use(globalLimiter);
 
@@ -235,6 +259,15 @@ nextApp.prepare().then(async () => {
     console.warn('⚠️ Listing routes not loaded:', error.message);
   }
 
+  // Games routes
+  try {
+    const { default: gamesRoutes } = await import("./src/modules/games/game.routes.js");
+    app.use("/api/v1/games", gamesRoutes);
+    console.log('✅ Games routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Games routes not loaded:', error.message);
+  }
+
   // Withdrawal routes
   try {
     const { default: withdrawalRoutes } = await import("./src/modules/withdrawals/withdrawal.routes.js");
@@ -242,6 +275,24 @@ nextApp.prepare().then(async () => {
     console.log('✅ Withdrawal routes loaded');
   } catch (error) {
     console.warn('⚠️ Withdrawal routes not loaded:', error.message);
+  }
+
+  // Deposit routes
+  try {
+    const { default: depositRoutes } = await import("./src/modules/deposits/deposit.routes.js");
+    app.use("/api/v1/deposits", depositRoutes);
+    console.log('✅ Deposit routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Deposit routes not loaded:', error.message);
+  }
+
+  // Notification routes
+  try {
+    const { default: notificationRoutes } = await import("./src/modules/notifications/notification.routes.js");
+    app.use("/api/v1/notifications", notificationRoutes);
+    console.log('✅ Notification routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Notification routes not loaded:', error.message);
   }
 
   // Health check endpoint

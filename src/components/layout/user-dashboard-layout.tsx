@@ -19,6 +19,30 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
+  const [balance, setBalance] = useState<number>(0);
+  const [level, setLevel] = useState<number>(1);
+
+  // Fetch user balance and level from database
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch('/api/v1/users/profile', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.data && data.data.user) {
+            setBalance(data.data.user.wallet?.balance || 0);
+            setLevel(data.data.user.stats?.level || 1);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
 
   // Check if profile is completed
   useEffect(() => {
@@ -93,7 +117,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                 >
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-purple-900/50 flex items-center justify-center border border-purple-400/50">
-                      <span className="text-purple-200 text-[10px] sm:text-xs font-bold">12</span>
+                      <span className="text-purple-200 text-[10px] sm:text-xs font-bold">{level}</span>
                     </div>
                     <div className="hidden lg:block">
                       <p className="text-[10px] text-purple-200/80 leading-none">Level</p>
@@ -116,7 +140,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                     </div>
                     <div className="hidden lg:block">
                       <p className="text-[10px] text-emerald-200/80 leading-none">Balance</p>
-                      <p className="text-sm font-bold text-white leading-none">2,480</p>
+                      <p className="text-sm font-bold text-white leading-none">{balance.toLocaleString()}</p>
                     </div>
                   </div>
                 </Link>
