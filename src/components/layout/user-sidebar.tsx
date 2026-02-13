@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { Home, MessageSquare, LogOut, User, FileText, Store, Wallet, Megaphone } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
@@ -14,9 +15,8 @@ interface SidebarItem {
 
 export function UserSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const menuItems: SidebarItem[] = [
     { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
@@ -30,20 +30,8 @@ export function UserSidebar() {
     { icon: User, label: 'Profile', path: '/user/profile' }
   ];
 
-  const handleNavigation = (path: string) => {
-    router.push(path);
-  };
-
-  const handleLogout = () => {
-    // Clear tokens
-    localStorage.removeItem('accessToken');
-    sessionStorage.removeItem('accessToken');
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-    router.push('/login');
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -54,13 +42,15 @@ export function UserSidebar() {
       {/* Logo Section with Glow Effect */}
       <div className="p-4 border-b border-cyan-500/20 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
-        <div className="text-center relative">
+        <Link href="/user/dashboard" className="text-center relative block">
           <div className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto relative group hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">U</span>
+            <span className="text-white font-bold text-lg">
+              {user?.username?.charAt(0).toUpperCase() || 'U'}
+            </span>
           </div>
           {/* Online Status Indicator */}
           <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
-        </div>
+        </Link>
       </div>
 
       {/* Navigation Menu */}
@@ -71,12 +61,13 @@ export function UserSidebar() {
             const isActive = pathname === item.path;
 
             return (
-              <button
+              <Link
                 key={index}
-                onClick={() => handleNavigation(item.path)}
+                href={item.path}
+                prefetch={true}
                 className={`w-full flex items-center justify-center p-3.5 rounded-2xl transition-all duration-300 group relative ${isActive
-                    ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-xl shadow-cyan-500/50 scale-105 border border-cyan-400/50'
-                    : 'text-gray-400 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-purple-500/10 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30'
+                  ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-xl shadow-cyan-500/50 scale-105 border border-cyan-400/50'
+                  : 'text-gray-400 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-purple-500/10 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30'
                   }`}
                 title={item.label}
               >
@@ -101,7 +92,7 @@ export function UserSidebar() {
                 {isActive && (
                   <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-r-full shadow-lg shadow-cyan-500/50" />
                 )}
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -125,14 +116,22 @@ export function UserSidebar() {
 
         {/* User Avatar */}
         <div className="relative">
-          <button className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto block hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 group relative bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">N</span>
-          </button>
+          <Link
+            href="/user/profile"
+            className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto block hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 group relative bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center"
+            title="Go to Profile"
+          >
+            <span className="text-white font-bold text-lg">
+              {user?.username?.charAt(0).toUpperCase() || 'U'}
+            </span>
+          </Link>
 
           {/* Online Status */}
           <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
         </div>
-        <p className="text-cyan-100 text-xs text-center mt-2 font-medium">Natalie</p>
+        <p className="text-cyan-100 text-xs text-center mt-2 font-medium truncate px-1">
+          {user?.username || 'User'}
+        </p>
       </div>
     </div>
   );

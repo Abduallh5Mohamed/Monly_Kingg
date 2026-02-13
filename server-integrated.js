@@ -13,6 +13,12 @@ import compression from "compression";
 import { globalLimiter } from "./src/middlewares/rateLimiter.js";
 import csrfProtection from "./src/middlewares/csrf.js";
 import userCacheService from "./src/services/userCacheService.js";
+import {
+  responseTimeTracker,
+  optimizationHeaders,
+  keepAlive,
+  memoryMonitor
+} from "./src/middlewares/performanceMiddleware.js";
 
 dotenv.config();
 
@@ -52,6 +58,10 @@ async function initializeServices() {
     console.log('⚠️ Server running in Frontend-only mode (No Backend services)');
     console.log('📱 Perfect for Frontend development!');
   }
+
+  // Start memory monitoring
+  memoryMonitor();
+  console.log('📊 Performance monitoring enabled');
 
   return true; // Always return true to allow server to start
 }
@@ -155,6 +165,11 @@ nextApp.prepare().then(async () => {
   }
 
   app.use(cookieParser());
+
+  // Performance monitoring
+  app.use(responseTimeTracker);
+  app.use(optimizationHeaders);
+  app.use(keepAlive);
 
   // Enable gzip compression for responses (60-80% reduction)
   app.use(compression({
@@ -297,6 +312,20 @@ nextApp.prepare().then(async () => {
     return handle(req, res);
   });
 
+  // Handle port already in use error
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`\n❌ Port ${port} is already in use!`);
+      console.log('\n💡 Solutions:');
+      console.log('   1. Run: npm run cleanup');
+      console.log('   2. Or manually kill the process using port 5000');
+      console.log('   3. Or change PORT in .env file\n');
+      process.exit(1);
+    } else {
+      throw error;
+    }
+  });
+
   server.listen(port, async (err) => {
     if (err) throw err;
 
@@ -322,5 +351,45 @@ nextApp.prepare().then(async () => {
     console.log(`🌐 Frontend: http://localhost:${port}`);
     console.log(`🔗 API: http://localhost:${port}/api/v1`);
     console.log(`💬 Socket.IO: ws://localhost:${port}`);
+    console.log(`\n✨ Press CTRL+C to stop\n`);
   });
+
+  // Graceful shutdown
+  const shutdown = async (signal) => {
+    console.log(`\n\n[${signal}] Received shutdown signal...`);
+
+    try {
+      console.log('🔌 Closing Socket.IO connections...');
+      const socketService = (await import("./src/services/socketService.js")).default;
+      if (socketService && socketService.io) {
+        socketService.io.close();
+      }
+
+      console.log('🛑 Stopping cache cleanup job...');
+      const cacheCleanupJob = (await import("./src/jobs/cacheCleanupJob.js")).default;
+      if (cacheCleanupJob) {
+        cacheCleanupJob.stop();
+      }
+
+      console.log('📡 Closing server...');
+      server.close(() => {
+        console.log('✅ Server closed successfully');
+        process.exit(0);
+      });
+
+      // Force close after 10 seconds
+      setTimeout(() => {
+        console.error('⚠️  Forced shutdown after timeout');
+        process.exit(1);
+      }, 10000);
+
+    } catch (error) {
+      console.error('❌ Error during shutdown:', error);
+      process.exit(1);
+    }
+  };
+
+  // Handle shutdown signals
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 });

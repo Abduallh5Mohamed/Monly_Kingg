@@ -38,7 +38,7 @@ interface Participant {
 
 interface Message {
   _id: string;
-  sender: Participant;
+  sender: Participant | null; // Allow null for deleted users
   content: string;
   type: string;
   timestamp: string;
@@ -334,8 +334,8 @@ export default function ChatsPage() {
                   key={chat._id}
                   onClick={() => setSelectedChat(chat)}
                   className={`p-3 rounded-lg cursor-pointer transition-all ${selectedChat?._id === chat._id
-                      ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30'
-                      : 'bg-white/5 hover:bg-white/10'
+                    ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30'
+                    : 'bg-white/5 hover:bg-white/10'
                     }`}
                 >
                   <div className="flex items-start gap-3">
@@ -432,15 +432,34 @@ export default function ChatsPage() {
                 ) : (
                   <div className="space-y-4">
                     {chatDetails.messages.map((message) => {
-                      const isFromSender = message.sender._id === chatDetails.chat.participants[0]._id;
-                      const sender = chatDetails.chat.participants.find(p => p._id === message.sender._id);
+                      // Handle null or missing sender
+                      if (!message.sender) {
+                        return (
+                          <div key={message._id} className="flex justify-start">
+                            <div className="max-w-[70%]">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-white/60">Deleted User</span>
+                              </div>
+                              <div className="rounded-2xl px-4 py-2 bg-white/5 text-white/60">
+                                <p className="text-sm break-words italic">{message.content}</p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // Handle empty participants array
+                      const participants = chatDetails.chat.participants || [];
+                      const firstParticipant = participants[0];
+                      const isFromSender = firstParticipant ? message.sender._id === firstParticipant._id : false;
+                      const sender = participants.find(p => p && p._id === message.sender._id);
 
                       return (
                         <div key={message._id} className={`flex ${!isFromSender ? 'justify-end' : 'justify-start'}`}>
                           <div className={`max-w-[70%] ${!isFromSender ? 'order-2' : 'order-1'}`}>
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-xs text-white/60">
-                                {sender?.username || sender?.email}
+                                {sender?.username || sender?.email || 'Unknown User'}
                               </span>
                               {sender?.role === 'admin' && (
                                 <Badge className="bg-purple-500/20 text-purple-400 text-xs">Admin</Badge>
@@ -448,8 +467,8 @@ export default function ChatsPage() {
                             </div>
                             <div
                               className={`rounded-2xl px-4 py-2 ${!isFromSender
-                                  ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white'
-                                  : 'bg-white/10 text-white'
+                                ? 'bg-gradient-to-r from-purple-500 to-blue-600 text-white'
+                                : 'bg-white/10 text-white'
                                 }`}
                             >
                               <p className="text-sm break-words">{message.content}</p>

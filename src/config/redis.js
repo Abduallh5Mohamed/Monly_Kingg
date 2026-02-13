@@ -104,35 +104,22 @@ class RedisService {
   // Basic cache operations with fallback
   async get(key) {
     try {
-      if (!this.isReady()) {
-        logger.warn(`Cache miss - Redis not ready for key: ${key}`);
-        return null;
-      }
+      if (!this.isReady()) return null;
       const value = await this.client.get(key);
-      if (value) {
-        logger.info(`🎯 Cache HIT: ${key}`);
-        return JSON.parse(value);
-      } else {
-        logger.info(`📊 Cache MISS: ${key}`);
-        return null;
-      }
+      return value ? JSON.parse(value) : null;
     } catch (error) {
-      logger.error(`Redis GET error for key ${key}:`, error.message);
+      logger.error(`Redis GET error for key ${key}: ${error.message}`);
       return null;
     }
   }
 
   async set(key, value, expirationInSeconds = 3600) {
     try {
-      if (!this.isReady()) {
-        logger.warn(`Cache skip - Redis not ready for key: ${key}`);
-        return false;
-      }
+      if (!this.isReady()) return false;
       await this.client.setEx(key, expirationInSeconds, JSON.stringify(value));
-      logger.info(`💾 Cache SET: ${key} (TTL: ${expirationInSeconds}s)`);
       return true;
     } catch (error) {
-      logger.error(`Redis SET error for key ${key}:`, error.message);
+      logger.error(`Redis SET error for key ${key}: ${error.message}`);
       return false;
     }
   }
@@ -141,10 +128,9 @@ class RedisService {
     try {
       if (!this.isReady()) return false;
       await this.client.del(key);
-      logger.info(`🗑️ Cache DELETE: ${key}`);
       return true;
     } catch (error) {
-      logger.error(`Redis DEL error for key ${key}:`, error.message);
+      logger.error(`Redis DEL error for key ${key}: ${error.message}`);
       return false;
     }
   }
@@ -152,10 +138,8 @@ class RedisService {
   async exists(key) {
     try {
       if (!this.isReady()) return false;
-      const result = await this.client.exists(key);
-      return result === 1;
+      return (await this.client.exists(key)) === 1;
     } catch (error) {
-      logger.error(`Redis EXISTS error for key ${key}:`, error.message);
       return false;
     }
   }
@@ -166,10 +150,9 @@ class RedisService {
       if (!this.isReady()) return false;
       await this.client.hSet(key, field, JSON.stringify(value));
       await this.client.expire(key, expirationInSeconds);
-      logger.info(`💾 Cache HSET: ${key}.${field} (TTL: ${expirationInSeconds}s)`);
       return true;
     } catch (error) {
-      logger.error(`Redis HSET error for key ${key}:`, error.message);
+      logger.error(`Redis HSET error for key ${key}: ${error.message}`);
       return false;
     }
   }
@@ -178,15 +161,9 @@ class RedisService {
     try {
       if (!this.isReady()) return null;
       const value = await this.client.hGet(key, field);
-      if (value) {
-        logger.info(`🎯 Cache HGET HIT: ${key}.${field}`);
-        return JSON.parse(value);
-      } else {
-        logger.info(`📊 Cache HGET MISS: ${key}.${field}`);
-        return null;
-      }
+      return value ? JSON.parse(value) : null;
     } catch (error) {
-      logger.error(`Redis HGET error for key ${key}:`, error.message);
+      logger.error(`Redis HGET error for key ${key}: ${error.message}`);
       return null;
     }
   }
@@ -196,18 +173,15 @@ class RedisService {
       if (!this.isReady()) return {};
       const value = await this.client.hGetAll(key);
       if (Object.keys(value).length > 0) {
-        logger.info(`🎯 Cache HGETALL HIT: ${key}`);
         const parsed = {};
         for (const [field, val] of Object.entries(value)) {
           parsed[field] = JSON.parse(val);
         }
         return parsed;
-      } else {
-        logger.info(`📊 Cache HGETALL MISS: ${key}`);
-        return {};
       }
+      return {};
     } catch (error) {
-      logger.error(`Redis HGETALL error for key ${key}:`, error.message);
+      logger.error(`Redis HGETALL error for key ${key}: ${error.message}`);
       return {};
     }
   }
@@ -220,10 +194,9 @@ class RedisService {
       if (value === 1) {
         await this.client.expire(key, expirationInSeconds);
       }
-      logger.info(`📈 Cache INCR: ${key} = ${value}`);
       return value;
     } catch (error) {
-      logger.error(`Redis INCR error for key ${key}:`, error.message);
+      logger.error(`Redis INCR error for key ${key}: ${error.message}`);
       return 0;
     }
   }
@@ -234,10 +207,9 @@ class RedisService {
       if (!this.isReady()) return false;
       await this.client.lPush(key, JSON.stringify(value));
       await this.client.lTrim(key, 0, maxLength - 1);
-      logger.info(`📝 Cache LPUSH: ${key}`);
       return true;
     } catch (error) {
-      logger.error(`Redis LPUSH error for key ${key}:`, error.message);
+      logger.error(`Redis LPUSH error for key ${key}: ${error.message}`);
       return false;
     }
   }
@@ -246,10 +218,9 @@ class RedisService {
     try {
       if (!this.isReady()) return [];
       const values = await this.client.lRange(key, start, end);
-      logger.info(`📖 Cache LRANGE: ${key} (${values.length} items)`);
       return values.map(value => JSON.parse(value));
     } catch (error) {
-      logger.error(`Redis LRANGE error for key ${key}:`, error.message);
+      logger.error(`Redis LRANGE error for key ${key}: ${error.message}`);
       return [];
     }
   }

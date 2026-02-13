@@ -37,10 +37,12 @@ const userSchema = new mongoose.Schema({
   sellerApprovedAt: { type: Date },
 
   // Profile info
+  fullName: { type: String, trim: true },
   phone: { type: String },
   address: { type: String },
   avatar: { type: String, default: null },
   bio: { type: String, maxlength: 500 },
+  profileCompleted: { type: Boolean, default: false },
 
   // Track username/phone changes (every 20 days)
   lastUsernameChange: { type: Date, default: null },
@@ -84,7 +86,21 @@ const userSchema = new mongoose.Schema({
   isOnline: { type: Boolean, default: false },
   lastSeenAt: { type: Date, default: Date.now }
 },
-  { timestamps: true });
+  { timestamps: true, minimize: true });
+
+// Pre-save hook to cap authLogs at 50 entries (prevents unbounded growth)
+userSchema.pre('save', function (next) {
+  if (this.authLogs && this.authLogs.length > 50) {
+    this.authLogs = this.authLogs.slice(-50);
+  }
+  if (this.refreshTokens && this.refreshTokens.length > 10) {
+    // Keep only active (non-revoked) + latest revoked
+    const active = this.refreshTokens.filter(r => !r.revoked);
+    const revoked = this.refreshTokens.filter(r => r.revoked).slice(-3);
+    this.refreshTokens = [...revoked, ...active];
+  }
+  next();
+});
 
 // Indexes for performance optimization
 userSchema.index({ username: 1, createdAt: -1 });

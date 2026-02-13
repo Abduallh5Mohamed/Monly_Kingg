@@ -11,8 +11,9 @@ router.get("/csrf-token", (req, res) => {
     res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 15 * 60 * 1000
+        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        maxAge: 15 * 60 * 1000,
+        path: "/"
     });
     res.json({ csrfToken });
 });

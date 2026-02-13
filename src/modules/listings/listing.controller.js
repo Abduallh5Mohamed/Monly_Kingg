@@ -1,5 +1,12 @@
 import Listing from "./listing.model.js";
 import User from "../users/user.model.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Create a new listing (seller only)
 export const createListing = async (req, res) => {
@@ -9,15 +16,50 @@ export const createListing = async (req, res) => {
       return res.status(403).json({ message: "Only approved sellers can create listings" });
     }
 
+    // Handle file uploads
+    const accountImages = [];
+    let coverImage = null;
+
+    if (req.files) {
+      // Get account images
+      if (req.files.accountImages) {
+        req.files.accountImages.forEach(file => {
+          accountImages.push(`/uploads/listings/${file.filename}`);
+        });
+      }
+
+      // Get cover image (if provided)
+      if (req.files.coverImage && req.files.coverImage[0]) {
+        coverImage = `/uploads/listings/${req.files.coverImage[0].filename}`;
+      }
+    }
+
+    // If no cover image provided, use first account image
+    if (!coverImage && accountImages.length > 0) {
+      coverImage = accountImages[0];
+    }
+
+    // Parse details if it's a string
+    let details = {};
+    if (req.body.details) {
+      try {
+        details = typeof req.body.details === 'string'
+          ? JSON.parse(req.body.details)
+          : req.body.details;
+      } catch (e) {
+        details = req.body.details;
+      }
+    }
+
     const listing = new Listing({
       seller: req.user._id,
       title: req.body.title,
       game: req.body.game,
       description: req.body.description || "",
       price: req.body.price,
-      images: req.body.images || [],
-      coverImage: req.body.coverImage || "",
-      details: req.body.details || {},
+      details: details,
+      images: accountImages,
+      coverImage: coverImage,
       status: "available",
     });
 

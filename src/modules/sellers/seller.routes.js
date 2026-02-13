@@ -5,6 +5,8 @@ import {
   submitSellerRequest,
   getMySellerRequest,
   getAllSellerRequests,
+  getActiveSellers,
+  getSellerDetail,
   approveSellerRequest,
   rejectSellerRequest,
 } from "./seller.controller.js";
@@ -17,6 +19,8 @@ router.get("/my-request", authMiddleware, getMySellerRequest);
 
 // Admin routes
 router.get("/requests", authMiddleware, requireAdmin, getAllSellerRequests);
+router.get("/active-sellers", authMiddleware, requireAdmin, getActiveSellers);
+router.get("/detail/:sellerId", authMiddleware, requireAdmin, getSellerDetail);
 router.put("/requests/:requestId/approve", authMiddleware, requireAdmin, approveSellerRequest);
 router.put("/requests/:requestId/reject", authMiddleware, requireAdmin, rejectSellerRequest);
 

@@ -1,11 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import connectDB, { createIndexes } from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import sellerRoutes from "./modules/sellers/seller.routes.js";
 import listingRoutes from "./modules/listings/listing.routes.js";
+import notificationRoutes from "./modules/notifications/notification.routes.js";
 import promotionRoutes from "./modules/promotions/promotion.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import helmet from "helmet";
@@ -18,6 +22,9 @@ import compression from "compression";
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
 import "./modules/users/user.model.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -70,9 +77,11 @@ app.use((req, res, next) => {
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-    : true,
+    : ['http://localhost:3000', 'http://localhost:5000'],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN']
 };
 app.use(cors(corsOptions));
 
@@ -81,6 +90,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet.hsts({ maxAge: 31536000 }));
 }
 app.use(cookieParser());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health checks (before rate limiting)
 app.use("/", healthRoutes);
@@ -94,6 +106,7 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/seller", sellerRoutes);
 app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

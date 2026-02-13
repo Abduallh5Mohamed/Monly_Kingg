@@ -4,10 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "cleanup": "powershell -ExecutionPolicy Bypass -File cleanup.ps1",
     "dev": "powershell -ExecutionPolicy Bypass -File start-all.ps1",
     "dev:only": "node server-integrated.js",
     "dev:server": "nodemon src/server.js",
     "dev:next": "next dev -p 3000",
+    "migrate:profile": "node src/scripts/migrate-profile-completed.js",
     "dev:separate": "concurrently \"npm run dev:server\" \"npm run dev:next\"",
     "build": "next build",
     "start": "npm run build && node server-integrated.js",

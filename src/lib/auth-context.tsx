@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiClient, UserData, ApiResponse, AuthResponse } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface AuthContextType {
   user: UserData | null;
@@ -13,6 +13,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<boolean>;
   resendCode: (email: string, password: string) => Promise<boolean>;
+  refreshAuth: () => Promise<void>; // Added to refresh user data
   isAuthenticated: boolean;
 }
 
@@ -27,8 +28,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Cache the auth check to prevent multiple calls
+  const [lastAuthCheck, setLastAuthCheck] = useState<number>(0);
+  const AUTH_CACHE_DURATION = 30000; // 30 seconds
 
   useEffect(() => {
+    // Skip auth check during navigation if recently checked
+    const now = Date.now();
+    if (user && (now - lastAuthCheck) < AUTH_CACHE_DURATION) {
+      setLoading(false);
+      return;
+    }
+
     // Check authentication status on page load
     // Only check if we might have a session (cookie exists)
     const hasCookie = document.cookie.includes('access_token') || document.cookie.includes('refresh_token');
@@ -37,13 +50,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [pathname]); // Only re-check on route change
 
   const checkAuthStatus = async () => {
     try {
       const response = await apiClient.refreshToken();
       if (response.success && response.data) {
         setUser(response.data.userData);
+        setLastAuthCheck(Date.now());
       }
     } catch (error) {
       // No active session - silent
@@ -60,14 +74,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (response.success && response.data) {
         setUser(response.data.userData);
+
+        console.log('🔍 Login Response:', {
+          username: response.data.userData.username,
+          profileCompleted: response.data.userData.profileCompleted,
+          type: typeof response.data.userData.profileCompleted
+        });
+
         toast({
           title: 'Login Successful!',
           description: `Welcome back, ${response.data.userData.username}`,
           variant: 'default',
         });
 
-        // Redirect user to dashboard
-        router.push('/user/dashboard');
+        // Check if profile needs to be completed
+        if (response.data.userData.profileCompleted !== true) {
+          console.log('➡️ Redirecting to /complete-profile');
+          router.push('/complete-profile');
+        } else if (response.data.userData.role === 'admin') {
+          console.log('➡️ Redirecting to /admin/dashboard');
+          router.push('/admin/dashboard');
+        } else {
+          console.log('➡️ Redirecting to /user/dashboard');
+          router.push('/user/dashboard');
+        }
         return true;
       } else {
         toast({
@@ -129,18 +159,57 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setLoading(true);
 
+      console.log('📞 [Frontend] Calling verify email API...');
       const response = await apiClient.verifyEmail(email, code);
 
+      console.log('📥 [Frontend] Full API Response:', {
+        success: response.success,
+        hasData: !!response.data,
+        dataKeys: response.data ? Object.keys(response.data) : [],
+        rawResponse: JSON.stringify(response)
+      });
+
       if (response.success && response.data) {
+        // Update user state first
         setUser(response.data.userData);
+
+        console.log('🔍 [Frontend] Verify Email Response:', {
+          username: response.data.userData?.username,
+          profileCompleted: response.data.userData?.profileCompleted,
+          type: typeof response.data.userData?.profileCompleted,
+          hasUserData: !!response.data.userData,
+          userDataKeys: response.data.userData ? Object.keys(response.data.userData) : []
+        });
+
         toast({
           title: 'Account Verified Successfully!',
           description: `Welcome, ${response.data.userData.username}`,
           variant: 'default',
         });
 
-        // Redirect user to dashboard
-        router.push('/user/dashboard');
+        // Use setTimeout to ensure state is updated before navigation
+        setTimeout(() => {
+          // Check if profile needs to be completed
+          const shouldCompleteProfile = response.data.userData.profileCompleted !== true;
+
+          console.log('🎯 [Frontend] Redirect Decision:', {
+            profileCompleted: response.data.userData.profileCompleted,
+            shouldCompleteProfile,
+            willRedirectTo: shouldCompleteProfile ? '/complete-profile' : '/user/dashboard'
+          });
+
+          // Redirect to complete-profile if profileCompleted is false, undefined, or null
+          if (shouldCompleteProfile) {
+            console.log('➡️ [Frontend] Redirecting to /complete-profile');
+            // Use replace to prevent back navigation
+            router.replace('/complete-profile');
+          } else {
+            // Redirect user to dashboard
+            console.log('➡️ [Frontend] Redirecting to /user/dashboard');
+            router.replace('/user/dashboard');
+          }
+        }, 100);
+
         return true;
       } else {
         toast({
@@ -227,6 +296,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     logout,
     verifyEmail,
     resendCode,
+    refreshAuth: checkAuthStatus,
     isAuthenticated: !!user,
   };
 

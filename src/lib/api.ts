@@ -27,6 +27,12 @@ interface UserData {
   email: string;
   role: string;
   isSeller?: boolean;
+  fullName?: string;
+  phone?: string;
+  address?: string;
+  avatar?: string;
+  bio?: string;
+  profileCompleted?: boolean;
 }
 
 interface AuthResponse {
@@ -42,10 +48,10 @@ class ApiClient {
   ): Promise<ApiResponse<T>> {
     try {
       const url = `${API_BASE_URL}${endpoint}`;
-      
+
       // احصل على CSRF token إذا كان متاحاً
       const csrfToken = this.getCsrfToken();
-      
+
       const response = await fetch(url, {
         credentials: 'include', // إرسال الكوكيز
         headers: {
@@ -82,7 +88,7 @@ class ApiClient {
 
   private getCsrfToken(): string | null {
     if (typeof document === 'undefined') return null;
-    
+
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
       const [name, value] = cookie.trim().split('=');

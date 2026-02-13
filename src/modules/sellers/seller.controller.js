@@ -1,5 +1,8 @@
 import SellerRequest from "./sellerRequest.model.js";
 import User from "../users/user.model.js";
+import Listing from "../listings/listing.model.js";
+import Chat from "../chats/chat.model.js";
+import Notification from "../notifications/notification.model.js";
 
 // Submit seller request
 export const submitSellerRequest = async (req, res) => {
@@ -15,7 +18,14 @@ export const submitSellerRequest = async (req, res) => {
       if (existing.status === "pending") {
         return res.status(400).json({ message: "You already have a pending request" });
       }
-      // If rejected, allow resubmission — update the existing record
+      // If rejected, allow resubmission — push old rejection to history, update record
+      existing.rejectionHistory.push({
+        reason: existing.rejectionReason,
+        rejectedBy: existing.reviewedBy,
+        rejectedAt: existing.reviewedAt,
+        idType: existing.idType,
+        fullName: existing.fullName,
+      });
       existing.idType = req.body.idType;
       existing.idImage = req.body.idImage;
       existing.faceImageFront = req.body.faceImageFront;
@@ -26,6 +36,7 @@ export const submitSellerRequest = async (req, res) => {
       existing.rejectionReason = null;
       existing.reviewedBy = null;
       existing.reviewedAt = null;
+      existing.applicationCount = (existing.applicationCount || 1) + 1;
       await existing.save();
       return res.status(200).json({ message: "Seller request resubmitted successfully", data: existing });
     }
@@ -38,6 +49,7 @@ export const submitSellerRequest = async (req, res) => {
       faceImageLeft: req.body.faceImageLeft,
       faceImageRight: req.body.faceImageRight,
       fullName: req.body.fullName,
+      applicationCount: 1,
     });
 
     await sellerRequest.save();
@@ -62,21 +74,23 @@ export const getMySellerRequest = async (req, res) => {
   }
 };
 
-// Admin: Get all seller requests
+// Admin: Get all seller requests (with full user profile)
 export const getAllSellerRequests = async (req, res) => {
   try {
     const { status = "all", page = 1, limit = 20 } = req.query;
     const filter = status !== "all" ? { status } : {};
 
-    const requests = await SellerRequest.find(filter)
-      .populate("user", "username email")
-      .populate("reviewedBy", "username")
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-
-    const total = await SellerRequest.countDocuments(filter);
-    const pendingCount = await SellerRequest.countDocuments({ status: "pending" });
+    const [requests, total, pendingCount] = await Promise.all([
+      SellerRequest.find(filter)
+        .populate("user", "username email avatar phone address bio fullName stats isSeller sellerApprovedAt createdAt isOnline lastSeenAt")
+        .populate("reviewedBy", "username")
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(Number(limit))
+        .lean(),
+      SellerRequest.countDocuments(filter),
+      SellerRequest.countDocuments({ status: "pending" }),
+    ]);
 
     return res.status(200).json({
       data: requests,
@@ -87,6 +101,133 @@ export const getAllSellerRequests = async (req, res) => {
     });
   } catch (error) {
     console.error("Get all seller requests error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Admin: Get all active (approved) sellers with their stats
+export const getActiveSellers = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, search = "" } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get approved seller requests  
+    const filter = { status: "approved" };
+    const [sellerRequests, total] = await Promise.all([
+      SellerRequest.find(filter)
+        .populate("user", "username email avatar phone address bio fullName stats isSeller sellerApprovedAt createdAt isOnline lastSeenAt wallet")
+        .sort({ reviewedAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      SellerRequest.countDocuments(filter),
+    ]);
+
+    // Get listings & chat counts for each seller in parallel
+    const sellerUserIds = sellerRequests.map(r => r.user?._id).filter(Boolean);
+
+    const [listingsByUser, chatsByUser] = await Promise.all([
+      Listing.aggregate([
+        { $match: { seller: { $in: sellerUserIds } } },
+        {
+          $group: {
+            _id: "$seller",
+            totalListings: { $sum: 1 },
+            activeListings: { $sum: { $cond: [{ $eq: ["$status", "available"] }, 1, 0] } },
+            soldListings: { $sum: { $cond: [{ $eq: ["$status", "sold"] }, 1, 0] } },
+            totalRevenue: { $sum: { $cond: [{ $eq: ["$status", "sold"] }, "$price", 0] } },
+          }
+        }
+      ]),
+      Chat.aggregate([
+        { $match: { participants: { $in: sellerUserIds }, isActive: true } },
+        { $unwind: "$participants" },
+        { $match: { participants: { $in: sellerUserIds } } },
+        { $group: { _id: "$participants", chatCount: { $sum: 1 } } }
+      ]),
+    ]);
+
+    // Map stats to sellers
+    const listingMap = {};
+    listingsByUser.forEach(l => { listingMap[l._id.toString()] = l; });
+    const chatMap = {};
+    chatsByUser.forEach(c => { chatMap[c._id.toString()] = c.chatCount; });
+
+    const sellers = sellerRequests.map(req => ({
+      ...req,
+      sellerStats: {
+        totalListings: listingMap[req.user?._id?.toString()]?.totalListings || 0,
+        activeListings: listingMap[req.user?._id?.toString()]?.activeListings || 0,
+        soldListings: listingMap[req.user?._id?.toString()]?.soldListings || 0,
+        totalRevenue: listingMap[req.user?._id?.toString()]?.totalRevenue || 0,
+        chatCount: chatMap[req.user?._id?.toString()] || 0,
+      },
+    }));
+
+    return res.status(200).json({
+      data: sellers,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error("Get active sellers error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Admin: Get single seller detail with listings
+export const getSellerDetail = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+
+    const sellerRequest = await SellerRequest.findById(sellerId)
+      .populate("user", "username email avatar phone address bio fullName stats isSeller sellerApprovedAt createdAt isOnline lastSeenAt wallet")
+      .populate("reviewedBy", "username")
+      .lean();
+
+    if (!sellerRequest) {
+      return res.status(404).json({ message: "Seller not found" });
+    }
+
+    const userId = sellerRequest.user?._id;
+
+    const [listings, chats, listingStats] = await Promise.all([
+      Listing.find({ seller: userId })
+        .populate("game", "name")
+        .sort({ createdAt: -1 })
+        .limit(50)
+        .lean(),
+      Chat.find({ participants: userId, isActive: true })
+        .populate("participants", "username avatar")
+        .select("chatNumber type lastMessage updatedAt participants")
+        .sort({ updatedAt: -1 })
+        .limit(20)
+        .lean(),
+      Listing.aggregate([
+        { $match: { seller: userId } },
+        {
+          $group: {
+            _id: null,
+            totalListings: { $sum: 1 },
+            activeListings: { $sum: { $cond: [{ $eq: ["$status", "available"] }, 1, 0] } },
+            soldListings: { $sum: { $cond: [{ $eq: ["$status", "sold"] }, 1, 0] } },
+            totalRevenue: { $sum: { $cond: [{ $eq: ["$status", "sold"] }, "$price", 0] } },
+          }
+        }
+      ]),
+    ]);
+
+    return res.status(200).json({
+      data: {
+        ...sellerRequest,
+        listings,
+        chats,
+        sellerStats: listingStats[0] || { totalListings: 0, activeListings: 0, soldListings: 0, totalRevenue: 0 },
+      }
+    });
+  } catch (error) {
+    console.error("Get seller detail error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -113,6 +254,16 @@ export const approveSellerRequest = async (req, res) => {
       $set: { isSeller: true, sellerApprovedAt: new Date() }
     });
 
+    // Create notification for user
+    await Notification.create({
+      user: request.user,
+      type: "seller_approved",
+      title: "Seller Application Approved! 🎉",
+      message: "Congratulations! Your seller application has been approved. You can now list your accounts for sale.",
+      relatedModel: "SellerRequest",
+      relatedId: request._id,
+    });
+
     return res.status(200).json({ message: "Seller request approved", data: request });
   } catch (error) {
     console.error("Approve seller request error:", error);
@@ -133,11 +284,23 @@ export const rejectSellerRequest = async (req, res) => {
       return res.status(400).json({ message: "Request already processed" });
     }
 
+    const rejectionReason = reason || "Application did not meet requirements";
     request.status = "rejected";
-    request.rejectionReason = reason || "Application did not meet requirements";
+    request.rejectionReason = rejectionReason;
     request.reviewedBy = req.user._id;
     request.reviewedAt = new Date();
     await request.save();
+
+    // Create notification for user with rejection reason
+    await Notification.create({
+      user: request.user,
+      type: "seller_rejected",
+      title: "Seller Application Update",
+      message: `Your seller application was not approved. Reason: ${rejectionReason}. You can reapply with updated documents.`,
+      relatedModel: "SellerRequest",
+      relatedId: request._id,
+      metadata: { rejectionReason },
+    });
 
     return res.status(200).json({ message: "Seller request rejected", data: request });
   } catch (error) {
