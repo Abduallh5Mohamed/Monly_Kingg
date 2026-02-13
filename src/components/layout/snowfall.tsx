@@ -11,15 +11,15 @@ const Snowfall = ({ className }: SnowfallProps) => {
 
   useEffect(() => {
     const generateFlakes = () => {
-      return Array.from({ length: 20 }).map((_, i) => {
+      return Array.from({ length: 12 }).map((_, i) => {
         const style: React.CSSProperties = {
           '--random-x-start': Math.random(),
           '--random-x-end': Math.random(),
           '--random-y-end': Math.random(),
-          '--random-scale': Math.random(),
-          '--random-delay': `${Math.random() * -20}s`,
-          '--random-duration': `${12 + Math.random() * 12}s`,
-          '--random-opacity': Math.random() * 0.4 + 0.3,
+          '--random-scale': Math.random() * 0.5 + 0.3,
+          '--random-delay': `${Math.random() * -15}s`,
+          '--random-duration': `${15 + Math.random() * 15}s`,
+          '--random-opacity': Math.random() * 0.3 + 0.2,
         } as React.CSSProperties;
 
         return <div className="snowflake" key={i} style={style} />;
