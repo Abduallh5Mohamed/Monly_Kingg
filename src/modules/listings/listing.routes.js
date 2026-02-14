@@ -14,6 +14,8 @@ import {
   getSellerStats,
   getAllListings,
   getListingById,
+  browseListings,
+  getGamesForFilter,
 } from "./listing.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -68,13 +70,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
 });
 
-<<<<<<< HEAD
-// ─── Public routes (no auth) ─── 
-router.get("/browse", cacheResponse(120), browseListings);
-router.get("/games", cacheResponse(300), getGamesForFilter);
-
-// All routes below require authentication
-=======
 // Multer error handler middleware
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -93,11 +88,10 @@ const handleMulterError = (err, req, res, next) => {
 };
 
 // Public routes (no auth required)
-router.get("/public", cacheResponse(120), getAllListings); // Get all available listings
-router.get("/:id/public", cacheResponse(300), getListingById); // Get single listing details
+router.get("/browse", cacheResponse(120), browseListings);
+router.get("/games", cacheResponse(300), getGamesForFilter);
 
 // Protected routes (require authentication)
->>>>>>> adbabc3876666b7c5acf9fea474891a8432dc334
 router.post(
   "/",
   authMiddleware,
