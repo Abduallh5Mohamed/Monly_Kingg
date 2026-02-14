@@ -84,54 +84,6 @@ export const createListing = async (req, res) => {
         console.error("Create listing error:", error);
         return res.status(500).json({ message: "Server error" });
     }
-<<<<<<< HEAD
-=======
-
-    // If no cover image provided, use first account image
-    if (!coverImage && accountImages.length > 0) {
-      coverImage = accountImages[0];
-    }
-
-    // Parse details if it's a string
-    let details = {};
-    if (req.body.details) {
-      try {
-        details = typeof req.body.details === 'string'
-          ? JSON.parse(req.body.details)
-          : req.body.details;
-      } catch (e) {
-        console.error('Failed to parse details:', e);
-        details = req.body.details;
-      }
-    }
-
-    const listing = new Listing({
-      seller: req.user._id,
-      title: req.body.title,
-      game: req.body.game,
-      description: req.body.description || "",
-      price: req.body.price,
-      details: details,
-      images: accountImages,
-      coverImage: coverImage,
-      status: "available",
-    });
-
-    await listing.save();
-    console.log('✅ Listing created successfully:', listing._id);
-    return res.status(201).json({ message: "Listing created successfully", data: listing });
-  } catch (error) {
-    console.error("❌ Create listing error:", error);
-
-    // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(e => e.message);
-      return res.status(400).json({ message: messages.join(', ') });
-    }
-
-    return res.status(500).json({ message: error.message || "Server error" });
-  }
->>>>>>> adbabc3876666b7c5acf9fea474891a8432dc334
 };
 
 // Get my listings (seller)

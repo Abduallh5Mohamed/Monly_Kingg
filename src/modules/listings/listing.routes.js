@@ -14,6 +14,8 @@ import {
   getSellerStats,
   getAllListings,
   getListingById,
+  browseListings,
+  getGamesForFilter,
 } from "./listing.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -68,13 +70,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
 });
 
-<<<<<<< HEAD
-// ─── Public routes (no auth) ─── 
-router.get("/browse", cacheResponse(120), browseListings);
-router.get("/games", cacheResponse(300), getGamesForFilter);
-
-// All routes below require authentication
-=======
 // Multer error handler middleware
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -92,12 +87,13 @@ const handleMulterError = (err, req, res, next) => {
   next();
 };
 
-// Public routes (no auth required)
-router.get("/public", cacheResponse(120), getAllListings); // Get all available listings
-router.get("/:id/public", cacheResponse(300), getListingById); // Get single listing details
+// ─── Public routes (no auth) ───
+router.get("/browse", cacheResponse(120), browseListings);
+router.get("/games", cacheResponse(300), getGamesForFilter);
+router.get("/public", cacheResponse(120), getAllListings);
+router.get("/:id/public", cacheResponse(300), getListingById);
 
-// Protected routes (require authentication)
->>>>>>> adbabc3876666b7c5acf9fea474891a8432dc334
+// ─── Protected routes (require authentication) ───
 router.post(
   "/",
   authMiddleware,
@@ -109,8 +105,8 @@ router.post(
   invalidateCache('api_cache:/api/v1/listings/*'),
   createListing
 );
-router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings); // Cache for 1 minute
-router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats); // Cache for 2 minutes
+router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
+router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats);
 router.put("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
 router.delete("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
 

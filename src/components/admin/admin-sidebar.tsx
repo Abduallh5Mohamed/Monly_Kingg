@@ -16,7 +16,9 @@ import {
   Shield,
   Bell,
   Store,
-  Megaphone
+  Megaphone,
+  Image as ImageIcon,
+  Percent,
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -26,6 +28,8 @@ const sidebarItems = [
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
   { icon: Store, label: 'Sellers', href: '/admin/sellers' },
   { icon: Megaphone, label: 'Promotions', href: '/admin/promotions' },
+  { icon: ImageIcon, label: 'Ads', href: '/admin/ads' },
+  { icon: Percent, label: 'Discounts', href: '/admin/discounts' },
   { icon: MessageSquare, label: 'Chats', href: '/admin/chats' },
   { icon: BarChart3, label: 'Analytics', href: '/admin/analytics' },
   { icon: Gamepad2, label: 'Games', href: '/admin/games' },

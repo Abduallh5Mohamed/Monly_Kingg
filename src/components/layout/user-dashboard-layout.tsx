@@ -1,8 +1,7 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -20,6 +19,15 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
   const [balance, setBalance] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Track scroll for header effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch user balance and level from database
   useEffect(() => {
@@ -66,108 +74,132 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-[#080a12]">
+    <div className="min-h-screen bg-[#060811]">
+      {/* Ambient background effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-[40%] -left-[20%] w-[60%] h-[60%] rounded-full bg-purple-600/[0.03] blur-[120px]" />
+        <div className="absolute -top-[30%] -right-[15%] w-[50%] h-[50%] rounded-full bg-cyan-600/[0.03] blur-[120px]" />
+        <div className="absolute top-[60%] left-[30%] w-[40%] h-[40%] rounded-full bg-blue-600/[0.02] blur-[100px]" />
+      </div>
+
       {/* Bottom Navigation Bar */}
       <UserSidebar />
 
       {/* Main Content */}
-      <div className="min-h-screen">
-        {/* ═══════ MODERN TOP HEADER ═══════ */}
-        <header className="sticky top-0 z-40 bg-[#0d1017]/80 backdrop-blur-2xl border-b border-white/[0.04]">
-          {/* Subtle gradient line at very top */}
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+      <div className="relative min-h-screen">
+        {/* ═══════ ULTRA MODERN HEADER ═══════ */}
+        <header className={`sticky top-0 z-40 transition-all duration-500 ${
+          scrolled 
+            ? 'bg-[#060811]/90 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
+            : 'bg-transparent'
+        }`}>
+          {/* Animated gradient line */}
+          <div className="h-[1px] w-full overflow-hidden">
+            <div className="h-full w-[200%] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent animate-[shimmer_3s_ease-in-out_infinite]" 
+                 style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
+          </div>
           
           <div className="px-4 sm:px-6 lg:px-8 py-3">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center justify-between gap-3">
               
-              {/* Search Bar - Glassmorphism */}
-              <div className="flex-1 max-w-xl">
+              {/* Logo / Brand mark */}
+              <Link href="/user" className="flex-shrink-0 flex items-center gap-2 group">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300 group-hover:scale-110">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <span className="hidden sm:block text-lg font-black text-white tracking-tight">
+                  Monly<span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">King</span>
+                </span>
+              </Link>
+
+              {/* Search Bar - Modern floating */}
+              <div className={`flex-1 max-w-lg transition-all duration-500 ${searchFocused ? 'max-w-2xl' : ''}`}>
                 <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-cyan-400 transition-colors" />
+                  <div className={`absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-300 ${searchFocused ? 'opacity-100' : 'group-hover:opacity-100'}`}>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20" />
+                  </div>
+                  <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300 ${searchFocused ? 'text-cyan-400 scale-110' : 'text-white/25'}`} />
                   <input
                     type="text"
-                    placeholder="Search accounts, games, gift cards..."
-                    className="w-full pl-11 pr-4 bg-white/[0.04] border border-white/[0.06] text-white placeholder:text-white/25 rounded-2xl h-11 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500/20 hover:bg-white/[0.06] transition-all duration-300"
+                    placeholder="Search games, accounts, gift cards..."
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setSearchFocused(false)}
+                    className="relative w-full pl-11 pr-4 bg-white/[0.04] border border-white/[0.06] text-white placeholder:text-white/20 rounded-2xl h-11 text-sm focus:outline-none focus:bg-white/[0.07] hover:bg-white/[0.06] transition-all duration-300"
                   />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
+                    <kbd className="px-1.5 py-0.5 text-[10px] text-white/20 bg-white/[0.05] rounded-md border border-white/[0.08] font-mono">⌘K</kbd>
+                  </div>
                 </div>
               </div>
 
               {/* Right Actions */}
-              <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-2">
                 
-                {/* Become Seller / My Store - Always visible */}
+                {/* Become Seller / My Store */}
                 {user?.isSeller ? (
                   <Link
                     href="/user/store"
-                    className="group relative flex items-center gap-2 px-4 py-2.5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.03]"
+                    className="group relative flex items-center gap-2 px-3.5 py-2 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02]"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/15 to-green-500/15 border border-emerald-500/20 rounded-xl" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/25 to-green-500/25 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/15 rounded-xl group-hover:from-emerald-500/20 group-hover:to-green-500/20 transition-all" />
                     <Store className="h-4 w-4 text-emerald-400 relative z-10" />
-                    <span className="hidden sm:inline text-xs font-bold text-emerald-300 relative z-10 tracking-wide">My Store</span>
+                    <span className="hidden md:inline text-xs font-semibold text-emerald-300 relative z-10">My Store</span>
                   </Link>
                 ) : (
                   <button
                     onClick={() => setSellerModalOpen(true)}
-                    className="group relative flex items-center gap-2 px-4 py-2.5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.03]"
+                    className="group relative flex items-center gap-2 px-3.5 py-2 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02]"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border border-cyan-500/15 rounded-xl" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Store className="h-4 w-4 text-cyan-400 relative z-10" />
-                    <span className="hidden sm:inline text-xs font-bold text-cyan-300 relative z-10 tracking-wide">Become Seller</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/15 rounded-xl group-hover:from-violet-500/20 group-hover:to-purple-500/20 transition-all" />
+                    <Store className="h-4 w-4 text-violet-400 relative z-10" />
+                    <span className="hidden md:inline text-xs font-semibold text-violet-300 relative z-10">Sell Now</span>
                   </button>
                 )}
 
-                {/* Level Badge - Premium glass style */}
-                <Link
-                  href="/user/profile"
-                  className="hidden sm:flex items-center gap-2 bg-gradient-to-br from-purple-500/15 to-violet-600/15 border border-purple-400/20 rounded-xl px-3 py-2 hover:border-purple-400/40 hover:scale-105 transition-all duration-300 group"
-                  title="Level"
-                >
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                    <span className="text-white text-[10px] font-black">1</span>
-                  </div>
-                  <div className="hidden lg:block">
-                    <p className="text-[9px] text-purple-300/60 leading-none uppercase tracking-wider">Level</p>
-                    <p className="text-xs font-black text-purple-200 leading-none">VIP</p>
-                  </div>
-                </Link>
-
-                {/* Balance Badge - Premium glass style */}
+                {/* Balance Chip */}
                 <Link
                   href="/user/payments"
-                  className="hidden sm:flex items-center gap-2 bg-gradient-to-br from-emerald-500/15 to-green-600/15 border border-emerald-400/20 rounded-xl px-3 py-2 hover:border-emerald-400/40 hover:scale-105 transition-all duration-300 group"
-                  title="Balance"
+                  className="hidden sm:flex items-center gap-2 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.06] hover:border-emerald-500/20 rounded-xl px-3 py-2 transition-all duration-300 group"
                 >
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                    <span className="text-white text-[10px] font-black">$</span>
+                  <div className="w-5 h-5 rounded-md bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center">
+                    <Wallet className="w-3 h-3 text-white" />
                   </div>
-                  <div className="hidden lg:block">
-                    <p className="text-[9px] text-emerald-300/60 leading-none uppercase tracking-wider">Balance</p>
-                    <p className="text-xs font-black text-emerald-200 leading-none">600</p>
+                  <span className="text-xs font-bold text-white/80 group-hover:text-emerald-300 transition-colors tabular-nums">
+                    ${balance.toFixed(2)}
+                  </span>
+                </Link>
+
+                {/* Level Chip */}
+                <Link
+                  href="/user/profile"
+                  className="hidden sm:flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.06] hover:border-purple-500/20 rounded-xl px-3 py-2 transition-all duration-300 group"
+                >
+                  <div className="w-5 h-5 rounded-md bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center">
+                    <TrendingUp className="w-3 h-3 text-white" />
                   </div>
+                  <span className="text-xs font-bold text-white/80 group-hover:text-purple-300 transition-colors">Lv.{level}</span>
                 </Link>
 
                 {/* Notifications */}
                 <NotificationBell />
 
-                {/* User Avatar - Modern ring */}
+                {/* User Avatar - Minimal elegant */}
                 <Link
                   href="/user/profile"
-                  className="relative group"
+                  className="relative group flex-shrink-0"
                   title="Profile"
                 >
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full p-[2px] bg-gradient-to-br from-cyan-400 via-purple-500 to-pink-500 group-hover:shadow-lg group-hover:shadow-cyan-500/30 transition-all duration-300 group-hover:scale-110">
-                    <div className="w-full h-full rounded-full bg-[#0d1017] flex items-center justify-center">
-                      {user?.avatar ? (
-                        <img src={user.avatar} alt="" className="w-full h-full rounded-full object-cover" />
-                      ) : (
+                  <div className="w-9 h-9 rounded-xl overflow-hidden ring-2 ring-white/[0.08] group-hover:ring-cyan-500/30 transition-all duration-300 group-hover:scale-105">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
                         <span className="text-white font-bold text-sm">{user?.username?.[0]?.toUpperCase() || 'U'}</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
-                  {/* Online indicator */}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0d1017]" />
+                  {/* Online dot */}
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-[2px] border-[#060811] shadow-[0_0_6px_rgba(74,222,128,0.4)]" />
                 </Link>
               </div>
             </div>
@@ -175,13 +207,31 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="p-4 sm:p-6 lg:p-8 pb-28">
+        <main className="relative p-4 sm:p-6 lg:p-8 pb-28">
           {children}
         </main>
       </div>
 
       {/* Become Seller Modal */}
       <BecomeSellerModal isOpen={sellerModalOpen} onClose={() => setSellerModalOpen(false)} />
+
+      {/* Keyframes for shimmer animation */}
+      <style jsx global>{`
+        @keyframes shimmer {
+          0%, 100% { transform: translateX(-25%); }
+          50% { transform: translateX(0%); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
+        @keyframes glow-pulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 }
@@ -266,23 +316,28 @@ function NotificationBell() {
     <div className="relative" ref={ref}>
       <button
         onClick={handleOpen}
-        className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.08] hover:border-white/10 text-white/40 hover:text-white transition-all duration-300"
+        className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/10 text-white/30 hover:text-white transition-all duration-300"
       >
-        <Bell className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
+        <Bell className="h-[18px] w-[18px]" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center px-1 text-[10px] font-bold bg-red-500 text-white rounded-full animate-pulse shadow-lg shadow-red-500/40">
+          <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center px-1 text-[10px] font-bold bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-full shadow-lg shadow-red-500/40">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.06] bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl shadow-black/40 z-[100]">
+        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.06] bg-[#0a0e17]/98 backdrop-blur-2xl shadow-2xl shadow-black/50 z-[100]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
-            <h3 className="text-sm font-bold text-white">Notifications</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-white">Notifications</h3>
+              {unreadCount > 0 && (
+                <span className="text-[10px] font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded-full">{unreadCount}</span>
+              )}
+            </div>
             {unreadCount > 0 && (
-              <button onClick={markAllRead} className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+              <button onClick={markAllRead} className="text-xs text-white/40 hover:text-cyan-400 transition-colors font-medium">
                 Mark all read
               </button>
             )}

@@ -12,6 +12,8 @@ import listingRoutes from "./modules/listings/listing.routes.js";
 import notificationRoutes from "./modules/notifications/notification.routes.js";
 import promotionRoutes from "./modules/promotions/promotion.routes.js";
 import gamesRoutes from "./modules/games/game.routes.js";
+import adsRoutes from "./modules/ads/ad.routes.js";
+import discountRoutes from "./modules/discounts/discount.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import cacheRoutes from "./routes/cache.routes.js";
 import helmet from "helmet";
@@ -110,6 +112,8 @@ app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/games", gamesRoutes);
+app.use("/api/v1/ads", adsRoutes);
+app.use("/api/v1/discounts", discountRoutes);
 app.use("/api/v1/cache", cacheRoutes);
 
 app.get("/", (req, res) => {
