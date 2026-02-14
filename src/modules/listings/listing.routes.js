@@ -87,11 +87,13 @@ const handleMulterError = (err, req, res, next) => {
   next();
 };
 
-// Public routes (no auth required)
+// ─── Public routes (no auth) ───
 router.get("/browse", cacheResponse(120), browseListings);
 router.get("/games", cacheResponse(300), getGamesForFilter);
+router.get("/public", cacheResponse(120), getAllListings);
+router.get("/:id/public", cacheResponse(300), getListingById);
 
-// Protected routes (require authentication)
+// ─── Protected routes (require authentication) ───
 router.post(
   "/",
   authMiddleware,
@@ -103,8 +105,8 @@ router.post(
   invalidateCache('api_cache:/api/v1/listings/*'),
   createListing
 );
-router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings); // Cache for 1 minute
-router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats); // Cache for 2 minutes
+router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
+router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats);
 router.put("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
 router.delete("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
 

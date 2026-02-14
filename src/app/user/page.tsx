@@ -22,6 +22,8 @@ import {
   Star,
   TrendingUp,
   Sparkles,
+  Megaphone,
+  Percent,
 } from 'lucide-react';
 
 /* ── SVG Platform Icons ── */
@@ -60,6 +62,32 @@ interface Listing {
 interface Game {
   _id: string;
   name: string;
+}
+
+interface DashboardAd {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+  position: string;
+  priority: number;
+}
+
+interface ActiveDiscount {
+  _id: string;
+  listing: {
+    _id: string;
+    title: string;
+    price: number;
+    coverImage: string | null;
+    images: string[];
+    game: { name: string } | null;
+    status: string;
+  } | null;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercent: number;
 }
 
 /* ═══════════ STATIC DEMO DATA ═══════════ */
@@ -114,30 +142,37 @@ const CATEGORIES = [
   { icon: Gift, label: 'Lifestyle', count: '310' },
 ];
 
-/* ── Promo Banners ── */
-const PROMO_BANNERS_TOP = [
-  { title: 'SOFTWARE', subtitle: 'Mega Sale', discount: '-80%', gradient: 'from-orange-500 via-red-500 to-pink-500', emoji: '🔥' },
-  { title: 'MINECRAFT', subtitle: 'Java + Bedrock', discount: '-60%', gradient: 'from-green-500 via-green-600 to-emerald-700', emoji: '⛏️' },
-  { title: 'YouTube Premium', subtitle: 'Ad-Free', discount: '-70%', gradient: 'from-red-500 via-red-600 to-red-800', emoji: '▶️' },
-];
-
-const PROMO_BANNERS_BOTTOM = [
-  { title: 'XBOX', discount: '-90%', gradient: 'from-green-400 via-green-500 to-green-700', IconComp: XboxIcon },
-  { title: 'PlayStation', discount: '-70%', gradient: 'from-blue-500 via-blue-600 to-blue-800', IconComp: PlayStationIcon },
-  { title: 'STEAM SALE', discount: '-80%', gradient: 'from-slate-600 via-slate-700 to-slate-900', IconComp: SteamIcon },
-];
 
 /* ── Platform Filter Tabs ── */
 const PLATFORM_TABS = [
   { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
-  { id: 'steam', name: 'Steam', icon: SteamIcon, color: 'from-slate-500 to-slate-600' },
-  { id: 'xbox', name: 'Xbox', icon: XboxIcon, color: 'from-green-500 to-green-600' },
-  { id: 'playstation', name: 'PlayStation', icon: PlayStationIcon, color: 'from-blue-500 to-blue-600' },
+  { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
+  { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
+  { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
+  { id: 'fifa', name: 'FIFA', icon: Gamepad2, color: 'from-green-500 to-green-600' },
 ];
 
 /* ═══════════ HORIZONTAL SCROLL COMPONENT ═══════════ */
 function HorizontalScroll({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+    setCanScrollLeft(scrollLeft > 5);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
+  };
+
+  useEffect(() => {
+    const ref = scrollRef.current;
+    if (ref) {
+      ref.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+      return () => ref.removeEventListener('scroll', checkScroll);
+    }
+  }, [children]);
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -146,22 +181,26 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
 
   return (
     <div className={`relative group ${className}`}>
+      {/* Left fade + button */}
+      <div className={`absolute left-0 top-0 bottom-2 w-16 bg-gradient-to-r from-[#060811] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} />
       <button
         onClick={() => scroll('left')}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0d1017]/95 backdrop-blur-sm border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/10 shadow-2xl -ml-3"
+        className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/[0.08] backdrop-blur-xl border border-white/[0.1] text-white flex items-center justify-center transition-all duration-300 hover:bg-white/15 hover:scale-110 shadow-xl ${canScrollLeft ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-4 h-4" />
       </button>
 
-      <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2">
+      <div ref={scrollRef} className="flex gap-3 overflow-x-auto scrollbar-hide scroll-smooth pb-2">
         {children}
       </div>
 
+      {/* Right fade + button */}
+      <div className={`absolute right-0 top-0 bottom-2 w-16 bg-gradient-to-l from-[#060811] to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollRight ? 'opacity-100' : 'opacity-0'}`} />
       <button
         onClick={() => scroll('right')}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0d1017]/95 backdrop-blur-sm border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/10 shadow-2xl -mr-3"
+        className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/[0.08] backdrop-blur-xl border border-white/[0.1] text-white flex items-center justify-center transition-all duration-300 hover:bg-white/15 hover:scale-110 shadow-xl ${canScrollRight ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   );
@@ -172,64 +211,63 @@ function StaticProductCard({ product }: { product: typeof STATIC_PRODUCTS[0] }) 
   const passPrice = (product.price * 0.82).toFixed(2);
 
   return (
-    <div className="group flex-shrink-0 w-[215px] bg-[#111318] rounded-2xl border border-white/[0.04] hover:border-cyan-500/25 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1">
+    <div className="group flex-shrink-0 w-[200px] bg-[#0c0f18] rounded-2xl border border-white/[0.04] hover:border-white/[0.1] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/[0.07] hover:-translate-y-1.5">
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={product.image}
           alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
 
         {/* Verified */}
-        <span className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-400/30 flex items-center justify-center">
-          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+        <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+          <ShieldCheck className="w-3 h-3 text-cyan-400" />
         </span>
 
-        {/* Discount */}
-        <span className="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">
-          -{product.discount}%
-        </span>
+        {/* Discount badge */}
+        <div className="absolute bottom-2 left-2 flex items-center gap-1">
+          <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
+            -{product.discount}%
+          </span>
+        </div>
 
         {/* Rating */}
-        <span className="absolute bottom-2.5 right-2.5 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
-          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" /> {product.rating}
+        <span className="absolute bottom-2 right-2 bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+          <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" /> {product.rating}
         </span>
       </div>
 
       {/* Content */}
-      <div className="p-3.5">
-        <h3 className="text-[13px] font-semibold text-white/90 line-clamp-2 min-h-[36px] group-hover:text-cyan-400 transition-colors leading-tight">
+      <div className="p-3">
+        <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
           {product.title}
         </h3>
 
         {/* Platform & Region */}
-        <div className="flex items-center gap-1.5 mt-2">
-          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{product.platform}</span>
-          <span className="text-white/15">|</span>
-          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{product.region}</span>
+        <div className="flex items-center gap-1 mt-2">
+          <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{product.platform}</span>
+          <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{product.region}</span>
+          <span className="text-[9px] text-white/20 ml-auto">{product.sold.toLocaleString()} sold</span>
         </div>
 
-        {/* Sold count */}
-        <p className="text-[10px] text-white/25 mt-1.5">{product.sold.toLocaleString()} sold</p>
-
         {/* Prices */}
-        <div className="flex items-center justify-between mt-3">
+        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
           <div>
-            <p className="text-[11px] text-white/25 line-through">${product.originalPrice.toFixed(2)}</p>
-            <p className="text-lg font-black text-white">${product.price.toFixed(2)}</p>
+            <p className="text-[10px] text-white/20 line-through">${product.originalPrice.toFixed(2)}</p>
+            <p className="text-base font-black text-white">${product.price.toFixed(2)}</p>
           </div>
-          <button className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-cyan-500/15 hover:border-cyan-500/25 hover:text-cyan-400 transition-all duration-300">
-            <ShoppingCart className="w-4 h-4" />
+          <button className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110">
+            <ShoppingCart className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* SEAL PASS Price */}
-        <div className="mt-2.5 bg-gradient-to-r from-pink-500/90 to-purple-600/90 rounded-lg px-3 py-1.5 flex items-center justify-between">
-          <span className="text-white font-bold text-sm">${passPrice}</span>
-          <span className="text-white/70 text-[10px] flex items-center gap-1">
-            with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/90">PASS</span>
+        <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+          <span className="text-white font-bold text-[13px]">${passPrice}</span>
+          <span className="text-white/60 text-[9px] flex items-center gap-1">
+            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
           </span>
         </div>
       </div>
@@ -246,46 +284,45 @@ function ProductCard({ listing }: { listing: Listing }) {
   return (
     <Link
       href={`/listings/${listing._id}`}
-      className="group flex-shrink-0 w-[215px] bg-[#111318] rounded-2xl border border-white/[0.04] hover:border-cyan-500/25 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1"
+      className="group flex-shrink-0 w-[200px] bg-[#0c0f18] rounded-2xl border border-white/[0.04] hover:border-white/[0.1] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/[0.07] hover:-translate-y-1.5"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         {listing.coverImage || listing.images?.length > 0 ? (
-          <img src={listing.coverImage || listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+          <img src={listing.coverImage || listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/[0.02] flex items-center justify-center">
-            <Gamepad2 className="w-10 h-10 text-white/10" />
+          <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
+            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <span className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-400/30 flex items-center justify-center">
-          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
+        <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+          <ShieldCheck className="w-3 h-3 text-cyan-400" />
         </span>
-        <span className="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">
+        <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
           -{discount}%
         </span>
       </div>
-      <div className="p-3.5">
-        <h3 className="text-[13px] font-semibold text-white/90 line-clamp-2 min-h-[36px] group-hover:text-cyan-400 transition-colors leading-tight">
+      <div className="p-3">
+        <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
           {listing.title}
         </h3>
-        <div className="flex items-center gap-1.5 mt-2">
-          {listing.game && <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{listing.game.name}</span>}
-          <span className="text-white/15">|</span>
-          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">GLOBAL</span>
+        <div className="flex items-center gap-1 mt-2">
+          {listing.game && <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{listing.game.name}</span>}
+          <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
         </div>
-        <div className="flex items-center justify-between mt-3">
+        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
           <div>
-            <p className="text-[11px] text-white/25 line-through">${originalPrice}</p>
-            <p className="text-lg font-black text-white">${listing.price}</p>
+            <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>
+            <p className="text-base font-black text-white">${listing.price}</p>
           </div>
-          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-cyan-500/15 hover:border-cyan-500/25 hover:text-cyan-400 transition-all duration-300">
-            <ShoppingCart className="w-4 h-4" />
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110">
+            <ShoppingCart className="w-3.5 h-3.5" />
           </button>
         </div>
-        <div className="mt-2.5 bg-gradient-to-r from-pink-500/90 to-purple-600/90 rounded-lg px-3 py-1.5 flex items-center justify-between">
-          <span className="text-white font-bold text-sm">${passPrice}</span>
-          <span className="text-white/70 text-[10px] flex items-center gap-1">
-            with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/90">PASS</span>
+        <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+          <span className="text-white font-bold text-[13px]">${passPrice}</span>
+          <span className="text-white/60 text-[9px] flex items-center gap-1">
+            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
           </span>
         </div>
       </div>
@@ -294,18 +331,22 @@ function ProductCard({ listing }: { listing: Listing }) {
 }
 
 /* ═══════════ SECTION HEADER ═══════════ */
-function SectionHeader({ icon: Icon, title, color }: { icon: React.ElementType; title: string; color: string }) {
+function SectionHeader({ icon: Icon, title, color, subtitle }: { icon: React.ElementType; title: string; color: string; subtitle?: string }) {
   return (
     <div className="flex items-center justify-between mb-5">
-      <Link href="/user/dashboard" className="flex items-center gap-3 group">
-        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
+      <div className="flex items-center gap-3">
+        <div className={`relative w-9 h-9 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
           <Icon className="w-4 h-4 text-white" />
+          <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${color} blur-lg opacity-30`} />
         </div>
-        <h2 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{title}</h2>
-        <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
-      </Link>
-      <Link href="/user/dashboard" className="text-xs text-white/30 hover:text-cyan-400 transition-colors font-medium">
+        <div>
+          <h2 className="text-base font-bold text-white leading-tight">{title}</h2>
+          {subtitle && <p className="text-[10px] text-white/25 mt-0.5">{subtitle}</p>}
+        </div>
+      </div>
+      <Link href="/user/dashboard" className="text-[11px] text-white/25 hover:text-cyan-400 transition-colors font-medium flex items-center gap-1 group">
         View All
+        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </Link>
     </div>
   );
@@ -320,11 +361,25 @@ export default function UserDashboardPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPlatform, setSelectedPlatform] = useState('all');
+  const [dashboardAds, setDashboardAds] = useState<DashboardAd[]>([]);
+  const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
 
   useEffect(() => {
     fetch('/api/v1/listings/games')
       .then((r) => r.json())
       .then((d) => { if (d.data) setGames(d.data); })
+      .catch(() => { });
+
+    // Fetch ads for dashboard
+    fetch('/api/v1/ads/active?position=hero')
+      .then((r) => r.json())
+      .then((d) => { if (d.data) setDashboardAds(d.data); })
+      .catch(() => { });
+
+    // Fetch active discounts
+    fetch('/api/v1/discounts/active')
+      .then((r) => r.json())
+      .then((d) => { if (d.data) setActiveDiscounts(d.data); })
       .catch(() => { });
   }, []);
 
@@ -350,96 +405,193 @@ export default function UserDashboardPage() {
 
   return (
     <UserDashboardLayout>
-      <div className="min-h-screen pb-28 space-y-8">
+      <div className="min-h-screen pb-28 space-y-10">
 
-        {/* ═══════════ PLATFORM TABS ═══════════ */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {PLATFORM_TABS.map((platform) => {
-            const Icon = platform.icon;
-            const isActive = selectedPlatform === platform.id;
-            return (
-              <button
-                key={platform.id}
-                onClick={() => setSelectedPlatform(platform.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${
-                  isActive 
-                    ? `bg-gradient-to-r ${platform.color} text-white shadow-lg shadow-cyan-500/20` 
-                    : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06] hover:text-white border border-white/[0.06]'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {platform.name}
-              </button>
-            );
-          })}
-        </div>
+        {/* ═══════════ HERO WELCOME SECTION ═══════════ */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0d1225] via-[#0f1630] to-[#0a0f20] border border-white/[0.04] p-6 sm:p-8">
+          {/* Decorative orbs */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/[0.04] rounded-full blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/[0.04] rounded-full blur-[60px]" />
+          
+          <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-black text-white">
+                Welcome back! <span className="inline-block animate-[float_3s_ease-in-out_infinite]">👋</span>
+              </h1>
+              <p className="text-sm text-white/30 mt-1">Find the best deals on gaming accounts & digital goods</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Quick stats pills */}
+              <div className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2">
+                <Flame className="w-4 h-4 text-orange-400" />
+                <span className="text-[11px] font-semibold text-white/60">12K+ Products</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2">
+                <ShieldCheck className="w-4 h-4 text-green-400" />
+                <span className="text-[11px] font-semibold text-white/60">Verified Sellers</span>
+              </div>
+            </div>
+          </div>
 
-        {/* ═══════════ CATEGORY ICONS ROW ═══════════ */}
-        <HorizontalScroll>
-          {CATEGORIES.map((cat, i) => {
-            const Icon = cat.icon;
-            return (
-              <Link key={i} href="/user/dashboard" className="flex-shrink-0 flex flex-col items-center gap-2 w-20 group">
-                <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/40 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/25 group-hover:text-cyan-400 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/10 group-hover:-translate-y-1">
-                  <Icon className="w-7 h-7" />
-                </div>
-                <div className="text-center">
-                  <span className="text-[11px] text-white/50 font-medium group-hover:text-white transition-colors leading-tight block">
-                    {cat.label}
-                  </span>
-                  <span className="text-[9px] text-white/20 font-medium">{cat.count}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </HorizontalScroll>
+          {/* Platform Tabs inside hero */}
+          <div className="relative flex items-center gap-2 mt-6 overflow-x-auto scrollbar-hide pb-1">
+            {PLATFORM_TABS.map((platform) => {
+              const Icon = platform.icon;
+              const isActive = selectedPlatform === platform.id;
+              return (
+                <button
+                  key={platform.id}
+                  onClick={() => setSelectedPlatform(platform.id)}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]' 
+                      : 'text-white/35 hover:text-white/60 hover:bg-white/[0.04]'
+                  }`}
+                >
+                  {isActive && <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${platform.color} opacity-15`} />}
+                  <Icon className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">{platform.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
-        {/* ═══════════ PROMOTIONAL BANNERS ═══════════ */}
-        <div className="space-y-3">
-          {/* Top row - Large banners */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {PROMO_BANNERS_TOP.map((banner, i) => (
-              <Link key={i} href="/user/dashboard"
-                className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${banner.gradient} h-28 md:h-32 flex items-center justify-between px-6 hover:scale-[1.02] transition-all duration-300 shadow-lg group`}
-              >
-                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{banner.emoji}</span>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-black text-white tracking-wider">{banner.title}</h3>
-                      <p className="text-white/60 text-xs font-medium">{banner.subtitle}</p>
-                    </div>
+        {/* ═══════════ ADMIN ADS HERO CAROUSEL ═══════════ */}
+        {dashboardAds.length > 0 && (
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1 h-5 rounded-full bg-gradient-to-b from-orange-400 to-red-500" />
+              <span className="text-[11px] text-white/25 font-semibold uppercase tracking-widest">Sponsored</span>
+            </div>
+            <HorizontalScroll>
+              {dashboardAds.map((ad) => (
+                <a
+                  key={ad._id}
+                  href={ad.link || '#'}
+                  target={ad.link ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => {}); }}
+                  className="flex-shrink-0 relative w-[300px] md:w-[380px] aspect-[16/9] rounded-2xl overflow-hidden group border border-white/[0.04] hover:border-white/[0.1] transition-all duration-500"
+                >
+                  <img src={ad.image} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-white font-bold text-sm truncate">{ad.title}</h3>
+                    {ad.description && <p className="text-white/40 text-[11px] mt-0.5 line-clamp-1">{ad.description}</p>}
                   </div>
-                </div>
-                <span className="relative z-10 bg-yellow-400 text-black text-lg font-black px-3.5 py-1.5 rounded-xl inline-flex items-center gap-1 shadow-lg">
-                  {banner.discount}
-                </span>
-              </Link>
-            ))}
-          </div>
+                  <span className="absolute top-2.5 right-2.5 bg-white/[0.08] backdrop-blur-sm text-white/40 text-[8px] px-1.5 py-0.5 rounded font-medium uppercase tracking-wider">Ad</span>
+                </a>
+              ))}
+            </HorizontalScroll>
+          </section>
+        )}
 
-          {/* Bottom row - Smaller banners */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {PROMO_BANNERS_BOTTOM.map((banner, i) => (
-              <Link key={i} href="/user/dashboard"
-                className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${banner.gradient} h-20 md:h-24 flex items-center justify-between px-5 hover:scale-[1.02] transition-all duration-300 shadow-lg group`}
-              >
-                <div className="flex items-center gap-3">
-                  <banner.IconComp className="w-8 h-8 text-white/80" />
-                  <h3 className="text-base md:text-lg font-black text-white tracking-wider">{banner.title}</h3>
-                </div>
-                <span className="bg-yellow-400 text-black text-sm font-black px-2.5 py-1 rounded-lg">
-                  {banner.discount}
-                </span>
-              </Link>
-            ))}
+        {/* ═══════════ CATEGORY ICONS - Bento Grid Style ═══════════ */}
+        <section>
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
+            {CATEGORIES.map((cat, i) => {
+              const Icon = cat.icon;
+              return (
+                <Link key={i} href="/user/dashboard" className="group flex flex-col items-center gap-2 py-3 px-2 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 hover:-translate-y-0.5">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-white/30 group-hover:text-cyan-400 group-hover:bg-cyan-500/10 transition-all duration-300">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="text-center">
+                    <span className="text-[10px] text-white/45 font-medium group-hover:text-white/70 transition-colors leading-tight block">
+                      {cat.label}
+                    </span>
+                    <span className="text-[8px] text-white/15 font-medium">{cat.count}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-        </div>
+        </section>
+
+        {/* ═══════════ DISCOUNTED PRODUCTS (FROM ADMIN) ═══════════ */}
+        {activeDiscounts.length > 0 && (
+          <section>
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-lg">
+                  <Percent className="w-4 h-4 text-white" />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 blur-lg opacity-30" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white leading-tight flex items-center gap-2">
+                    Flash Deals
+                    <span className="bg-red-500/15 text-red-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-500/15 animate-pulse">
+                      LIMITED
+                    </span>
+                  </h2>
+                  <p className="text-[10px] text-white/20 mt-0.5">Exclusive discounts, grab before they're gone</p>
+                </div>
+              </div>
+              <Link href="/user/dashboard" className="text-[11px] text-white/25 hover:text-red-400 transition-colors font-medium flex items-center gap-1 group">
+                View All
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+            <HorizontalScroll>
+              {activeDiscounts.map((disc) => {
+                if (!disc.listing) return null;
+                const coverImg = disc.listing.coverImage || (disc.listing.images?.length > 0 ? disc.listing.images[0] : null);
+                return (
+                  <Link
+                    key={disc._id}
+                    href={`/listings/${disc.listing._id}`}
+                    className="group flex-shrink-0 w-[200px] bg-[#0c0f18] rounded-2xl border border-red-500/[0.06] hover:border-red-500/20 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/[0.07] hover:-translate-y-1.5 relative"
+                  >
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 via-pink-500 to-red-500 z-10" />
+
+                    <div className="relative aspect-[4/3] overflow-hidden">
+                      {coverImg ? (
+                        <img src={coverImg} alt={disc.listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
+                          <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
+                      <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+                        <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                      </span>
+                      <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg animate-pulse">
+                        -{disc.discountPercent}%
+                      </span>
+                    </div>
+
+                    <div className="p-3">
+                      <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-red-300 transition-colors leading-tight">
+                        {disc.listing.title}
+                      </h3>
+                      {disc.listing.game && (
+                        <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium mt-2 inline-block">
+                          {disc.listing.game.name}
+                        </span>
+                      )}
+                      <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+                        <div>
+                          <p className="text-[10px] text-white/20 line-through">${disc.originalPrice.toFixed(2)}</p>
+                          <p className="text-base font-black text-red-400">${disc.discountedPrice.toFixed(2)}</p>
+                        </div>
+                        <div className="bg-red-500/10 border border-red-500/15 text-red-400 text-[9px] font-black px-2 py-1 rounded-lg">
+                          DEAL
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </HorizontalScroll>
+          </section>
+        )}
 
         {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
         <section>
-          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" />
+          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" subtitle="Most popular gaming accounts" />
           <HorizontalScroll>
             {STATIC_PRODUCTS.map((product) => (
               <StaticProductCard key={product.id} product={product} />
@@ -449,7 +601,7 @@ export default function UserDashboardPage() {
 
         {/* ═══════════ BEST SELLING GIFT CARDS (STATIC) ═══════════ */}
         <section>
-          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" />
+          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" subtitle="Top rated digital gift cards" />
           <HorizontalScroll>
             {STATIC_GIFT_CARDS.map((product) => (
               <StaticProductCard key={product.id} product={product} />
@@ -457,56 +609,85 @@ export default function UserDashboardPage() {
           </HorizontalScroll>
         </section>
 
-        {/* ═══════════ SEAL+PASS BANNER ═══════════ */}
-        <section className="relative overflow-hidden rounded-2xl border border-white/[0.06]">
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#12101f] via-[#161230] to-[#0f0d1a]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(168,85,247,0.08),transparent_70%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(236,72,153,0.06),transparent_60%)]" />
+        {/* ═══════════ SEAL+PASS BANNER - Premium Design ═══════════ */}
+        <section className="relative overflow-hidden rounded-3xl border border-white/[0.06]">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-fuchsia-600/10" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(168,85,247,0.15),transparent_60%)]" />
+          
+          {/* Animated grid pattern */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
-          <div className="relative flex flex-col md:flex-row items-center">
-            {/* Left Visual */}
-            <div className="relative w-full md:w-1/2 h-48 md:h-64 flex items-center justify-center overflow-hidden">
-              <div className="relative z-10">
-                <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-pink-500/30 animate-pulse">
-                  <Crown className="w-14 h-14 md:w-20 md:h-20 text-white drop-shadow-lg" />
+          <div className="relative flex flex-col md:flex-row-reverse items-center">
+            {/* Right Visual - Crown Icon */}
+            <div className="relative w-full md:w-2/5 h-48 md:h-60 flex items-center justify-center overflow-hidden">
+              <div className="relative">
+                {/* Main Crown */}
+                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-gradient-to-br from-amber-400 via-orange-500 to-pink-600 flex items-center justify-center shadow-2xl shadow-purple-500/30 group hover:shadow-purple-500/50 transition-all duration-700 hover:scale-105">
+                  <Crown className="w-16 h-16 md:w-20 md:h-20 text-white drop-shadow-2xl" />
+                  {/* Inner glow */}
+                  <div className="absolute inset-4 rounded-[2rem] bg-gradient-to-br from-white/20 to-transparent" />
                 </div>
+                {/* Orbiting particles */}
+                <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 shadow-lg shadow-amber-500/50 animate-pulse" />
+                <div className="absolute -bottom-2 -left-2 w-5 h-5 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 shadow-lg shadow-purple-500/50 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <Sparkles className="absolute top-8 -left-8 w-5 h-5 text-yellow-400 animate-[spin_4s_linear_infinite]" />
               </div>
-              {/* Floating elements */}
-              <div className="absolute top-6 right-12 w-10 h-10 bg-pink-500/15 rounded-xl rotate-45 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '3s' }} />
-              <div className="absolute bottom-10 left-20 w-6 h-6 bg-purple-500/20 rounded-full animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }} />
-              <div className="absolute top-1/3 right-1/4 w-8 h-8 bg-violet-500/10 rounded-lg rotate-12 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '3.5s' }} />
-              <Sparkles className="absolute top-8 left-1/3 w-5 h-5 text-yellow-400/30 animate-pulse" />
             </div>
 
-            {/* Right Content */}
-            <div className="w-full md:w-1/2 p-6 md:p-8 text-center md:text-left">
-              <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">
-                SEAL<span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">+</span>PASS
+            {/* Left Content */}
+            <div className="w-full md:w-3/5 p-8 md:p-10 text-center md:text-left">
+              <div className="inline-block mb-4">
+                <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
+              </div>
+              
+              <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
+                SEAL<span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">+</span>PASS
               </h3>
-              <p className="text-white/40 text-sm mt-2">Buy up to 25% cheaper with subscription!</p>
+              
+              <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
+                Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
+              </p>
 
-              <div className="my-4 border-t border-white/[0.06]" />
-
-              <div className="flex items-baseline gap-2 justify-center md:justify-start">
-                <span className="text-white/30 text-sm">only</span>
-                <span className="text-4xl md:text-5xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">2.49</span>
-                <span className="text-xl font-bold text-white/60">$</span>
+              <div className="flex flex-wrap gap-3 mb-6 justify-center md:justify-start">
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-white/70 text-xs font-medium">Early Access</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" style={{ animationDelay: '0.3s' }} />
+                  <span className="text-white/70 text-xs font-medium">Priority Support</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay: '0.6s' }} />
+                  <span className="text-white/70 text-xs font-medium">Exclusive Deals</span>
+                </div>
               </div>
 
-              <button className="mt-5 w-full md:w-auto bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold px-8 py-3.5 rounded-xl hover:shadow-xl hover:shadow-pink-500/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm hover:scale-[1.02] active:scale-[0.98]">
-                <Zap className="w-4 h-4" />
-                JOIN AND UNLOCK NOW
+              <div className="flex items-end gap-3 justify-center md:justify-start mb-6">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-white/40 text-sm">Starting at</span>
+                  <span className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">$2.49</span>
+                  <span className="text-lg text-white/40 font-medium">/month</span>
+                </div>
+              </div>
+
+              <button className="group relative w-full md:w-auto bg-gradient-to-r from-amber-400 via-orange-500 to-pink-600 text-white font-bold px-10 py-4 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98]">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative flex items-center justify-center gap-2.5 text-base">
+                  <Zap className="w-5 h-5" />
+                  Get SEAL+PASS Now
+                </span>
               </button>
 
-              <p className="text-white/20 text-[11px] mt-3">Cancel anytime. Enjoy all benefits until end of paid period.</p>
+              <p className="text-white/20 text-[11px] mt-4 font-medium">✓ Cancel anytime • No hidden fees • Instant activation</p>
             </div>
           </div>
         </section>
 
         {/* ═══════════ TRENDING GAMES (STATIC) ═══════════ */}
         <section>
-          <SectionHeader icon={TrendingUp} title="Trending Games" color="from-purple-500 to-violet-600" />
+          <SectionHeader icon={TrendingUp} title="Trending Now" color="from-purple-500 to-violet-600" subtitle="What everyone's buying" />
           <HorizontalScroll>
             {STATIC_TRENDING.map((product) => (
               <StaticProductCard key={product.id} product={product} />
@@ -517,10 +698,13 @@ export default function UserDashboardPage() {
         {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}
         {listings.length > 0 && (
           <section>
-            <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" />
+            <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" subtitle="Fresh from our sellers" />
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="w-7 h-7 text-cyan-400 animate-spin" />
+                  <span className="text-[11px] text-white/20">Loading listings...</span>
+                </div>
               </div>
             ) : (
               <HorizontalScroll>
@@ -534,7 +718,7 @@ export default function UserDashboardPage() {
 
         {/* ═══════════ POPULAR SUBSCRIPTIONS (STATIC) ═══════════ */}
         <section>
-          <SectionHeader icon={Timer} title="Popular Subscriptions" color="from-pink-500 to-rose-600" />
+          <SectionHeader icon={Timer} title="Popular Subscriptions" color="from-pink-500 to-rose-600" subtitle="Best subscription deals" />
           <HorizontalScroll>
             {STATIC_SUBSCRIPTIONS.map((product) => (
               <StaticProductCard key={product.id} product={product} />
@@ -542,25 +726,25 @@ export default function UserDashboardPage() {
           </HorizontalScroll>
         </section>
 
-        {/* ═══════════ FEATURES BAR ═══════════ */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* ═══════════ TRUST BADGES - Minimal ═══════════ */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
           {[
-            { icon: ShieldCheck, title: 'Secure Payments', desc: 'Protected transactions', color: 'text-emerald-400', bg: 'from-emerald-500/10 to-emerald-600/5' },
-            { icon: Zap, title: 'Instant Delivery', desc: 'Get accounts fast', color: 'text-yellow-400', bg: 'from-yellow-500/10 to-yellow-600/5' },
-            { icon: Headphones, title: '24/7 Support', desc: 'Always here to help', color: 'text-blue-400', bg: 'from-blue-500/10 to-blue-600/5' },
-            { icon: Gift, title: 'Best Deals', desc: 'Unbeatable prices', color: 'text-pink-400', bg: 'from-pink-500/10 to-pink-600/5' },
+            { icon: ShieldCheck, title: 'Secure Payments', desc: 'Protected transactions', color: 'text-emerald-400' },
+            { icon: Zap, title: 'Instant Delivery', desc: 'Get accounts instantly', color: 'text-amber-400' },
+            { icon: Headphones, title: '24/7 Support', desc: 'Always available', color: 'text-blue-400' },
+            { icon: Gift, title: 'Best Deals', desc: 'Unbeatable prices', color: 'text-pink-400' },
           ].map((feature, i) => (
-            <div key={i} className={`bg-gradient-to-br ${feature.bg} border border-white/[0.04] rounded-xl p-4 flex items-center gap-3 hover:border-white/10 transition-all duration-300 hover:scale-[1.02]`}>
-              <div className={`w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center ${feature.color}`}>
-                <feature.icon className="w-5 h-5" />
+            <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-4 flex items-center gap-3 hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300">
+              <div className={`w-9 h-9 rounded-xl bg-white/[0.04] flex items-center justify-center ${feature.color}`}>
+                <feature.icon className="w-4 h-4" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">{feature.title}</p>
-                <p className="text-[10px] text-white/30">{feature.desc}</p>
+                <p className="text-[12px] font-semibold text-white/80">{feature.title}</p>
+                <p className="text-[10px] text-white/20">{feature.desc}</p>
               </div>
             </div>
           ))}
-        </div>
+        </section>
 
       </div>
     </UserDashboardLayout>
