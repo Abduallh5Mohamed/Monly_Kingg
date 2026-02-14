@@ -9,7 +9,7 @@ export default function VerifyEmailPage() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Login Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/assets/Login-Background.png)' }}
       />
