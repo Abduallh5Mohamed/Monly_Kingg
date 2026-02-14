@@ -135,21 +135,21 @@ export function FeaturedGamesSection() {
               <button
                 key={game.name}
                 onClick={() => handleGameSelect(game)}
-                className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 text-left flex-shrink-0 w-[200px] sm:w-auto snap-start ${
-                  isSelected
+                className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 text-left flex-shrink-0 w-[200px] sm:w-auto snap-start ${isSelected
                     ? 'border-primary shadow-[0_0_30px_rgba(34,211,238,0.3)] scale-[1.02]'
                     : 'border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-primary/10'
-                }`}
+                  }`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={game.bgImage}
                     alt={game.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className={`object-cover transition-all duration-700 ${isSelected ? 'scale-110 brightness-75' : 'group-hover:scale-110 brightness-50 group-hover:brightness-[0.6]'}`}
                   />
                   <div className={`absolute inset-0 transition-all duration-500 ${isSelected ? 'bg-gradient-to-t from-black/90 via-black/50 to-transparent' : 'bg-gradient-to-t from-black/80 via-black/40 to-transparent'}`} />
-                  
+
                   {isSelected && (
                     <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                       <ChevronDown className="w-4 h-4 text-white" />
@@ -160,7 +160,7 @@ export function FeaturedGamesSection() {
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="relative w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 border border-white/20">
-                      <Image src={game.logo} alt={game.name} fill className="object-cover" />
+                      <Image src={game.logo} alt={game.name} fill sizes="32px" className="object-cover" />
                     </div>
                     <h3 className="font-bold text-white text-sm truncate">{game.name}</h3>
                   </div>
@@ -186,7 +186,7 @@ export function FeaturedGamesSection() {
                 <div className="flex items-center justify-between relative z-10">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border-2 flex-shrink-0" style={{ borderColor: selectedGame.color + '60' }}>
-                      <Image src={selectedGame.logo} alt={selectedGame.name} fill className="object-cover" />
+                      <Image src={selectedGame.logo} alt={selectedGame.name} fill sizes="48px" className="object-cover" />
                     </div>
                     <div>
                       <h3 className="text-lg sm:text-xl font-bold text-white">{selectedGame.name}</h3>
@@ -214,7 +214,7 @@ export function FeaturedGamesSection() {
                       }}
                     >
                       <div className="relative aspect-[4/3] overflow-hidden">
-                        <Image src={account.image} alt={account.title} fill className="object-cover transition-transform duration-500 group-hover/card:scale-105" />
+                        <Image src={account.image} alt={account.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover/card:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                         <div className="absolute top-3 right-3 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20">
                           <span className="text-white font-bold text-sm">${account.price}</span>

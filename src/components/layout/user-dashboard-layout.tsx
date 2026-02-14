@@ -1,7 +1,7 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp } from 'lucide-react';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -15,12 +15,22 @@ interface UserDashboardLayoutProps {
 export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
   const [balance, setBalance] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
   const [searchFocused, setSearchFocused] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Redirect to home if user is not logged in
+  useEffect(() => {
+    if (!loading && !user) {
+      console.log('🚪 User not logged in, redirecting to home...');
+      router.replace('/'); // Redirect to home page
+    }
+  }, [user, loading, router]);
 
   // Track scroll for header effect
   useEffect(() => {
@@ -28,6 +38,26 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close profile menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    if (profileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [profileMenuOpen]);
+
+  // Handle logout
+  const handleLogout = async () => {
+    setProfileMenuOpen(false);
+    await logout('/', true);
+  };
 
   // Fetch user balance and level from database
   useEffect(() => {
@@ -73,6 +103,18 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
     }
   }, [user]);
 
+  // Show loading or nothing while redirecting
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen bg-[#060811] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-400 text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#060811]">
       {/* Ambient background effects */}
@@ -88,20 +130,19 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       {/* Main Content */}
       <div className="relative min-h-screen">
         {/* ═══════ ULTRA MODERN HEADER ═══════ */}
-        <header className={`sticky top-0 z-40 transition-all duration-500 ${
-          scrolled 
-            ? 'bg-[#060811]/90 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
-            : 'bg-transparent'
-        }`}>
+        <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled
+          ? 'bg-[#060811]/90 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+          : 'bg-transparent'
+          }`}>
           {/* Animated gradient line */}
           <div className="h-[1px] w-full overflow-hidden">
-            <div className="h-full w-[200%] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent animate-[shimmer_3s_ease-in-out_infinite]" 
-                 style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
+            <div className="h-full w-[200%] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent animate-[shimmer_3s_ease-in-out_infinite]"
+              style={{ animation: 'shimmer 3s ease-in-out infinite' }} />
           </div>
-          
+
           <div className="px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between gap-3">
-              
+
               {/* Logo / Brand mark */}
               <Link href="/user" className="flex-shrink-0 flex items-center gap-2 group">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300 group-hover:scale-110">
@@ -134,7 +175,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
 
               {/* Right Actions */}
               <div className="flex items-center gap-2">
-                
+
                 {/* Become Seller / My Store */}
                 {user?.isSeller ? (
                   <Link
@@ -183,24 +224,78 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                 {/* Notifications */}
                 <NotificationBell />
 
-                {/* User Avatar - Minimal elegant */}
-                <Link
-                  href="/user/profile"
-                  className="relative group flex-shrink-0"
-                  title="Profile"
-                >
-                  <div className="w-9 h-9 rounded-xl overflow-hidden ring-2 ring-white/[0.08] group-hover:ring-cyan-500/30 transition-all duration-300 group-hover:scale-105">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">{user?.username?.[0]?.toUpperCase() || 'U'}</span>
+                {/* User Avatar with Dropdown Menu */}
+                <div ref={profileMenuRef} className="relative flex-shrink-0">
+                  <button
+                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                    className="relative group flex items-center gap-1.5 focus:outline-none"
+                    title="Profile Menu"
+                  >
+                    <div className="w-9 h-9 rounded-xl overflow-hidden ring-2 ring-white/[0.08] group-hover:ring-cyan-500/30 transition-all duration-300 group-hover:scale-105">
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">{user?.username?.[0]?.toUpperCase() || 'U'}</span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Online dot */}
+                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-[2px] border-[#060811] shadow-[0_0_6px_rgba(74,222,128,0.4)]" />
+
+                    {/* Dropdown arrow */}
+                    <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform duration-200 ${profileMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {profileMenuOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-[#12162a] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+                      {/* User info header */}
+                      <div className="px-4 py-3 border-b border-white/[0.06]">
+                        <p className="text-white font-semibold text-sm">{user?.username}</p>
+                        <p className="text-white/40 text-xs mt-0.5">{user?.email}</p>
                       </div>
-                    )}
-                  </div>
-                  {/* Online dot */}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-[2px] border-[#060811] shadow-[0_0_6px_rgba(74,222,128,0.4)]" />
-                </Link>
+
+                      {/* Menu items */}
+                      <div className="py-1.5">
+                        <Link
+                          href="/user/profile"
+                          onClick={() => setProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
+                            <User className="w-4 h-4 text-white/40 group-hover:text-cyan-400 transition-colors" />
+                          </div>
+                          <span className="text-sm font-medium">Profile</span>
+                        </Link>
+
+                        <Link
+                          href="/user/profile"
+                          onClick={() => setProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-purple-500/10 transition-colors">
+                            <Settings className="w-4 h-4 text-white/40 group-hover:text-purple-400 transition-colors" />
+                          </div>
+                          <span className="text-sm font-medium">Settings</span>
+                        </Link>
+                      </div>
+
+                      {/* Logout button */}
+                      <div className="border-t border-white/[0.06] py-1.5">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-red-400/70 hover:text-red-400 hover:bg-red-500/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-red-500/10 transition-colors">
+                            <LogOut className="w-4 h-4" />
+                          </div>
+                          <span className="text-sm font-medium">Logout</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -248,6 +343,7 @@ interface Notification {
 }
 
 function NotificationBell() {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -263,33 +359,41 @@ function NotificationBell() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Poll unread count every 30s
+  // Poll unread count every 30s - only if user is logged in
   const fetchUnread = useCallback(async () => {
+    if (!user) return; // Don't fetch if user is not logged in
     try {
       const res = await fetch('/api/v1/notifications/unread-count', { credentials: 'include' });
-      const data = await res.json();
-      setUnreadCount(data.unreadCount || 0);
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadCount(data.unreadCount || 0);
+      }
     } catch { /* silent */ }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
+    if (!user) return; // Skip polling if no user
     fetchUnread();
     const iv = setInterval(fetchUnread, 30000);
     return () => clearInterval(iv);
-  }, [fetchUnread]);
+  }, [fetchUnread, user]);
 
   const fetchNotifications = async () => {
+    if (!user) return; // Don't fetch if user is not logged in
     setLoading(true);
     try {
       const res = await fetch('/api/v1/notifications?limit=15', { credentials: 'include' });
-      const data = await res.json();
-      setNotifications(data.data || []);
-      setUnreadCount(data.unreadCount || 0);
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.data || []);
+        setUnreadCount(data.unreadCount || 0);
+      }
     } catch { /* silent */ }
     finally { setLoading(false); }
   };
 
   const handleOpen = () => {
+    if (!user) return; // Don't open if not logged in
     if (!open) fetchNotifications();
     setOpen(!open);
   };

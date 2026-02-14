@@ -53,11 +53,6 @@ export const memoryMonitor = () => {
 
 // Request optimization headers
 export const optimizationHeaders = (req, res, next) => {
-    // Enable HTTP/2 Server Push hints
-    if (req.path === '/') {
-        res.setHeader('Link', '</styles/globals.css>; rel=preload; as=style');
-    }
-
     // Cache control for static assets
     if (req.path.match(/\.(jpg|jpeg|png|gif|ico|css|js|woff|woff2)$/)) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');

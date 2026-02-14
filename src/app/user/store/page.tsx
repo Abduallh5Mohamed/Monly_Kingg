@@ -29,6 +29,8 @@ import {
   Sparkles,
   TrendingDown,
   Crown,
+  Edit2,
+  Percent,
 } from 'lucide-react';
 
 interface Listing {
@@ -423,18 +425,41 @@ export default function SellerStorePage() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
+                    {/* Seller Action Buttons */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {/* Edit Button */}
                       <button
-                        className="flex-1 h-11 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-sm font-bold transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.02]"
+                        onClick={() => router.push(`/user/store/edit/${listing._id}`)}
+                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-200 group"
+                        title="Edit Listing"
                       >
-                        Buy Now
+                        <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-semibold">Edit</span>
                       </button>
+
+                      {/* Discount Button */}
                       <button
-                        className="flex items-center justify-center gap-2 h-11 px-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white/70 text-sm font-medium hover:bg-white/[0.08] hover:text-white hover:border-white/20 transition-all duration-200"
+                        onClick={() => openPromoteModal(listing)}
+                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
+                        title="Promote Listing"
                       >
-                        <ShoppingCart className="w-4 h-4" />
-                        <span className="hidden sm:inline">Add to Cart</span>
+                        <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-semibold">Promote</span>
+                      </button>
+
+                      {/* Delete Button */}
+                      <button
+                        onClick={() => handleDelete(listing._id)}
+                        disabled={deleteLoading === listing._id}
+                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-500/20 border border-red-500/30 text-red-400 hover:from-red-500/30 hover:to-rose-500/30 hover:border-red-500/50 transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Delete Listing"
+                      >
+                        {deleteLoading === listing._id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        )}
+                        <span className="text-[10px] font-semibold">Delete</span>
                       </button>
                     </div>
                   </div>

@@ -295,6 +295,33 @@ nextApp.prepare().then(async () => {
     console.warn('⚠️ Notification routes not loaded:', error.message);
   }
 
+  // Ads routes
+  try {
+    const { default: adRoutes } = await import("./src/modules/ads/ad.routes.js");
+    app.use("/api/v1/ads", adRoutes);
+    console.log('✅ Ads routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Ads routes not loaded:', error.message);
+  }
+
+  // Discount routes
+  try {
+    const { default: discountRoutes } = await import("./src/modules/discounts/discount.routes.js");
+    app.use("/api/v1/discounts", discountRoutes);
+    console.log('✅ Discount routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Discount routes not loaded:', error.message);
+  }
+
+  // Promotion routes
+  try {
+    const { default: promotionRoutes } = await import("./src/modules/promotions/promotion.routes.js");
+    app.use("/api/v1/promotions", promotionRoutes);
+    console.log('✅ Promotion routes loaded');
+  } catch (error) {
+    console.warn('⚠️ Promotion routes not loaded:', error.message);
+  }
+
   // Health check endpoint
   app.get("/api/health", async (req, res) => {
     const cacheStats = await userCacheService.getCacheStats();

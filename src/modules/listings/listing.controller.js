@@ -121,6 +121,27 @@ export const getMyListings = async (req, res) => {
   }
 };
 
+// Get single listing for seller (for editing)
+export const getMyListingById = async (req, res) => {
+  try {
+    const listing = await Listing.findOne({
+      _id: req.params.id,
+      seller: req.user._id
+    })
+      .populate("game", "name _id")
+      .lean();
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found or unauthorized" });
+    }
+
+    return res.status(200).json({ success: true, data: listing });
+  } catch (error) {
+    console.error("Get my listing by ID error:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Update a listing
 export const updateListing = async (req, res) => {
   try {
@@ -130,6 +151,7 @@ export const updateListing = async (req, res) => {
     }
 
     if (req.body.title) listing.title = req.body.title;
+    if (req.body.game) listing.game = req.body.game;
     if (req.body.description !== undefined) listing.description = req.body.description;
     if (req.body.price) listing.price = req.body.price;
     if (req.body.images) listing.images = req.body.images;
@@ -138,6 +160,10 @@ export const updateListing = async (req, res) => {
     if (req.body.status) listing.status = req.body.status;
 
     await listing.save();
+
+    // Populate game data before returning
+    await listing.populate('game');
+
     return res.status(200).json({ message: "Listing updated", data: listing });
   } catch (error) {
     console.error("Update listing error:", error);
