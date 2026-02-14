@@ -1,233 +1,567 @@
 'use client';
 
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
+  Gamepad2,
+  Monitor,
+  Gift,
+  ChevronRight,
+  ChevronLeft,
+  ShieldCheck,
+  Zap,
+  Loader2,
+  ShoppingCart,
+  CreditCard,
+  Timer,
+  Headphones,
+  Crown,
+  Laptop,
+  Flame,
+  Star,
   TrendingUp,
-  Users,
-  MessageSquare,
-  Calendar,
-  ArrowRight,
-  Clock,
-  CheckCircle,
-  AlertCircle
+  Sparkles,
 } from 'lucide-react';
 
+/* ── SVG Platform Icons ── */
+const SteamIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M11.979 0C5.678 0 .511 4.86.022 10.95l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.063 0 .125.003.187.006l2.866-4.158V8.77c0-2.344 1.904-4.25 4.248-4.25 2.344 0 4.248 1.906 4.248 4.25 0 2.343-1.904 4.248-4.248 4.248l-.073-.001-4.088 2.92c0 .052.003.104.003.156 0 1.757-1.43 3.187-3.187 3.187-1.542 0-2.826-1.093-3.127-2.554L.238 14.41c1.301 5.332 6.103 9.29 11.74 9.29C18.616 23.7 24 18.316 24 11.85 24 5.384 18.617 0 11.979 0z" />
+  </svg>
+);
+
+const XboxIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M4.102 21.033C6.211 22.881 8.977 24 12 24c3.026 0 5.789-1.119 7.902-2.967 1.877-1.912-4.316-8.709-7.902-11.417-3.582 2.708-9.779 9.505-7.898 11.417zm11.16-14.406c2.5 2.961 7.484 10.313 6.076 12.912C23.056 17.36 24 14.8 24 12c0-4.571-2.548-8.545-6.301-10.58l-.001.001c-.125-.074-.249-.145-.376-.214-.327.396-1.48 1.953-2.06 4.42zm-9.116 12.91c-1.409-2.6 3.577-9.951 6.078-12.91-.578-2.468-1.734-4.024-2.061-4.42-.156.086-.31.177-.461.27C5.857 4.641 3.43 8.025 3.07 12h.006c0 2.819.951 5.395 2.07 7.537z" />
+  </svg>
+);
+
+const PlayStationIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M8.985 2.596v17.548l3.915 1.261V6.688c0-.69.304-1.151.794-.991.636.181.76.814.76 1.505v5.876c2.441 1.193 4.362-.002 4.362-3.153 0-3.237-1.126-4.675-4.438-5.827-1.307-.448-3.728-1.186-5.393-1.502z" />
+  </svg>
+);
+
+/* ── Types ── */
+interface Listing {
+  _id: string;
+  title: string;
+  game: { _id: string; name: string } | null;
+  seller: { _id: string; username: string } | null;
+  price: number;
+  coverImage: string | null;
+  images: string[];
+  details: Record<string, unknown>;
+  status: string;
+  createdAt: string;
+}
+
+interface Game {
+  _id: string;
+  name: string;
+}
+
+/* ═══════════ STATIC DEMO DATA ═══════════ */
+const STATIC_PRODUCTS = [
+  { id: 's1', title: 'GTA V Premium Edition - Full Access Account', game: 'Grand Theft Auto V', price: 12.99, originalPrice: 29.99, discount: 57, rating: 4.8, sold: 1240, image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
+  { id: 's2', title: 'Fortnite Account - 150+ Skins Rare Collection', game: 'Fortnite', price: 24.99, originalPrice: 89.99, discount: 72, rating: 4.9, sold: 890, image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=300&fit=crop', platform: 'Epic', region: 'Global', verified: true },
+  { id: 's3', title: 'Valorant Account - Diamond Rank + 30 Skins', game: 'Valorant', price: 34.99, originalPrice: 79.99, discount: 56, rating: 4.7, sold: 567, image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=300&fit=crop', platform: 'Riot', region: 'EU', verified: true },
+  { id: 's4', title: 'Minecraft Java + Bedrock Premium Account', game: 'Minecraft', price: 8.49, originalPrice: 26.95, discount: 69, rating: 4.9, sold: 3200, image: 'https://images.unsplash.com/photo-1587573089734-599ef9a138e1?w=400&h=300&fit=crop', platform: 'Microsoft', region: 'Global', verified: true },
+  { id: 's5', title: 'CS2 Prime Status + 500hrs Gameplay', game: 'Counter-Strike 2', price: 15.99, originalPrice: 35.99, discount: 56, rating: 4.6, sold: 2100, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
+  { id: 's6', title: 'Apex Legends - Heirloom Account Level 500', game: 'Apex Legends', price: 44.99, originalPrice: 149.99, discount: 70, rating: 4.8, sold: 456, image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
+  { id: 's7', title: 'League of Legends - 200+ Champions All Skins', game: 'League of Legends', price: 29.99, originalPrice: 99.99, discount: 70, rating: 4.7, sold: 780, image: 'https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?w=400&h=300&fit=crop', platform: 'Riot', region: 'EUW', verified: true },
+  { id: 's8', title: 'Roblox Account - 10,000 Robux + Premium', game: 'Roblox', price: 19.99, originalPrice: 49.99, discount: 60, rating: 4.5, sold: 1500, image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&h=300&fit=crop', platform: 'Roblox', region: 'Global', verified: true },
+];
+
+const STATIC_GIFT_CARDS = [
+  { id: 'g1', title: 'Steam Gift Card $50 USD', game: 'Steam', price: 42.99, originalPrice: 50.00, discount: 14, rating: 5.0, sold: 5600, image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop', platform: 'Steam', region: 'US', verified: true },
+  { id: 'g2', title: 'PlayStation Store Gift Card $25', game: 'PlayStation', price: 21.49, originalPrice: 25.00, discount: 14, rating: 4.9, sold: 3400, image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop', platform: 'PlayStation', region: 'US', verified: true },
+  { id: 'g3', title: 'Xbox Game Pass Ultimate 3 Months', game: 'Xbox', price: 28.99, originalPrice: 44.99, discount: 36, rating: 4.8, sold: 2800, image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=300&fit=crop', platform: 'Xbox', region: 'Global', verified: true },
+  { id: 'g4', title: 'Nintendo eShop Gift Card $35', game: 'Nintendo', price: 30.49, originalPrice: 35.00, discount: 13, rating: 4.9, sold: 1900, image: 'https://images.unsplash.com/photo-1585620385456-4759f9b5c7d9?w=400&h=300&fit=crop', platform: 'Nintendo', region: 'US', verified: true },
+  { id: 'g5', title: 'Google Play Gift Card $100', game: 'Google Play', price: 89.99, originalPrice: 100.00, discount: 10, rating: 4.8, sold: 4200, image: 'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=400&h=300&fit=crop', platform: 'Google', region: 'Global', verified: true },
+  { id: 'g6', title: 'iTunes / Apple Gift Card $50', game: 'Apple', price: 43.99, originalPrice: 50.00, discount: 12, rating: 4.9, sold: 3100, image: 'https://images.unsplash.com/photo-1591337676887-a217a6c1e926?w=400&h=300&fit=crop', platform: 'Apple', region: 'US', verified: true },
+];
+
+const STATIC_TRENDING = [
+  { id: 't1', title: 'Elden Ring - Full Access Steam Account', game: 'Elden Ring', price: 18.99, originalPrice: 59.99, discount: 68, rating: 4.9, sold: 670, image: 'https://images.unsplash.com/photo-1580327344181-c1163234db17?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
+  { id: 't2', title: 'Hogwarts Legacy Deluxe + All DLC', game: 'Hogwarts Legacy', price: 22.99, originalPrice: 69.99, discount: 67, rating: 4.8, sold: 890, image: 'https://images.unsplash.com/photo-1535572290543-960a8046f5af?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
+  { id: 't3', title: 'FIFA 24 Ultimate Team Account', game: 'EA FC 24', price: 14.99, originalPrice: 39.99, discount: 63, rating: 4.6, sold: 1200, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
+  { id: 't4', title: 'Call of Duty MW3 - Level 155 Account', game: 'Call of Duty', price: 27.99, originalPrice: 69.99, discount: 60, rating: 4.7, sold: 540, image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop', platform: 'Battle.net', region: 'EU', verified: true },
+  { id: 't5', title: 'Diablo IV Season Pass + Campaign', game: 'Diablo IV', price: 32.99, originalPrice: 89.99, discount: 63, rating: 4.5, sold: 340, image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop', platform: 'Battle.net', region: 'Global', verified: true },
+  { id: 't6', title: 'Cyberpunk 2077 Phantom Liberty Account', game: 'Cyberpunk 2077', price: 16.99, originalPrice: 49.99, discount: 66, rating: 4.8, sold: 780, image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
+];
+
+const STATIC_SUBSCRIPTIONS = [
+  { id: 'sub1', title: 'Netflix Premium 1 Year Subscription', game: 'Netflix', price: 29.99, originalPrice: 155.88, discount: 81, rating: 4.9, sold: 8900, image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8d6f28?w=400&h=300&fit=crop', platform: 'Netflix', region: 'Global', verified: true },
+  { id: 'sub2', title: 'Spotify Premium 12 Months Account', game: 'Spotify', price: 19.99, originalPrice: 119.88, discount: 83, rating: 4.8, sold: 12400, image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=400&h=300&fit=crop', platform: 'Spotify', region: 'Global', verified: true },
+  { id: 'sub3', title: 'YouTube Premium 1 Year - No Ads', game: 'YouTube', price: 24.99, originalPrice: 143.88, discount: 83, rating: 4.9, sold: 7600, image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=400&h=300&fit=crop', platform: 'Google', region: 'Global', verified: true },
+  { id: 'sub4', title: 'Discord Nitro 1 Year Full Access', game: 'Discord', price: 34.99, originalPrice: 99.99, discount: 65, rating: 4.7, sold: 4500, image: 'https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?w=400&h=300&fit=crop', platform: 'Discord', region: 'Global', verified: true },
+  { id: 'sub5', title: 'Xbox Game Pass Ultimate 12 Months', game: 'Xbox', price: 59.99, originalPrice: 179.88, discount: 67, rating: 4.8, sold: 3200, image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=300&fit=crop', platform: 'Xbox', region: 'Global', verified: true },
+  { id: 'sub6', title: 'EA Play Pro 1 Year Membership', game: 'EA Play', price: 39.99, originalPrice: 99.99, discount: 60, rating: 4.6, sold: 2100, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
+];
+
+/* ── Category Icons ── */
+const CATEGORIES = [
+  { icon: SteamIcon, label: 'Steam', count: '2.4K' },
+  { icon: Gamepad2, label: 'Games & DLCs', count: '1.8K' },
+  { icon: CreditCard, label: 'Gift Cards', count: '950' },
+  { icon: Timer, label: 'Subscriptions', count: '620' },
+  { icon: Monitor, label: 'Accounts', count: '3.1K' },
+  { icon: XboxIcon, label: 'Xbox', count: '780' },
+  { icon: PlayStationIcon, label: 'PlayStation', count: '640' },
+  { icon: Laptop, label: 'Software', count: '420' },
+  { icon: Gift, label: 'Lifestyle', count: '310' },
+];
+
+/* ── Promo Banners ── */
+const PROMO_BANNERS_TOP = [
+  { title: 'SOFTWARE', subtitle: 'Mega Sale', discount: '-80%', gradient: 'from-orange-500 via-red-500 to-pink-500', emoji: '🔥' },
+  { title: 'MINECRAFT', subtitle: 'Java + Bedrock', discount: '-60%', gradient: 'from-green-500 via-green-600 to-emerald-700', emoji: '⛏️' },
+  { title: 'YouTube Premium', subtitle: 'Ad-Free', discount: '-70%', gradient: 'from-red-500 via-red-600 to-red-800', emoji: '▶️' },
+];
+
+const PROMO_BANNERS_BOTTOM = [
+  { title: 'XBOX', discount: '-90%', gradient: 'from-green-400 via-green-500 to-green-700', IconComp: XboxIcon },
+  { title: 'PlayStation', discount: '-70%', gradient: 'from-blue-500 via-blue-600 to-blue-800', IconComp: PlayStationIcon },
+  { title: 'STEAM SALE', discount: '-80%', gradient: 'from-slate-600 via-slate-700 to-slate-900', IconComp: SteamIcon },
+];
+
+/* ── Platform Filter Tabs ── */
+const PLATFORM_TABS = [
+  { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
+  { id: 'steam', name: 'Steam', icon: SteamIcon, color: 'from-slate-500 to-slate-600' },
+  { id: 'xbox', name: 'Xbox', icon: XboxIcon, color: 'from-green-500 to-green-600' },
+  { id: 'playstation', name: 'PlayStation', icon: PlayStationIcon, color: 'from-blue-500 to-blue-600' },
+];
+
+/* ═══════════ HORIZONTAL SCROLL COMPONENT ═══════════ */
+function HorizontalScroll({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({ left: dir === 'right' ? 340 : -340, behavior: 'smooth' });
+  };
+
+  return (
+    <div className={`relative group ${className}`}>
+      <button
+        onClick={() => scroll('left')}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0d1017]/95 backdrop-blur-sm border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/10 shadow-2xl -ml-3"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2">
+        {children}
+      </div>
+
+      <button
+        onClick={() => scroll('right')}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#0d1017]/95 backdrop-blur-sm border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white/10 shadow-2xl -mr-3"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
+
+/* ═══════════ STATIC PRODUCT CARD ═══════════ */
+function StaticProductCard({ product }: { product: typeof STATIC_PRODUCTS[0] }) {
+  const passPrice = (product.price * 0.82).toFixed(2);
+
+  return (
+    <div className="group flex-shrink-0 w-[215px] bg-[#111318] rounded-2xl border border-white/[0.04] hover:border-cyan-500/25 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1">
+      {/* Image */}
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <img
+          src={product.image}
+          alt={product.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+        {/* Verified */}
+        <span className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-400/30 flex items-center justify-center">
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+        </span>
+
+        {/* Discount */}
+        <span className="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">
+          -{product.discount}%
+        </span>
+
+        {/* Rating */}
+        <span className="absolute bottom-2.5 right-2.5 bg-black/50 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" /> {product.rating}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="p-3.5">
+        <h3 className="text-[13px] font-semibold text-white/90 line-clamp-2 min-h-[36px] group-hover:text-cyan-400 transition-colors leading-tight">
+          {product.title}
+        </h3>
+
+        {/* Platform & Region */}
+        <div className="flex items-center gap-1.5 mt-2">
+          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{product.platform}</span>
+          <span className="text-white/15">|</span>
+          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{product.region}</span>
+        </div>
+
+        {/* Sold count */}
+        <p className="text-[10px] text-white/25 mt-1.5">{product.sold.toLocaleString()} sold</p>
+
+        {/* Prices */}
+        <div className="flex items-center justify-between mt-3">
+          <div>
+            <p className="text-[11px] text-white/25 line-through">${product.originalPrice.toFixed(2)}</p>
+            <p className="text-lg font-black text-white">${product.price.toFixed(2)}</p>
+          </div>
+          <button className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-cyan-500/15 hover:border-cyan-500/25 hover:text-cyan-400 transition-all duration-300">
+            <ShoppingCart className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* SEAL PASS Price */}
+        <div className="mt-2.5 bg-gradient-to-r from-pink-500/90 to-purple-600/90 rounded-lg px-3 py-1.5 flex items-center justify-between">
+          <span className="text-white font-bold text-sm">${passPrice}</span>
+          <span className="text-white/70 text-[10px] flex items-center gap-1">
+            with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/90">PASS</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
+function ProductCard({ listing }: { listing: Listing }) {
+  const discount = Math.floor(10 + ((listing.price * 7) % 60));
+  const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
+  const passPrice = (listing.price * 0.82).toFixed(2);
+
+  return (
+    <Link
+      href={`/listings/${listing._id}`}
+      className="group flex-shrink-0 w-[215px] bg-[#111318] rounded-2xl border border-white/[0.04] hover:border-cyan-500/25 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 hover:-translate-y-1"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        {listing.coverImage || listing.images?.length > 0 ? (
+          <img src={listing.coverImage || listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/[0.02] flex items-center justify-center">
+            <Gamepad2 className="w-10 h-10 text-white/10" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <span className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-400/30 flex items-center justify-center">
+          <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+        </span>
+        <span className="absolute bottom-2.5 left-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">
+          -{discount}%
+        </span>
+      </div>
+      <div className="p-3.5">
+        <h3 className="text-[13px] font-semibold text-white/90 line-clamp-2 min-h-[36px] group-hover:text-cyan-400 transition-colors leading-tight">
+          {listing.title}
+        </h3>
+        <div className="flex items-center gap-1.5 mt-2">
+          {listing.game && <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">{listing.game.name}</span>}
+          <span className="text-white/15">|</span>
+          <span className="text-[10px] text-white/40 bg-white/5 px-2 py-0.5 rounded-md font-medium">GLOBAL</span>
+        </div>
+        <div className="flex items-center justify-between mt-3">
+          <div>
+            <p className="text-[11px] text-white/25 line-through">${originalPrice}</p>
+            <p className="text-lg font-black text-white">${listing.price}</p>
+          </div>
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/40 hover:bg-cyan-500/15 hover:border-cyan-500/25 hover:text-cyan-400 transition-all duration-300">
+            <ShoppingCart className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="mt-2.5 bg-gradient-to-r from-pink-500/90 to-purple-600/90 rounded-lg px-3 py-1.5 flex items-center justify-between">
+          <span className="text-white font-bold text-sm">${passPrice}</span>
+          <span className="text-white/70 text-[10px] flex items-center gap-1">
+            with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/90">PASS</span>
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ═══════════ SECTION HEADER ═══════════ */
+function SectionHeader({ icon: Icon, title, color }: { icon: React.ElementType; title: string; color: string }) {
+  return (
+    <div className="flex items-center justify-between mb-5">
+      <Link href="/user/dashboard" className="flex items-center gap-3 group">
+        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center shadow-lg`}>
+          <Icon className="w-4 h-4 text-white" />
+        </div>
+        <h2 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{title}</h2>
+        <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+      </Link>
+      <Link href="/user/dashboard" className="text-xs text-white/30 hover:text-cyan-400 transition-colors font-medium">
+        View All
+      </Link>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════
+   MAIN PAGE
+   ═══════════════════════════════════ */
 export default function UserDashboardPage() {
-  const stats = [
-    {
-      title: 'Total Messages',
-      value: '48',
-      change: '+12%',
-      icon: MessageSquare,
-      color: 'from-blue-500 to-blue-600'
-    },
-    {
-      title: 'Active Chats',
-      value: '12',
-      change: '+5%',
-      icon: Users,
-      color: 'from-purple-500 to-purple-600'
-    },
-    {
-      title: 'Scheduled Meetings',
-      value: '8',
-      change: '+3%',
-      icon: Calendar,
-      color: 'from-pink-500 to-pink-600'
-    },
-    {
-      title: 'Tasks Completed',
-      value: '24',
-      change: '+18%',
-      icon: CheckCircle,
-      color: 'from-green-500 to-green-600'
-    }
-  ];
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [trendingListings, setTrendingListings] = useState<Listing[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
 
-  const recentChats = [
-    {
-      name: 'Jonathan',
-      message: 'Lorem ipsum is simply text...',
-      time: '9:00 AM',
-      unread: 1,
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jonathan',
-      online: true
-    },
-    {
-      name: 'Elizabeth Jan',
-      message: 'It is a long established fact',
-      time: '10:00 AM',
-      unread: 0,
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Elizabeth',
-      online: false
-    },
-    {
-      name: 'Kevin',
-      message: 'Contrary to popular belief...',
-      time: '02:00 PM',
-      unread: 2,
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin',
-      online: true
-    }
-  ];
+  useEffect(() => {
+    fetch('/api/v1/listings/games')
+      .then((r) => r.json())
+      .then((d) => { if (d.data) setGames(d.data); })
+      .catch(() => { });
+  }, []);
 
-  const upcomingEvents = [
-    {
-      title: 'Team Meeting',
-      time: '10:00 AM - 11:00 AM',
-      date: 'Today',
-      color: 'bg-blue-500'
-    },
-    {
-      title: 'Project Review',
-      time: '2:00 PM - 3:30 PM',
-      date: 'Today',
-      color: 'bg-purple-500'
-    },
-    {
-      title: 'Client Call',
-      time: '4:00 PM - 5:00 PM',
-      date: 'Tomorrow',
-      color: 'bg-pink-500'
+  const fetchListings = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [bestRes, trendRes] = await Promise.all([
+        fetch('/api/v1/listings/browse?limit=10&sort=newest'),
+        fetch('/api/v1/listings/browse?limit=10&sort=price_asc'),
+      ]);
+      const bestData = await bestRes.json();
+      const trendData = await trendRes.json();
+      if (bestData.data) setListings(bestData.data);
+      if (trendData.data) setTrendingListings(trendData.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  }, []);
+
+  useEffect(() => { fetchListings(); }, [fetchListings]);
 
   return (
     <UserDashboardLayout>
-      <div className="space-y-8">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-3xl p-8 text-white shadow-2xl shadow-cyan-500/20">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, Natalie! 👋</h1>
-              <p className="text-white/80">Here's what's happening with your account today.</p>
-            </div>
-            <Button className="bg-white text-cyan-600 hover:bg-white/90 rounded-full px-6 font-bold">
-              View Profile
-            </Button>
-          </div>
-        </div>
+      <div className="min-h-screen pb-28 space-y-8">
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
+        {/* ═══════════ PLATFORM TABS ═══════════ */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {PLATFORM_TABS.map((platform) => {
+            const Icon = platform.icon;
+            const isActive = selectedPlatform === platform.id;
             return (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-cyan-500/20 hover:border-cyan-500/30 transition-all duration-300"
+              <button
+                key={platform.id}
+                onClick={() => setSelectedPlatform(platform.id)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${
+                  isActive 
+                    ? `bg-gradient-to-r ${platform.color} text-white shadow-lg shadow-cyan-500/20` 
+                    : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06] hover:text-white border border-white/[0.06]'
+                }`}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <span className="text-sm font-semibold text-green-500 flex items-center gap-1">
-                    <TrendingUp className="h-4 w-4" />
-                    {stat.change}
-                  </span>
-                </div>
-                <h3 className="text-white/60 text-sm mb-1">{stat.title}</h3>
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-              </div>
+                <Icon className="w-5 h-5" />
+                {platform.name}
+              </button>
             );
           })}
         </div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Chats */}
-          <div className="lg:col-span-2 bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-white">Recent Chats</h2>
-              <Button variant="ghost" className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10">
-                View All <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {recentChats.map((chat, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 hover:border-cyan-500/30 border border-transparent transition-all cursor-pointer"
-                >
-                  <div className="relative">
-                    <img
-                      src={chat.avatar}
-                      alt={chat.name}
-                      className="w-12 h-12 rounded-full"
-                    />
-                    {chat.online && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#131720]" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white">{chat.name}</h3>
-                    <p className="text-sm text-gray-400 truncate">{chat.message}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500 mb-1">{chat.time}</p>
-                    {chat.unread > 0 && (
-                      <span className="inline-flex items-center justify-center w-6 h-6 bg-cyan-500 text-white text-xs font-bold rounded-full">
-                        {chat.unread}
-                      </span>
-                    )}
-                  </div>
+        {/* ═══════════ CATEGORY ICONS ROW ═══════════ */}
+        <HorizontalScroll>
+          {CATEGORIES.map((cat, i) => {
+            const Icon = cat.icon;
+            return (
+              <Link key={i} href="/user/dashboard" className="flex-shrink-0 flex flex-col items-center gap-2 w-20 group">
+                <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/40 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/25 group-hover:text-cyan-400 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/10 group-hover:-translate-y-1">
+                  <Icon className="w-7 h-7" />
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="text-center">
+                  <span className="text-[11px] text-white/50 font-medium group-hover:text-white transition-colors leading-tight block">
+                    {cat.label}
+                  </span>
+                  <span className="text-[9px] text-white/20 font-medium">{cat.count}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </HorizontalScroll>
 
-          {/* Upcoming Events */}
-          <div className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-white mb-6">Upcoming Events</h2>
-            <div className="space-y-4">
-              {upcomingEvents.map((event, index) => (
-                <div
-                  key={index}
-                  className="border-l-4 border-cyan-500 pl-4 py-3 hover:bg-white/5 rounded-r-xl transition-all"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-2 h-2 ${event.color} rounded-full mt-2`} />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-white mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-400 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {event.time}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">{event.date}</p>
+        {/* ═══════════ PROMOTIONAL BANNERS ═══════════ */}
+        <div className="space-y-3">
+          {/* Top row - Large banners */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {PROMO_BANNERS_TOP.map((banner, i) => (
+              <Link key={i} href="/user/dashboard"
+                className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${banner.gradient} h-28 md:h-32 flex items-center justify-between px-6 hover:scale-[1.02] transition-all duration-300 shadow-lg group`}
+              >
+                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{banner.emoji}</span>
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-black text-white tracking-wider">{banner.title}</h3>
+                      <p className="text-white/60 text-xs font-medium">{banner.subtitle}</p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <Button className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-700 hover:to-cyan-600 rounded-full shadow-lg shadow-cyan-500/20">
-              Schedule New Meeting
-            </Button>
+                <span className="relative z-10 bg-yellow-400 text-black text-lg font-black px-3.5 py-1.5 rounded-xl inline-flex items-center gap-1 shadow-lg">
+                  {banner.discount}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Bottom row - Smaller banners */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {PROMO_BANNERS_BOTTOM.map((banner, i) => (
+              <Link key={i} href="/user/dashboard"
+                className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${banner.gradient} h-20 md:h-24 flex items-center justify-between px-5 hover:scale-[1.02] transition-all duration-300 shadow-lg group`}
+              >
+                <div className="flex items-center gap-3">
+                  <banner.IconComp className="w-8 h-8 text-white/80" />
+                  <h3 className="text-base md:text-lg font-black text-white tracking-wider">{banner.title}</h3>
+                </div>
+                <span className="bg-yellow-400 text-black text-sm font-black px-2.5 py-1 rounded-lg">
+                  {banner.discount}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="bg-gradient-to-br from-[#131720]/80 to-[#1a1d2e]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button className="h-20 bg-gradient-to-br from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-500/20">
-              <MessageSquare className="h-6 w-6" />
-              <span className="text-sm">New Chat</span>
-            </Button>
-            <Button className="h-20 bg-gradient-to-br from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-600/20">
-              <Calendar className="h-6 w-6" />
-              <span className="text-sm">Schedule</span>
-            </Button>
-            <Button className="h-20 bg-gradient-to-br from-cyan-400 to-cyan-500 hover:from-cyan-500 hover:to-cyan-600 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-400/20">
-              <Users className="h-6 w-6" />
-              <span className="text-sm">Create Group</span>
-            </Button>
-            <Button className="h-20 bg-gradient-to-br from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 rounded-xl flex flex-col gap-2 shadow-lg shadow-cyan-500/20">
-              <CheckCircle className="h-6 w-6" />
-              <span className="text-sm">View Tasks</span>
-            </Button>
+        {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" />
+          <HorizontalScroll>
+            {STATIC_PRODUCTS.map((product) => (
+              <StaticProductCard key={product.id} product={product} />
+            ))}
+          </HorizontalScroll>
+        </section>
+
+        {/* ═══════════ BEST SELLING GIFT CARDS (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" />
+          <HorizontalScroll>
+            {STATIC_GIFT_CARDS.map((product) => (
+              <StaticProductCard key={product.id} product={product} />
+            ))}
+          </HorizontalScroll>
+        </section>
+
+        {/* ═══════════ SEAL+PASS BANNER ═══════════ */}
+        <section className="relative overflow-hidden rounded-2xl border border-white/[0.06]">
+          {/* Background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#12101f] via-[#161230] to-[#0f0d1a]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(168,85,247,0.08),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(236,72,153,0.06),transparent_60%)]" />
+
+          <div className="relative flex flex-col md:flex-row items-center">
+            {/* Left Visual */}
+            <div className="relative w-full md:w-1/2 h-48 md:h-64 flex items-center justify-center overflow-hidden">
+              <div className="relative z-10">
+                <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-pink-500/30 animate-pulse">
+                  <Crown className="w-14 h-14 md:w-20 md:h-20 text-white drop-shadow-lg" />
+                </div>
+              </div>
+              {/* Floating elements */}
+              <div className="absolute top-6 right-12 w-10 h-10 bg-pink-500/15 rounded-xl rotate-45 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '3s' }} />
+              <div className="absolute bottom-10 left-20 w-6 h-6 bg-purple-500/20 rounded-full animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+              <div className="absolute top-1/3 right-1/4 w-8 h-8 bg-violet-500/10 rounded-lg rotate-12 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '3.5s' }} />
+              <Sparkles className="absolute top-8 left-1/3 w-5 h-5 text-yellow-400/30 animate-pulse" />
+            </div>
+
+            {/* Right Content */}
+            <div className="w-full md:w-1/2 p-6 md:p-8 text-center md:text-left">
+              <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                SEAL<span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">+</span>PASS
+              </h3>
+              <p className="text-white/40 text-sm mt-2">Buy up to 25% cheaper with subscription!</p>
+
+              <div className="my-4 border-t border-white/[0.06]" />
+
+              <div className="flex items-baseline gap-2 justify-center md:justify-start">
+                <span className="text-white/30 text-sm">only</span>
+                <span className="text-4xl md:text-5xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">2.49</span>
+                <span className="text-xl font-bold text-white/60">$</span>
+              </div>
+
+              <button className="mt-5 w-full md:w-auto bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold px-8 py-3.5 rounded-xl hover:shadow-xl hover:shadow-pink-500/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm hover:scale-[1.02] active:scale-[0.98]">
+                <Zap className="w-4 h-4" />
+                JOIN AND UNLOCK NOW
+              </button>
+
+              <p className="text-white/20 text-[11px] mt-3">Cancel anytime. Enjoy all benefits until end of paid period.</p>
+            </div>
           </div>
+        </section>
+
+        {/* ═══════════ TRENDING GAMES (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={TrendingUp} title="Trending Games" color="from-purple-500 to-violet-600" />
+          <HorizontalScroll>
+            {STATIC_TRENDING.map((product) => (
+              <StaticProductCard key={product.id} product={product} />
+            ))}
+          </HorizontalScroll>
+        </section>
+
+        {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}
+        {listings.length > 0 && (
+          <section>
+            <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" />
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+              </div>
+            ) : (
+              <HorizontalScroll>
+                {listings.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} />
+                ))}
+              </HorizontalScroll>
+            )}
+          </section>
+        )}
+
+        {/* ═══════════ POPULAR SUBSCRIPTIONS (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={Timer} title="Popular Subscriptions" color="from-pink-500 to-rose-600" />
+          <HorizontalScroll>
+            {STATIC_SUBSCRIPTIONS.map((product) => (
+              <StaticProductCard key={product.id} product={product} />
+            ))}
+          </HorizontalScroll>
+        </section>
+
+        {/* ═══════════ FEATURES BAR ═══════════ */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { icon: ShieldCheck, title: 'Secure Payments', desc: 'Protected transactions', color: 'text-emerald-400', bg: 'from-emerald-500/10 to-emerald-600/5' },
+            { icon: Zap, title: 'Instant Delivery', desc: 'Get accounts fast', color: 'text-yellow-400', bg: 'from-yellow-500/10 to-yellow-600/5' },
+            { icon: Headphones, title: '24/7 Support', desc: 'Always here to help', color: 'text-blue-400', bg: 'from-blue-500/10 to-blue-600/5' },
+            { icon: Gift, title: 'Best Deals', desc: 'Unbeatable prices', color: 'text-pink-400', bg: 'from-pink-500/10 to-pink-600/5' },
+          ].map((feature, i) => (
+            <div key={i} className={`bg-gradient-to-br ${feature.bg} border border-white/[0.04] rounded-xl p-4 flex items-center gap-3 hover:border-white/10 transition-all duration-300 hover:scale-[1.02]`}>
+              <div className={`w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center ${feature.color}`}>
+                <feature.icon className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">{feature.title}</p>
+                <p className="text-[10px] text-white/30">{feature.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
+
       </div>
     </UserDashboardLayout>
   );

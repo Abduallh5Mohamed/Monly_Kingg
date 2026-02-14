@@ -19,7 +19,7 @@ export function Header() {
     { name: 'Home', href: '#home' },
     { name: 'Features', href: '#features' },
     { name: 'Games', href: '#games' },
-
+    { name: 'Accounts', href: '#accounts' },
     { name: 'Support', href: '#support' },
   ];
 
@@ -28,15 +28,15 @@ export function Header() {
       const sections = navItems
         .map(item => (item.href.startsWith('#') ? document.querySelector(item.href) : null))
         .filter(Boolean);
-      
+
       const scrollPosition = window.scrollY + 150;
 
       let currentSection = 'home';
       for (const section of sections) {
         const element = section as HTMLElement;
         if (element && element.offsetTop <= scrollPosition && element.offsetTop + element.clientHeight > scrollPosition) {
-            currentSection = element.id;
-            break;
+          currentSection = element.id;
+          break;
         }
       }
       setActiveSection(currentSection);
@@ -97,7 +97,7 @@ export function Header() {
 
               {user.role === 'admin' && (
                 <Link href="/admin" className="hidden sm:block">
-                  <Button 
+                  <Button
                     variant="outline"
                     size="sm"
                     className="font-bold rounded-full border-purple-500/50 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300 text-xs h-8 px-3"
@@ -106,7 +106,7 @@ export function Header() {
                   </Button>
                 </Link>
               )}
-              <Button 
+              <Button
                 onClick={handleLogout}
                 variant="ghost"
                 size="sm"

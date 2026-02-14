@@ -7202,6 +7202,16 @@
 [2026-02-09T13:35:50.148Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
 [2026-02-09T13:36:46.908Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
 [2026-02-09T13:37:00.786Z] [INFO]: User abduallhshadow@gmail.com hid chat 690a21f15e15078e6a635171
+<<<<<<< HEAD
+[2026-02-13T17:08:10.102Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (419ms)
+[2026-02-13T17:10:25.710Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (358ms)
+[2026-02-14T07:24:14.752Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (358ms)
+[2026-02-14T08:58:42.491Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (387ms)
+[2026-02-14T09:10:13.278Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (368ms)
+[2026-02-14T09:26:56.296Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (303ms)
+[2026-02-14T09:56:11.328Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (327ms)
+[2026-02-14T10:46:00.729Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (406ms)
+=======
 [2026-02-13T15:47:06.168Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (448ms)
 [2026-02-13T15:48:08.153Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 4497ms
 [2026-02-13T15:48:08.642Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
@@ -7572,6 +7582,7 @@
 [2026-02-13T21:53:02.325Z] [WARN]: ⚠️ Slow Request: GET /admin/promotions - 2886ms
 [2026-02-13T21:53:03.788Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/all - 1225ms
 [2026-02-13T21:53:03.791Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/stats - 1211ms
+<<<<<<< HEAD
 [2026-02-13T22:02:39.248Z] [WARN]: ⚠️ Slow Request: GET /admin - 1678ms
 [2026-02-13T22:02:43.521Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
 [2026-02-13T22:02:44.892Z] [WARN]: ⚠️ Slow Request: GET /login - 1350ms
@@ -7935,3 +7946,6 @@
 [2026-02-14T11:09:09.608Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
 [2026-02-14T11:10:09.707Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
 [2026-02-14T11:11:09.806Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+=======
+>>>>>>> adbabc3876666b7c5acf9fea474891a8432dc334
+>>>>>>> acc97629e26c4c12a90f27d863c918d424497005
