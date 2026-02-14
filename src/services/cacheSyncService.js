@@ -76,8 +76,6 @@ class CacheSyncService {
             if (updatedUser) {
                 await this.syncUserToCache(updatedUser);
 
-                window?.dispatchEvent?.(new Event('userDataUpdated'));
-
                 return updatedUser;
             }
 

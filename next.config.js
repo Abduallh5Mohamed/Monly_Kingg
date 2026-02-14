@@ -25,7 +25,15 @@ const nextConfig = {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
   },
 
-  // NOTE: No rewrites needed in integrated mode - Express handles /api/* directly
+  // Proxy API requests to backend server when running in development mode
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*',
+      },
+    ];
+  },
 
   async redirects() {
     return [

@@ -1,16 +1,12 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export function Logo() {
   return (
     <Link href="/" className="flex items-center">
-      <Image
+      <img
         src="/assets/logo.png"
-        alt="Monly King Logo"
-        width={180}
-        height={50}
-        priority
-        style={{ width: 'auto', height: 'auto' }}
+        alt="Monly King"
+        className="h-14 w-auto"
       />
     </Link>
   );

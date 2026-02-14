@@ -40,13 +40,11 @@ const sellFormSchema = z.object({
 });
 
 const games = [
-  'Apex Legends',
-  'League of Legends',
+  'FIFA',
+  'PUBG',
+  'Ark Rider',
   'Valorant',
-  'Star Citizen',
-  'Counter-Strike 2',
-  'Overwatch 2',
-  'Fortnite',
+  'League of Legends',
 ];
 
 export function SellForm() {

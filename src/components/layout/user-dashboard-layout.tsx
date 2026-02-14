@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { BecomeSellerModal } from '@/components/become-seller-modal';
+import { Logo } from '@/components/logo';
 import Link from 'next/link';
 
 interface UserDashboardLayoutProps {
@@ -143,15 +144,10 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
           <div className="px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between gap-3">
 
-              {/* Logo / Brand mark */}
-              <Link href="/user" className="flex-shrink-0 flex items-center gap-2 group">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-all duration-300 group-hover:scale-110">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <span className="hidden sm:block text-lg font-black text-white tracking-tight">
-                  Monly<span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">King</span>
-                </span>
-              </Link>
+              {/* Logo */}
+              <div className="flex-shrink-0">
+                <Logo />
+              </div>
 
               {/* Search Bar - Modern floating */}
               <div className={`flex-1 max-w-lg transition-all duration-500 ${searchFocused ? 'max-w-2xl' : ''}`}>

@@ -146,10 +146,11 @@ const CATEGORIES = [
 /* ── Platform Filter Tabs ── */
 const PLATFORM_TABS = [
   { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
-  { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
-  { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
-  { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
   { id: 'fifa', name: 'FIFA', icon: Gamepad2, color: 'from-green-500 to-green-600' },
+  { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
+  { id: 'ark-rider', name: 'Ark Rider', icon: Gamepad2, color: 'from-pink-500 to-pink-600' },
+  { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
+  { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
 ];
 
 /* ═══════════ HORIZONTAL SCROLL COMPONENT ═══════════ */

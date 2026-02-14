@@ -40,10 +40,11 @@ const PROMO_BADGES = [
 ];
 
 const GAME_BADGES: Record<string, { color: string; label: string; textColor: string }> = {
-    'League of Legends': { color: 'bg-blue-600', label: 'RIOT EUW', textColor: 'text-white' },
+    'FIFA': { color: 'bg-green-600', label: 'EA FC 25', textColor: 'text-white' },
+    'PUBG': { color: 'bg-orange-600', label: 'GLOBAL', textColor: 'text-white' },
+    'Ark Rider': { color: 'bg-pink-600', label: 'ACTION', textColor: 'text-white' },
     'Valorant': { color: 'bg-red-600', label: 'RIOT EUW', textColor: 'text-white' },
-    'PUBG Mobile': { color: 'bg-yellow-600', label: 'GLOBAL', textColor: 'text-white' },
-    'FIFA / FC': { color: 'bg-green-600', label: 'EA FC 25', textColor: 'text-white' },
+    'League of Legends': { color: 'bg-blue-600', label: 'RIOT EUW', textColor: 'text-white' },
 };
 
 function getPromoBadge(index: number) {
@@ -205,7 +206,7 @@ export default function MarketplacePage() {
                                     <div
                                         key={listing._id}
                                         className="group rounded-2xl overflow-hidden bg-[#0d1117] border border-white/[0.06] hover:border-cyan-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 flex flex-col cursor-pointer"
-                                        onClick={() => router.push(`/listing/${listing._id}`)}
+                                        onClick={() => router.push(`/listings/${listing._id}`)}
                                     >
                                         {/* Cover Image */}
                                         <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[#1a1d2e] to-[#0d1117]">

@@ -25,8 +25,9 @@ const accountLinks = [
 
 const gameCategories = [
   { name: 'Valorant' },
-  { name: 'PUBG Mobile' },
-  { name: 'FIFA / FC' },
+  { name: 'FIFA' },
+  { name: 'PUBG' },
+  { name: 'Ark Rider' },
   { name: 'League of Legends' },
   { name: 'Call of Duty' },
 ];

@@ -5,10 +5,24 @@ dotenv.config();
 
 const GAMES = [
     {
-        name: "League of Legends",
-        slug: "league-of-legends",
-        category: "MOBA",
-        icon: "swords",
+        name: "FIFA",
+        slug: "fifa",
+        category: "Sports",
+        icon: "trophy",
+        status: "active",
+    },
+    {
+        name: "PUBG",
+        slug: "pubg",
+        category: "Battle Royale",
+        icon: "gamepad2",
+        status: "active",
+    },
+    {
+        name: "Ark Rider",
+        slug: "ark-rider",
+        category: "Action",
+        icon: "zap",
         status: "active",
     },
     {
@@ -19,17 +33,10 @@ const GAMES = [
         status: "active",
     },
     {
-        name: "PUBG Mobile",
-        slug: "pubg-mobile",
-        category: "Battle Royale",
-        icon: "gamepad2",
-        status: "active",
-    },
-    {
-        name: "FIFA / FC",
-        slug: "fifa-fc",
-        category: "Sports",
-        icon: "trophy",
+        name: "League of Legends",
+        slug: "league-of-legends",
+        category: "MOBA",
+        icon: "swords",
         status: "active",
     },
 ];
