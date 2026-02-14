@@ -184,6 +184,13 @@ export const login = async (req, res) => {
       expiresIn: 15 * 60
     });
   } catch (err) {
+    console.error("Login error:", err.message);
+
+    // Check if email not verified
+    if (err.message === "Invalid credentials") {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
     res.status(401).json({ message: "Invalid email or password" });
   }
 };

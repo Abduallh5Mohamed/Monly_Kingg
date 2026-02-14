@@ -22,7 +22,6 @@ const nextConfig = {
 
   // Enable experimental features for better performance
   experimental: {
-    optimizeCss: true, // Enable CSS optimization
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
   },
 

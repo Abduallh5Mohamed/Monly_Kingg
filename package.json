@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cleanup": "powershell -ExecutionPolicy Bypass -File cleanup.ps1",
-    "dev": "npm run dev:separate",
+    "dev": "node server-integrated.js",
     "dev:only": "node server-integrated.js",
     "dev:server": "nodemon src/server.js",
     "dev:next": "next dev -p 3000",

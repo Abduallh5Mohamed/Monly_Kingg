@@ -7949,6 +7949,133 @@
 =======
 >>>>>>> adbabc3876666b7c5acf9fea474891a8432dc334
 >>>>>>> acc97629e26c4c12a90f27d863c918d424497005
+<<<<<<< HEAD
+[2026-02-14T11:13:42.385Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1904ms
+[2026-02-14T11:13:44.392Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 552ms
+[2026-02-14T11:13:47.237Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 546ms
+[2026-02-14T11:13:47.246Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 594ms
+[2026-02-14T11:13:47.253Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 1884ms
+[2026-02-14T11:13:47.264Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 548ms
+[2026-02-14T11:13:47.269Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 522ms
+[2026-02-14T11:13:47.280Z] [WARN]: ⚠️ Slow Request: GET /__nextjs_original-stack-frame - 676ms
+[2026-02-14T11:13:49.849Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T11:13:49.861Z] [WARN]: ⚠️ Slow Request: POST /logout - 1580ms
+[2026-02-14T11:13:58.932Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (678ms)
+[2026-02-14T11:13:58.957Z] [WARN]: ⚠️ Slow Request: POST /login - 713ms
+[2026-02-14T11:13:59.003Z] [ERROR]: Redis HSET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T11:13:59.250Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:14:34.829Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 1070ms
+[2026-02-14T11:16:06.283Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 1303ms
+[2026-02-14T11:56:34.550Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T11:56:34.779Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T11:56:34.779Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T11:56:35.196Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T11:56:35.197Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T11:56:35.197Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T11:56:35.227Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T11:56:35.232Z] [INFO]: ✅ Cleanup complete in 35ms
+[2026-02-14T11:56:35.232Z] [INFO]:    Users removed: 0
+[2026-02-14T11:56:35.232Z] [INFO]:    Cached users before: 1
+[2026-02-14T11:56:35.232Z] [INFO]:    Cached users after: 1
+[2026-02-14T11:56:35.233Z] [INFO]:    Memory before: 1.15M
+[2026-02-14T11:56:35.233Z] [INFO]:    Memory after: 1.15M
+[2026-02-14T11:57:42.793Z] [WARN]: ⚠️ Slow Request: GET /login - 10186ms
+[2026-02-14T11:57:45.489Z] [WARN]: ⚠️ Slow Request: GET /_next/image - 2678ms
+[2026-02-14T11:57:47.109Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 819ms
+[2026-02-14T11:58:24.897Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T11:58:25.606Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T11:58:25.608Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T12:00:14.776Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T12:00:14.887Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T12:00:14.887Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T12:00:15.414Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T12:00:15.415Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T12:00:15.415Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T12:00:15.469Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T12:00:15.524Z] [INFO]: ✅ Cleanup complete in 109ms
+[2026-02-14T12:00:15.525Z] [INFO]:    Users removed: 0
+[2026-02-14T12:00:15.525Z] [INFO]:    Cached users before: 1
+[2026-02-14T12:00:15.526Z] [INFO]:    Cached users after: 1
+[2026-02-14T12:00:15.526Z] [INFO]:    Memory before: 1.15M
+[2026-02-14T12:00:15.526Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T12:01:30.094Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T12:01:30.156Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T12:01:30.156Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T12:01:30.441Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T12:01:30.442Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T12:01:30.442Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T12:01:30.465Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T12:01:30.473Z] [INFO]: ✅ Cleanup complete in 31ms
+[2026-02-14T12:01:30.473Z] [INFO]:    Users removed: 0
+[2026-02-14T12:01:30.473Z] [INFO]:    Cached users before: 1
+[2026-02-14T12:01:30.473Z] [INFO]:    Cached users after: 1
+[2026-02-14T12:01:30.474Z] [INFO]:    Memory before: 1.15M
+[2026-02-14T12:01:30.474Z] [INFO]:    Memory after: 1.15M
+[2026-02-14T12:03:40.765Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T12:03:40.901Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T12:03:40.901Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T12:03:41.201Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T12:03:41.202Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T12:03:41.203Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T12:03:41.225Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T12:03:41.235Z] [INFO]: ✅ Cleanup complete in 32ms
+[2026-02-14T12:03:41.235Z] [INFO]:    Users removed: 0
+[2026-02-14T12:03:41.235Z] [INFO]:    Cached users before: 1
+[2026-02-14T12:03:41.236Z] [INFO]:    Cached users after: 1
+[2026-02-14T12:03:41.236Z] [INFO]:    Memory before: 1.16M
+[2026-02-14T12:03:41.236Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T12:03:46.536Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (715ms)
+[2026-02-14T12:03:46.547Z] [WARN]: ⚠️ Slow Request: POST /login - 762ms
+[2026-02-14T12:03:56.553Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 9935ms
+[2026-02-14T12:03:57.618Z] [ERROR]: Redis GET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T12:03:57.621Z] [INFO]: ❌ Cache MISS: user:68d9b957e9a319acf7221479
+[2026-02-14T12:03:57.657Z] [INFO]: 💾 Synced user 68d9b957e9a319acf7221479 to cache
+[2026-02-14T12:04:08.427Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:04:08.620Z] [WARN]: ⚠️ Slow Request: GET /profile - 866ms
+[2026-02-14T12:04:17.817Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:04:28.823Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:04:37.592Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:04:47.587Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:04:57.617Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:07.524Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:18.496Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:18.783Z] [WARN]: ⚠️ Slow Request: GET /profile - 652ms
+[2026-02-14T12:05:27.718Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:28.221Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 644ms
+[2026-02-14T12:05:28.285Z] [WARN]: ⚠️ Slow Request: GET /profile - 742ms
+[2026-02-14T12:05:37.643Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:38.257Z] [WARN]: ⚠️ Slow Request: GET /profile - 718ms
+[2026-02-14T12:05:47.612Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:58.453Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T12:05:58.846Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 571ms
+[2026-02-14T12:05:58.948Z] [WARN]: ⚠️ Slow Request: GET /profile - 722ms
+[2026-02-14T12:06:04.455Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 14186ms
+[2026-02-14T12:06:37.982Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2262ms
+[2026-02-14T12:06:39.985Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/app-pages-internals.js - 732ms
+[2026-02-14T12:06:39.996Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/app/layout.js - 694ms
+[2026-02-14T12:07:33.714Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T12:07:33.786Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T12:07:33.786Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T12:07:34.016Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T12:07:34.017Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T12:07:34.017Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T12:07:34.032Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T12:07:34.036Z] [INFO]: ✅ Cleanup complete in 19ms
+[2026-02-14T12:07:34.036Z] [INFO]:    Users removed: 0
+[2026-02-14T12:07:34.036Z] [INFO]:    Cached users before: 1.5
+[2026-02-14T12:07:34.036Z] [INFO]:    Cached users after: 1.5
+[2026-02-14T12:07:34.037Z] [INFO]:    Memory before: 1.16M
+[2026-02-14T12:07:34.037Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T12:07:49.681Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 8100ms
+[2026-02-14T12:07:53.130Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 832ms
+[2026-02-14T12:08:50.600Z] [WARN]: ⚠️ Slow Request: GET /user - 1723ms
+[2026-02-14T12:09:24.301Z] [WARN]: ⚠️ Slow Request: GET /user - 4096ms
+[2026-02-14T12:09:24.434Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 3132ms
+[2026-02-14T12:09:27.236Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 550ms
+[2026-02-14T12:09:44.649Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 784ms
+[2026-02-14T12:10:00.383Z] [WARN]: ⚠️ Slow Request: GET /listings/698f578b7026740e1a472645 - 2065ms
+[2026-02-14T12:10:09.277Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 603ms
+=======
 [2026-02-14T11:52:07.038Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (321ms)
 [2026-02-14T11:52:26.800Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
 [2026-02-14T11:52:26.812Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
@@ -7962,3 +8089,9 @@
 [2026-02-14T11:53:28.759Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
 [2026-02-14T11:54:41.214Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (319ms)
 [2026-02-14T12:05:18.926Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (335ms)
+>>>>>>> 4e9d93e578e305a29752dac4b7ea5fb50fae3ef0
+[2026-02-14T12:12:23.329Z] [WARN]: ⚠️ Slow Request: GET /api/v1/ads/active - 30371ms
+[2026-02-14T12:12:23.518Z] [WARN]: ⚠️ Slow Request: GET /api/v1/discounts/active - 30517ms
+[2026-02-14T12:12:34.583Z] [WARN]: ⚠️ High Memory Usage:
+[2026-02-14T12:12:36.212Z] [WARN]: ⚠️ Slow Request: GET /user - 7812ms
+[2026-02-14T12:12:39.034Z] [WARN]: ⚠️ Slow Request: GET /user - 2144ms
