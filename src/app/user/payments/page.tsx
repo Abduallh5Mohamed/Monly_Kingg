@@ -39,6 +39,18 @@ export default function PaymentsPage() {
   // Fetch real deposits from database
   useEffect(() => {
     fetchDeposits();
+
+    const interval = setInterval(fetchDeposits, 15000);
+
+    const handleDataUpdate = () => {
+      fetchDeposits();
+    };
+    window.addEventListener('userDataUpdated', handleDataUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('userDataUpdated', handleDataUpdate);
+    };
   }, []);
 
   const fetchDeposits = async () => {
@@ -114,8 +126,8 @@ export default function PaymentsPage() {
         alert('Deposit request submitted successfully! Admin will review it soon.');
         setShowPermissionModal(false);
         resetForm();
-        // Refresh deposits list
         fetchDeposits();
+        window.dispatchEvent(new Event('userDataUpdated'));
       } else {
         setError(data.message || 'Failed to submit deposit request');
       }
@@ -188,10 +200,10 @@ export default function PaymentsPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-12 h-12 bg-gradient-to-br rounded-xl flex items-center justify-center ${deposit.status === 'approved'
-                        ? 'from-green-500/20 to-emerald-500/20'
-                        : deposit.status === 'pending'
-                          ? 'from-yellow-500/20 to-orange-500/20'
-                          : 'from-red-500/20 to-pink-500/20'
+                      ? 'from-green-500/20 to-emerald-500/20'
+                      : deposit.status === 'pending'
+                        ? 'from-yellow-500/20 to-orange-500/20'
+                        : 'from-red-500/20 to-pink-500/20'
                       }`}>
                       {deposit.status === 'approved' ? (
                         <CheckCircle2 className="w-6 h-6 text-green-400" />
@@ -204,10 +216,10 @@ export default function PaymentsPage() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${deposit.status === 'approved'
-                            ? 'bg-green-500/20 text-green-400 border-green-500/30'
-                            : deposit.status === 'pending'
-                              ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                              : 'bg-red-500/20 text-red-400 border-red-500/30'
+                          ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                          : deposit.status === 'pending'
+                            ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                            : 'bg-red-500/20 text-red-400 border-red-500/30'
                           }`}>
                           {deposit.status === 'approved' ? '✓ Approved' : deposit.status === 'pending' ? '⏱ Pending Review' : '✗ Rejected'}
                         </span>
@@ -284,8 +296,8 @@ export default function PaymentsPage() {
                         </a>
                         <div className="absolute -bottom-6 left-0 right-0 text-center">
                           <span className={`text-xs font-semibold ${deposit.status === 'approved' ? 'text-green-400' :
-                              deposit.status === 'pending' ? 'text-yellow-400' :
-                                'text-red-400'
+                            deposit.status === 'pending' ? 'text-yellow-400' :
+                              'text-red-400'
                             }`}>
                             {deposit.status === 'approved' ? 'Accepted' :
                               deposit.status === 'pending' ? 'Under Review' :

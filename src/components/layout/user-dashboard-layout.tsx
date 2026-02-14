@@ -41,6 +41,18 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
 
     if (user) {
       fetchUserData();
+
+      const interval = setInterval(fetchUserData, 10000);
+
+      const handleDataUpdate = () => {
+        fetchUserData();
+      };
+      window.addEventListener('userDataUpdated', handleDataUpdate);
+
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('userDataUpdated', handleDataUpdate);
+      };
     }
   }, [user]);
 

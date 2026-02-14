@@ -1,5 +1,6 @@
 import Withdrawal from "./withdrawal.model.js";
 import User from "../users/user.model.js";
+import cacheSyncService from '../../services/cacheSyncService.js';
 
 export const submitWithdrawal = async (req, res) => {
   try {
@@ -126,13 +127,18 @@ export const approveWithdrawal = async (req, res) => {
       });
     }
 
-    user.wallet.balance = userBalance - withdrawal.amount;
-    await user.save();
+    await cacheSyncService.updateBalanceWithSync(
+      withdrawal.user._id,
+      -withdrawal.amount,
+      `withdrawal approval #${id}`
+    );
 
-    const admin = await User.findById(req.user._id);
-    if (admin && admin.role === 'admin') {
-      admin.wallet.balance = (admin.wallet.balance || 0) + withdrawal.amount;
-      await admin.save();
+    if (req.user.role === 'admin') {
+      await cacheSyncService.updateBalanceWithSync(
+        req.user._id,
+        withdrawal.amount,
+        `withdrawal approval #${id} (admin credit)`
+      );
     }
 
     withdrawal.status = "approved";

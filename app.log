@@ -7572,3 +7572,366 @@
 [2026-02-13T21:53:02.325Z] [WARN]: ⚠️ Slow Request: GET /admin/promotions - 2886ms
 [2026-02-13T21:53:03.788Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/all - 1225ms
 [2026-02-13T21:53:03.791Z] [WARN]: ⚠️ Slow Request: GET /api/v1/promotions/stats - 1211ms
+[2026-02-13T22:02:39.248Z] [WARN]: ⚠️ Slow Request: GET /admin - 1678ms
+[2026-02-13T22:02:43.521Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-13T22:02:44.892Z] [WARN]: ⚠️ Slow Request: GET /login - 1350ms
+[2026-02-13T22:02:51.031Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (428ms)
+[2026-02-13T22:02:51.983Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 931ms
+[2026-02-13T22:02:52.192Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-13T22:02:52.284Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T08:38:31.107Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T08:39:15.526Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T08:39:15.534Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T08:39:15.841Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T08:39:15.842Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T08:39:15.842Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T08:39:15.848Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T08:39:15.851Z] [INFO]: ✅ Cleanup complete in 9ms
+[2026-02-14T08:39:15.852Z] [INFO]:    Users removed: 0
+[2026-02-14T08:39:15.852Z] [INFO]:    Cached users before: 0.5
+[2026-02-14T08:39:15.852Z] [INFO]:    Cached users after: 0.5
+[2026-02-14T08:39:15.852Z] [INFO]:    Memory before: 1.04M
+[2026-02-14T08:39:15.852Z] [INFO]:    Memory after: 1.08M
+[2026-02-14T08:39:50.285Z] [WARN]: ⚠️ Slow Request: GET / - 10354ms
+[2026-02-14T08:39:53.139Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/app/page.js - 1127ms
+[2026-02-14T08:39:54.034Z] [WARN]: ⚠️ Slow Request: GET /_next/image - 1167ms
+[2026-02-14T08:39:54.414Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 2424ms
+[2026-02-14T08:39:54.619Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 1959ms
+[2026-02-14T08:40:32.084Z] [WARN]: ⚠️ Slow Request: GET /login - 2524ms
+[2026-02-14T08:40:43.119Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (719ms)
+[2026-02-14T08:40:43.154Z] [WARN]: ⚠️ Slow Request: POST /login - 762ms
+[2026-02-14T08:40:45.561Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 2381ms
+[2026-02-14T08:40:47.636Z] [WARN]: ⚠️ Slow Request: GET /admin - 1825ms
+[2026-02-14T08:40:47.893Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T08:40:47.997Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T08:41:47.330Z] [WARN]: ⚠️ Slow Request: GET /profile - 626ms
+[2026-02-14T08:42:39.198Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T08:42:48.007Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (511ms)
+[2026-02-14T08:42:48.023Z] [WARN]: ⚠️ Slow Request: POST /login - 527ms
+[2026-02-14T08:42:52.435Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 4384ms
+[2026-02-14T08:43:34.468Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1631ms
+[2026-02-14T08:43:42.080Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 1222ms
+[2026-02-14T08:44:11.642Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T08:44:25.754Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (342ms)
+[2026-02-14T08:44:26.309Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 539ms
+[2026-02-14T08:44:27.186Z] [WARN]: ⚠️ Slow Request: GET /admin - 743ms
+[2026-02-14T08:44:27.457Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T08:44:27.555Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T08:47:33.570Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 2606ms
+[2026-02-14T08:47:50.641Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers/698df62c45e40bd6e1b6f049 - 2042ms
+[2026-02-14T08:48:21.943Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 686ms
+[2026-02-14T09:10:14.862Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T09:10:16.335Z] [WARN]: ⚠️ Slow Request: GET /login - 1448ms
+[2026-02-14T09:10:26.976Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (402ms)
+[2026-02-14T09:10:27.856Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 833ms
+[2026-02-14T09:10:28.453Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T09:10:28.531Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T09:11:28.909Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T09:11:36.184Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (456ms)
+[2026-02-14T09:11:41.950Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 5716ms
+[2026-02-14T09:12:16.061Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 596ms
+[2026-02-14T09:12:21.743Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 690ms
+[2026-02-14T09:13:51.598Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:14:04.561Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (376ms)
+[2026-02-14T09:14:05.449Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 859ms
+[2026-02-14T09:14:05.782Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T09:14:05.859Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T09:18:07.659Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T09:18:07.819Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T09:18:07.820Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T09:18:08.209Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T09:18:08.211Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T09:18:08.212Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T09:18:08.241Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T09:18:08.246Z] [INFO]: ✅ Cleanup complete in 34ms
+[2026-02-14T09:18:08.246Z] [INFO]:    Users removed: 0
+[2026-02-14T09:18:08.246Z] [INFO]:    Cached users before: 2.5
+[2026-02-14T09:18:08.246Z] [INFO]:    Cached users after: 2.5
+[2026-02-14T09:18:08.246Z] [INFO]:    Memory before: 1.16M
+[2026-02-14T09:18:08.247Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T09:20:12.062Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T09:20:12.144Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T09:20:12.144Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T09:20:12.368Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T09:20:12.369Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T09:20:12.369Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T09:20:12.382Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T09:20:12.386Z] [INFO]: ✅ Cleanup complete in 17ms
+[2026-02-14T09:20:12.386Z] [INFO]:    Users removed: 0
+[2026-02-14T09:20:12.386Z] [INFO]:    Cached users before: 2.5
+[2026-02-14T09:20:12.386Z] [INFO]:    Cached users after: 2.5
+[2026-02-14T09:20:12.386Z] [INFO]:    Memory before: 1.16M
+[2026-02-14T09:20:12.386Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T09:20:23.123Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 4597ms
+[2026-02-14T09:20:41.025Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T09:20:42.384Z] [WARN]: ⚠️ Slow Request: GET /login - 1349ms
+[2026-02-14T09:20:48.187Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (367ms)
+[2026-02-14T09:20:49.236Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1001ms
+[2026-02-14T09:20:50.484Z] [WARN]: ⚠️ Slow Request: GET /admin - 1096ms
+[2026-02-14T09:20:50.643Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T09:20:50.762Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T09:20:54.537Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 776ms
+[2026-02-14T09:22:01.104Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T09:22:06.183Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (440ms)
+[2026-02-14T09:22:06.569Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T09:22:06.656Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T09:22:08.849Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T09:22:14.236Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (289ms)
+[2026-02-14T09:22:16.710Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2462ms
+[2026-02-14T09:22:22.702Z] [WARN]: ⚠️ Slow Request: GET /assets/pubg-battlegrounds.png - 1176ms
+[2026-02-14T09:22:27.251Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1303ms
+[2026-02-14T09:24:32.374Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:32:18.755Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (759ms)
+[2026-02-14T09:32:18.811Z] [WARN]: ⚠️ Slow Request: POST /login - 834ms
+[2026-02-14T09:32:24.580Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 909ms
+[2026-02-14T09:35:32.804Z] [WARN]: ⚠️ Slow Request: GET / - 1546ms
+[2026-02-14T09:35:33.859Z] [WARN]: ⚠️ Slow Request: GET /styles/globals.css - 901ms
+[2026-02-14T09:35:42.675Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (749ms)
+[2026-02-14T09:35:42.696Z] [WARN]: ⚠️ Slow Request: POST /login - 776ms
+[2026-02-14T09:35:53.050Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:35:56.855Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (517ms)
+[2026-02-14T09:35:56.878Z] [WARN]: ⚠️ Slow Request: POST /login - 540ms
+[2026-02-14T09:36:10.243Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 7484ms
+[2026-02-14T09:36:31.164Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 545ms
+[2026-02-14T09:36:34.412Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:36:37.866Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (332ms)
+[2026-02-14T09:50:09.653Z] [INFO]: ❌ Cache MISS: user:68d9b957e9a319acf7221479
+[2026-02-14T09:50:09.666Z] [INFO]: 💾 Synced user 68d9b957e9a319acf7221479 to cache
+[2026-02-14T09:51:44.532Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-14T09:51:44.641Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-14T09:51:44.641Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-14T09:51:44.888Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-14T09:51:44.890Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-14T09:51:44.890Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-14T09:51:44.904Z] [INFO]: ✅ Cleanup complete: 0 inactive users removed from cache
+[2026-02-14T09:51:44.908Z] [INFO]: ✅ Cleanup complete in 18ms
+[2026-02-14T09:51:44.908Z] [INFO]:    Users removed: 0
+[2026-02-14T09:51:44.908Z] [INFO]:    Cached users before: 2.5
+[2026-02-14T09:51:44.908Z] [INFO]:    Cached users after: 2.5
+[2026-02-14T09:51:44.908Z] [INFO]:    Memory before: 1.16M
+[2026-02-14T09:51:44.909Z] [INFO]:    Memory after: 1.16M
+[2026-02-14T09:51:59.920Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 5764ms
+[2026-02-14T09:52:06.625Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:52:08.644Z] [WARN]: ⚠️ Slow Request: GET /login - 2005ms
+[2026-02-14T09:52:19.338Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (526ms)
+[2026-02-14T09:52:19.359Z] [WARN]: ⚠️ Slow Request: POST /login - 550ms
+[2026-02-14T09:52:19.625Z] [ERROR]: Redis GET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T09:52:19.626Z] [INFO]: ❌ Cache MISS: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:19.637Z] [INFO]: 💾 Synced user 68d9b957e9a319acf7221479 to cache
+[2026-02-14T09:52:27.577Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 4883ms
+[2026-02-14T09:52:27.591Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 2766ms
+[2026-02-14T09:52:27.903Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:34.440Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 982ms
+[2026-02-14T09:52:34.645Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:44.623Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:52.742Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:56.554Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1308ms
+[2026-02-14T09:52:56.751Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:52:56.803Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:53:03.934Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:53:09.849Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (451ms)
+[2026-02-14T09:53:09.952Z] [ERROR]: Redis GET error for key user:698a00a5323f816e36f98461: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T09:53:09.952Z] [INFO]: ❌ Cache MISS: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:09.958Z] [INFO]: 💾 Synced user 698a00a5323f816e36f98461 to cache
+[2026-02-14T09:53:12.537Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:18.152Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:19.661Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:21.673Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:28.271Z] [WARN]: ⚠️ Slow Request: GET /user/store - 731ms
+[2026-02-14T09:53:28.470Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:38.420Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:44.546Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:53:54.549Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:54:04.555Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:54:14.541Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:54:24.548Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:54:34.548Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
+[2026-02-14T09:54:36.873Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-14T09:54:42.873Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (403ms)
+[2026-02-14T09:54:42.887Z] [ERROR]: Redis HSET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T09:54:43.103Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T09:54:48.321Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T09:54:52.496Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (368ms)
+[2026-02-14T09:54:54.463Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1949ms
+[2026-02-14T09:54:54.590Z] [ERROR]: Redis GET error for key user:68d8ff2507dbca5b8253d47c: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T09:54:54.590Z] [INFO]: ❌ Cache MISS: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:54:54.599Z] [INFO]: 💾 Synced user 68d8ff2507dbca5b8253d47c to cache
+[2026-02-14T09:54:56.183Z] [WARN]: ⚠️ Slow Request: GET /admin - 1565ms
+[2026-02-14T09:54:56.482Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T09:54:56.606Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T09:55:05.640Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 801ms
+[2026-02-14T09:55:16.890Z] [INFO]: 💾 Synced user 698a00a5323f816e36f98461 to cache
+[2026-02-14T09:55:16.890Z] [INFO]: 💰 Balance updated for user 698a00a5323f816e36f98461: 0 → 1000 (deposit approval #69904656738662d706713223)
+[2026-02-14T09:55:16.911Z] [INFO]: 💾 Synced user 68d8ff2507dbca5b8253d47c to cache
+[2026-02-14T09:55:16.912Z] [INFO]: 💰 Balance updated for user 68d8ff2507dbca5b8253d47c: 0 → -1000 (deposit approval #69904656738662d706713223 (admin deduction))
+[2026-02-14T09:55:16.924Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:55:24.560Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:55:54.558Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:56:24.560Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:56:54.561Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:57:24.558Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:57:54.562Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:58:24.558Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:58:54.560Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:59:24.561Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:59:54.558Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T09:59:58.356Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 548ms
+[2026-02-14T10:00:07.924Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T10:00:08.125Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T10:00:14.952Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T10:00:15.013Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T10:00:18.866Z] [WARN]: ⚠️ Slow Request: GET /admin - 812ms
+[2026-02-14T10:00:20.139Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T10:00:20.205Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-14T10:00:20.275Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-14T10:00:50.164Z] [INFO]: ✅ Cache HIT: user:68d8ff2507dbca5b8253d47c
+[2026-02-14T10:00:58.553Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-14T10:01:04.901Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (320ms)
+[2026-02-14T10:01:04.910Z] [ERROR]: Redis HSET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T10:01:05.306Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:01:15.579Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:01:25.601Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:01:35.309Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:01:45.300Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:01:55.291Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:05.304Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:15.593Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:25.595Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:35.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:45.597Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:02:55.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:03:05.589Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:03:15.589Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:09.624Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:15.582Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:25.594Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:35.592Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:45.595Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:04:55.587Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:05:05.592Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:05:15.595Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:06:09.647Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:07:09.614Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:08:09.598Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:09:09.607Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:10:09.608Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:11:09.650Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:12:09.627Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:13:09.616Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:14:09.600Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:15:09.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:15:43.737Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:15:45.304Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:15:55.593Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:03.579Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 5623ms
+[2026-02-14T10:23:13.226Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 3250ms
+[2026-02-14T10:23:17.112Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T10:23:23.465Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (406ms)
+[2026-02-14T10:23:23.505Z] [ERROR]: Redis HSET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T10:23:23.683Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:25.919Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:26.073Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-14T10:23:28.408Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-14T10:23:31.217Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:41.091Z] [WARN]: ⚠️ Slow Request: GET /user/withdraw - 3180ms
+[2026-02-14T10:23:41.306Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:42.870Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:23:53.604Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:24:03.594Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:24:13.590Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:24:23.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:24:33.590Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:24:43.596Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:25:09.582Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:25:39.319Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:25:42.856Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:25:53.584Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:26:03.595Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:26:13.617Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:26:23.593Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:26:33.589Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:27:09.612Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:28:09.645Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:28:37.872Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:28:43.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:28:53.600Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:29:03.581Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:29:13.599Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:29:23.602Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:29:33.594Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:03.872Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:13.604Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:23.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:33.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:43.596Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:52.837Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:30:59.493Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:06.537Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 2387ms
+[2026-02-14T10:31:06.668Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:06.685Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:16.812Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:21.681Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:22.191Z] [WARN]: ⚠️ Slow Request: GET /profile - 527ms
+[2026-02-14T10:31:26.714Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:36.765Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:36.824Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:46.693Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:52.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:31:57.581Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:07.601Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:07.618Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:17.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:22.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:27.585Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:37.603Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:37.615Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:32:47.593Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:33:09.593Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:33:09.606Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:34:09.590Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:34:09.612Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:35:09.597Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:35:09.627Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:36:09.646Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:36:09.687Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:37:09.974Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:37:10.052Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:38:09.618Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:38:09.651Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:50:17.364Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1019ms
+[2026-02-14T10:50:32.165Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-14T10:50:32.172Z] [WARN]: ⚠️ Slow Request: POST /logout - 508ms
+[2026-02-14T10:56:12.341Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (612ms)
+[2026-02-14T10:56:12.390Z] [WARN]: ⚠️ Slow Request: POST /login - 686ms
+[2026-02-14T10:56:13.038Z] [ERROR]: Redis GET error for key user:68d9b957e9a319acf7221479: WRONGTYPE Operation against a key holding the wrong kind of value
+[2026-02-14T10:56:13.039Z] [INFO]: ❌ Cache MISS: user:68d9b957e9a319acf7221479
+[2026-02-14T10:56:13.056Z] [INFO]: 💾 Synced user 68d9b957e9a319acf7221479 to cache
+[2026-02-14T10:56:22.999Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:56:32.992Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:56:42.997Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:56:52.993Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:02.989Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:12.989Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:23.584Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:33.589Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:43.597Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:57:53.590Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:03.586Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:13.599Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:23.594Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:33.601Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:43.609Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:58:53.591Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T10:59:03.596Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:00:09.616Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:01:09.588Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:02:09.617Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:03:09.615Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:04:09.661Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:05:09.840Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:06:09.719Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:07:09.858Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:08:09.894Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:09:09.608Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:10:09.707Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479
+[2026-02-14T11:11:09.806Z] [INFO]: ✅ Cache HIT: user:68d9b957e9a319acf7221479

@@ -28,7 +28,16 @@ export function AdminHeader() {
 
     fetchAdminData();
     const interval = setInterval(fetchAdminData, 30000);
-    return () => clearInterval(interval);
+
+    const handleDataUpdate = () => {
+      fetchAdminData();
+    };
+    window.addEventListener('userDataUpdated', handleDataUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('userDataUpdated', handleDataUpdate);
+    };
   }, []);
 
   return (

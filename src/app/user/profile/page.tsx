@@ -73,6 +73,18 @@ export default function ProfilePage() {
     useEffect(() => {
         if (user) {
             fetchProfile();
+
+            const interval = setInterval(fetchProfile, 15000);
+
+            const handleDataUpdate = () => {
+                fetchProfile();
+            };
+            window.addEventListener('userDataUpdated', handleDataUpdate);
+
+            return () => {
+                clearInterval(interval);
+                window.removeEventListener('userDataUpdated', handleDataUpdate);
+            };
         }
     }, [user]);
 

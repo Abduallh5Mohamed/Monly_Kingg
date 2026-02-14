@@ -77,6 +77,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingAmounts, setEditingAmounts] = useState<{ [id: string]: number }>({});
 
   useEffect(() => {
     fetchData();
@@ -104,12 +105,23 @@ export default function OrdersPage() {
   const handleApproveDeposit = async (id: string) => {
     setActionLoading(id);
     try {
+      const deposit = deposits.find(d => d._id === id);
+      const amount = editingAmounts[id] ?? (deposit?.amount || deposit?.paidAmount || 0);
+
       const res = await fetch(`/api/v1/deposits/${id}/approve`, {
         method: 'PUT',
         credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount }),
       });
       if (res.ok) {
+        setEditingAmounts(prev => {
+          const updated = { ...prev };
+          delete updated[id];
+          return updated;
+        });
         fetchData();
+        window.dispatchEvent(new Event('userDataUpdated'));
       }
     } catch (error) {
       console.error('Approve error:', error);
@@ -129,6 +141,7 @@ export default function OrdersPage() {
       });
       if (res.ok) {
         fetchData();
+        window.dispatchEvent(new Event('userDataUpdated'));
       }
     } catch (error) {
       console.error('Reject error:', error);
@@ -146,6 +159,7 @@ export default function OrdersPage() {
       });
       if (res.ok) {
         fetchData();
+        window.dispatchEvent(new Event('userDataUpdated'));
       }
     } catch (error) {
       console.error('Approve error:', error);
@@ -168,6 +182,7 @@ export default function OrdersPage() {
       });
       if (res.ok) {
         fetchData();
+        window.dispatchEvent(new Event('userDataUpdated'));
       }
     } catch (error) {
       console.error('Reject error:', error);
@@ -405,7 +420,23 @@ export default function OrdersPage() {
 
                       {/* Amount */}
                       <TableCell className="text-white font-semibold">
-                        {(deposit.amount || deposit.paidAmount || 0).toLocaleString()} LE
+                        {deposit.status === 'pending' ? (
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              value={editingAmounts[deposit._id] ?? (deposit.amount || deposit.paidAmount || 0)}
+                              onChange={(e) => setEditingAmounts({
+                                ...editingAmounts,
+                                [deposit._id]: parseFloat(e.target.value) || 0
+                              })}
+                              className="w-28 bg-white/5 border-cyan-500/30 text-white h-8"
+                              min="500"
+                            />
+                            <span className="text-white/60">LE</span>
+                          </div>
+                        ) : (
+                          <span>{(deposit.amount || deposit.paidAmount || 0).toLocaleString()} LE</span>
+                        )}
                       </TableCell>
 
                       {/* Sender Info */}

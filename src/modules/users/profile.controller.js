@@ -1,6 +1,7 @@
 import User from "./user.model.js";
 import Listing from "../listings/listing.model.js";
 import Favorite from "../favorites/favorite.model.js";
+import cacheSyncService from '../../services/cacheSyncService.js';
 
 // Get user profile with stats
 export const getProfile = async (req, res) => {
@@ -12,12 +13,12 @@ export const getProfile = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        // Run ALL queries in parallel instead of sequentially
+        const userFromCache = await cacheSyncService.getUserWithSync(userId);
+
         const [user, myListings, favorites, totalSales] = await Promise.all([
-            User.findById(userId)
+            userFromCache || User.findById(userId)
                 .select("-passwordHash -verificationCode -verificationCodeValidation -forgotPasswordCode -forgotPasswordCodeValidation -passwordResetToken -passwordResetExpires -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret")
                 .lean(),
-            // Only query listings if we might need them (we'll filter later)
             Listing.find({ seller: userId })
                 .select('game status createdAt title price')
                 .populate("game", "name icon")
@@ -141,11 +142,10 @@ export const updateProfile = async (req, res) => {
         if (avatar !== undefined) updates.avatar = avatar;
         if (bio !== undefined) updates.bio = bio;
 
-        const updatedUser = await User.findByIdAndUpdate(
+        const updatedUser = await cacheSyncService.updateUserWithSync(
             userId,
-            { $set: updates },
-            { new: true, runValidators: true }
-        ).select("-passwordHash -verificationCode -forgotPasswordCode -passwordResetToken -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret");
+            { $set: updates }
+        );
 
         return res.json({
             success: true,
@@ -269,11 +269,10 @@ export const completeProfile = async (req, res) => {
             updates.avatar = avatarUrl;
         }
 
-        const updatedUser = await User.findByIdAndUpdate(
+        const updatedUser = await cacheSyncService.updateUserWithSync(
             userId,
-            { $set: updates },
-            { new: true, runValidators: true }
-        ).select("-passwordHash -verificationCode -forgotPasswordCode -passwordResetToken -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret");
+            { $set: updates }
+        );
 
         return res.json({
             success: true,

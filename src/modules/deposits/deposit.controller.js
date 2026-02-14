@@ -1,5 +1,6 @@
 import Deposit from "./deposit.model.js";
 import User from "../users/user.model.js";
+import cacheSyncService from '../../services/cacheSyncService.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -49,8 +50,8 @@ export const submitDeposit = async (req, res) => {
         }
 
         const parsedAmount = parseFloat(amount);
-        if (isNaN(parsedAmount) || parsedAmount < 100 || parsedAmount > 1000000) {
-            return res.status(400).json({ message: "Amount must be between 100 LE and 1,000,000 LE" });
+        if (isNaN(parsedAmount) || parsedAmount < 500) {
+            return res.status(400).json({ message: "Amount must be at least 500 LE" });
         }
 
         const depositDateTime = new Date(depositDate);
@@ -173,6 +174,8 @@ export const getAllDeposits = async (req, res) => {
 export const approveDeposit = async (req, res) => {
     try {
         const { id } = req.params;
+        const { amount: editedAmount } = req.body;
+
         const deposit = await Deposit.findById(id).populate("user");
 
         if (!deposit) {
@@ -182,23 +185,36 @@ export const approveDeposit = async (req, res) => {
             return res.status(400).json({ message: "Deposit already processed" });
         }
 
+        let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
+
+        if (editedAmount !== undefined && editedAmount !== null) {
+            const parsedAmount = parseFloat(editedAmount);
+            if (isNaN(parsedAmount) || parsedAmount < 500) {
+                return res.status(400).json({
+                    message: "Invalid amount. Must be at least 500 LE"
+                });
+            }
+            amountToCredit = parsedAmount;
+            deposit.amount = parsedAmount;
+        }
+
         deposit.status = "approved";
         deposit.processedBy = req.user._id;
         deposit.processedAt = new Date();
         await deposit.save();
 
-        const amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
+        await cacheSyncService.updateBalanceWithSync(
+            deposit.user._id,
+            amountToCredit,
+            `deposit approval #${id}`
+        );
 
-        const user = await User.findById(deposit.user._id);
-        if (user) {
-            user.wallet.balance = (user.wallet.balance || 0) + amountToCredit;
-            await user.save();
-        }
-
-        const admin = await User.findById(req.user._id);
-        if (admin && admin.role === 'admin') {
-            admin.wallet.balance = (admin.wallet.balance || 0) - amountToCredit;
-            await admin.save();
+        if (req.user.role === 'admin') {
+            await cacheSyncService.updateBalanceWithSync(
+                req.user._id,
+                -amountToCredit,
+                `deposit approval #${id} (admin deduction)`
+            );
         }
 
         return res.status(200).json({
