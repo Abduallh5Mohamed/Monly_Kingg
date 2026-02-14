@@ -41,6 +41,7 @@ export function AccountCarousel() {
                   src={game.logo}
                   alt={'Trending Game'}
                   fill
+                  sizes="(max-width: 640px) 66vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   style={{ objectPosition: game.objectPosition || 'center' }}
                 />

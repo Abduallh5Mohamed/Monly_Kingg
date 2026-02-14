@@ -78,7 +78,7 @@ export function AdminHeader() {
         </div>
 
         <Button
-          onClick={logout}
+          onClick={() => logout('/', true)}
           variant="ghost"
           size="sm"
           className="w-9 h-9 p-0 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-lg"

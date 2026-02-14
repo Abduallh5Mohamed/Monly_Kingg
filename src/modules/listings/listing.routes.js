@@ -9,6 +9,7 @@ import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddle
 import {
   createListing,
   getMyListings,
+  getMyListingById,
   updateListing,
   deleteListing,
   getSellerStats,
@@ -91,9 +92,9 @@ const handleMulterError = (err, req, res, next) => {
 router.get("/browse", cacheResponse(120), browseListings);
 router.get("/games", cacheResponse(300), getGamesForFilter);
 router.get("/public", cacheResponse(120), getAllListings);
-router.get("/:id/public", cacheResponse(300), getListingById);
 
 // ─── Protected routes (require authentication) ───
+// Must come BEFORE /:id/public to avoid route conflicts
 router.post(
   "/",
   authMiddleware,
@@ -106,8 +107,12 @@ router.post(
   createListing
 );
 router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
+router.get("/my-listings/:id", authMiddleware, getMyListingById);
 router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats);
 router.put("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
 router.delete("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
+
+// Generic routes at the end
+router.get("/:id/public", cacheResponse(300), getListingById);
 
 export default router;

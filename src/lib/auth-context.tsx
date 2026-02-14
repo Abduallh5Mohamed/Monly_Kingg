@@ -10,7 +10,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
+  logout: (redirectTo?: string, showToast?: boolean) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<boolean>;
   resendCode: (email: string, password: string) => Promise<boolean>;
   refreshAuth: () => Promise<void>; // Added to refresh user data
@@ -34,33 +34,84 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [lastAuthCheck, setLastAuthCheck] = useState<number>(0);
   const AUTH_CACHE_DURATION = 30000; // 30 seconds
 
-  useEffect(() => {
-    // Skip auth check during navigation if recently checked
-    const now = Date.now();
-    if (user && (now - lastAuthCheck) < AUTH_CACHE_DURATION) {
-      setLoading(false);
-      return;
-    }
+  // Idle timeout - 15 minutes
+  const IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+  const [lastActivity, setLastActivity] = useState<number>(Date.now());
 
-    // Check authentication status on page load
-    // Only check if we might have a session (cookie exists)
-    const hasCookie = document.cookie.includes('access_token') || document.cookie.includes('refresh_token');
-    if (hasCookie) {
-      checkAuthStatus();
-    } else {
-      setLoading(false);
+  // Update last activity on user interaction
+  useEffect(() => {
+    const updateActivity = () => {
+      setLastActivity(Date.now());
+    };
+
+    // Track user activity
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+    events.forEach(event => {
+      window.addEventListener(event, updateActivity, { passive: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, updateActivity);
+      });
+    };
+  }, []);
+
+  // Check for idle timeout
+  useEffect(() => {
+    if (!user) return;
+
+    const checkIdleTimeout = () => {
+      const now = Date.now();
+      const timeSinceLastActivity = now - lastActivity;
+
+      if (timeSinceLastActivity >= IDLE_TIMEOUT) {
+        console.log('🕐 Session timeout due to inactivity');
+        toast({
+          title: 'Session Expired',
+          description: 'You have been logged out due to inactivity',
+          variant: 'default',
+        });
+        logout('/', false); // Don't show double toast
+      }
+    };
+
+    // Check every minute
+    const interval = setInterval(checkIdleTimeout, 60000);
+    return () => clearInterval(interval);
+  }, [user, lastActivity]);
+
+  useEffect(() => {
+    // Always check auth on mount - cookies are httpOnly so document.cookie can't see them
+    // The server will validate the tokens via the cookie header automatically
+    checkAuthStatus();
+  }, []); // Only on mount
+
+  // Track route changes
+  useEffect(() => {
+    if (user) {
+      setLastActivity(Date.now()); // Update activity on navigation
     }
-  }, [pathname]); // Only re-check on route change
+  }, [pathname, user]);
 
   const checkAuthStatus = async () => {
     try {
+      console.log('🔍 Checking auth status...');
       const response = await apiClient.refreshToken();
       if (response.success && response.data) {
+        console.log('✅ Auth status: User authenticated', response.data.userData);
         setUser(response.data.userData);
         setLastAuthCheck(Date.now());
+        setLastActivity(Date.now()); // Reset activity on successful auth
+      } else {
+        // Failed to refresh - clear user
+        console.log('❌ Auth status: Failed to refresh token', response.message);
+        setUser(null);
       }
     } catch (error) {
-      // No active session - silent
+      // No active session - clear user
+      console.log('❌ Auth status: Error', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -264,25 +315,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const logout = async (): Promise<void> => {
+  const logout = async (redirectTo: string = '/login', showToast: boolean = true): Promise<void> => {
     try {
       setLoading(true);
 
       await apiClient.logout();
       setUser(null);
 
-      toast({
-        title: 'Logged Out',
-        description: 'You have been logged out successfully',
-        variant: 'default',
-      });
+      if (showToast) {
+        toast({
+          title: 'Logged Out',
+          description: 'You have been logged out successfully',
+          variant: 'default',
+        });
+      }
 
-      // Redirect user to login page
-      router.push('/login');
+      // Redirect user to specified path (default: login page)
+      router.push(redirectTo);
     } catch (error) {
       console.error('Logout error:', error);
       // Even if request fails, clear local data
       setUser(null);
+      router.push(redirectTo);
     } finally {
       setLoading(false);
     }
