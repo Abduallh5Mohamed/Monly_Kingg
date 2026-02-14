@@ -21,7 +21,11 @@
     "stress-test-quick": "powershell -ExecutionPolicy Bypass -File run-load-test.ps1 -Quick",
     "stress-test-heavy": "powershell -ExecutionPolicy Bypass -File run-load-test.ps1 -Users 50 -Duration 120",
     "create-test-users": "node create-test-users.js all",
-    "cleanup-test-users": "node create-test-users.js cleanup"
+    "cleanup-test-users": "node create-test-users.js cleanup",
+    "security:setup": "node scripts/setup-encryption.js",
+    "security:encrypt-data": "node scripts/encrypt-existing-deposits.js",
+    "security:audit": "npm audit",
+    "security:audit-fix": "npm audit fix"
   },
   "type": "module",
   "author": "",

@@ -18,6 +18,30 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
+  const [balance, setBalance] = useState<number>(0);
+  const [level, setLevel] = useState<number>(1);
+
+  // Fetch user balance and level from database
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch('/api/v1/users/profile', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.data && data.data.user) {
+            setBalance(data.data.user.wallet?.balance || 0);
+            setLevel(data.data.user.stats?.level || 1);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
 
   // Check if profile is completed
   useEffect(() => {

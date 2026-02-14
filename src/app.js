@@ -11,6 +11,7 @@ import sellerRoutes from "./modules/sellers/seller.routes.js";
 import listingRoutes from "./modules/listings/listing.routes.js";
 import notificationRoutes from "./modules/notifications/notification.routes.js";
 import promotionRoutes from "./modules/promotions/promotion.routes.js";
+import gamesRoutes from "./modules/games/game.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import helmet from "helmet";
 import cors from "cors";
@@ -107,6 +108,7 @@ app.use("/api/v1/seller", sellerRoutes);
 app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1/promotions", promotionRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/games", gamesRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");
