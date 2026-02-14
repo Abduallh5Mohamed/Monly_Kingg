@@ -1,138 +1,127 @@
 'use client';
 
-import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, MessageSquare, LogOut, User, FileText, Store, Wallet, Megaphone } from 'lucide-react';
+import { Home, MessageSquare, Store, Wallet, User, Sparkles } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
-interface SidebarItem {
-  icon: any;
-  label: string;
-  path: string;
-  badge?: number;
+interface NavItem {
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+    path: string;
+    badge?: number;
 }
 
 export function UserSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const pathname = usePathname();
-  const { user, logout } = useAuth();
+    const pathname = usePathname();
+    const { user } = useAuth();
 
-  const menuItems: SidebarItem[] = [
-    { icon: Home, label: 'Dashboard', path: '/user/dashboard' },
-    { icon: MessageSquare, label: 'Messages', path: '/user/chat', badge: 3 },
-    { icon: FileText, label: 'Payments', path: '/user/payments' },
-    { icon: Wallet, label: 'Withdraw', path: '/user/withdraw' },
-    ...(user?.isSeller ? [
-      { icon: Store, label: 'My Store', path: '/user/store' },
-      { icon: Megaphone, label: 'Promotions', path: '/user/promotions' },
-    ] : []),
-    { icon: User, label: 'Profile', path: '/user/profile' }
-  ];
+    const navItems: NavItem[] = [
+        { icon: MessageSquare, label: 'Chat', path: '/user/chat', badge: 3 },
+        { icon: Store, label: 'Store', path: '/user/store' },
+        { icon: Home, label: 'Home', path: '/user' },
+        { icon: Wallet, label: 'Pay', path: '/user/payments' },
+        { icon: User, label: 'Profile', path: '/user/profile' },
+    ];
 
-  const handleLogout = async () => {
-    await logout();
-  };
+    return (
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-4 px-4">
+            <div className="relative w-full max-w-[420px] pointer-events-auto">
 
-  return (
-    <div
-      className={`${isCollapsed ? 'w-20' : 'w-20'
-        } h-screen bg-gradient-to-b from-[#0f1419] via-[#1a1f2e] to-[#0a0e14] flex flex-col transition-all duration-300 fixed left-0 top-0 z-50 shadow-2xl shadow-cyan-500/10 border-r border-cyan-500/20`}
-    >
-      {/* Logo Section with Glow Effect */}
-      <div className="p-4 border-b border-cyan-500/20 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
-        <Link href="/user/dashboard" className="text-center relative block">
-          <div className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto relative group hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">
-              {user?.username?.charAt(0).toUpperCase() || 'U'}
-            </span>
-          </div>
-          {/* Online Status Indicator */}
-          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
-        </Link>
-      </div>
+                {/* Glass Background */}
+                <div className="relative bg-[#0d1017]/85 backdrop-blur-2xl border border-white/[0.06] rounded-2xl shadow-[0_-8px_40px_rgba(0,0,0,0.4)]">
+                    {/* Gradient top line */}
+                    <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent rounded-full" />
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 px-3 py-6 overflow-y-auto">
-        <div className="space-y-4">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.path;
+                    {/* Nav Items */}
+                    <div className="flex items-center justify-around px-2 py-2">
+                        {navItems.map((item) => {
+                            const isHome = item.label === 'Home';
+                            const isActive = isHome
+                                ? pathname === '/user' || pathname === '/user/'
+                                : pathname === item.path || pathname?.startsWith(item.path + '/');
+                            const Icon = item.icon;
 
-            return (
-              <Link
-                key={index}
-                href={item.path}
-                prefetch={true}
-                className={`w-full flex items-center justify-center p-3.5 rounded-2xl transition-all duration-300 group relative ${isActive
-                  ? 'bg-gradient-to-br from-cyan-500 to-cyan-600 text-white shadow-xl shadow-cyan-500/50 scale-105 border border-cyan-400/50'
-                  : 'text-gray-400 hover:bg-gradient-to-br hover:from-cyan-500/10 hover:to-purple-500/10 hover:text-cyan-300 border border-transparent hover:border-cyan-500/30'
-                  }`}
-                title={item.label}
-              >
-                {/* Icon Glow Effect */}
-                <div
-                  className={`absolute inset-0 rounded-2xl blur-xl transition-opacity duration-300 ${isActive ? 'bg-cyan-500/30 opacity-100' : 'opacity-0 group-hover:opacity-50 bg-cyan-500/20'
-                    }`}
-                />
+                            if (isHome) {
+                                return (
+                                    <Link
+                                        key={item.path}
+                                        href={item.path}
+                                        className="relative flex items-center justify-center -mt-7"
+                                    >
+                                        {/* Outer glow ring */}
+                                        <div className={`absolute inset-0 rounded-full transition-all duration-500 ${
+                                            isActive ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-xl scale-150' : ''
+                                        }`} />
 
-                <Icon
-                  className={`h-6 w-6 relative z-10 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'
-                    }`}
-                />
+                                        {/* Main button */}
+                                        <div className={`
+                                            relative w-[58px] h-[58px] rounded-full flex items-center justify-center
+                                            transition-all duration-300
+                                            ${isActive
+                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30 scale-105'
+                                                : 'bg-[#161a24] border border-white/[0.08] hover:border-cyan-500/20 shadow-lg shadow-black/40'
+                                            }
+                                        `}>
+                                            <Home className={`w-6 h-6 transition-all duration-300 ${
+                                                isActive ? 'text-white drop-shadow-lg' : 'text-white/40'
+                                            }`} />
 
-                {item.badge && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-red-500 to-pink-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg shadow-red-500/50 border-2 border-[#0f1419]">
-                    {item.badge}
-                  </span>
-                )}
+                                            {/* Sparkle decorations when active */}
+                                            {isActive && (
+                                                <>
+                                                    <Sparkles className="absolute -top-1 -right-1 w-3 h-3 text-cyan-300 animate-pulse" />
+                                                    <div className="absolute -bottom-1 -left-1 w-2 h-2 rounded-full bg-cyan-400/50 animate-ping" />
+                                                </>
+                                            )}
+                                        </div>
+                                    </Link>
+                                );
+                            }
 
-                {/* Active Indicator */}
-                {isActive && (
-                  <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-r-full shadow-lg shadow-cyan-500/50" />
-                )}
-              </Link>
-            );
-          })}
+                            return (
+                                <Link
+                                    key={item.path}
+                                    href={item.path}
+                                    className="group relative flex flex-col items-center justify-center py-2 px-1 min-w-[52px]"
+                                >
+                                    {/* Active background glow */}
+                                    {isActive && (
+                                        <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent rounded-xl" />
+                                    )}
+
+                                    <div className="relative">
+                                        <Icon className={`w-[22px] h-[22px] transition-all duration-300 ${
+                                            isActive
+                                                ? 'text-cyan-400 drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]'
+                                                : 'text-white/30 group-hover:text-white/60'
+                                        }`} />
+
+                                        {/* Badge */}
+                                        {item.badge && item.badge > 0 && (
+                                            <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-[8px] font-bold text-white ring-2 ring-[#0d1017] shadow-lg shadow-red-500/30">
+                                                {item.badge}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Label */}
+                                    <span className={`text-[10px] font-medium mt-1 transition-all duration-300 ${
+                                        isActive ? 'text-cyan-400' : 'text-white/20 group-hover:text-white/40'
+                                    }`}>
+                                        {item.label}
+                                    </span>
+
+                                    {/* Active indicator dot */}
+                                    {isActive && (
+                                        <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500" />
+                                    )}
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
         </div>
-      </nav>
-
-      {/* User Profile at Bottom */}
-      <div className="p-3 border-t border-cyan-500/20 relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent pointer-events-none" />
-
-        {/* Logout Button */}
-        <div className="relative mb-4">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center p-3 rounded-2xl text-gray-400 hover:bg-gradient-to-br hover:from-red-500/20 hover:to-pink-500/20 hover:text-red-400 transition-all duration-300 group border border-transparent hover:border-red-500/30 relative overflow-hidden"
-            title="Logout"
-          >
-            <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <LogOut className="h-6 w-6 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-          </button>
-        </div>
-
-        {/* User Avatar */}
-        <div className="relative">
-          <Link
-            href="/user/profile"
-            className="w-14 h-14 rounded-full border-2 border-cyan-500/50 mx-auto block hover:border-cyan-400 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 group relative bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center"
-            title="Go to Profile"
-          >
-            <span className="text-white font-bold text-lg">
-              {user?.username?.charAt(0).toUpperCase() || 'U'}
-            </span>
-          </Link>
-
-          {/* Online Status */}
-          <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#0f1419] shadow-lg shadow-green-500/50" />
-        </div>
-        <p className="text-cyan-100 text-xs text-center mt-2 font-medium truncate px-1">
-          {user?.username || 'User'}
-        </p>
-      </div>
-    </div>
-  );
+    );
 }

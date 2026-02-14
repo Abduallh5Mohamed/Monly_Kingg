@@ -12,6 +12,8 @@ import {
   updateListing,
   deleteListing,
   getSellerStats,
+  browseListings,
+  getGamesForFilter,
 } from "./listing.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -51,7 +53,11 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
 });
 
-// All routes require authentication
+// ─── Public routes (no auth) ─── 
+router.get("/browse", cacheResponse(120), browseListings);
+router.get("/games", cacheResponse(300), getGamesForFilter);
+
+// All routes below require authentication
 router.post(
   "/",
   authMiddleware,

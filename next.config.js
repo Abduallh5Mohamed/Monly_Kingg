@@ -5,14 +5,14 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   swcMinify: true, // Use SWC for faster builds
-  
+
   // Production optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
   },
-  
+
   // Reduce bundle size
   modularizeImports: {
     'lucide-react': {
@@ -24,6 +24,19 @@ const nextConfig = {
   experimental: {
     optimizeCss: true, // Enable CSS optimization
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*',
+      },
+      {
+        source: '/uploads/:path*',
+        destination: 'http://localhost:5000/uploads/:path*',
+      },
+    ];
   },
 
   async redirects() {
