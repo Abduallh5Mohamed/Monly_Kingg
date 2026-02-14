@@ -142,25 +142,14 @@ const CATEGORIES = [
   { icon: Gift, label: 'Lifestyle', count: '310' },
 ];
 
-/* ── Promo Banners ── */
-const PROMO_BANNERS_TOP = [
-  { title: 'SOFTWARE', subtitle: 'Mega Sale', discount: '-80%', gradient: 'from-orange-500 via-red-500 to-pink-500', emoji: '🔥' },
-  { title: 'MINECRAFT', subtitle: 'Java + Bedrock', discount: '-60%', gradient: 'from-green-500 via-green-600 to-emerald-700', emoji: '⛏️' },
-  { title: 'YouTube Premium', subtitle: 'Ad-Free', discount: '-70%', gradient: 'from-red-500 via-red-600 to-red-800', emoji: '▶️' },
-];
-
-const PROMO_BANNERS_BOTTOM = [
-  { title: 'XBOX', discount: '-90%', gradient: 'from-green-400 via-green-500 to-green-700', IconComp: XboxIcon },
-  { title: 'PlayStation', discount: '-70%', gradient: 'from-blue-500 via-blue-600 to-blue-800', IconComp: PlayStationIcon },
-  { title: 'STEAM SALE', discount: '-80%', gradient: 'from-slate-600 via-slate-700 to-slate-900', IconComp: SteamIcon },
-];
 
 /* ── Platform Filter Tabs ── */
 const PLATFORM_TABS = [
   { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
-  { id: 'steam', name: 'Steam', icon: SteamIcon, color: 'from-slate-500 to-slate-600' },
-  { id: 'xbox', name: 'Xbox', icon: XboxIcon, color: 'from-green-500 to-green-600' },
-  { id: 'playstation', name: 'PlayStation', icon: PlayStationIcon, color: 'from-blue-500 to-blue-600' },
+  { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
+  { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
+  { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
+  { id: 'fifa', name: 'FIFA', icon: Gamepad2, color: 'from-green-500 to-green-600' },
 ];
 
 /* ═══════════ HORIZONTAL SCROLL COMPONENT ═══════════ */
@@ -520,50 +509,6 @@ export default function UserDashboardPage() {
           </div>
         </section>
 
-        {/* ═══════════ PROMOTIONAL BANNERS - Modern Cards ═══════════ */}
-        <section className="space-y-2.5">
-          {/* Top row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-            {PROMO_BANNERS_TOP.map((banner, i) => (
-              <Link key={i} href="/user/dashboard"
-                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${banner.gradient} h-24 md:h-28 flex items-center justify-between px-5 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl group`}
-              >
-                {/* Noise overlay */}
-                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute inset-0 opacity-[0.03] mix-blend-soft-light" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
-                
-                <div className="relative z-10 flex items-center gap-3">
-                  <span className="text-2xl">{banner.emoji}</span>
-                  <div>
-                    <h3 className="text-lg font-black text-white tracking-wide">{banner.title}</h3>
-                    <p className="text-white/50 text-[11px] font-medium">{banner.subtitle}</p>
-                  </div>
-                </div>
-                <span className="relative z-10 bg-white/20 backdrop-blur-sm text-white text-base font-black px-3 py-1.5 rounded-xl border border-white/20">
-                  {banner.discount}
-                </span>
-              </Link>
-            ))}
-          </div>
-
-          {/* Bottom row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-            {PROMO_BANNERS_BOTTOM.map((banner, i) => (
-              <Link key={i} href="/user/dashboard"
-                className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${banner.gradient} h-16 md:h-20 flex items-center justify-between px-5 transition-all duration-500 hover:scale-[1.02] group`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <banner.IconComp className="w-6 h-6 text-white/70" />
-                  <h3 className="text-sm font-black text-white tracking-wider">{banner.title}</h3>
-                </div>
-                <span className="bg-white/20 backdrop-blur-sm text-white text-sm font-black px-2.5 py-1 rounded-lg border border-white/10">
-                  {banner.discount}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
         {/* ═══════════ DISCOUNTED PRODUCTS (FROM ADMIN) ═══════════ */}
         {activeDiscounts.length > 0 && (
           <section>
@@ -664,54 +609,78 @@ export default function UserDashboardPage() {
           </HorizontalScroll>
         </section>
 
-        {/* ═══════════ SEAL+PASS BANNER - Ultra Modern ═══════════ */}
-        <section className="relative overflow-hidden rounded-3xl border border-white/[0.04]">
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0e0b1f] via-[#130f2a] to-[#0b0918]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(139,92,246,0.06),transparent_60%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_30%,rgba(236,72,153,0.04),transparent_50%)]" />
+        {/* ═══════════ SEAL+PASS BANNER - Premium Design ═══════════ */}
+        <section className="relative overflow-hidden rounded-3xl border border-white/[0.06]">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-fuchsia-600/10" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(168,85,247,0.15),transparent_60%)]" />
           
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+          {/* Animated grid pattern */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
-          <div className="relative flex flex-col md:flex-row items-center">
-            {/* Left Visual */}
-            <div className="relative w-full md:w-2/5 h-44 md:h-56 flex items-center justify-center overflow-hidden">
-              <div className="relative z-10">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-pink-500/20 rotate-6 hover:rotate-0 transition-transform duration-500">
-                  <Crown className="w-12 h-12 md:w-16 md:h-16 text-white drop-shadow-lg" />
+          <div className="relative flex flex-col md:flex-row-reverse items-center">
+            {/* Right Visual - Crown Icon */}
+            <div className="relative w-full md:w-2/5 h-48 md:h-60 flex items-center justify-center overflow-hidden">
+              <div className="relative">
+                {/* Main Crown */}
+                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] bg-gradient-to-br from-amber-400 via-orange-500 to-pink-600 flex items-center justify-center shadow-2xl shadow-purple-500/30 group hover:shadow-purple-500/50 transition-all duration-700 hover:scale-105">
+                  <Crown className="w-16 h-16 md:w-20 md:h-20 text-white drop-shadow-2xl" />
+                  {/* Inner glow */}
+                  <div className="absolute inset-4 rounded-[2rem] bg-gradient-to-br from-white/20 to-transparent" />
                 </div>
+                {/* Orbiting particles */}
+                <div className="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 shadow-lg shadow-amber-500/50 animate-pulse" />
+                <div className="absolute -bottom-2 -left-2 w-5 h-5 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 shadow-lg shadow-purple-500/50 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <Sparkles className="absolute top-8 -left-8 w-5 h-5 text-yellow-400 animate-[spin_4s_linear_infinite]" />
               </div>
-              {/* Floating orbs */}
-              <div className="absolute top-8 right-16 w-8 h-8 bg-pink-500/10 rounded-full animate-[float_3s_ease-in-out_infinite]" />
-              <div className="absolute bottom-12 left-20 w-5 h-5 bg-purple-500/15 rounded-full animate-[float_4s_ease-in-out_infinite_1s]" />
-              <Sparkles className="absolute top-12 left-1/3 w-4 h-4 text-yellow-400/20 animate-pulse" />
             </div>
 
-            {/* Right Content */}
-            <div className="w-full md:w-3/5 p-6 md:p-8 text-center md:text-left">
-              <div className="inline-block mb-3">
-                <span className="text-[10px] font-bold text-purple-400 bg-purple-400/10 px-3 py-1 rounded-full uppercase tracking-widest">Premium</span>
+            {/* Left Content */}
+            <div className="w-full md:w-3/5 p-8 md:p-10 text-center md:text-left">
+              <div className="inline-block mb-4">
+                <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
               </div>
-              <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
-                SEAL<span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">+</span>PASS
+              
+              <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
+                SEAL<span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">+</span>PASS
               </h3>
-              <p className="text-white/30 text-sm mt-2 max-w-sm">Save up to 25% on every purchase with our premium membership</p>
+              
+              <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
+                Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
+              </p>
 
-              <div className="my-5 border-t border-white/[0.04]" />
-
-              <div className="flex items-baseline gap-2 justify-center md:justify-start">
-                <span className="text-white/25 text-sm">from</span>
-                <span className="text-3xl md:text-4xl font-black text-white tabular-nums">$2.49</span>
-                <span className="text-sm text-white/30">/mo</span>
+              <div className="flex flex-wrap gap-3 mb-6 justify-center md:justify-start">
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-white/70 text-xs font-medium">Early Access</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" style={{ animationDelay: '0.3s' }} />
+                  <span className="text-white/70 text-xs font-medium">Priority Support</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay: '0.6s' }} />
+                  <span className="text-white/70 text-xs font-medium">Exclusive Deals</span>
+                </div>
               </div>
 
-              <button className="mt-5 w-full md:w-auto bg-gradient-to-r from-violet-500 to-purple-600 text-white font-bold px-8 py-3 rounded-xl hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 flex items-center justify-center gap-2 text-sm hover:scale-[1.02] active:scale-[0.98]">
-                <Zap className="w-4 h-4" />
-                Get SEAL+PASS
+              <div className="flex items-end gap-3 justify-center md:justify-start mb-6">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-white/40 text-sm">Starting at</span>
+                  <span className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">$2.49</span>
+                  <span className="text-lg text-white/40 font-medium">/month</span>
+                </div>
+              </div>
+
+              <button className="group relative w-full md:w-auto bg-gradient-to-r from-amber-400 via-orange-500 to-pink-600 text-white font-bold px-10 py-4 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98]">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative flex items-center justify-center gap-2.5 text-base">
+                  <Zap className="w-5 h-5" />
+                  Get SEAL+PASS Now
+                </span>
               </button>
 
-              <p className="text-white/15 text-[10px] mt-3">Cancel anytime. No hidden fees.</p>
+              <p className="text-white/20 text-[11px] mt-4 font-medium">✓ Cancel anytime • No hidden fees • Instant activation</p>
             </div>
           </div>
         </section>

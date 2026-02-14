@@ -7957,3 +7957,8 @@
 [2026-02-14T11:52:35.862Z] [INFO]: Admin fetched users: page 1, 4 users
 [2026-02-14T11:52:56.757Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
 [2026-02-14T11:52:56.766Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T11:53:26.780Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T11:53:26.797Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T11:53:28.759Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T11:54:41.214Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (319ms)
+[2026-02-14T12:05:18.926Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (335ms)
