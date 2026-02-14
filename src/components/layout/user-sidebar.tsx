@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Tag, Trophy, Music, UserCircle } from 'lucide-react';
+import { Home, Search, ShoppingBag, MapPin } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 interface NavItem {
@@ -17,40 +17,48 @@ export function UserSidebar() {
 
     // Left side items (before home)
     const leftItems: NavItem[] = [
-        { icon: Tag, label: 'Deals', path: '/user/deals' },
-        { icon: Trophy, label: 'Ranks', path: '/user/ranks' },
+        { icon: ShoppingBag, label: 'STORE', path: '/user/store' },
+        { icon: Search, label: 'SEARCH', path: '/user/search' },
     ];
 
     // Right side items (after home)
     const rightItems: NavItem[] = [
-        { icon: Music, label: 'Audio', path: '/user/audio' },
-        { icon: UserCircle, label: 'Profile', path: '/user/profile' },
+        { icon: ShoppingBag, label: 'ORDERS', path: '/user/orders' },
+        { icon: MapPin, label: 'LOCATION', path: '/user/location' },
     ];
 
-    const homeItem = { icon: Home, label: 'Home', path: '/user' };
+    const homeItem = { icon: Home, label: 'HOME', path: '/user' };
 
     const isPathActive = (path: string, isHome: boolean) => {
         if (isHome) return pathname === '/user' || pathname === '/user/';
         return pathname === path || pathname?.startsWith(path + '/');
     };
 
-    const renderNavItem = (item: NavItem, isHome = false) => {
-        const isActive = isPathActive(item.path, isHome);
+    const renderNavItem = (item: NavItem) => {
+        const isActive = isPathActive(item.path, false);
         const Icon = item.icon;
 
         return (
             <Link
                 key={item.path}
                 href={item.path}
-                className="group relative flex flex-col items-center justify-center py-2.5 px-5 transition-all duration-300"
+                className="group relative flex flex-col items-center justify-center py-3 px-6 transition-all duration-300"
             >
-                <div className="relative">
-                    <Icon className={`w-[23px] h-[23px] transition-all duration-300 ${
-                        isActive
-                            ? 'text-white/90'
-                            : 'text-white/30 group-hover:text-white/50'
-                    }`} />
-                </div>
+                {/* Icon */}
+                <Icon className={`w-5 h-5 mb-1 transition-all duration-300 ${
+                    isActive
+                        ? 'text-white'
+                        : 'text-white/40 group-hover:text-white/70'
+                }`} />
+                
+                {/* Label */}
+                <span className={`text-[9px] font-bold tracking-wider transition-all duration-300 ${
+                    isActive
+                        ? 'text-white'
+                        : 'text-white/40 group-hover:text-white/70'
+                }`}>
+                    {item.label}
+                </span>
             </Link>
         );
     };
@@ -58,14 +66,11 @@ export function UserSidebar() {
     const isHomeActive = isPathActive(homeItem.path, true);
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-5 px-4">
-            <div className="relative w-full max-w-[360px] pointer-events-auto">
+        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-6 px-4">
+            <div className="relative w-full max-w-[420px] pointer-events-auto">
 
-                {/* Main container with dark theme */}
-                <div className="relative bg-[#0d1018]/90 backdrop-blur-3xl rounded-[32px] shadow-[0_10px_50px_rgba(0,0,0,0.6)] border border-white/[0.06]">
-                    
-                    {/* Subtle top highlight */}
-                    <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                {/* Main container - Dark Navy Blue like the image */}
+                <div className="relative bg-[#1a2332] rounded-[28px] shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
 
                     {/* Nav Items Container */}
                     <div className="relative flex items-center justify-center">
@@ -78,27 +83,30 @@ export function UserSidebar() {
                         {/* Center - Floating Home Button */}
                         <Link
                             href={homeItem.path}
-                            className="relative flex items-center justify-center -mt-10 mx-1"
+                            className="relative flex flex-col items-center justify-center -mt-9"
                         >
-                            {/* Outer glow effect */}
-                            <div className="absolute inset-0 w-[68px] h-[68px] rounded-full bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 blur-xl opacity-40 animate-pulse" />
-                            
-                            {/* Main button circle */}
+                            {/* Main button circle - Solid Navy Blue */}
                             <div className={`
-                                relative w-[64px] h-[64px] rounded-full flex items-center justify-center
-                                bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700
-                                shadow-2xl shadow-blue-500/30
-                                transition-all duration-500 ease-out
-                                hover:scale-110 hover:shadow-blue-500/50
+                                relative w-[60px] h-[60px] rounded-full flex items-center justify-center
+                                bg-[#1a2332]
+                                shadow-xl shadow-black/40
+                                transition-all duration-300
+                                hover:scale-105
                                 active:scale-95
-                                border-4 border-[#0d1018]
+                                border-[3px] border-[#1a2332]
                             `}>
-                                {/* Inner shine overlay */}
-                                <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent" />
-                                
-                                {/* Home icon */}
-                                <Home className="w-7 h-7 text-white relative z-10 drop-shadow-lg" strokeWidth={2.5} />
+                                {/* Inner circle */}
+                                <div className="w-full h-full rounded-full bg-[#1a2332] flex items-center justify-center">
+                                    <Home className="w-6 h-6 text-white" />
+                                </div>
                             </div>
+                            
+                            {/* Label below */}
+                            <span className={`text-[9px] font-bold tracking-wider mt-1 transition-all duration-300 ${
+                                isHomeActive ? 'text-white' : 'text-white/40'
+                            }`}>
+                                {homeItem.label}
+                            </span>
                         </Link>
 
                         {/* Right Items */}
