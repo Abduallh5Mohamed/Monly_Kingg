@@ -21,6 +21,7 @@ import {
     Filter,
     LayoutGrid,
     LayoutList,
+    Zap,
 } from 'lucide-react';
 
 /* ── Types ── */
@@ -51,77 +52,87 @@ function ListingCard({ listing }: { listing: Listing }) {
     return (
         <Link
             href={`/listings/${listing._id}`}
-            className="group bg-[#0c0f18] rounded-2xl border border-white/[0.04] hover:border-white/[0.1] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/[0.07] hover:-translate-y-1"
+            className="group/card relative isolate"
         >
-            {/* Image */}
-            <div className="relative aspect-[4/3] overflow-hidden">
-                {listing.coverImage || listing.images?.length > 0 ? (
-                    <img
-                        src={listing.coverImage || listing.images[0]}
-                        alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
-                        <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+            {/* Hover border glow */}
+            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
+
+            <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                    {listing.coverImage || listing.images?.length > 0 ? (
+                        <img
+                            src={listing.coverImage || listing.images[0]}
+                            alt={listing.title}
+                            className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out"
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.04] to-purple-500/[0.02] flex items-center justify-center">
+                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1019] via-[#0d1019]/30 to-transparent" />
+
+                    {/* Top row badges */}
+                    <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
+                        {listing.seller ? (
+                            <span className="bg-black/40 backdrop-blur-md text-white/70 text-[8px] font-semibold px-1.5 py-[3px] rounded-md border border-white/[0.06] flex items-center gap-1">
+                                <div className="w-1 h-1 rounded-full bg-green-400" />
+                                @{listing.seller.username}
+                            </span>
+                        ) : (
+                            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
+                                <Zap className="w-2.5 h-2.5" /> -{discount}%
+                            </span>
+                        )}
+                        <span className="w-6 h-6 rounded-lg bg-black/30 backdrop-blur-md border border-white/[0.08] flex items-center justify-center">
+                            <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                        </span>
                     </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
 
-                {/* Verified */}
-                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
-                    <ShieldCheck className="w-3 h-3 text-cyan-400" />
-                </span>
-
-                {/* Discount badge */}
-                <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-                    -{discount}%
-                </span>
-
-                {/* Seller */}
-                {listing.seller && (
-                    <span className="absolute top-2 left-2 bg-black/40 backdrop-blur-sm text-white/70 text-[9px] font-medium px-1.5 py-0.5 rounded-md">
-                        @{listing.seller.username}
-                    </span>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="p-3">
-                <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
-                    {listing.title}
-                </h3>
-
-                {/* Game & Region tags */}
-                <div className="flex items-center gap-1 mt-2 flex-wrap">
-                    {listing.game && (
-                        <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">
-                            {listing.game.name}
+                    {/* Discount badge on bottom if seller exists */}
+                    {listing.seller && (
+                        <span className="absolute bottom-2 left-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
+                            <Zap className="w-2.5 h-2.5" /> -{discount}%
                         </span>
                     )}
-                    <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
                 </div>
 
-                {/* Prices */}
-                <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
-                    <div>
-                        <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>
-                        <p className="text-base font-black text-white">${listing.price.toFixed(2)}</p>
+                {/* Content */}
+                <div className="p-3">
+                    <h3 className="text-[11px] font-semibold text-white/85 line-clamp-2 min-h-[30px] group-hover/card:text-white transition-colors leading-snug">
+                        {listing.title}
+                    </h3>
+
+                    <div className="flex items-center gap-1 mt-2 flex-wrap">
+                        {listing.game && (
+                            <span className="text-[8px] text-cyan-300/50 bg-cyan-500/[0.06] px-1.5 py-[2px] rounded font-semibold border border-cyan-500/[0.06]">
+                                {listing.game.name}
+                            </span>
+                        )}
+                        <span className="text-[8px] text-purple-300/50 bg-purple-500/[0.06] px-1.5 py-[2px] rounded font-semibold border border-purple-500/[0.06]">GLOBAL</span>
                     </div>
-                    <button
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110"
-                    >
-                        <ShoppingCart className="w-3.5 h-3.5" />
-                    </button>
-                </div>
 
-                {/* SEAL PASS Price */}
-                <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-                    <span className="text-white font-bold text-[13px]">${passPrice}</span>
-                    <span className="text-white/60 text-[9px] flex items-center gap-1">
-                        with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
-                    </span>
+                    <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+                        <div>
+                            <p className="text-[9px] text-white/20 line-through">${originalPrice}</p>
+                            <p className="text-[15px] font-black text-white">${listing.price.toFixed(2)}</p>
+                        </div>
+                        <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            className="w-8 h-8 rounded-lg bg-cyan-500/[0.08] border border-cyan-500/[0.08] flex items-center justify-center text-cyan-400/30 hover:text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-500/25 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_16px_rgba(6,182,212,0.15)]"
+                        >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+
+                    {/* SEAL PASS */}
+                    <div className="mt-2 bg-gradient-to-r from-violet-600/80 to-purple-700/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                        <span className="text-white font-black text-[12px]">${passPrice}</span>
+                        <span className="text-white/40 text-[8px] flex items-center gap-0.5">
+                            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/70">PASS</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </Link>
