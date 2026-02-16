@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
-import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import {
     Gamepad2,
@@ -22,7 +21,7 @@ import {
     Filter,
     LayoutGrid,
     LayoutList,
-    Tag,
+    Zap,
 } from 'lucide-react';
 
 /* ── Types ── */
@@ -45,8 +44,7 @@ interface Game {
 }
 
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
-function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
-    const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
+function ListingCard({ listing }: { listing: Listing }) {
     const discount = Math.floor(10 + ((listing.price * 7) % 60));
     const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
     const passPrice = (listing.price * 0.82).toFixed(2);
@@ -56,98 +54,86 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
             href={`/listings/${listing._id}`}
             className="group/card relative isolate"
         >
-            {/* Hover border glow */}
-            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
+            {/* Hover border glow - Enhanced */}
+            <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
 
-            <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
+            <div className="relative bg-gradient-to-b from-[#0f1425] to-[#0a0d18] rounded-3xl border border-white/[0.08] group-hover/card:border-white/[0.15] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_20px_60px_-15px_rgba(6,182,212,0.2)] group-hover/card:-translate-y-2">
                 {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="relative aspect-[5/4] overflow-hidden">
                     {listing.coverImage || listing.images?.length > 0 ? (
                         <img
                             src={listing.coverImage || listing.images[0]}
                             alt={listing.title}
-                            className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out"
+                            className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
                         />
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.04] to-purple-500/[0.02] flex items-center justify-center">
-                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.04] flex items-center justify-center">
+                            <Gamepad2 className="w-12 h-12 text-white/[0.08]" />
                         </div>
                     )}
-                    
-<<<<<<< HEAD
-                {/* Verified */}
-                <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
-                    <ShieldCheck className="w-3 h-3 text-cyan-400" />
-                </span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-[#0a0d18]/50 to-transparent" />
 
-                {/* Discount badge / Owner badge */}
-                {isOwner ? (
-                    <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
-                        <Tag className="w-3 h-3" /> Your Listing
-                    </span>
-                ) : (
-                    <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-                        -{discount}%
-                    </span>
-                )}
+                    {/* Top row badges - Enhanced */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                        {listing.seller ? (
+                            <span className="bg-black/50 backdrop-blur-xl text-white/80 text-[10px] font-bold px-2.5 py-1.5 rounded-xl border border-white/[0.1] flex items-center gap-1.5 shadow-lg">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                @{listing.seller.username}
+                            </span>
+                        ) : (
+                            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1 backdrop-blur-sm">
+                                <Zap className="w-3 h-3" /> -{discount}%
+                            </span>
+                        )}
+                        <span className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-xl border border-white/[0.12] flex items-center justify-center shadow-lg">
+                            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                        </span>
+                    </div>
 
-                {/* Seller */}
-                {listing.seller && (
-                    <span className="absolute top-2 left-2 bg-black/40 backdrop-blur-sm text-white/70 text-[9px] font-medium px-1.5 py-0.5 rounded-md">
-                        @{listing.seller.username}
-                    </span>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="p-3">
-                <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
-                    {listing.title}
-                </h3>
-
-                {/* Game & Region tags */}
-                <div className="flex items-center gap-1 mt-2 flex-wrap">
-                    {listing.game && (
-                        <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">
-                            {listing.game.name}
-=======
                     {/* Discount badge on bottom if seller exists */}
                     {listing.seller && (
-                        <span className="absolute bottom-2 left-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
-                            <Zap className="w-2.5 h-2.5" /> -{discount}%
->>>>>>> 9da68345753ca74588f2a7441db6b48186f16ee5
+                        <span className="absolute bottom-3 left-3 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
+                            <Zap className="w-3 h-3" /> -{discount}%
                         </span>
                     )}
                 </div>
 
-<<<<<<< HEAD
-                {/* Prices */}
-                <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
-                    <div>
-                        {!isOwner && <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>}
-                        <p className="text-base font-black text-white">${listing.price.toFixed(2)}</p>
+                {/* Content - Enhanced */}
+                <div className="p-4">
+                    <h3 className="text-sm font-bold text-white/90 line-clamp-2 min-h-[40px] group-hover/card:text-white transition-colors leading-tight mb-3">
+                        {listing.title}
+                    </h3>
+
+                    <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+                        {listing.game && (
+                            <span className="text-[10px] text-cyan-400/70 bg-cyan-500/[0.1] px-2 py-1 rounded-lg font-bold border border-cyan-500/[0.12]">
+                                {listing.game.name}
+                            </span>
+                        )}
+                        <span className="text-[10px] text-purple-400/70 bg-purple-500/[0.1] px-2 py-1 rounded-lg font-bold border border-purple-500/[0.12]">GLOBAL</span>
                     </div>
-                    {!isOwner && (
+
+                    <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
+                        <div>
+                            <p className="text-[10px] text-white/30 line-through font-medium">${originalPrice}</p>
+                            <p className="text-xl font-black text-white mt-0.5">${listing.price.toFixed(2)}</p>
+                        </div>
                         <button
                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                            className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110"
+                            className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/[0.15] flex items-center justify-center text-cyan-400 hover:text-cyan-300 hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/30 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_24px_rgba(6,182,212,0.25)]"
                         >
-                            <ShoppingCart className="w-3.5 h-3.5" />
+                            <ShoppingCart className="w-5 h-5" />
                         </button>
-                    )}
-                </div>
+                    </div>
 
-                {/* SEAL PASS Price — hide for owner */}
-                {!isOwner && (
-                    <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-                        <span className="text-white font-bold text-[13px]">${passPrice}</span>
-                        <span className="text-white/60 text-[9px] flex items-center gap-1">
-                            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
+                    {/* SEAL PASS - Enhanced */}
+                    <div className="mt-3 bg-gradient-to-r from-violet-600/90 to-purple-700/90 rounded-xl px-3 py-2 flex items-center justify-between shadow-lg border border-violet-500/20">
+                        <span className="text-white font-black text-sm">${passPrice}</span>
+                        <span className="text-white/50 text-[10px] flex items-center gap-1">
+                            with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
                         </span>
                     </div>
-                )}
-=======
-              
+                </div>
             </div>
         </Link>
     );
@@ -155,7 +141,6 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
 
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
-    const { user } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
@@ -290,8 +275,8 @@ export default function StoreBrowsePage() {
                                 <button
                                     onClick={() => { setGameDropdownOpen(!gameDropdownOpen); setSortDropdownOpen(false); }}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${selectedGame
-                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                            ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                            : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                         }`}
                                 >
                                     <Gamepad2 className="w-3.5 h-3.5" />
@@ -354,8 +339,8 @@ export default function StoreBrowsePage() {
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${showFilters || minPrice || maxPrice
-                                    ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                    : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                     }`}
                             >
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -486,9 +471,9 @@ export default function StoreBrowsePage() {
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                             {listings.map((listing) => (
-                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} />
+                                <ListingCard key={listing._id} listing={listing} />
                             ))}
                         </div>
 
@@ -520,8 +505,8 @@ export default function StoreBrowsePage() {
                                             key={pageNum}
                                             onClick={() => setPage(pageNum)}
                                             className={`w-9 h-9 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-all ${page === pageNum
-                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-                                                : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
+                                                    ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                                                    : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
                                                 }`}
                                         >
                                             {pageNum}
