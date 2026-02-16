@@ -8095,6 +8095,7 @@
 [2026-02-14T12:12:34.583Z] [WARN]: ⚠️ High Memory Usage:
 [2026-02-14T12:12:36.212Z] [WARN]: ⚠️ Slow Request: GET /user - 7812ms
 [2026-02-14T12:12:39.034Z] [WARN]: ⚠️ Slow Request: GET /user - 2144ms
+<<<<<<< HEAD
 [2026-02-14T19:22:47.719Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
 [2026-02-14T19:23:47.734Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
 [2026-02-14T19:24:47.754Z] [INFO]: ✅ Cache HIT: user:698a00a5323f816e36f98461
@@ -9175,3 +9176,697 @@
 [2026-02-16T14:18:25.567Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
 [2026-02-16T14:18:25.611Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
 [2026-02-16T14:18:25.612Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+=======
+[2026-02-14T19:33:33.131Z] [INFO]: 📧 Verification email sent to abdogamedmot@gmail.com
+[2026-02-14T19:33:33.166Z] [INFO]: User registered: abdogamedmot@gmail.com
+[2026-02-14T19:34:22.751Z] [INFO]: Email verified for user: abdogamedmot@gmail.com
+[2026-02-14T19:44:33.757Z] [INFO]: ✅ [LOGIN] abdogamedmot@gmail.com (349ms)
+[2026-02-14T19:44:37.924Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T19:45:23.541Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T19:45:23.542Z] [ERROR]: updateUserWithSync error: window is not defined
+[2026-02-14T19:50:23.007Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:00:42.478Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:00:42.611Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:00:42.617Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:00:52.617Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:00:52.622Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:02.620Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:02.626Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:12.610Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:12.616Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:22.614Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:22.620Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:32.619Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:32.623Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:42.612Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:42.619Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:01:52.619Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:01:52.624Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:02.612Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:02.618Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:12.609Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:12.618Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:22.629Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:22.635Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:32.615Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:32.621Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:42.615Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:42.622Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:02:52.610Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:02:52.615Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:02.617Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:02.621Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:12.617Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:12.622Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:22.615Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:22.620Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:32.612Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:32.615Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:42.613Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:42.618Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:03:52.611Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:03:52.616Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:02.615Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:02.618Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:12.946Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:12.954Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:22.937Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:22.941Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:32.934Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:32.937Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:42.916Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:42.920Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:04:52.617Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:04:52.622Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:02.940Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:02.945Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:12.938Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:12.941Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:22.635Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:22.642Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:32.937Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:32.942Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:42.937Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:42.943Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:05:52.936Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:05:52.940Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:02.617Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:02.623Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:04.488Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:06:23.953Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:06:24.144Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:24.152Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:27.093Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:06:27.247Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:27.252Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:30.334Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:06:30.506Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:30.510Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:33.190Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:06:33.386Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:33.393Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:43.405Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:43.411Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:53.932Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:06:53.935Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:06:59.067Z] [INFO]: User logged out, refresh token revoked: abdogamedmot@gmail.com
+[2026-02-14T20:08:03.734Z] [INFO]: ✅ [LOGIN] abdogamedmot@gmail.com (338ms)
+[2026-02-14T20:08:14.457Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:08:14.519Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:08:14.525Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:08:21.642Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:08:21.656Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:08:31.943Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:08:31.947Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:08:41.936Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:08:41.940Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:08:51.124Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:08:51.131Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:08:59.157Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:09:02.295Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:09:02.374Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:02.383Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:09:09.208Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:09:11.376Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:09:11.461Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:11.472Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:09:21.938Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:21.941Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:09:31.943Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:31.952Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:09:40.926Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:40.931Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:09:50.940Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:09:50.942Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:00.945Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:00.948Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:10.938Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:10.942Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:20.937Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:20.940Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:30.903Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:30.907Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:34.788Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:34.797Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:44.747Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:44.752Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:10:54.762Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:10:54.769Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:04.765Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:04.776Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:14.886Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:14.894Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:26.302Z] [INFO]: Refresh token rotated for user: abdogamedmot@gmail.com
+[2026-02-14T20:11:26.524Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:26.534Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:36.516Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:36.526Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:46.612Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:46.628Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:11:56.611Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:11:56.634Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:06.605Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:06.615Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:16.513Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:16.518Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:26.532Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:26.538Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:32.811Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:32.814Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:42.795Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:42.800Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:12:52.447Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:12:52.461Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:02.389Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:13:02.395Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:12.392Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:13:12.397Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:22.446Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:13:22.464Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:32.397Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:13:32.401Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:42.404Z] [INFO]: ❌ Cache MISS: user:6990ce09affbe33e6347ff3f
+[2026-02-14T20:13:42.410Z] [INFO]: 💾 Synced user 6990ce09affbe33e6347ff3f to cache
+[2026-02-14T20:13:48.537Z] [INFO]: User logged out, refresh token revoked: abdogamedmot@gmail.com
+[2026-02-14T20:18:13.448Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (382ms)
+[2026-02-14T20:18:28.397Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T20:18:28.407Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T20:18:28.769Z] [INFO]: Admin fetched stats: 4 total users
+[2026-02-14T20:18:30.129Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T20:18:30.188Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T20:18:30.198Z] [INFO]: Refresh token rotated for user: monlykingstore@gmail.com
+[2026-02-14T20:18:30.285Z] [INFO]: Admin fetched stats: 4 total users
+[2026-02-14T20:18:30.437Z] [INFO]: Admin fetched users: page 1, 4 users
+[2026-02-14T20:18:42.930Z] [INFO]: Admin fetched users: page 1, 4 users
+[2026-02-14T20:19:00.118Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T20:19:00.126Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T20:19:03.686Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T20:20:30.706Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (315ms)
+[2026-02-14T20:20:31.049Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:20:31.075Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:20:37.859Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:20:37.941Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:20:37.944Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:20:41.509Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:20:41.569Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:20:41.575Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:20:51.136Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:20:51.173Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:01.109Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:01.115Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:11.113Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:11.126Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:21.109Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:21.120Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:31.110Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:31.119Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:41.105Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:41.115Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:21:51.130Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:21:51.146Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:01.106Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:01.117Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:11.955Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:11.965Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:21.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:21.946Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:31.937Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:31.940Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:41.937Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:41.941Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:22:51.946Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:22:51.952Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:01.935Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:01.938Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:11.105Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:11.111Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:21.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:21.944Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:31.936Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:31.942Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:41.933Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:41.938Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:23:51.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:23:51.943Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:24:01.935Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:24:01.939Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:24:33.945Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:24:33.948Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:25:33.947Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:25:33.954Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:26:33.937Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:26:33.940Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:27:33.944Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:27:33.948Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:28:10.634Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:28:10.640Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:28:11.108Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:28:11.115Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:28:16.251Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:28:16.433Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:28:16.437Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:28:19.077Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-14T20:40:36.680Z] [INFO]: ✅ [LOGIN] monlykingstore@gmail.com (283ms)
+[2026-02-14T20:40:45.603Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T20:40:45.610Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T20:40:45.723Z] [INFO]: Admin fetched stats: 4 total users
+[2026-02-14T20:40:45.819Z] [INFO]: Admin fetched users: page 1, 4 users
+[2026-02-14T20:41:15.931Z] [INFO]: ❌ Cache MISS: user:68dc6297ea6649ef04ed569c
+[2026-02-14T20:41:15.934Z] [INFO]: 💾 Synced user 68dc6297ea6649ef04ed569c to cache
+[2026-02-14T20:41:43.233Z] [INFO]: User logged out, refresh token revoked: monlykingstore@gmail.com
+[2026-02-14T20:42:41.416Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (297ms)
+[2026-02-14T20:42:42.074Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:42:42.080Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:42:48.670Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:42:48.674Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:42:51.556Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:42:51.637Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:42:51.655Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:05.118Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:05.125Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:15.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:15.946Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:25.941Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:25.947Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:35.939Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:35.942Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:45.933Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:45.936Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:43:55.933Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:43:55.937Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:44:05.941Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:44:05.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:44:23.004Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:44:23.008Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:44:25.099Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:44:25.108Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:52:36.506Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:53:05.949Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:05.977Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:15.856Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:15.867Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:22.088Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:22.108Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:32.017Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:32.023Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:36.116Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:53:39.897Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:53:40.045Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:40.053Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:50.064Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:50.070Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:53:51.275Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T20:53:51.476Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:53:51.481Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:01.477Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:01.487Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:11.468Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:11.480Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:21.476Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:21.484Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:31.470Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:31.482Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:41.493Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:41.500Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:54:51.498Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:54:51.514Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:01.947Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:01.955Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:11.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:11.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:21.983Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:21.997Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:31.942Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:31.946Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:41.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:41.944Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:55:51.946Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:55:51.952Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:56:13.029Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:56:13.036Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:56:21.498Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:56:21.506Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:56:31.472Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:56:31.481Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:56:41.932Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:56:41.936Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:56:52.296Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:56:52.302Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:57:01.935Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:57:01.939Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:57:11.936Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:57:11.940Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:57:21.944Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:57:21.948Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:57:31.938Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:57:31.942Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:58:03.508Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:58:03.517Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:58:11.623Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:58:11.630Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:58:53.867Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:58:53.882Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:03.804Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:03.810Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:13.815Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:13.824Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:23.832Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:23.848Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:33.823Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:33.833Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:43.827Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:43.838Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T20:59:53.857Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T20:59:53.867Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:03.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:03.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:13.950Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:13.956Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:23.951Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:23.954Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:33.833Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:33.866Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:47.808Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:47.819Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:00:53.941Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:00:53.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:03.951Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:03.958Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:13.943Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:13.953Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:23.946Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:23.950Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:33.943Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:33.950Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:43.939Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:43.943Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:01:53.943Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:01:53.948Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:02:03.943Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:02:03.949Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:02:33.938Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:02:33.946Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:03:33.940Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:03:33.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:04:33.939Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:04:33.944Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:05:33.944Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:05:33.949Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:06:33.950Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:06:33.956Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:07:33.935Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:07:33.940Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:07:51.387Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:07:51.390Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:07:53.824Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:07:53.835Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:08:03.950Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:08:03.958Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:08:13.943Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:08:13.949Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:08:23.949Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:08:23.955Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:08:33.941Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:08:33.949Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:08:43.960Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:08:43.972Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:10:18.854Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T21:10:18.907Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:10:18.909Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:10:27.239Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-14T21:10:27.280Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:10:27.283Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:10:37.289Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:10:37.296Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:10:47.937Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:10:47.945Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:10:57.938Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:10:57.943Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:11:07.931Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:11:07.934Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:11:17.936Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:11:17.941Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:11:27.949Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:11:27.955Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-14T21:12:33.936Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-14T21:12:33.940Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:31:47.898Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-15T12:32:21.976Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:32:21.993Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:32:31.050Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:32:31.064Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:32:33.883Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-15T12:32:33.983Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:32:33.986Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:32:44.009Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:32:44.019Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:32:53.995Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:32:53.999Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:03.992Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:04.000Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:13.995Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:13.999Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:23.996Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:24.001Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:33.992Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:33.995Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:43.994Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:43.999Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:33:53.994Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:33:54.001Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:03.991Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:04.002Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:13.997Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:14.000Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:24.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:24.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:34.449Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:34.454Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:44.443Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:44.450Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:34:54.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:34:54.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:35:04.447Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:35:04.452Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:35:14.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:35:14.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:35:24.443Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:35:24.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:36:31.446Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:36:31.450Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:37:31.444Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:37:31.449Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:37:52.772Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:37:52.776Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:37:53.996Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:37:54.004Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:03.987Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:03.995Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:14.000Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:14.005Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:24.437Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:24.441Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:34.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:34.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:44.438Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:44.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:38:54.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:38:54.445Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:39:04.459Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:39:04.464Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:39:14.446Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:39:14.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:39:31.443Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:39:31.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:40:23.386Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:40:23.392Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:40:24.017Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:40:24.024Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:40:34.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:40:34.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:40:44.436Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:40:44.440Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:40:54.438Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:40:54.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:41:04.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:41:04.452Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:41:14.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:41:14.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:41:24.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:41:24.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:42:02.416Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:42:02.420Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:42:04.006Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:42:04.011Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:42:14.456Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:42:14.463Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:42:23.997Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:42:24.001Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:42:34.005Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:42:34.009Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:43:17.328Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-15T12:43:17.497Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:43:17.501Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:43:28.439Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:43:28.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:43:38.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:43:38.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:43:48.450Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:43:48.461Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:43:58.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:43:58.445Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:08.460Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:08.463Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:17.504Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:17.512Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:27.511Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:27.523Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:37.500Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:37.504Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:48.444Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:48.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:44:57.502Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:44:57.507Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:07.509Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:07.515Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:17.504Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:17.510Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:27.507Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:27.513Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:37.502Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:37.507Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:47.507Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:47.511Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:45:57.502Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:45:57.507Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:08.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:08.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:18.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:18.445Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:28.437Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:28.440Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:38.439Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:38.443Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:48.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:48.457Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:46:58.437Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:46:58.439Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:08.661Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:08.665Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:18.449Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:18.457Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:28.438Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:28.441Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:38.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:38.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:48.452Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:48.457Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:47:58.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:47:58.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:08.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:08.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:18.418Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:18.423Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:28.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:28.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:38.444Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:38.450Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:48.445Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:48.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:48:58.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:48:58.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:08.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:08.445Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:18.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:18.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:28.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:28.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:38.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:38.443Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:48.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:48.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:49:58.436Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:49:58.439Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:08.438Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:08.443Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:18.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:18.445Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:28.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:28.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:38.439Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:38.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:48.445Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:48.449Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:50:58.437Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:50:58.441Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:08.439Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:08.443Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:18.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:18.444Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:28.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:28.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:38.445Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:38.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:48.451Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:48.454Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:51:58.443Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:51:58.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:08.440Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:08.443Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:18.447Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:18.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:28.436Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:28.439Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:38.436Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:38.439Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:48.445Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:48.449Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:52:58.437Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:52:58.441Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:53:08.438Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:53:08.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:53:18.446Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:53:18.449Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:53:31.439Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:53:31.442Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:54:31.464Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:54:31.468Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:55:31.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:55:31.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:56:31.445Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:56:31.448Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T12:57:31.448Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T12:57:31.451Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:03:31.471Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-15T13:30:54.760Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (306ms)
+[2026-02-15T13:30:55.038Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:30:55.054Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:30:57.740Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:30:57.757Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:00.659Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-15T13:31:00.772Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:00.776Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:10.783Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:10.789Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:20.780Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:20.784Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:31.442Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:31.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:41.435Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:41.438Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:31:51.441Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:31:51.446Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:32:01.468Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:32:01.473Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:32:11.447Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:32:11.453Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:32:21.444Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:32:21.447Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:32:31.459Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:32:31.463Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+[2026-02-15T13:33:31.450Z] [INFO]: ❌ Cache MISS: user:68de79e5ad1be2e1bc91702e
+[2026-02-15T13:33:31.456Z] [INFO]: 💾 Synced user 68de79e5ad1be2e1bc91702e to cache
+>>>>>>> 9da68345753ca74588f2a7441db6b48186f16ee5
+[2026-02-16T14:19:47.937Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 10828ms
+[2026-02-16T14:19:48.855Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-16T14:19:49.843Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/fallback/main.js - 838ms

@@ -51,10 +51,10 @@ const gameCategories: GameCategory[] = [
     ]
   },
   {
-    name: 'FIFA / FC',
+    name: 'FIFA',
     description: 'Ultimate Team accounts with top players',
     bgImage: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800',
-    logo: 'https://placehold.co/80x80/1a1f2e/22c55e?text=FC',
+    logo: 'https://placehold.co/80x80/1a1f2e/22c55e?text=FIFA',
     color: '#22c55e',
     accounts: [
       { id: 'f1', title: 'TOTY Squad Ready', rank: 'Div 1', price: 350, image: 'https://placehold.co/400x300/1a1f2e/22c55e?text=TOTY', rating: 4.9, seller: 'FutKing', features: ['5M Coins', 'TOTY Mbappe', 'Full Meta'] },
@@ -74,14 +74,14 @@ const gameCategories: GameCategory[] = [
     ]
   },
   {
-    name: 'Call of Duty',
-    description: 'Warzone & multiplayer accounts with camos',
+    name: 'Ark Rider',
+    description: 'Action-packed accounts with rare items',
     bgImage: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=800',
-    logo: 'https://placehold.co/80x80/1a1f2e/a855f7?text=CoD',
-    color: '#a855f7',
+    logo: 'https://placehold.co/80x80/1a1f2e/ec4899?text=ARK',
+    color: '#ec4899',
     accounts: [
-      { id: 'c1', title: 'Damascus + Obsidian', rank: 'Prestige Master', price: 180, image: 'https://placehold.co/400x300/1a1f2e/a855f7?text=Damascus', rating: 4.8, seller: 'CodVault', features: ['Damascus All', 'Obsidian Pack', 'Dark Aether'] },
-      { id: 'c2', title: 'Ranked Play Ready', rank: 'Crimson', price: 120, image: 'https://placehold.co/400x300/1a1f2e/a855f7?text=Ranked', rating: 4.7, seller: 'WarzonePro', features: ['Ranked Unlocks', 'Meta Loadouts', 'Clean Stats'] },
+      { id: 'a1', title: 'Legendary Rider', rank: 'S-Rank', price: 280, image: 'https://placehold.co/400x300/1a1f2e/ec4899?text=Legendary', rating: 4.9, seller: 'ArkMaster', features: ['Rare Mount', 'Epic Gear', 'Max Level'] },
+      { id: 'a2', title: 'Elite Collection', rank: 'A-Rank', price: 150, image: 'https://placehold.co/400x300/1a1f2e/ec4899?text=Elite', rating: 4.7, seller: 'RiderPro', features: ['Multiple Riders', 'Premium Items', 'Resources'] },
     ]
   },
 ];

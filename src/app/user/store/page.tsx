@@ -54,10 +54,11 @@ interface Stats {
 
 // Badge styles per game type
 const GAME_BADGES: Record<string, { color: string; label: string }> = {
-  'League of Legends': { color: 'bg-blue-500', label: 'RIOT' },
+  'FIFA': { color: 'bg-green-500', label: 'EA FC 25' },
+  'PUBG': { color: 'bg-orange-500', label: 'GLOBAL' },
+  'Ark Rider': { color: 'bg-pink-500', label: 'ACTION' },
   'Valorant': { color: 'bg-red-500', label: 'RIOT EUW' },
-  'PUBG Mobile': { color: 'bg-yellow-500', label: 'GLOBAL' },
-  'FIFA / FC': { color: 'bg-green-500', label: 'EA FC 25' },
+  'League of Legends': { color: 'bg-blue-500', label: 'RIOT EUW' },
 };
 
 // Promo badge options
@@ -347,7 +348,7 @@ export default function SellerStorePage() {
 
                     {/* Top badges */}
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <span className={`${promoBadge.color} ${promoBadge.textColor} text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-lg uppercase`}>
+                      <span className={`${promoBadge.color} text-white text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-lg uppercase`}>
                         <PromoBadgeIcon className="w-3.5 h-3.5" />
                         {promoBadge.label}
                       </span>

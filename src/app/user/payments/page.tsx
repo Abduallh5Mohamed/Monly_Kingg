@@ -866,13 +866,11 @@ export default function PaymentsPage() {
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all text-base"
                     >
                       <option value="" className="bg-[#1a1d2e] text-gray-400">-- Not Specified --</option>
-                      <option value="PUBG Mobile" className="bg-[#1a1d2e] text-[#f5f5dc]">🎮 PUBG Mobile</option>
-                      <option value="FIFA 23" className="bg-[#1a1d2e] text-[#f5f5dc]">⚽ FIFA 23</option>
-                      <option value="Call of Duty Mobile" className="bg-[#1a1d2e] text-[#f5f5dc]">🔫 Call of Duty Mobile</option>
+                      <option value="FIFA" className="bg-[#1a1d2e] text-[#f5f5dc]">⚽ FIFA</option>
+                      <option value="PUBG" className="bg-[#1a1d2e] text-[#f5f5dc]">🎮 PUBG</option>
+                      <option value="Ark Rider" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ Ark Rider</option>
                       <option value="Valorant" className="bg-[#1a1d2e] text-[#f5f5dc]">🎯 Valorant</option>
                       <option value="League of Legends" className="bg-[#1a1d2e] text-[#f5f5dc]">🏆 League of Legends</option>
-                      <option value="Fortnite" className="bg-[#1a1d2e] text-[#f5f5dc]">🎪 Fortnite</option>
-                      <option value="Apex Legends" className="bg-[#1a1d2e] text-[#f5f5dc]">🎲 Apex Legends</option>
                     </select>
                   </div>
 

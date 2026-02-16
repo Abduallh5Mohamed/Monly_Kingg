@@ -54,23 +54,27 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
     return (
         <Link
             href={`/listings/${listing._id}`}
-            className="group bg-[#0c0f18] rounded-2xl border border-white/[0.04] hover:border-white/[0.1] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/[0.07] hover:-translate-y-1"
+            className="group/card relative isolate"
         >
-            {/* Image */}
-            <div className="relative aspect-[4/3] overflow-hidden">
-                {listing.coverImage || listing.images?.length > 0 ? (
-                    <img
-                        src={listing.coverImage || listing.images[0]}
-                        alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
-                        <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
-                    </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
+            {/* Hover border glow */}
+            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
 
+            <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                    {listing.coverImage || listing.images?.length > 0 ? (
+                        <img
+                            src={listing.coverImage || listing.images[0]}
+                            alt={listing.title}
+                            className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out"
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.04] to-purple-500/[0.02] flex items-center justify-center">
+                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                        </div>
+                    )}
+                    
+<<<<<<< HEAD
                 {/* Verified */}
                 <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
@@ -106,11 +110,17 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                     {listing.game && (
                         <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">
                             {listing.game.name}
+=======
+                    {/* Discount badge on bottom if seller exists */}
+                    {listing.seller && (
+                        <span className="absolute bottom-2 left-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
+                            <Zap className="w-2.5 h-2.5" /> -{discount}%
+>>>>>>> 9da68345753ca74588f2a7441db6b48186f16ee5
                         </span>
                     )}
-                    <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
                 </div>
 
+<<<<<<< HEAD
                 {/* Prices */}
                 <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                     <div>
@@ -136,6 +146,8 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                         </span>
                     </div>
                 )}
+=======
+              
             </div>
         </Link>
     );
