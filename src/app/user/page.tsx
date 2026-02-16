@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
-import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import {
   Gamepad2,
@@ -25,7 +24,6 @@ import {
   Sparkles,
   Megaphone,
   Percent,
-  Tag,
 } from 'lucide-react';
 
 /* ── SVG Platform Icons ── */
@@ -214,65 +212,65 @@ function StaticProductCard({ product }: { product: typeof STATIC_PRODUCTS[0] }) 
   const passPrice = (product.price * 0.82).toFixed(2);
 
   return (
-    <div className="group/card flex-shrink-0 w-[200px] relative isolate">
-      {/* Hover border glow */}
-      <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
+    <div className="group/card flex-shrink-0 w-[280px] relative isolate">
+      {/* Hover border glow - Enhanced */}
+      <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
 
-      <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
+      <div className="relative bg-gradient-to-b from-[#0f1425] to-[#0a0d18] rounded-3xl border border-white/[0.08] group-hover/card:border-white/[0.15] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_20px_60px_-15px_rgba(6,182,212,0.2)] group-hover/card:-translate-y-2">
         {/* Image section */}
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative aspect-[5/4] overflow-hidden">
           <img
             src={product.image}
             alt={product.title}
-            className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out"
+            className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1019] via-[#0d1019]/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-[#0a0d18]/50 to-transparent" />
 
-          {/* Top row badges */}
-          <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
-            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
-              <Zap className="w-2.5 h-2.5" /> -{product.discount}%
+          {/* Top row badges - Enhanced */}
+          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1 backdrop-blur-sm">
+              <Zap className="w-3 h-3" /> -{product.discount}%
             </span>
-            <span className="w-6 h-6 rounded-lg bg-black/30 backdrop-blur-md border border-white/[0.08] flex items-center justify-center">
-              <ShieldCheck className="w-3 h-3 text-cyan-400" />
+            <span className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-xl border border-white/[0.12] flex items-center justify-center shadow-lg">
+              <ShieldCheck className="w-4 h-4 text-cyan-400" />
             </span>
           </div>
 
           {/* Bottom row: rating */}
-          <div className="absolute bottom-2 right-2">
-            <span className="bg-black/40 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-[3px] rounded-md flex items-center gap-0.5 border border-white/[0.06]">
-              <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" /> {product.rating}
+          <div className="absolute bottom-3 right-3">
+            <span className="bg-black/50 backdrop-blur-xl text-white text-[10px] font-bold px-2 py-1 rounded-xl flex items-center gap-1 border border-white/[0.1] shadow-lg">
+              <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {product.rating}
             </span>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-3">
-          <h3 className="text-[11px] font-semibold text-white/85 line-clamp-2 min-h-[30px] group-hover/card:text-white transition-colors leading-snug">
+        {/* Content - Enhanced */}
+        <div className="p-4">
+          <h3 className="text-sm font-bold text-white/90 line-clamp-2 min-h-[40px] group-hover/card:text-white transition-colors leading-tight mb-3">
             {product.title}
           </h3>
 
-          <div className="flex items-center gap-1 mt-2">
-            <span className="text-[8px] text-cyan-300/50 bg-cyan-500/[0.06] px-1.5 py-[2px] rounded font-semibold border border-cyan-500/[0.06]">{product.platform}</span>
-            <span className="text-[8px] text-purple-300/50 bg-purple-500/[0.06] px-1.5 py-[2px] rounded font-semibold border border-purple-500/[0.06]">{product.region}</span>
-            <span className="text-[8px] text-white/15 ml-auto">{product.sold.toLocaleString()} sold</span>
+          <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+            <span className="text-[10px] text-cyan-400/70 bg-cyan-500/[0.1] px-2 py-1 rounded-lg font-bold border border-cyan-500/[0.12]">{product.platform}</span>
+            <span className="text-[10px] text-purple-400/70 bg-purple-500/[0.1] px-2 py-1 rounded-lg font-bold border border-purple-500/[0.12]">{product.region}</span>
+            <span className="text-[10px] text-white/20 ml-auto font-medium">{product.sold.toLocaleString()} sold</span>
           </div>
 
-          <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+          <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
-              <p className="text-[9px] text-white/20 line-through">${product.originalPrice.toFixed(2)}</p>
-              <p className="text-[15px] font-black text-white">${product.price.toFixed(2)}</p>
+              <p className="text-[10px] text-white/30 line-through font-medium">${product.originalPrice.toFixed(2)}</p>
+              <p className="text-xl font-black text-white mt-0.5">${product.price.toFixed(2)}</p>
             </div>
-            <button className="w-8 h-8 rounded-lg bg-cyan-500/[0.08] border border-cyan-500/[0.08] flex items-center justify-center text-cyan-400/30 hover:text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-500/25 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_16px_rgba(6,182,212,0.15)]">
-              <ShoppingCart className="w-3.5 h-3.5" />
+            <button className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/[0.15] flex items-center justify-center text-cyan-400 hover:text-cyan-300 hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/30 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_24px_rgba(6,182,212,0.25)]">
+              <ShoppingCart className="w-5 h-5" />
             </button>
           </div>
 
-          {/* SEAL PASS */}
-          <div className="mt-2 bg-gradient-to-r from-violet-600/80 to-purple-700/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-            <span className="text-white font-black text-[12px]">${passPrice}</span>
-            <span className="text-white/40 text-[8px] flex items-center gap-0.5">
-              with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/70">PASS</span>
+          {/* SEAL PASS - Enhanced */}
+          <div className="mt-3 bg-gradient-to-r from-violet-600/90 to-purple-700/90 rounded-xl px-3 py-2 flex items-center justify-between shadow-lg border border-violet-500/20">
+            <span className="text-white font-black text-sm">${passPrice}</span>
+            <span className="text-white/50 text-[10px] flex items-center gap-1">
+              with <Crown className="w-3 h-3 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
             </span>
           </div>
         </div>
@@ -282,8 +280,7 @@ function StaticProductCard({ product }: { product: typeof STATIC_PRODUCTS[0] }) 
 }
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
-  const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
+function ProductCard({ listing }: { listing: Listing }) {
   const discount = Math.floor(10 + ((listing.price * 7) % 60));
   const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
   const passPrice = (listing.price * 0.82).toFixed(2);
@@ -291,18 +288,18 @@ function ProductCard({ listing, currentUserId }: { listing: Listing; currentUser
   return (
     <Link
       href={`/listings/${listing._id}`}
-      className="group/card flex-shrink-0 w-[200px] relative isolate"
+      className="group/card flex-shrink-0 w-[280px] relative isolate"
     >
-      {/* Hover border glow */}
-      <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
+      {/* Hover border glow - Enhanced */}
+      <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
 
-      <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
-        <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative bg-gradient-to-b from-[#0f1425] to-[#0a0d18] rounded-3xl border border-white/[0.08] group-hover/card:border-white/[0.15] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_20px_60px_-15px_rgba(6,182,212,0.2)] group-hover/card:-translate-y-2">
+        <div className="relative aspect-[5/4] overflow-hidden">
           {listing.coverImage || listing.images?.length > 0 ? (
-            <img src={listing.coverImage || listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out" />
+            <img src={listing.coverImage || listing.images[0]} alt={listing.title} className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out" />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.04] to-purple-500/[0.02] flex items-center justify-center">
-              <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+            <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.04] flex items-center justify-center">
+              <Gamepad2 className="w-12 h-12 text-white/[0.08]" />
             </div>
           )}
 
@@ -381,7 +378,6 @@ function SectionHeader({ icon: Icon, title, color, subtitle }: { icon: React.Ele
    MAIN PAGE
    ═══════════════════════════════════ */
 export default function UserDashboardPage() {
-  const { user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [trendingListings, setTrendingListings] = useState<Listing[]>([]);
   const [games, setGames] = useState<Game[]>([]);
@@ -438,7 +434,7 @@ export default function UserDashboardPage() {
           {/* Decorative orbs */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/[0.04] rounded-full blur-[80px]" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/[0.04] rounded-full blur-[60px]" />
-
+          
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-white">
@@ -468,10 +464,14 @@ export default function UserDashboardPage() {
                 <button
                   key={platform.id}
                   onClick={() => setSelectedPlatform(platform.id)}
+<<<<<<< HEAD
                   className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${isActive
                     ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]'
                     : 'text-white/35 hover:text-white/60 hover:bg-white/[0.04]'
                     }`}
+
+                 
+
                 >
                   {isActive && <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${platform.color} opacity-15`} />}
                   <Icon className="w-4 h-4 relative z-10" />
@@ -496,7 +496,7 @@ export default function UserDashboardPage() {
                   href={ad.link || '#'}
                   target={ad.link ? '_blank' : undefined}
                   rel="noopener noreferrer"
-                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { }); }}
+                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => {}); }}
                   className="flex-shrink-0 relative w-[300px] md:w-[380px] aspect-[16/9] rounded-2xl overflow-hidden group border border-white/[0.04] hover:border-white/[0.1] transition-all duration-500"
                 >
                   <img src={ad.image} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -639,7 +639,7 @@ export default function UserDashboardPage() {
           {/* Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-fuchsia-600/10" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(168,85,247,0.15),transparent_60%)]" />
-
+          
           {/* Animated grid pattern */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
@@ -665,11 +665,11 @@ export default function UserDashboardPage() {
               <div className="inline-block mb-4">
                 <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
               </div>
-
+              
               <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
                 SEAL<span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">+</span>PASS
               </h3>
-
+              
               <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
                 Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
               </p>
@@ -734,7 +734,7 @@ export default function UserDashboardPage() {
             ) : (
               <HorizontalScroll>
                 {listings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} />
+                  <ProductCard key={listing._id} listing={listing} />
                 ))}
               </HorizontalScroll>
             )}

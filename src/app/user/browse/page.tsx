@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
-import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import {
     Gamepad2,
@@ -22,7 +21,7 @@ import {
     Filter,
     LayoutGrid,
     LayoutList,
-    Tag,
+    Zap,
 } from 'lucide-react';
 
 /* ── Types ── */
@@ -45,8 +44,7 @@ interface Game {
 }
 
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
-function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
-    const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
+function ListingCard({ listing }: { listing: Listing }) {
     const discount = Math.floor(10 + ((listing.price * 7) % 60));
     const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
     const passPrice = (listing.price * 0.82).toFixed(2);
@@ -56,21 +54,21 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
             href={`/listings/${listing._id}`}
             className="group/card relative isolate"
         >
-            {/* Hover border glow */}
-            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-cyan-500/0 to-purple-500/0 group-hover/card:from-cyan-500/30 group-hover/card:to-purple-500/20 transition-all duration-500 opacity-0 group-hover/card:opacity-100 blur-[2px]" />
+            {/* Hover border glow - Enhanced */}
+            <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
 
-            <div className="relative bg-[#0d1019] rounded-2xl border border-white/[0.05] group-hover/card:border-white/[0.1] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_16px_48px_-12px_rgba(6,182,212,0.12)] group-hover/card:-translate-y-1.5">
+            <div className="relative bg-gradient-to-b from-[#0f1425] to-[#0a0d18] rounded-3xl border border-white/[0.08] group-hover/card:border-white/[0.15] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_20px_60px_-15px_rgba(6,182,212,0.2)] group-hover/card:-translate-y-2">
                 {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden">
+                <div className="relative aspect-[5/4] overflow-hidden">
                     {listing.coverImage || listing.images?.length > 0 ? (
                         <img
                             src={listing.coverImage || listing.images[0]}
                             alt={listing.title}
-                            className="w-full h-full object-cover group-hover/card:scale-[1.08] transition-transform duration-700 ease-out"
+                            className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
                         />
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.04] to-purple-500/[0.02] flex items-center justify-center">
-                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                        <div className="w-full h-full bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.04] flex items-center justify-center">
+                            <Gamepad2 className="w-12 h-12 text-white/[0.08]" />
                         </div>
                     )}
 
@@ -146,7 +144,6 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
 
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
-    const { user } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
@@ -281,8 +278,8 @@ export default function StoreBrowsePage() {
                                 <button
                                     onClick={() => { setGameDropdownOpen(!gameDropdownOpen); setSortDropdownOpen(false); }}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${selectedGame
-                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                            ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                            : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                         }`}
                                 >
                                     <Gamepad2 className="w-3.5 h-3.5" />
@@ -345,8 +342,8 @@ export default function StoreBrowsePage() {
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${showFilters || minPrice || maxPrice
-                                    ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                    : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                     }`}
                             >
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -477,9 +474,9 @@ export default function StoreBrowsePage() {
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                             {listings.map((listing) => (
-                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} />
+                                <ListingCard key={listing._id} listing={listing} />
                             ))}
                         </div>
 
@@ -511,8 +508,8 @@ export default function StoreBrowsePage() {
                                             key={pageNum}
                                             onClick={() => setPage(pageNum)}
                                             className={`w-9 h-9 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-all ${page === pageNum
-                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-                                                : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
+                                                    ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                                                    : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
                                                 }`}
                                         >
                                             {pageNum}
