@@ -9870,3 +9870,44 @@
 [2026-02-16T14:19:47.937Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 10828ms
 [2026-02-16T14:19:48.855Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
 [2026-02-16T14:19:49.843Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/fallback/main.js - 838ms
+[2026-02-16T14:27:30.488Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 2140ms
+[2026-02-16T14:34:50.889Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 4782ms
+[2026-02-16T14:34:50.899Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 4830ms
+[2026-02-16T14:34:54.728Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-16T14:34:54.889Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-16T14:34:54.922Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-16T14:34:54.923Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T14:38:03.898Z] [WARN]: ⚠️ Slow Request: GET /user - 4827ms
+[2026-02-16T14:49:21.180Z] [WARN]: ⚠️ Slow Request: GET /listings/698f578b7026740e1a472645 - 7114ms
+[2026-02-16T14:51:53.702Z] [WARN]: ⚠️ Slow Request: GET /user/seller/698a00a5323f816e36f98461 - 1759ms
+[2026-02-16T14:51:54.684Z] [WARN]: ⚠️ Slow Request: GET /user/seller/698a00a5323f816e36f98461 - 673ms
+[2026-02-16T14:51:54.762Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-16T14:51:57.833Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-16T14:51:58.092Z] [WARN]: ⚠️ Slow Request: POST /refresh - 581ms
+[2026-02-16T14:51:58.209Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-16T14:51:58.246Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-16T14:51:58.247Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T14:51:59.902Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-16T14:52:01.296Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-16T14:52:01.371Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-16T14:52:01.478Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-16T14:52:01.479Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T14:53:44.343Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-16T14:53:45.641Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-16T14:53:45.860Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-16T14:53:45.888Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-16T14:53:45.888Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T14:54:00.261Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 2342ms
+[2026-02-16T14:54:00.502Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-16T14:54:06.760Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 1645ms
+[2026-02-16T14:54:23.508Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-16T14:54:29.067Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-16T14:54:29.088Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-16T14:54:30.373Z] [WARN]: ⚠️ Slow Request: GET / - 1294ms
+[2026-02-16T14:54:33.733Z] [WARN]: ⚠️ Slow Request: GET /login - 1334ms
+[2026-02-16T14:54:45.464Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (464ms)
+[2026-02-16T14:54:45.695Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-16T14:54:45.807Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-16T14:54:45.809Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T14:54:46.297Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 780ms
+[2026-02-16T14:55:07.561Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1944ms

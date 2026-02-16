@@ -305,31 +305,22 @@ function ProductCard({ listing, currentUserId }: { listing: Listing; currentUser
               <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1019] via-[#0d1019]/30 to-transparent" />
+          
+          {/* Verified badge */}
+          <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+            <ShieldCheck className="w-3 h-3 text-cyan-400" />
+          </span>
 
-          {/* Top row badges */}
-          <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
-            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
-              <Zap className="w-2.5 h-2.5" /> -{discount}%
+          {/* Discount badge / Owner badge */}
+          {isOwner ? (
+            <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
+              <Tag className="w-3 h-3" /> Your Listing
             </span>
-            <span className="w-6 h-6 rounded-lg bg-black/30 backdrop-blur-md border border-white/[0.08] flex items-center justify-center">
-              <ShieldCheck className="w-3 h-3 text-cyan-400" />
+          ) : (
+            <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
+              -{discount}%
             </span>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
-        <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
-          <ShieldCheck className="w-3 h-3 text-cyan-400" />
-        </span>
-        {isOwner ? (
-          <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
-            <Tag className="w-3 h-3" /> Your Listing
-          </span>
-        ) : (
-          <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-            -{discount}%
-          </span>
-        )}
+          )}
       </div>
       <div className="p-3">
         <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
@@ -358,6 +349,7 @@ function ProductCard({ listing, currentUserId }: { listing: Listing; currentUser
             </span>
           </div>
         )}
+      </div>
       </div>
     </Link>
   );

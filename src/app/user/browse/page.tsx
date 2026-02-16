@@ -74,7 +74,6 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                         </div>
                     )}
                     
-<<<<<<< HEAD
                 {/* Verified */}
                 <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
@@ -110,17 +109,10 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                     {listing.game && (
                         <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">
                             {listing.game.name}
-=======
-                    {/* Discount badge on bottom if seller exists */}
-                    {listing.seller && (
-                        <span className="absolute bottom-2 left-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-[3px] rounded-md shadow-lg flex items-center gap-0.5">
-                            <Zap className="w-2.5 h-2.5" /> -{discount}%
->>>>>>> 9da68345753ca74588f2a7441db6b48186f16ee5
                         </span>
                     )}
                 </div>
 
-<<<<<<< HEAD
                 {/* Prices */}
                 <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                     <div>
@@ -146,8 +138,7 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                         </span>
                     </div>
                 )}
-=======
-              
+            </div>
             </div>
         </Link>
     );
