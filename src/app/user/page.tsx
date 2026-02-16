@@ -426,7 +426,7 @@ export default function UserDashboardPage() {
           {/* Decorative orbs */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/[0.04] rounded-full blur-[80px]" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/[0.04] rounded-full blur-[60px]" />
-          
+
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-white">
@@ -456,11 +456,10 @@ export default function UserDashboardPage() {
                 <button
                   key={platform.id}
                   onClick={() => setSelectedPlatform(platform.id)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${
-                    isActive 
-                      ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]' 
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${isActive
+                      ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]'
                       : 'text-white/35 hover:text-white/60 hover:bg-white/[0.04]'
-                  }`}
+                    }`}
                 >
                   {isActive && <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${platform.color} opacity-15`} />}
                   <Icon className="w-4 h-4 relative z-10" />
@@ -485,7 +484,7 @@ export default function UserDashboardPage() {
                   href={ad.link || '#'}
                   target={ad.link ? '_blank' : undefined}
                   rel="noopener noreferrer"
-                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => {}); }}
+                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { }); }}
                   className="flex-shrink-0 relative w-[300px] md:w-[380px] aspect-[16/9] rounded-2xl overflow-hidden group border border-white/[0.04] hover:border-white/[0.1] transition-all duration-500"
                 >
                   <img src={ad.image} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -628,7 +627,7 @@ export default function UserDashboardPage() {
           {/* Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-fuchsia-600/10" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(168,85,247,0.15),transparent_60%)]" />
-          
+
           {/* Animated grid pattern */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
@@ -654,11 +653,11 @@ export default function UserDashboardPage() {
               <div className="inline-block mb-4">
                 <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
               </div>
-              
+
               <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
                 SEAL<span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">+</span>PASS
               </h3>
-              
+
               <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
                 Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
               </p>

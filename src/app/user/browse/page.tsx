@@ -278,8 +278,8 @@ export default function StoreBrowsePage() {
                                 <button
                                     onClick={() => { setGameDropdownOpen(!gameDropdownOpen); setSortDropdownOpen(false); }}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${selectedGame
-                                            ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                            : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                         }`}
                                 >
                                     <Gamepad2 className="w-3.5 h-3.5" />
@@ -342,8 +342,8 @@ export default function StoreBrowsePage() {
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${showFilters || minPrice || maxPrice
-                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                    ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                    : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                     }`}
                             >
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -508,8 +508,8 @@ export default function StoreBrowsePage() {
                                             key={pageNum}
                                             onClick={() => setPage(pageNum)}
                                             className={`w-9 h-9 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-all ${page === pageNum
-                                                    ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-                                                    : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
+                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                                                : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
                                                 }`}
                                         >
                                             {pageNum}
