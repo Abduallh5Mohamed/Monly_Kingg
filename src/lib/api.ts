@@ -53,10 +53,10 @@ class ApiClient {
       const csrfToken = this.getCsrfToken();
 
       const response = await fetch(url, {
-        credentials: 'include', // إرسال الكوكيز
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          ...(csrfToken && { 'X-CSRF-Token': csrfToken }),
+          ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken }),
           ...options.headers,
         },
         ...options,

@@ -7,7 +7,7 @@
  * This is NOT deleting from database - only from cache!
  */
 
-import enhancedCacheService from '../services/enhancedCacheService.js';
+import cacheService from '../services/cacheService.js';
 import logger from '../utils/logger.js';
 
 class CacheCleanupJob {
@@ -64,13 +64,13 @@ class CacheCleanupJob {
             logger.info('🧹 Starting cache cleanup...');
 
             // Get stats before cleanup
-            const statsBefore = await enhancedCacheService.getCacheStats();
+            const statsBefore = await cacheService.getCacheStats();
 
             // Run cleanup
-            const result = await enhancedCacheService.cleanupInactiveUsers();
+            const result = await cacheService.cleanupInactiveEntries();
 
             // Get stats after cleanup
-            const statsAfter = await enhancedCacheService.getCacheStats();
+            const statsAfter = await cacheService.getCacheStats();
 
             const duration = Date.now() - startTime;
 

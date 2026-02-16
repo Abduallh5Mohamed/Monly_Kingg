@@ -4,6 +4,7 @@
  */
 
 import redis from '../config/redis.js';
+import cacheService from '../services/cacheService.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -18,31 +19,29 @@ export const cacheResponse = (duration = 300) => {
         }
 
         // Skip caching if Redis is not connected
-        if (!redis.client || !redis.client.status || redis.client.status !== 'ready') {
+        if (!redis.isReady()) {
             return next();
         }
 
-        // Generate cache key from URL and query params
-        const cacheKey = `api_cache:${req.originalUrl || req.url}`;
+        // User-scoped cache key to prevent data leakage between users
+        const userId = req.user?._id || req.user?.id || 'anon';
+        const cacheKey = `api_cache:${userId}:${req.originalUrl || req.url}`;
 
         try {
             // Try to get cached response
             const cachedData = await redis.get(cacheKey);
 
             if (cachedData) {
-                logger.info(`✅ Cache HIT: ${cacheKey}`);
-                return res.json(JSON.parse(cachedData));
+                return res.json(cachedData);
             }
 
             // Cache miss - intercept res.json to cache the response
-            logger.info(`❌ Cache MISS: ${cacheKey}`);
             const originalJson = res.json.bind(res);
 
             res.json = function (data) {
                 // Only cache successful responses (2xx)
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    redis.setex(cacheKey, duration, JSON.stringify(data))
-                        .then(() => logger.info(`💾 Cached: ${cacheKey} (${duration}s)`))
+                    redis.set(cacheKey, data, duration)
                         .catch(err => logger.error('Cache save error:', err.message));
                 }
 
@@ -63,19 +62,13 @@ export const cacheResponse = (duration = 300) => {
  */
 export const clearCache = async (pattern = 'api_cache:*') => {
     try {
-        if (!redis.client || redis.client.status !== 'ready') {
+        if (!redis.isReady()) {
             return { success: false, message: 'Redis not connected' };
         }
 
-        const keys = await redis.client.keys(pattern);
-
-        if (keys.length > 0) {
-            await redis.client.del(...keys);
-            logger.info(`🗑️ Cleared ${keys.length} cache entries matching: ${pattern}`);
-            return { success: true, count: keys.length };
-        }
-
-        return { success: true, count: 0 };
+        // Use SCAN-based invalidation (never KEYS in production)
+        const result = await cacheService.invalidateApiCache(pattern);
+        return result;
     } catch (error) {
         logger.error('Clear cache error:', error.message);
         return { success: false, message: error.message };

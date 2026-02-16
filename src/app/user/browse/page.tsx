@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
+import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import {
     Gamepad2,
@@ -21,6 +22,7 @@ import {
     Filter,
     LayoutGrid,
     LayoutList,
+    Tag,
 } from 'lucide-react';
 
 /* ── Types ── */
@@ -43,7 +45,8 @@ interface Game {
 }
 
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
-function ListingCard({ listing }: { listing: Listing }) {
+function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
+    const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
     const discount = Math.floor(10 + ((listing.price * 7) % 60));
     const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
     const passPrice = (listing.price * 0.82).toFixed(2);
@@ -73,10 +76,16 @@ function ListingCard({ listing }: { listing: Listing }) {
                     <ShieldCheck className="w-3 h-3 text-cyan-400" />
                 </span>
 
-                {/* Discount badge */}
-                <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-                    -{discount}%
-                </span>
+                {/* Discount badge / Owner badge */}
+                {isOwner ? (
+                    <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
+                        <Tag className="w-3 h-3" /> Your Listing
+                    </span>
+                ) : (
+                    <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
+                        -{discount}%
+                    </span>
+                )}
 
                 {/* Seller */}
                 {listing.seller && (
@@ -105,24 +114,28 @@ function ListingCard({ listing }: { listing: Listing }) {
                 {/* Prices */}
                 <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                     <div>
-                        <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>
+                        {!isOwner && <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>}
                         <p className="text-base font-black text-white">${listing.price.toFixed(2)}</p>
                     </div>
-                    <button
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                        className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110"
-                    >
-                        <ShoppingCart className="w-3.5 h-3.5" />
-                    </button>
+                    {!isOwner && (
+                        <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110"
+                        >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                        </button>
+                    )}
                 </div>
 
-                {/* SEAL PASS Price */}
-                <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-                    <span className="text-white font-bold text-[13px]">${passPrice}</span>
-                    <span className="text-white/60 text-[9px] flex items-center gap-1">
-                        with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
-                    </span>
-                </div>
+                {/* SEAL PASS Price — hide for owner */}
+                {!isOwner && (
+                    <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                        <span className="text-white font-bold text-[13px]">${passPrice}</span>
+                        <span className="text-white/60 text-[9px] flex items-center gap-1">
+                            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
+                        </span>
+                    </div>
+                )}
             </div>
         </Link>
     );
@@ -130,6 +143,7 @@ function ListingCard({ listing }: { listing: Listing }) {
 
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
+    const { user } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
@@ -462,7 +476,7 @@ export default function StoreBrowsePage() {
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                             {listings.map((listing) => (
-                                <ListingCard key={listing._id} listing={listing} />
+                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} />
                             ))}
                         </div>
 

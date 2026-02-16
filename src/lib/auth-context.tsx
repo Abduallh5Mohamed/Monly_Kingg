@@ -315,7 +315,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const logout = async (redirectTo: string = '/login', showToast: boolean = true): Promise<void> => {
+  const logout = async (redirectTo?: string, showToast: boolean = true): Promise<void> => {
     try {
       setLoading(true);
 
@@ -330,13 +330,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
       }
 
-      // Redirect user to specified path (default: login page)
-      router.push(redirectTo);
+      // Ensure redirectTo is a valid string path
+      const targetPath = typeof redirectTo === 'string' && redirectTo.length > 0 ? redirectTo : '/';
+
+      // Redirect user to specified path (default: home page)
+      router.push(targetPath);
     } catch (error) {
       console.error('Logout error:', error);
       // Even if request fails, clear local data
       setUser(null);
-      router.push(redirectTo);
+      const targetPath = typeof redirectTo === 'string' && redirectTo.length > 0 ? redirectTo : '/';
+      router.push(targetPath);
     } finally {
       setLoading(false);
     }

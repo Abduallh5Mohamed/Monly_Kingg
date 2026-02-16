@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef, ChangeEvent, KeyboardEvent } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -139,7 +139,7 @@ export default function SupportPage() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v1/auth/me', {
+        const response = await fetch('/api/v1/auth/me', {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
@@ -177,7 +177,7 @@ export default function SupportPage() {
 
     console.log(' Initializing Socket.IO with token...');
 
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io(window.location.origin, {
       auth: { token },
       transports: ['websocket', 'polling'],
       withCredentials: true // Important for cookie-based auth
@@ -368,7 +368,7 @@ export default function SupportPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('http://localhost:5000/api/v1/chats', {
+      const response = await fetch('/api/v1/chats', {
         headers,
         credentials: 'include' // Important for cookie-based auth
       });
@@ -396,7 +396,7 @@ export default function SupportPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/chats/${chatId}`, {
+      const response = await fetch(`/api/v1/chats/${chatId}`, {
         headers,
         credentials: 'include' // Important for cookie-based auth
       });
@@ -480,7 +480,7 @@ export default function SupportPage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(`http://localhost:5000/api/v1/chats/${selectedChat._id}/messages`, {
+        const response = await fetch(`/api/v1/chats/${selectedChat._id}/messages`, {
           method: 'POST',
           headers,
           credentials: 'include',
@@ -585,7 +585,7 @@ export default function SupportPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/chats/${chatId}`, {
+      const response = await fetch(`/api/v1/chats/${chatId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -609,7 +609,7 @@ export default function SupportPage() {
       setShowDeleteConfirm(false);
       setDeletingChatId(null);
 
-      console.log('✅ Chat deleted successfully');
+      console.log('âœ… Chat deleted successfully');
     } catch (error) {
       console.error('Failed to delete chat:', error);
     }
@@ -659,7 +659,7 @@ export default function SupportPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/users/search?q=${encodeURIComponent(value)}`, {
+      const response = await fetch(`/api/v1/users/search?q=${encodeURIComponent(value)}`, {
         headers,
         credentials: 'include'
       });
@@ -697,7 +697,7 @@ export default function SupportPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('http://localhost:5000/api/v1/chats', {
+      const response = await fetch('/api/v1/chats', {
         method: 'POST',
         headers,
         credentials: 'include',
@@ -709,38 +709,38 @@ export default function SupportPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Create chat response:', data);
+        console.log('âœ… Create chat response:', data);
 
         if (data.success) {
           // The API returns the chat directly in data.data
           const newChat = data.data;
-          console.log('📝 New chat created:', newChat._id);
+          console.log('ðŸ“ New chat created:', newChat._id);
 
           // Check if chat already exists in list
           const existingChat = chats.find(c => c._id === newChat._id);
 
           if (!existingChat) {
-            console.log('➕ Adding new chat to list');
+            console.log('âž• Adding new chat to list');
             setChats(prev => [newChat, ...prev]);
           } else {
-            console.log('🔄 Chat already exists in list');
+            console.log('ðŸ”„ Chat already exists in list');
           }
 
           // Set the selected chat FIRST
-          console.log('🎯 Setting selected chat:', newChat._id);
+          console.log('ðŸŽ¯ Setting selected chat:', newChat._id);
           setSelectedChat(newChat);
           setMessages([]); // Clear old messages
 
           // Join the chat room via socket BEFORE loading messages
           if (socket?.connected) {
-            console.log('🔌 Joining chat room via socket');
+            console.log('ðŸ”Œ Joining chat room via socket');
             socket.emit('join_chat', newChat._id);
           } else {
-            console.warn('⚠️ Socket not connected');
+            console.warn('âš ï¸ Socket not connected');
           }
 
           // Load messages for this chat
-          console.log('📨 Loading messages for chat:', newChat._id);
+          console.log('ðŸ“¨ Loading messages for chat:', newChat._id);
           await loadMessages(newChat._id);
 
           // Clear search
@@ -748,10 +748,10 @@ export default function SupportPage() {
           setUserSearchResults([]);
           setSearchResults([]);
 
-          console.log('✅ Chat opened successfully!');
+          console.log('âœ… Chat opened successfully!');
         }
       } else {
-        console.error('❌ Failed to create chat:', response.status, response.statusText);
+        console.error('âŒ Failed to create chat:', response.status, response.statusText);
         const errorData = await response.json();
         console.error('Error details:', errorData);
       }
@@ -803,7 +803,7 @@ export default function SupportPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/chats/${selectedChat._id}/messages`, {
+      const response = await fetch(`/api/v1/chats/${selectedChat._id}/messages`, {
         method: 'POST',
         headers,
         credentials: 'include',
@@ -1010,7 +1010,7 @@ export default function SupportPage() {
   const displayedChats = searchQuery.trim() ? searchResults : chats;
   const typingIndicator = selectedChat ? typingUsers.get(selectedChat._id) : undefined;
   const isChatListEmpty = !isLoading && displayedChats.length === 0;
-  const emojiPalette = ['😀', '😁', '😂', '🤣', '😊', '😍', '😘', '😎', '🙌', '🔥', '❤️', '👍'];
+  const emojiPalette = ['ðŸ˜€', 'ðŸ˜', 'ðŸ˜‚', 'ðŸ¤£', 'ðŸ˜Š', 'ðŸ˜', 'ðŸ˜˜', 'ðŸ˜Ž', 'ðŸ™Œ', 'ðŸ”¥', 'â¤ï¸', 'ðŸ‘'];
 
   return (
     <UserDashboardLayout>
@@ -1166,7 +1166,7 @@ export default function SupportPage() {
                     <button
                       onClick={(e) => confirmDeleteChat(chat._id, e)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border border-red-500/30 bg-red-500/10 p-2 transition-all hover:border-red-500/50 hover:bg-red-500/20"
-                      title="حذف المحادثة"
+                      title="Ø­Ø°Ù Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©"
                     >
                       <Trash2 className="h-4 w-4 text-red-400" />
                     </button>
@@ -1460,13 +1460,13 @@ export default function SupportPage() {
                 <Trash2 className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">حذف المحادثة</h3>
-                <p className="text-sm text-white/60">سيتم إخفاء المحادثة من قائمتك فقط</p>
+                <h3 className="text-lg font-semibold text-white">Ø­Ø°Ù Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©</h3>
+                <p className="text-sm text-white/60">Ø³ÙŠØªÙ… Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ù…Ù† Ù‚Ø§Ø¦Ù…ØªÙƒ ÙÙ‚Ø·</p>
               </div>
             </div>
 
             <p className="mb-6 text-sm text-white/70">
-              المحادثة سيتم إخفاؤها من عندك فقط. الشخص الآخر سيظل يراها، والرسائل ستبقى محفوظة في قاعدة البيانات.
+              Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ø³ÙŠØªÙ… Ø¥Ø®ÙØ§Ø¤Ù‡Ø§ Ù…Ù† Ø¹Ù†Ø¯Ùƒ ÙÙ‚Ø·. Ø§Ù„Ø´Ø®Øµ Ø§Ù„Ø¢Ø®Ø± Ø³ÙŠØ¸Ù„ ÙŠØ±Ø§Ù‡Ø§ØŒ ÙˆØ§Ù„Ø±Ø³Ø§Ø¦Ù„ Ø³ØªØ¨Ù‚Ù‰ Ù…Ø­ÙÙˆØ¸Ø© ÙÙŠ Ù‚Ø§Ø¹Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª.
             </p>
 
             <div className="flex gap-3">
@@ -1475,13 +1475,13 @@ export default function SupportPage() {
                 variant="outline"
                 className="flex-1 border-white/10 bg-white/5 text-white hover:bg-white/10"
               >
-                إلغاء
+                Ø¥Ù„ØºØ§Ø¡
               </Button>
               <Button
                 onClick={() => deletingChatId && handleDeleteChat(deletingChatId)}
                 className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
               >
-                حذف المحادثة
+                Ø­Ø°Ù Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©
               </Button>
             </div>
           </div>

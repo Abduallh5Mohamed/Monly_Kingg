@@ -15,7 +15,10 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import { globalLimiter } from "./src/middlewares/rateLimiter.js";
 import csrfProtection from "./src/middlewares/csrf.js";
-import userCacheService from "./src/services/userCacheService.js";
+import { enhancedSanitizer } from "./src/middlewares/securityMiddleware.js";
+import { authMiddleware } from "./src/middlewares/authMiddleware.js";
+import cacheService from "./src/services/cacheService.js";
+import { createIndexes } from "./src/config/db.js";
 import {
   responseTimeTracker,
   optimizationHeaders,
@@ -89,20 +92,29 @@ nextApp.prepare().then(async () => {
   // Silence Chrome DevTools .well-known probe
   app.use('/.well-known', (req, res) => res.status(204).end());
 
-  // Increase payload limit for image uploads (base64)
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+  // Increase payload limit for image uploads (base64) — but limit to 10MB to prevent abuse
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-  // NoSQL injection protection
-  function sanitizeObject(obj) {
-    if (!obj || typeof obj !== 'object') return;
-    Object.keys(obj).forEach((key) => {
-      if (key.startsWith('$') || key.includes('.')) {
+  // ✅ SECURITY: NoSQL injection protection (deep recursive, handles arrays + prototype pollution)
+  function sanitizeObject(obj, depth = 0) {
+    if (!obj || typeof obj !== 'object' || depth > 10) return;
+    if (Array.isArray(obj)) {
+      obj.forEach((item, i) => {
+        if (typeof item === 'string' && item.startsWith('$')) { obj[i] = ''; return; }
+        sanitizeObject(item, depth + 1);
+      });
+      return;
+    }
+    for (const key of Object.keys(obj)) {
+      if (key.startsWith('$') || key.includes('.') || key === '__proto__' || key === 'constructor' || key === 'prototype') {
         delete obj[key];
-        return;
+        continue;
       }
-      sanitizeObject(obj[key]);
-    });
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        sanitizeObject(obj[key], depth + 1);
+      }
+    }
   }
 
   app.use((req, res, next) => {
@@ -131,13 +143,9 @@ nextApp.prepare().then(async () => {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-eval'",
-            "'unsafe-inline'",
-            "https://fonts.googleapis.com",
-            "https://fonts.gstatic.com"
-          ],
+          scriptSrc: dev
+            ? ["'self'", "'unsafe-eval'", "'unsafe-inline'"]  // Required for Next.js dev mode
+            : ["'self'", "'unsafe-inline'"],                    // Production: no eval
           styleSrc: [
             "'self'",
             "'unsafe-inline'",
@@ -160,27 +168,28 @@ nextApp.prepare().then(async () => {
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
-          connectSrc: ["'self'"],
-          frameSrc: ["'none'"], // Prevent embedding in iframes
-          objectSrc: ["'none'"], // Prevent Flash and other plugins
-          upgradeInsecureRequests: [], // Upgrade HTTP to HTTPS
+          connectSrc: ["'self'", "ws:", "wss:"],
+          frameSrc: ["'none'"],
+          objectSrc: ["'none'"],
+          baseUri: ["'self'"],                   // Prevent base tag hijacking
+          formAction: ["'self'"],                // Restrict form submissions
+          upgradeInsecureRequests: [],
         },
       },
-      frameguard: { action: 'deny' }, // X-Frame-Options: DENY - prevent clickjacking
-      noSniff: true, // X-Content-Type-Options: nosniff - prevent MIME sniffing
-      xssFilter: true, // X-XSS-Protection: 1; mode=block
-      referrerPolicy: { policy: 'strict-origin-when-cross-origin' }, // Control referrer information
+      frameguard: { action: 'deny' },
+      noSniff: true,
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
       hsts: {
-        maxAge: 31536000, // 1 year
+        maxAge: 31536000,
         includeSubDomains: true,
         preload: true
       },
-      hidePoweredBy: true, // Hide X-Powered-By header
+      hidePoweredBy: true,
     })
   );
 
   if (process.env.NODE_ENV === "production") {
-    app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true, preload: true }));
+    // HSTS already configured in helmet above
   }
 
   app.use(cookieParser());
@@ -193,26 +202,35 @@ nextApp.prepare().then(async () => {
   // Enable gzip compression for responses (60-80% reduction)
   app.use(compression({
     filter: (req, res) => {
-      // Skip compression for Next.js internal requests
-      if (req.url.startsWith('/_next/')) return false;
       if (req.headers['x-no-compression']) return false;
       return compression.filter(req, res);
     },
-    level: 4, // Fast compression (lower = faster, less compression)
-    threshold: 1024, // Only compress responses > 1KB
+    level: 4,
+    threshold: 1024,
   }));
 
-  // Serve static files from uploads directory
+  // Serve static files from uploads directory with security headers
   const uploadsPath = path.join(__dirname, 'uploads');
-  app.use('/uploads', express.static(uploadsPath));
+  app.use('/uploads', (req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day for uploaded files
+    next();
+  }, express.static(uploadsPath));
   console.log('✅ Serving static uploads from:', uploadsPath);
 
   app.use(globalLimiter);
 
+  // ✅ SECURITY: DOMPurify-based XSS sanitization on all requests
+  app.use(enhancedSanitizer);
+
+  // ✅ SECURITY: CSRF protection on all API mutation routes
+  app.use('/api', csrfProtection);
+
   // API Routes - These come before Next.js handler
   app.use("/api/auth", authRoutes);
   app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
-  app.use("/api/v1/users", csrfProtection, userRoutes);
+  app.use("/api/v1/users", userRoutes);
 
   // Upload routes
   try {
@@ -322,34 +340,30 @@ nextApp.prepare().then(async () => {
     console.warn('⚠️ Promotion routes not loaded:', error.message);
   }
 
-  // Health check endpoint
-  app.get("/api/health", async (req, res) => {
-    const cacheStats = await userCacheService.getCacheStats();
+  // Health check endpoint (basic info only — no sensitive data)
+  app.get("/api/health", (req, res) => {
     res.json({
       status: "ok",
-      message: "🚀 Accounts Store API is running...",
-      timestamp: new Date().toISOString(),
-      redis: {
-        connected: redis.isReady(),
-        stats: cacheStats
-      }
+      timestamp: new Date().toISOString()
     });
   });
 
-  // Cache management endpoints
-  app.get("/api/cache/stats", async (req, res) => {
+  // Cache management endpoints (require auth + admin role)
+  app.get("/api/cache/stats", authMiddleware, async (req, res) => {
+    if (req.user?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
     try {
-      const stats = await userCacheService.getCacheStats();
+      const stats = await cacheService.getCacheStats();
       res.json({ success: true, data: stats });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   });
 
-  app.delete("/api/cache/user/:userId", async (req, res) => {
+  app.delete("/api/cache/user/:userId", authMiddleware, async (req, res) => {
+    if (req.user?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
     try {
       const { userId } = req.params;
-      await userCacheService.clearUserCache(userId);
+      await cacheService.clearUserCache(userId);
       res.json({ success: true, message: `Cache cleared for user ${userId}` });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
@@ -381,7 +395,6 @@ nextApp.prepare().then(async () => {
     // Return JSON error response
     res.status(statusCode).json({
       message,
-      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
     });
   });
 
@@ -414,6 +427,13 @@ nextApp.prepare().then(async () => {
       console.log('🔌 Socket.IO initialized for real-time chat');
     } catch (error) {
       console.warn('⚠️ Socket.IO not initialized:', error.message);
+    }
+
+    // ✅ Create database indexes (critical for performance)
+    try {
+      await createIndexes();
+    } catch (error) {
+      console.warn('⚠️ Index creation skipped:', error.message);
     }
 
     // Start cache cleanup job

@@ -6,6 +6,7 @@ import {
     createChat,
     createSupportChat,
     deleteChat,
+    deleteMessage,
     getOnlineUsers
 } from "./chat.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
@@ -30,10 +31,13 @@ router.post("/support", createSupportChat);
 // Send message to chat (MUST be before /:chatId route)
 router.post("/:chatId/messages", sendMessage);
 
+// Delete message from chat (soft delete — admin can still see)
+router.delete("/:chatId/messages/:messageId", deleteMessage);
+
 // Get chat messages
 router.get("/:chatId", getChatMessages);
 
-// Delete chat
+// Delete chat (soft delete — admin can still see)
 router.delete("/:chatId", deleteChat);
 
 export default router;

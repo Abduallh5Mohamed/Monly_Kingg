@@ -6,7 +6,7 @@
  */
 
 import express from 'express';
-import enhancedCacheService from '../../services/enhancedCacheService.js';
+import cacheService from '../../services/cacheService.js';
 import cacheCleanupJob from '../../jobs/cacheCleanupJob.js';
 import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { requireAdmin } from '../../middlewares/roleMiddleware.js';
@@ -22,7 +22,7 @@ router.use(authMiddleware, requireAdmin);
  */
 router.get('/stats', async (req, res) => {
     try {
-        const stats = await enhancedCacheService.getCacheStats();
+        const stats = await cacheService.getCacheStats();
         const jobStatus = cacheCleanupJob.getStatus();
 
         res.json({
@@ -69,7 +69,7 @@ router.post('/cleanup', async (req, res) => {
 router.delete('/user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        const success = await enhancedCacheService.forceEvictUser(userId);
+        const success = await cacheService.clearUserCache(userId);
 
         if (success) {
             res.json({
@@ -98,7 +98,7 @@ router.delete('/user/:userId', async (req, res) => {
 router.post('/invalidate/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        const success = await enhancedCacheService.invalidateUser(userId);
+        const success = await cacheService.invalidateUser(userId);
 
         if (success) {
             res.json({
@@ -127,7 +127,7 @@ router.post('/invalidate/:userId', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        const cached = await enhancedCacheService.getUser(userId);
+        const cached = await cacheService.getUser(userId);
 
         if (cached) {
             res.json({

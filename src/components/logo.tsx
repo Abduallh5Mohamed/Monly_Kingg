@@ -7,10 +7,10 @@ export function Logo() {
       <Image
         src="/assets/logo.png"
         alt="Monly King Logo"
-        width={180}
-        height={50}
+        width={240}
+        height={65}
         priority
-        style={{ width: 'auto', height: 'auto' }}
+        className="h-auto w-auto max-h-[65px]"
       />
     </Link>
   );

@@ -34,33 +34,44 @@ export const responseTimeTracker = (req, res, next) => {
 };
 
 // Memory usage monitoring (optional, for debugging)
+// Memory usage monitoring with cleanup support
+let memoryMonitorInterval = null;
 export const memoryMonitor = () => {
-    setInterval(() => {
+    if (memoryMonitorInterval) clearInterval(memoryMonitorInterval);
+    memoryMonitorInterval = setInterval(() => {
         const used = process.memoryUsage();
-        const memoryInfo = {
-            rss: `${Math.round(used.rss / 1024 / 1024)}MB`, // Total memory
-            heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)}MB`,
-            heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)}MB`,
-            external: `${Math.round(used.external / 1024 / 1024)}MB`
-        };
 
         // Only log if heap usage is high (> 500MB)
         if (used.heapUsed > 500 * 1024 * 1024) {
-            logger.warn('⚠️ High Memory Usage:', memoryInfo);
+            logger.warn('⚠️ High Memory Usage:', {
+                rss: `${Math.round(used.rss / 1024 / 1024)}MB`,
+                heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)}MB`,
+            });
         }
-    }, 60000); // Check every minute
+    }, 60000);
 };
 
 // Request optimization headers
 export const optimizationHeaders = (req, res, next) => {
-    // Cache control for static assets
-    if (req.path.match(/\.(jpg|jpeg|png|gif|ico|css|js|woff|woff2)$/)) {
+    // Cache control for static assets (images, fonts, CSS, JS bundles)
+    if (req.path.match(/\.(jpg|jpeg|png|gif|ico|css|woff|woff2|avif|webp|svg)$/)) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
-
-    // API responses - short cache
-    if (req.path.startsWith('/api/')) {
-        res.setHeader('Cache-Control', 'private, max-age=0, must-revalidate');
+    // Next.js hashed static bundles — safe to cache forever
+    else if (req.path.startsWith('/_next/static/')) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+    // API responses — never cache, always fresh
+    else if (req.path.startsWith('/api/')) {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+    // HTML pages — always revalidate to get latest version
+    else {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
     }
 
     next();

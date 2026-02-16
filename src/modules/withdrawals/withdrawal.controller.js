@@ -1,6 +1,7 @@
 import Withdrawal from "./withdrawal.model.js";
 import User from "../users/user.model.js";
-import cacheSyncService from '../../services/cacheSyncService.js';
+import cacheService from '../../services/cacheService.js';
+import socketService from '../../services/socketService.js';
 
 export const submitWithdrawal = async (req, res) => {
   try {
@@ -45,6 +46,13 @@ export const submitWithdrawal = async (req, res) => {
     });
 
     await withdrawal.save();
+
+    // Populate user details for socket notification
+    await withdrawal.populate('user', 'username email');
+
+    // Notify admins of new withdrawal in real-time
+    socketService.notifyAdminsNewWithdrawal(withdrawal);
+
     return res.status(201).json({ message: "Withdrawal request submitted successfully", data: withdrawal });
   } catch (error) {
     console.error("Submit withdrawal error:", error);
@@ -127,14 +135,14 @@ export const approveWithdrawal = async (req, res) => {
       });
     }
 
-    await cacheSyncService.updateBalanceWithSync(
+    await cacheService.updateBalanceWithSync(
       withdrawal.user._id,
       -withdrawal.amount,
       `withdrawal approval #${id}`
     );
 
     if (req.user.role === 'admin') {
-      await cacheSyncService.updateBalanceWithSync(
+      await cacheService.updateBalanceWithSync(
         req.user._id,
         withdrawal.amount,
         `withdrawal approval #${id} (admin credit)`
@@ -145,6 +153,12 @@ export const approveWithdrawal = async (req, res) => {
     withdrawal.reviewedBy = req.user._id;
     withdrawal.reviewedAt = new Date();
     await withdrawal.save();
+
+    // Notify admins of withdrawal update in real-time
+    socketService.notifyAdminsWithdrawalUpdate(withdrawal);
+
+    // Notify user of their withdrawal approval
+    socketService.notifyUserWithdrawalStatus(withdrawal.user._id.toString(), withdrawal);
 
     return res.status(200).json({ message: "Withdrawal approved", data: withdrawal });
   } catch (error) {
@@ -170,6 +184,12 @@ export const rejectWithdrawal = async (req, res) => {
     withdrawal.reviewedBy = req.user._id;
     withdrawal.reviewedAt = new Date();
     await withdrawal.save();
+
+    // Notify admins of withdrawal update in real-time
+    socketService.notifyAdminsWithdrawalUpdate(withdrawal);
+
+    // Notify user of their withdrawal rejection
+    socketService.notifyUserWithdrawalStatus(withdrawal.user.toString(), withdrawal);
 
     return res.status(200).json({ message: "Withdrawal rejected", data: withdrawal });
   } catch (error) {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
+import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
 import {
   Gamepad2,
@@ -24,6 +25,7 @@ import {
   Sparkles,
   Megaphone,
   Percent,
+  Tag,
 } from 'lucide-react';
 
 /* ── SVG Platform Icons ── */
@@ -276,7 +278,8 @@ function StaticProductCard({ product }: { product: typeof STATIC_PRODUCTS[0] }) 
 }
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing }: { listing: Listing }) {
+function ProductCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
+  const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
   const discount = Math.floor(10 + ((listing.price * 7) % 60));
   const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
   const passPrice = (listing.price * 0.82).toFixed(2);
@@ -298,9 +301,15 @@ function ProductCard({ listing }: { listing: Listing }) {
         <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
           <ShieldCheck className="w-3 h-3 text-cyan-400" />
         </span>
-        <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-          -{discount}%
-        </span>
+        {isOwner ? (
+          <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
+            <Tag className="w-3 h-3" /> Your Listing
+          </span>
+        ) : (
+          <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
+            -{discount}%
+          </span>
+        )}
       </div>
       <div className="p-3">
         <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
@@ -312,19 +321,23 @@ function ProductCard({ listing }: { listing: Listing }) {
         </div>
         <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
           <div>
-            <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>
+            {!isOwner && <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>}
             <p className="text-base font-black text-white">${listing.price}</p>
           </div>
-          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110">
-            <ShoppingCart className="w-3.5 h-3.5" />
-          </button>
+          {!isOwner && (
+            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-white/[0.06] flex items-center justify-center text-white/30 hover:text-cyan-400 hover:border-cyan-500/20 transition-all duration-300 hover:scale-110">
+              <ShoppingCart className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
-        <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-          <span className="text-white font-bold text-[13px]">${passPrice}</span>
-          <span className="text-white/60 text-[9px] flex items-center gap-1">
-            with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
-          </span>
-        </div>
+        {!isOwner && (
+          <div className="mt-2 bg-gradient-to-r from-violet-500/80 to-purple-600/80 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+            <span className="text-white font-bold text-[13px]">${passPrice}</span>
+            <span className="text-white/60 text-[9px] flex items-center gap-1">
+              with <Crown className="w-2.5 h-2.5 text-yellow-300" /> <span className="font-bold text-white/80">PASS</span>
+            </span>
+          </div>
+        )}
       </div>
     </Link>
   );
@@ -356,6 +369,7 @@ function SectionHeader({ icon: Icon, title, color, subtitle }: { icon: React.Ele
    MAIN PAGE
    ═══════════════════════════════════ */
 export default function UserDashboardPage() {
+  const { user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [trendingListings, setTrendingListings] = useState<Listing[]>([]);
   const [games, setGames] = useState<Game[]>([]);
@@ -709,7 +723,7 @@ export default function UserDashboardPage() {
             ) : (
               <HorizontalScroll>
                 {listings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} />
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} />
                 ))}
               </HorizontalScroll>
             )}

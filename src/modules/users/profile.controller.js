@@ -1,7 +1,7 @@
 import User from "./user.model.js";
 import Listing from "../listings/listing.model.js";
 import Favorite from "../favorites/favorite.model.js";
-import cacheSyncService from '../../services/cacheSyncService.js';
+import cacheService from '../../services/cacheService.js';
 
 // Get user profile with stats
 export const getProfile = async (req, res) => {
@@ -13,7 +13,7 @@ export const getProfile = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const userFromCache = await cacheSyncService.getUserWithSync(userId);
+        const userFromCache = await cacheService.getUser(userId);
 
         const [user, myListings, favorites, totalSales] = await Promise.all([
             userFromCache || User.findById(userId)
@@ -142,7 +142,7 @@ export const updateProfile = async (req, res) => {
         if (avatar !== undefined) updates.avatar = avatar;
         if (bio !== undefined) updates.bio = bio;
 
-        const updatedUser = await cacheSyncService.updateUserWithSync(
+        const updatedUser = await cacheService.updateUserWithSync(
             userId,
             { $set: updates }
         );
@@ -269,7 +269,7 @@ export const completeProfile = async (req, res) => {
             updates.avatar = avatarUrl;
         }
 
-        const updatedUser = await cacheSyncService.updateUserWithSync(
+        const updatedUser = await cacheService.updateUserWithSync(
             userId,
             { $set: updates }
         );

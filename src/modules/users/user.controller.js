@@ -1,6 +1,6 @@
 
 import * as userService from "./user.service.js";
-import enhancedCacheService from "../../services/enhancedCacheService.js";
+import cacheService from "../../services/cacheService.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -29,7 +29,7 @@ export const getUser = async (req, res, next) => {
     }
 
     // Fallback to Read-Through cache (will populate cache automatically)
-    const user = await enhancedCacheService.getUser(id);
+    const user = await cacheService.getUser(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({
@@ -58,7 +58,7 @@ export const updateUser = async (req, res, next) => {
     }
 
     // Use Write-Through: updates DB first, then cache
-    const user = await enhancedCacheService.updateUser(req.params.id, req.body);
+    const user = await cacheService.updateUserWithSync(req.params.id, req.body);
 
     res.json({
       success: true,
@@ -73,7 +73,7 @@ export const updateUser = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   try {
     // Delete from DB and cache
-    await enhancedCacheService.deleteUser(req.params.id);
+    await cacheService.deleteUser(req.params.id);
     res.json({
       success: true,
       message: "User deleted (DB + Cache)"

@@ -85,7 +85,7 @@ const nextConfig = {
       },
     ],
   },
-  // Headers for caching static assets
+  // Headers for caching static assets only (dynamic routes handled by performanceMiddleware)
   async headers() {
     return [
       {

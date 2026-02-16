@@ -7,7 +7,7 @@
  * - Activity tracking for LRU
  */
 
-import enhancedCacheService from '../services/enhancedCacheService.js';
+import cacheService from '../services/cacheService.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -23,7 +23,7 @@ export const cacheUser = async (req, res, next) => {
         }
 
         // Try to get from cache
-        const cachedUser = await enhancedCacheService.getUser(userId);
+        const cachedUser = await cacheService.getUser(userId);
 
         if (cachedUser) {
             // Attach to request for controller to use
@@ -53,7 +53,7 @@ export const invalidateUserCache = async (req, res, next) => {
                 const userId = req.params.userId || req.params.id || req.user?._id;
 
                 if (userId) {
-                    await enhancedCacheService.invalidateUser(userId);
+                    await cacheService.invalidateUser(userId);
                     logger.info(`🗑️ Middleware: Cache invalidated for user ${userId}`);
                 }
             }
@@ -90,7 +90,8 @@ export const updateCacheAfterWrite = (userDataGetter) => {
                             : data.user || data.data || data;
 
                         if (userData) {
-                            await enhancedCacheService.createUserCache(userId, userData);
+                            const userWithId = userData._id ? userData : { ...userData, _id: userId };
+                            await cacheService.cacheUser(userWithId);
                             logger.info(`💾 Middleware: Cache updated for user ${userId} after write`);
                         }
                     }
@@ -112,16 +113,8 @@ export const updateCacheAfterWrite = (userDataGetter) => {
  * Use on any authenticated route
  */
 export const trackActivity = async (req, res, next) => {
-    try {
-        if (req.user?._id) {
-            // Update last accessed timestamp (non-blocking)
-            enhancedCacheService._updateLastAccessed(req.user._id).catch(err => {
-                // Silent fail - not critical
-            });
-        }
-    } catch (error) {
-        // Silent fail - activity tracking shouldn't block requests
-    }
+    // Activity tracking is now handled by Redis TTL-based expiry
+    // No need to manually track last-accessed timestamps
     next();
 };
 

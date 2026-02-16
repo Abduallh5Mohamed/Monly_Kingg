@@ -167,8 +167,14 @@ export const getChatMessages = async (req, res) => {
             });
         }
 
-        // Paginate messages (oldest first - normal order)
-        const allMessages = chat.messages || [];
+        // Filter out soft-deleted messages for this user (admin sees everything)
+        const userIdStr = userId.toString();
+        const deletedMsgIds = chat.deletedMessagesFor?.get(userIdStr) || [];
+        const deletedSet = new Set(deletedMsgIds.map(id => id.toString()));
+
+        const allMessages = (chat.messages || []).filter(msg =>
+            !deletedSet.has(msg._id.toString())
+        );
         const totalMessages = allMessages.length;
         const messages = allMessages
             .slice((page - 1) * limit, page * limit);
@@ -330,7 +336,7 @@ export const createSupportChat = async (req, res) => {
     }
 };
 
-/* ---------------- Delete Chat ---------------- */
+/* ---------------- Delete Chat (Soft Delete — Admin Can Still See) ---------------- */
 export const deleteChat = async (req, res) => {
     try {
         const { chatId } = req.params;
@@ -348,18 +354,17 @@ export const deleteChat = async (req, res) => {
             });
         }
 
-        // Hide chat for this user only (not delete from database)
+        // Soft delete: hide chat for this user only (admin can still see it)
         if (!chat.hiddenFor) {
             chat.hiddenFor = [];
         }
 
-        // Add user to hiddenFor array if not already there
         if (!chat.hiddenFor.includes(userId)) {
             chat.hiddenFor.push(userId);
             await chat.save();
         }
 
-        logger.info(`User ${req.user.email} hid chat ${chatId}`);
+        logger.info(`✅ User ${req.user.email} soft-deleted chat ${chatId} (admin can still view)`);
 
         res.json({
             success: true,
@@ -370,6 +375,57 @@ export const deleteChat = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to delete chat"
+        });
+    }
+};
+
+/* ---------------- Delete Message (Soft Delete — Admin Can Still See) ---------------- */
+export const deleteMessage = async (req, res) => {
+    try {
+        const { chatId, messageId } = req.params;
+        const userId = req.user._id;
+
+        const chat = await Chat.findOne({
+            _id: chatId,
+            participants: userId
+        });
+
+        if (!chat) {
+            return res.status(404).json({
+                success: false,
+                message: "Chat not found"
+            });
+        }
+
+        // Check if message exists
+        const message = chat.messages.id(messageId);
+        if (!message) {
+            return res.status(404).json({
+                success: false,
+                message: "Message not found"
+            });
+        }
+
+        // Soft delete: add messageId to deletedMessagesFor map for this user
+        const userIdStr = userId.toString();
+        const deletedMsgs = chat.deletedMessagesFor.get(userIdStr) || [];
+        if (!deletedMsgs.includes(messageId)) {
+            deletedMsgs.push(messageId);
+            chat.deletedMessagesFor.set(userIdStr, deletedMsgs);
+            await chat.save();
+        }
+
+        logger.info(`✅ User ${req.user.email} soft-deleted message ${messageId} in chat ${chatId} (admin can still view)`);
+
+        res.json({
+            success: true,
+            message: "Message deleted successfully"
+        });
+    } catch (error) {
+        logger.error(`Delete message error: ${error.message}`);
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete message"
         });
     }
 };

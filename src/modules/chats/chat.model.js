@@ -25,14 +25,8 @@ const chatSchema = new mongoose.Schema({
     required: true,
     index: true
   }],
-  // Store only recent messages (last 100) for performance
-  messages: {
-    type: [messageSchema],
-    validate: {
-      validator: function (v) { return v.length <= 100; },
-      message: 'Messages array exceeds limit of 100'
-    }
-  },
+  // Store ALL messages forever (no limit — admin can view everything)
+  messages: [messageSchema],
   // Quick access to last message
   lastMessage: {
     content: String,
@@ -44,7 +38,8 @@ const chatSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true, index: true },
   archived: { type: Boolean, default: false },
   unreadCount: { type: Map, of: Number, default: {} }, // userId -> count
-  hiddenFor: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // Users who hid this chat
+  hiddenFor: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Users who hid this chat (soft delete)
+  deletedMessagesFor: { type: Map, of: [String], default: {} } // userId -> [messageId1, messageId2] (soft delete messages)
 }, {
   timestamps: true,
   toJSON: { virtuals: true },
@@ -81,18 +76,9 @@ chatSchema.pre('save', async function (next) {
   next();
 });
 
-// Method to add message efficiently
+// Method to add message efficiently (no more auto-deletion)
 chatSchema.methods.addMessage = async function (messageData) {
-  // If messages array reaches limit, keep only last 50
-  if (this.messages.length >= 100) {
-    // Archive old messages to separate collection (optional)
-    const oldMessages = this.messages.slice(0, 50);
-    // await MessageArchive.insertMany(oldMessages.map(m => ({ ...m, chatId: this._id })));
-
-    this.messages = this.messages.slice(50);
-  }
-
-  // Add new message
+  // Add new message — no limits, keep everything for admin
   this.messages.push(messageData);
 
   // Update last message

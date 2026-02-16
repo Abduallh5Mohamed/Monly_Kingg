@@ -1,7 +1,7 @@
 import User from "../users/user.model.js";
 import Chat from "../chats/chat.model.js";
 import logger from "../../utils/logger.js";
-import userCacheService from "../../services/userCacheService.js";
+import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
 
 /* ---------------- Get All Users ---------------- */
@@ -59,6 +59,12 @@ export const getAllUsers = async (req, res) => {
 /* ---------------- Get Admin Stats ---------------- */
 export const getAdminStats = async (req, res) => {
     try {
+        // Try cache first (3-minute TTL)
+        const cached = await cacheService.getCachedAdminStats();
+        if (cached) {
+            return res.json({ success: true, data: cached, cached: true });
+        }
+
         // Get user statistics
         const totalUsers = await User.countDocuments();
         const verifiedUsers = await User.countDocuments({ verified: true });
@@ -109,6 +115,9 @@ export const getAdminStats = async (req, res) => {
             registrationTrend: last7Days
         };
 
+        // Cache the stats for 3 minutes
+        await cacheService.cacheAdminStats(stats);
+
         logger.info(`Admin fetched stats: ${totalUsers} total users`);
 
         res.json({
@@ -151,7 +160,7 @@ export const updateUserRole = async (req, res) => {
         }
 
         // Clear user from cache
-        await userCacheService.removeUser(userId);
+        await cacheService.invalidateUser(userId);
 
         // Log the action
         user.authLogs.push({
@@ -201,7 +210,7 @@ export const deleteUser = async (req, res) => {
         }
 
         // Clear user from cache
-        await userCacheService.removeUser(userId);
+        await cacheService.invalidateUser(userId);
 
         logger.info(`Admin ${req.user.email} deleted user ${user.email}`);
 
@@ -309,7 +318,7 @@ export const toggleUserStatus = async (req, res) => {
         await user.save();
 
         // Clear user from cache
-        await userCacheService.removeUser(userId);
+        await cacheService.invalidateUser(userId);
 
         logger.info(`Admin ${req.user.email} ${user.verified ? 'activated' : 'deactivated'} user ${user.email}`);
 

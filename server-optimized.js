@@ -19,7 +19,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { globalLimiter } from "./src/middlewares/rateLimiter.js";
 import csrfProtection from "./src/middlewares/csrf.js";
-import userCacheService from "./src/services/userCacheService.js";
+import cacheService from "./src/services/cacheService.js";
 import SocketService from "./src/services/socketService.js";
 
 dotenv.config();

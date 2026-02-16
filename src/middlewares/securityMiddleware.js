@@ -34,30 +34,39 @@ function deepSanitize(obj) {
 
 export const enhancedSanitizer = (req, res, next) => {
     try {
-        // Sanitize request body
+        // Sanitize request body (mutable — safe to reassign)
         if (req.body && typeof req.body === 'object') {
             req.body = deepSanitize(req.body);
         }
 
-        // Sanitize query parameters
+        // Sanitize query parameters in-place (req.query may be a getter in Express 5+)
         if (req.query && typeof req.query === 'object') {
-            req.query = deepSanitize(req.query);
+            for (const key of Object.keys(req.query)) {
+                if (typeof req.query[key] === 'string') {
+                    req.query[key] = sanitizeString(req.query[key]);
+                }
+            }
         }
 
-        // Sanitize URL parameters
+        // Sanitize URL parameters in-place
         if (req.params && typeof req.params === 'object') {
-            req.params = deepSanitize(req.params);
+            for (const key of Object.keys(req.params)) {
+                if (typeof req.params[key] === 'string') {
+                    req.params[key] = sanitizeString(req.params[key]);
+                }
+            }
         }
 
         next();
     } catch (error) {
-        // Log error but don't block request
-        console.error('Sanitization error:', error);
+        // Non-fatal — continue request
         next();
     }
 };
 
 // Rate limiting for sensitive endpoints
+import rateLimit from 'express-rate-limit';
+
 export const sensitiveEndpointLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5, // limit each IP to 5 requests per windowMs for sensitive operations

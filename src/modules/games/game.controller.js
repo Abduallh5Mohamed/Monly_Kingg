@@ -1,9 +1,20 @@
 import Game from "./game.model.js";
+import cacheService from "../../services/cacheService.js";
 
-// Get all active games (public)
+// Get all active games (public) — cached for 6 hours
 export const getAllGames = async (req, res) => {
     try {
-        const games = await Game.find({ status: "active" }).sort({ name: 1 });
+        // Try cache first
+        const cached = await cacheService.getCachedGames();
+        if (cached) {
+            return res.status(200).json({ data: cached, cached: true });
+        }
+
+        const games = await Game.find({ status: "active" }).sort({ name: 1 }).lean();
+
+        // Cache for 6 hours
+        await cacheService.cacheGames(games);
+
         return res.status(200).json({ data: games });
     } catch (error) {
         console.error("Get all games error:", error);
@@ -11,13 +22,25 @@ export const getAllGames = async (req, res) => {
     }
 };
 
-// Get a game by slug
+// Get a game by slug — cached for 6 hours
 export const getGameBySlug = async (req, res) => {
     try {
-        const game = await Game.findOne({ slug: req.params.slug, status: "active" });
+        const { slug } = req.params;
+
+        // Try cache first
+        const cached = await cacheService.getCachedGameBySlug(slug);
+        if (cached) {
+            return res.status(200).json({ data: cached, cached: true });
+        }
+
+        const game = await Game.findOne({ slug, status: "active" }).lean();
         if (!game) {
             return res.status(404).json({ message: "Game not found" });
         }
+
+        // Cache individual game
+        await cacheService.cacheGameBySlug(slug, game);
+
         return res.status(200).json({ data: game });
     } catch (error) {
         console.error("Get game by slug error:", error);

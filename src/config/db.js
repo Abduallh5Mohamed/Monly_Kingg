@@ -17,7 +17,7 @@ const connectDB = async () => {
             retryWrites: true,
             retryReads: true,
             w: 'majority',
-            journal: false, // Faster writes (trade-off: slight durability risk)
+            journal: true, // Ensure write durability (critical for financial data)
             // Compression
             compressors: ['zlib'],
             zlibCompressionLevel: 3, // Faster compression

@@ -3,11 +3,14 @@ export default function csrfProtection(req, res, next) {
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
 
   const publicPaths = [
-    '/api/v1/auth/register',
-    '/api/v1/auth/login',
-    '/api/v1/auth/verify-email',
-    '/api/v1/auth/resend-code',
-    '/api/v1/auth/csrf-token'
+    '/v1/auth/register',
+    '/v1/auth/login',
+    '/v1/auth/refresh',
+    '/v1/auth/verify-email',
+    '/v1/auth/resend-code',
+    '/v1/auth/forgot-password',
+    '/v1/auth/reset-password',
+    '/v1/auth/csrf-token'
   ];
 
   if (publicPaths.includes(req.path)) {

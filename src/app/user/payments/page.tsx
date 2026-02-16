@@ -8,6 +8,8 @@ import {
   ChevronRight, Plus, AlertCircle, Phone, Globe, ArrowDownCircle, ArrowUpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSocket } from '@/lib/socket-context';
+import { useToast } from '@/hooks/use-toast';
 
 interface Deposit {
   _id: string;
@@ -68,6 +70,8 @@ const countryCodes = [
 
 export default function PaymentsPage() {
   const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
+  const { isConnected, on } = useSocket();
+  const { toast } = useToast();
 
   // Deposit states
   const [deposits, setDeposits] = useState<Deposit[]>([]);
@@ -107,13 +111,6 @@ export default function PaymentsPage() {
   useEffect(() => {
     if (activeTab === 'deposit') {
       fetchDeposits();
-      const interval = setInterval(fetchDeposits, 15000);
-      const handleDataUpdate = () => fetchDeposits();
-      window.addEventListener('userDataUpdated', handleDataUpdate);
-      return () => {
-        clearInterval(interval);
-        window.removeEventListener('userDataUpdated', handleDataUpdate);
-      };
     }
   }, [activeTab]);
 
@@ -123,6 +120,40 @@ export default function PaymentsPage() {
       fetchWithdrawals();
     }
   }, [activeTab, withdrawPage]);
+
+  // ─── Real-time: listen for deposit/withdrawal status updates ───
+  useEffect(() => {
+    if (!isConnected) return;
+    const unsubs: (() => void)[] = [];
+
+    // When admin approves/rejects my deposit
+    unsubs.push(on('deposit_status_updated', (deposit: Deposit) => {
+      setDeposits(prev => prev.map(d => d._id === deposit._id ? { ...d, ...deposit } : d));
+      const emoji = deposit.status === 'approved' ? '✅' : '❌';
+      toast({
+        title: `${emoji} Deposit ${deposit.status === 'approved' ? 'Approved' : 'Rejected'}`,
+        description: deposit.status === 'approved'
+          ? `Your deposit of ${deposit.amount} LE has been approved!`
+          : `Your deposit of ${deposit.amount} LE was rejected.`,
+        duration: 8000,
+      });
+    }));
+
+    // When admin approves/rejects my withdrawal
+    unsubs.push(on('withdrawal_status_updated', (withdrawal: Withdrawal) => {
+      setWithdrawals(prev => prev.map(w => w._id === withdrawal._id ? { ...w, ...withdrawal } : w));
+      const emoji = withdrawal.status === 'approved' ? '✅' : '❌';
+      toast({
+        title: `${emoji} Withdrawal ${withdrawal.status === 'approved' ? 'Approved' : 'Rejected'}`,
+        description: withdrawal.status === 'approved'
+          ? `Your withdrawal of ${withdrawal.amount} LE has been approved!`
+          : `Your withdrawal was rejected${withdrawal.rejectionReason ? ': ' + withdrawal.rejectionReason : ''}.`,
+        duration: 8000,
+      });
+    }));
+
+    return () => unsubs.forEach(fn => fn());
+  }, [isConnected, on, toast]);
 
   const fetchDeposits = async () => {
     setDepositsLoading(true);
@@ -325,8 +356,8 @@ export default function PaymentsPage() {
           <button
             onClick={() => setActiveTab('deposit')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'deposit'
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 scale-105'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 scale-105'
+              : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
               }`}
           >
             <ArrowDownCircle className="w-5 h-5" />
@@ -335,8 +366,8 @@ export default function PaymentsPage() {
           <button
             onClick={() => setActiveTab('withdraw')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'withdraw'
-                ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30 scale-105'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+              ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30 scale-105'
+              : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
               }`}
           >
             <ArrowUpCircle className="w-5 h-5" />

@@ -1,6 +1,7 @@
 import Deposit from "./deposit.model.js";
 import User from "../users/user.model.js";
-import cacheSyncService from '../../services/cacheSyncService.js';
+import cacheService from '../../services/cacheService.js';
+import socketService from '../../services/socketService.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -104,6 +105,12 @@ export const submitDeposit = async (req, res) => {
 
         await deposit.save();
 
+        // Populate user details for socket notification
+        await deposit.populate('user', 'username email phone profile.province profile.phone');
+
+        // Notify admins of new deposit in real-time
+        socketService.notifyAdminsNewDeposit(deposit);
+
         return res.status(201).json({
             message: "Deposit request submitted successfully",
             data: {
@@ -203,19 +210,26 @@ export const approveDeposit = async (req, res) => {
         deposit.processedAt = new Date();
         await deposit.save();
 
-        await cacheSyncService.updateBalanceWithSync(
+        // Credit user balance
+        await cacheService.updateBalanceWithSync(
             deposit.user._id,
             amountToCredit,
             `deposit approval #${id}`
         );
 
+        // Deduct from admin balance
         if (req.user.role === 'admin') {
-            await cacheSyncService.updateBalanceWithSync(
+            await cacheService.updateBalanceWithSync(
                 req.user._id,
                 -amountToCredit,
                 `deposit approval #${id} (admin deduction)`
             );
         }
+
+        // Real-time: notify admins of deposit update
+        socketService.notifyAdminsDepositUpdate(deposit);
+        // Real-time: notify user of approval
+        socketService.notifyUserDepositStatus(deposit.user._id.toString(), deposit);
 
         return res.status(200).json({
             message: `Deposit approved and ${amountToCredit} LE added to balance`,
@@ -232,7 +246,7 @@ export const rejectDeposit = async (req, res) => {
         const { id } = req.params;
         const { reason } = req.body;
 
-        const deposit = await Deposit.findById(id);
+        const deposit = await Deposit.findById(id).populate("user", "username email");
         if (!deposit) {
             return res.status(404).json({ message: "Deposit not found" });
         }
@@ -241,7 +255,13 @@ export const rejectDeposit = async (req, res) => {
         }
 
         deposit.status = "rejected";
+        deposit.rejectionReason = reason || "Rejected by admin";
         await deposit.save();
+
+        // Real-time: notify admins of deposit update
+        socketService.notifyAdminsDepositUpdate(deposit);
+        // Real-time: notify user of rejection
+        socketService.notifyUserDepositStatus(deposit.user._id.toString(), deposit);
 
         return res.status(200).json({ message: "Deposit rejected", data: deposit });
     } catch (error) {

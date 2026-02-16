@@ -1,5 +1,5 @@
 import express from 'express';
-import cacheSyncService from '../services/cacheSyncService.js';
+import cacheService from '../services/cacheService.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { requireAdmin } from '../middlewares/roleMiddleware.js';
 import logger from '../utils/logger.js';
@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/stats', authMiddleware, requireAdmin, async (req, res) => {
     try {
-        const stats = await cacheSyncService.getCacheStats();
+        const stats = await cacheService.getCacheStats();
         return res.json({
             success: true,
             data: stats
@@ -26,7 +26,7 @@ router.get('/stats', authMiddleware, requireAdmin, async (req, res) => {
 router.post('/validate/:userId', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const { userId } = req.params;
-        const result = await cacheSyncService.validateCacheConsistency(userId);
+        const result = await cacheService.validateCacheConsistency(userId);
 
         return res.json({
             success: true,
@@ -45,7 +45,7 @@ router.post('/validate/:userId', authMiddleware, requireAdmin, async (req, res) 
 router.post('/sync/:userId', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const { userId } = req.params;
-        const user = await cacheSyncService.getUserWithSync(userId);
+        const user = await cacheService.getUser(userId);
 
         if (!user) {
             return res.status(404).json({
@@ -72,7 +72,7 @@ router.post('/sync/:userId', authMiddleware, requireAdmin, async (req, res) => {
 router.post('/invalidate/:userId', authMiddleware, requireAdmin, async (req, res) => {
     try {
         const { userId } = req.params;
-        const result = await cacheSyncService.invalidateUserCache(userId);
+        const result = await cacheService.invalidateUser(userId);
 
         return res.json({
             success: true,
@@ -100,7 +100,7 @@ router.post('/bulk-sync', authMiddleware, requireAdmin, async (req, res) => {
             });
         }
 
-        const result = await cacheSyncService.bulkSyncUsers(userIds);
+        const result = await cacheService.bulkSyncUsers(userIds);
 
         return res.json({
             success: true,

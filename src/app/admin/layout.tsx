@@ -1,5 +1,8 @@
 ﻿'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 
@@ -8,21 +11,22 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Allow access without authentication for development
-  // In production, you should uncomment the authentication check below
-  
-  /*
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Redirect if not admin
-    if (!loading && (!user || user.role !== 'admin')) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
+    setMounted(true);
+  }, []);
 
-  if (loading) {
+  useEffect(() => {
+    if (mounted && !loading && (!user || user.role !== 'admin')) {
+      router.replace('/login');
+    }
+  }, [user, loading, router, mounted]);
+
+  // Don't render anything on server or before client mount — prevents hydration mismatch
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-[#0f1117] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
@@ -31,9 +35,12 @@ export default function AdminLayout({
   }
 
   if (!user || user.role !== 'admin') {
-    return null;
+    return (
+      <div className="min-h-screen bg-[#0f1117] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      </div>
+    );
   }
-  */
 
   return (
     <div className="min-h-screen bg-[#0a0c10]">

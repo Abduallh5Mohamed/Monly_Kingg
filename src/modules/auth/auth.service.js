@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import User from "../users/user.model.js";
 import { sendEmail } from "../../utils/email.js";
 import logger from "../../utils/logger.js";
-import userCacheService from "../../services/userCacheService.js";
+import cacheService from "../../services/cacheService.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
@@ -209,16 +209,37 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       throw new Error("Invalid credentials");
     }
 
+    // ✅ SECURITY: Enforce account lockout after too many failed attempts
+    const MAX_FAILED_ATTEMPTS = 5;
+    const LOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutes
+
+    if (user.lockUntil && user.lockUntil > new Date()) {
+      const remainingMinutes = Math.ceil((user.lockUntil - Date.now()) / 60000);
+      throw new Error(`Account is temporarily locked. Try again in ${remainingMinutes} minutes.`);
+    }
+
+    // If lock has expired, reset the counter
+    if (user.lockUntil && user.lockUntil <= new Date()) {
+      await User.updateOne({ _id: user._id }, { $set: { failedLoginAttempts: 0, lockUntil: null } });
+      user.failedLoginAttempts = 0;
+    }
+
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-      // Lightweight failed attempt update - use updateOne to avoid loading full doc
-      await User.updateOne(
-        { _id: user._id },
-        {
-          $inc: { failedLoginAttempts: 1 },
-          $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
-        }
-      );
+      const newFailedAttempts = (user.failedLoginAttempts || 0) + 1;
+      const updateData = {
+        $inc: { failedLoginAttempts: 1 },
+        $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
+      };
+
+      // Lock account if max attempts reached
+      if (newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
+        updateData.$set = { lockUntil: new Date(Date.now() + LOCK_DURATION_MS) };
+        logger.warn(`🔒 Account locked for ${user.email} after ${newFailedAttempts} failed attempts`);
+      }
+
+      // Lightweight failed attempt update
+      await User.updateOne({ _id: user._id }, updateData);
       throw new Error("Invalid credentials");
     }
 
@@ -241,8 +262,8 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 
     // Fire-and-forget: cache session + user data in parallel (don't await)
     const cacheOps = [
-      userCacheService.cacheSession(user._id, { accessToken, refreshToken: refreshTokenString, loginTime: new Date(), ip, userAgent }),
-      userCacheService.cacheUser(user)
+      cacheService.cacheSession(user._id, { accessToken, refreshToken: refreshTokenString, loginTime: new Date(), ip, userAgent }),
+      cacheService.cacheUser(user)
     ];
     Promise.allSettled(cacheOps).catch(() => { }); // Non-blocking
 
@@ -345,7 +366,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 
     // 🎯 Try cache first
     logger.info(`🔍 [FORGOT PASSWORD] Checking cache for user: ${normalizedEmail}`);
-    let cachedUser = await userCacheService.getUser(normalizedEmail);
+    let cachedUser = await cacheService.getUser(normalizedEmail);
     let user;
 
     if (cachedUser) {
@@ -361,7 +382,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
         const userDataForCache = { ...user.toObject() };
         delete userDataForCache.passwordHash; // Security
         delete userDataForCache.passwordResetToken; // Security
-        await userCacheService.cacheUser(userDataForCache);
+        await cacheService.cacheUser(userDataForCache);
       }
     }
 
@@ -389,7 +410,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     user.lastPasswordResetSentAt = new Date();
 
     // Cache the reset token temporarily (for faster verification)
-    await userCacheService.cachePasswordResetToken(user._id, resetToken);
+    await cacheService.cachePasswordResetToken(user._id, resetToken);
 
     // Audit log
     user.authLogs.push({ action: "forgot_password", success: true, ip, userAgent });
@@ -425,7 +446,7 @@ export const verifyResetToken = async (email, token) => {
     logger.info(`🔍 [VERIFY RESET TOKEN] Checking token for: ${normalizedEmail}`);
 
     // Check cache first for faster verification
-    const cachedToken = await userCacheService.getPasswordResetToken(normalizedEmail);
+    const cachedToken = await cacheService.getPasswordResetToken(normalizedEmail);
     let isValidToken = false;
 
     if (cachedToken && cachedToken === token) {
@@ -448,7 +469,7 @@ export const verifyResetToken = async (email, token) => {
       user.passwordResetToken = null;
       user.passwordResetExpires = null;
       await user.save();
-      await userCacheService.removePasswordResetToken(user._id);
+      await cacheService.removePasswordResetToken(user._id);
       throw new Error("Invalid or expired reset token");
     }
 
@@ -505,8 +526,8 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
     await revokeAllRefreshTokens(user, "password_reset");
 
     // Clear user from cache (password changed, need fresh data)
-    await userCacheService.removeUser(user._id);
-    await userCacheService.removePasswordResetToken(user._id);
+    await cacheService.invalidateUser(user._id);
+    await cacheService.removePasswordResetToken(user._id);
 
     // Audit log
     user.authLogs.push({ action: "reset_password", success: true, ip, userAgent });

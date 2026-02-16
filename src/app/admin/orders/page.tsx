@@ -27,7 +27,12 @@ import {
   Image,
   MapPin,
   Phone,
+  Wifi,
+  WifiOff,
+  Bell,
 } from 'lucide-react';
+import { useSocket } from '@/lib/socket-context';
+import { useToast } from '@/hooks/use-toast';
 
 interface Deposit {
   _id: string;
@@ -79,9 +84,64 @@ export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingAmounts, setEditingAmounts] = useState<{ [id: string]: number }>({});
 
+  // Global socket from SocketProvider
+  const { isConnected, on } = useSocket();
+  const { toast } = useToast();
+
+  // Fetch initial data
   useEffect(() => {
     fetchData();
   }, [activeTab]);
+
+  // ─── Real-time socket listeners ────────────────
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const unsubs: (() => void)[] = [];
+
+    // New deposit arrives → prepend to list + show toast
+    unsubs.push(on('new_deposit', (deposit: Deposit) => {
+      setDeposits(prev => {
+        // Avoid duplicates
+        if (prev.some(d => d._id === deposit._id)) return prev;
+        return [deposit, ...prev];
+      });
+      toast({
+        title: '💰 New Deposit Request',
+        description: `${deposit.user?.username || 'User'} — ${deposit.amount || 0} LE`,
+        duration: 6000,
+      });
+      // Play notification sound
+      try { new Audio('/assets/notification.mp3').play().catch(() => { }); } catch { }
+    }));
+
+    // New withdrawal arrives
+    unsubs.push(on('new_withdrawal', (withdrawal: Withdrawal) => {
+      setWithdrawals(prev => {
+        if (prev.some(w => w._id === withdrawal._id)) return prev;
+        return [withdrawal, ...prev];
+      });
+      toast({
+        title: '💸 New Withdrawal Request',
+        description: `${withdrawal.user?.username || 'User'} — ${withdrawal.amount || 0} LE`,
+        duration: 6000,
+      });
+      try { new Audio('/assets/notification.mp3').play().catch(() => { }); } catch { }
+    }));
+
+    // Deposit status changed (by another admin tab)
+    unsubs.push(on('deposit_updated', (deposit: Deposit) => {
+      setDeposits(prev => prev.map(d => d._id === deposit._id ? { ...d, ...deposit } : d));
+    }));
+
+    // Withdrawal status changed
+    unsubs.push(on('withdrawal_updated', (withdrawal: Withdrawal) => {
+      setWithdrawals(prev => prev.map(w => w._id === withdrawal._id ? { ...w, ...withdrawal } : w));
+    }));
+
+    // Cleanup all listeners on unmount / reconnect
+    return () => unsubs.forEach(fn => fn());
+  }, [isConnected, on, toast]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -114,14 +174,15 @@ export default function OrdersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount }),
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.data) {
         setEditingAmounts(prev => {
           const updated = { ...prev };
           delete updated[id];
           return updated;
         });
-        fetchData();
-        window.dispatchEvent(new Event('userDataUpdated'));
+        // Optimistic update — socket will also fire but this is instant
+        setDeposits(prev => prev.map(d => d._id === id ? { ...d, ...data.data } : d));
       }
     } catch (error) {
       console.error('Approve error:', error);
@@ -139,9 +200,9 @@ export default function OrdersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: 'Rejected by admin' }),
       });
-      if (res.ok) {
-        fetchData();
-        window.dispatchEvent(new Event('userDataUpdated'));
+      const data = await res.json();
+      if (res.ok && data.data) {
+        setDeposits(prev => prev.map(d => d._id === id ? { ...d, ...data.data } : d));
       }
     } catch (error) {
       console.error('Reject error:', error);
@@ -157,9 +218,9 @@ export default function OrdersPage() {
         method: 'PUT',
         credentials: 'include',
       });
-      if (res.ok) {
-        fetchData();
-        window.dispatchEvent(new Event('userDataUpdated'));
+      const data = await res.json();
+      if (res.ok && data.data) {
+        setWithdrawals(prev => prev.map(w => w._id === id ? { ...w, ...data.data } : w));
       }
     } catch (error) {
       console.error('Approve error:', error);
@@ -180,9 +241,9 @@ export default function OrdersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason }),
       });
-      if (res.ok) {
-        fetchData();
-        window.dispatchEvent(new Event('userDataUpdated'));
+      const data = await res.json();
+      if (res.ok && data.data) {
+        setWithdrawals(prev => prev.map(w => w._id === id ? { ...w, ...data.data } : w));
       }
     } catch (error) {
       console.error('Reject error:', error);
@@ -220,8 +281,22 @@ export default function OrdersPage() {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Financial Operations</h1>
-          <p className="text-white/60">Manage deposits and withdrawals</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-3">
+            Financial Operations
+            {/* Real-time connection indicator */}
+            {isConnected ? (
+              <span className="flex items-center gap-1.5 text-xs font-normal text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/20">
+                <Wifi className="w-3 h-3 animate-pulse" />
+                Live
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-xs font-normal text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">
+                <WifiOff className="w-3 h-3" />
+                Connecting...
+              </span>
+            )}
+          </h1>
+          <p className="text-white/60">Manage deposits and withdrawals • Real-time updates enabled</p>
         </div>
       </div>
 
