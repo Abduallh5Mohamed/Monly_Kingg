@@ -89,11 +89,27 @@ export default function BrowseAccountsPage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  /* ── fetch games once ── */
+  /* ── fetch games once with caching ── */
   useEffect(() => {
+    const cachedGames = sessionStorage.getItem('games_list');
+    const cacheTime = sessionStorage.getItem('games_list_time');
+    const now = Date.now();
+    const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+    if (cachedGames && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+      setGames(JSON.parse(cachedGames));
+      return;
+    }
+
     fetch('/api/v1/listings/games')
       .then((r) => r.json())
-      .then((d) => { if (d.data) setGames(d.data); })
+      .then((d) => {
+        if (d.data) {
+          setGames(d.data);
+          sessionStorage.setItem('games_list', JSON.stringify(d.data));
+          sessionStorage.setItem('games_list_time', now.toString());
+        }
+      })
       .catch(() => { });
   }, []);
 
@@ -164,17 +180,16 @@ export default function BrowseAccountsPage() {
   return (
     <UserDashboardLayout>
       <div className="min-h-screen pb-20">
-        
+
         {/* ════════════════════ GAME CATEGORIES TABS ════════════════════ */}
         <div className="mb-6 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-2 pb-2">
             <button
               onClick={() => { setSelectedGame(''); setPage(1); }}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
-                !selectedGame
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${!selectedGame
                   ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
-              }`}
+                }`}
             >
               <Flame className="w-4 h-4" />
               All Games
@@ -183,11 +198,10 @@ export default function BrowseAccountsPage() {
               <button
                 key={game._id}
                 onClick={() => { setSelectedGame(game._id); setPage(1); }}
-                className={`px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
-                  selectedGame === game._id
+                className={`px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${selectedGame === game._id
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
                     : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
-                }`}
+                  }`}
               >
                 {game.name}
               </button>
@@ -238,11 +252,10 @@ export default function BrowseAccountsPage() {
               {/* Filter toggle */}
               <button
                 onClick={() => setShowFilters((p) => !p)}
-                className={`h-12 px-4 rounded-xl border font-medium text-sm flex items-center gap-2 transition-all ${
-                  showFilters 
-                    ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300' 
+                className={`h-12 px-4 rounded-xl border font-medium text-sm flex items-center gap-2 transition-all ${showFilters
+                    ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300'
                     : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/[0.08] hover:text-white'
-                }`}
+                  }`}
               >
                 <Filter className="h-4 w-4" />
                 <span className="hidden sm:inline">Filters</span>
@@ -287,11 +300,10 @@ export default function BrowseAccountsPage() {
                     <button
                       key={r.label}
                       onClick={() => selectPriceRange(r)}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        activePriceLabel === r.label
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activePriceLabel === r.label
                           ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
                           : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
-                      }`}
+                        }`}
                     >
                       {r.label}
                     </button>
@@ -402,9 +414,8 @@ export default function BrowseAccountsPage() {
               <Link
                 key={listing._id}
                 href={`/listings/${listing._id}`}
-                className={`group relative overflow-hidden rounded-2xl bg-[#12151c] border border-white/5 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 ${
-                  viewMode === 'list' ? 'flex gap-4' : ''
-                }`}
+                className={`group relative overflow-hidden rounded-2xl bg-[#12151c] border border-white/5 hover:border-cyan-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 ${viewMode === 'list' ? 'flex gap-4' : ''
+                  }`}
               >
                 {/* Image */}
                 <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-48 h-32 shrink-0' : 'aspect-[4/3]'}`}>
@@ -505,11 +516,10 @@ export default function BrowseAccountsPage() {
                   <button
                     key={n}
                     onClick={() => setPage(n as number)}
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${
-                      page === n
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${page === n
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
                         : 'text-white/50 hover:bg-white/5 hover:text-white'
-                    }`}
+                      }`}
                   >
                     {n}
                   </button>

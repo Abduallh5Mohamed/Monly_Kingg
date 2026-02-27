@@ -1,7 +1,7 @@
 import Promotion from "./promotion.model.js";
 import Listing from "../listings/listing.model.js";
 
-// Pricing: cost per day in USD
+// Pricing: cost per day in EGP
 const PRICE_PER_DAY = 2;
 
 // Seller: Submit promotion request
@@ -100,7 +100,7 @@ export const getPromotionPricing = async (req, res) => {
         pricePerDay: PRICE_PER_DAY,
         minDays: 1,
         maxDays: 30,
-        currency: "USD",
+        currency: "EGP",
       },
     });
   } catch (error) {

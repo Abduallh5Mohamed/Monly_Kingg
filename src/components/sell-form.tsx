@@ -42,7 +42,7 @@ const sellFormSchema = z.object({
 const games = [
   'FIFA',
   'PUBG',
-  'Ark Rider',
+  'Arc Raiders',
   'Valorant',
   'League of Legends',
 ];
@@ -124,7 +124,7 @@ export function SellForm() {
                 <FormItem>
                   <FormLabel className="text-primary">Rank / Level</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Radiant, Apex Predator" {...field} className="bg-input/50" />
+                    <Input placeholder="e.g., Radiant, Arc Raider Elite" {...field} className="bg-input/50" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,32 +148,32 @@ export function SellForm() {
           <FormField
             control={form.control}
             name="image"
-            render={({ field: { onChange, value, ...rest }}) => (
+            render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
                 <FormLabel className="text-primary">Account Screenshot</FormLabel>
                 <FormControl>
-                    <div className="relative">
-                        <Input 
-                            type="file" 
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            accept="image/*"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                onChange(file);
-                                setFileName(file?.name || '');
-                            }}
-                            {...rest}
-                         />
-                        <div className="flex items-center justify-center w-full h-24 border-2 border-dashed border-input rounded-md bg-input/20 hover:bg-input/40 transition-colors">
-                           <div className="text-center">
-                            <Upload className="mx-auto h-8 w-8 text-muted-foreground"/>
-                            <p className="mt-1 text-sm text-muted-foreground">{fileName || 'Click or drag file to upload'}</p>
-                           </div>
-                        </div>
+                  <div className="relative">
+                    <Input
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        onChange(file);
+                        setFileName(file?.name || '');
+                      }}
+                      {...rest}
+                    />
+                    <div className="flex items-center justify-center w-full h-24 border-2 border-dashed border-input rounded-md bg-input/20 hover:bg-input/40 transition-colors">
+                      <div className="text-center">
+                        <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+                        <p className="mt-1 text-sm text-muted-foreground">{fileName || 'Click or drag file to upload'}</p>
+                      </div>
                     </div>
+                  </div>
                 </FormControl>
                 <FormDescription>
-                    A screenshot of the account's rank, skins, or other assets.
+                  A screenshot of the account's rank, skins, or other assets.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

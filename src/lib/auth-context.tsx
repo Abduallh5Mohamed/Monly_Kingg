@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, ReactNode } from 'react';
 import { apiClient, UserData, ApiResponse, AuthResponse } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter, usePathname } from 'next/navigation';
@@ -35,16 +35,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const AUTH_CACHE_DURATION = 30000; // 30 seconds
 
   // Idle timeout - 15 minutes
-  const IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
-  const [lastActivity, setLastActivity] = useState<number>(Date.now());
+  // IMPORTANT: useRef (not useState) to prevent re-renders on every user interaction.
+  // useState would cause AuthProvider to re-render → new `user` object ref → ALL
+  // components using useAuth() re-render → their useEffect([user]) re-fire → API storm.
+  const IDLE_TIMEOUT = 15 * 60 * 1000;
+  const lastActivityRef = useRef<number>(Date.now());
 
-  // Update last activity on user interaction
+  // Update last activity on user interaction (no re-render!)
   useEffect(() => {
     const updateActivity = () => {
-      setLastActivity(Date.now());
+      lastActivityRef.current = Date.now();
     };
 
-    // Track user activity
     const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
     events.forEach(event => {
       window.addEventListener(event, updateActivity, { passive: true });
@@ -57,13 +59,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
-  // Check for idle timeout
+  // Check for idle timeout — depends only on `user` (stable unless login/logout)
   useEffect(() => {
     if (!user) return;
 
     const checkIdleTimeout = () => {
-      const now = Date.now();
-      const timeSinceLastActivity = now - lastActivity;
+      const timeSinceLastActivity = Date.now() - lastActivityRef.current;
 
       if (timeSinceLastActivity >= IDLE_TIMEOUT) {
         console.log('🕐 Session timeout due to inactivity');
@@ -72,14 +73,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           description: 'You have been logged out due to inactivity',
           variant: 'default',
         });
-        logout('/', false); // Don't show double toast
+        logout('/', false);
       }
     };
 
-    // Check every minute
     const interval = setInterval(checkIdleTimeout, 60000);
     return () => clearInterval(interval);
-  }, [user, lastActivity]);
+  }, [user]);
 
   useEffect(() => {
     // Always check auth on mount - cookies are httpOnly so document.cookie can't see them
@@ -87,10 +87,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuthStatus();
   }, []); // Only on mount
 
-  // Track route changes
+  // Track route changes (ref — no re-render)
   useEffect(() => {
     if (user) {
-      setLastActivity(Date.now()); // Update activity on navigation
+      lastActivityRef.current = Date.now();
     }
   }, [pathname, user]);
 
@@ -102,7 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('✅ Auth status: User authenticated', response.data.userData);
         setUser(response.data.userData);
         setLastAuthCheck(Date.now());
-        setLastActivity(Date.now()); // Reset activity on successful auth
+        lastActivityRef.current = Date.now(); // Reset activity on successful auth
       } else {
         // Failed to refresh - clear user
         console.log('❌ Auth status: Failed to refresh token', response.message);

@@ -3,8 +3,8 @@
 import { Logo } from '../logo';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  Gamepad2, Shield, Headphones, CreditCard, 
+import {
+  Gamepad2, Shield, Headphones, CreditCard,
   ChevronRight, Send, ExternalLink,
   Twitter, MessageCircle, Youtube, Instagram
 } from 'lucide-react';
@@ -27,7 +27,7 @@ const gameCategories = [
   { name: 'Valorant' },
   { name: 'FIFA' },
   { name: 'PUBG' },
-  { name: 'Ark Rider' },
+  { name: 'Arc Raiders' },
   { name: 'League of Legends' },
   { name: 'Call of Duty' },
 ];
@@ -83,12 +83,12 @@ export function Footer() {
       {/* Main Footer Content */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6">
-          
+
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-5">
             <Logo />
             <p className="text-sm text-white/50 leading-relaxed max-w-sm">
-              The most trusted marketplace for buying and selling gaming accounts. 
+              The most trusted marketplace for buying and selling gaming accounts.
               Safe transactions, verified sellers, and premium accounts for all your favorite games.
             </p>
 
@@ -190,8 +190,8 @@ export function Footer() {
               <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">We Accept</p>
               <div className="flex flex-wrap items-center gap-3">
                 {paymentMethods.map((method) => (
-                  <div 
-                    key={method.name} 
+                  <div
+                    key={method.name}
                     className="px-3 py-2 bg-white/5 rounded-lg border border-white/5 hover:border-white/10 transition-all flex items-center justify-center h-10"
                   >
                     <Image

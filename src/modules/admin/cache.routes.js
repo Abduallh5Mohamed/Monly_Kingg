@@ -10,11 +10,12 @@ import cacheService from '../../services/cacheService.js';
 import cacheCleanupJob from '../../jobs/cacheCleanupJob.js';
 import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { requireAdmin } from '../../middlewares/roleMiddleware.js';
+import { adminHeavyLimiter } from '../../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
-// All routes require admin
-router.use(authMiddleware, requireAdmin);
+// All routes require admin + heavy operation rate limiting
+router.use(authMiddleware, requireAdmin, adminHeavyLimiter);
 
 /**
  * GET /api/v1/admin/cache/stats

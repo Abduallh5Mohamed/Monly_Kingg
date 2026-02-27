@@ -64,15 +64,13 @@ export const enhancedSanitizer = (req, res, next) => {
     }
 };
 
-// Rate limiting for sensitive endpoints
-import rateLimit from 'express-rate-limit';
+// Rate limiting for sensitive endpoints (use centralized rate limiter)
+import { createRateLimiter } from './rateLimiter.js';
 
-export const sensitiveEndpointLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // limit each IP to 5 requests per windowMs for sensitive operations
-    message: {
-        error: 'Too many sensitive requests from this IP, please try again later.'
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
+export const sensitiveEndpointLimiter = createRateLimiter('login', {
+    max: 5,
+    message: 'Too many sensitive requests from this IP, please try again later.'
+}, {
+    useUserKey: false,
+    progressive: true
 });

@@ -60,12 +60,13 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
     await logout('/', true);
   };
 
-  // Fetch user balance and level from database
+  // Fetch user balance and level — event-driven with 120s fallback poll
   useEffect(() => {
+    let mounted = true;
     const fetchUserData = async () => {
       try {
         const res = await fetch('/api/v1/users/profile', { credentials: 'include' });
-        if (res.ok) {
+        if (res.ok && mounted) {
           const data = await res.json();
           if (data.data && data.data.user) {
             setBalance(data.data.user.wallet?.balance || 0);
@@ -80,7 +81,8 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
     if (user) {
       fetchUserData();
 
-      const interval = setInterval(fetchUserData, 10000);
+      // 120s fallback — primary updates come via the 'userDataUpdated' event
+      const interval = setInterval(fetchUserData, 120000);
 
       const handleDataUpdate = () => {
         fetchUserData();
@@ -88,11 +90,12 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       window.addEventListener('userDataUpdated', handleDataUpdate);
 
       return () => {
+        mounted = false;
         clearInterval(interval);
         window.removeEventListener('userDataUpdated', handleDataUpdate);
       };
     }
-  }, [user]);
+  }, [user?.username]);  // stable primitive — doesn't change on re-renders
 
   // Check if profile is completed
   useEffect(() => {
@@ -102,7 +105,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       console.log('➡️ Dashboard redirecting to /complete-profile');
       router.push('/complete-profile');
     }
-  }, [user]);
+  }, [user?.profileCompleted]);
 
   // Show loading or nothing while redirecting
   if (loading || !user) {
@@ -356,8 +359,11 @@ function NotificationBell() {
   }, []);
 
   // Poll unread count every 30s - only if user is logged in
+  // Use stable dependency (user ID string) to prevent effect re-firing
+  const userId = user?._id || user?.username || null;
+
   const fetchUnread = useCallback(async () => {
-    if (!user) return; // Don't fetch if user is not logged in
+    if (!userId) return;
     try {
       const res = await fetch('/api/v1/notifications/unread-count', { credentials: 'include' });
       if (res.ok) {
@@ -365,14 +371,14 @@ function NotificationBell() {
         setUnreadCount(data.unreadCount || 0);
       }
     } catch { /* silent */ }
-  }, [user]);
+  }, [userId]);  // stable string, not object reference
 
   useEffect(() => {
-    if (!user) return; // Skip polling if no user
+    if (!userId) return;
     fetchUnread();
     const iv = setInterval(fetchUnread, 30000);
     return () => clearInterval(iv);
-  }, [fetchUnread, user]);
+  }, [fetchUnread]);  // fetchUnread is stable because userId is stable
 
   const fetchNotifications = async () => {
     if (!user) return; // Don't fetch if user is not logged in

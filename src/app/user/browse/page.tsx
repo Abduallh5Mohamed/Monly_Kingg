@@ -22,7 +22,9 @@ import {
     LayoutGrid,
     LayoutList,
     Zap,
+    Tag,
 } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 
 /* ── Types ── */
 interface Listing {
@@ -44,7 +46,8 @@ interface Game {
 }
 
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
-function ListingCard({ listing }: { listing: Listing }) {
+function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
+    const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
     const discount = Math.floor(10 + ((listing.price * 7) % 60));
     const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
     const passPrice = (listing.price * 0.82).toFixed(2);
@@ -144,6 +147,7 @@ function ListingCard({ listing }: { listing: Listing }) {
 
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
+    const { user } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
@@ -162,11 +166,27 @@ export default function StoreBrowsePage() {
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
     const LIMIT = 20;
 
-    // Fetch games for filter
+    // Fetch games for filter with caching
     useEffect(() => {
+        const cachedGames = sessionStorage.getItem('games_list');
+        const cacheTime = sessionStorage.getItem('games_list_time');
+        const now = Date.now();
+        const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+        if (cachedGames && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+            setGames(JSON.parse(cachedGames));
+            return;
+        }
+
         fetch('/api/v1/listings/games')
             .then((r) => r.json())
-            .then((d) => { if (d.data) setGames(d.data); })
+            .then((d) => {
+                if (d.data) {
+                    setGames(d.data);
+                    sessionStorage.setItem('games_list', JSON.stringify(d.data));
+                    sessionStorage.setItem('games_list_time', now.toString());
+                }
+            })
             .catch(() => { });
     }, []);
 
@@ -278,8 +298,8 @@ export default function StoreBrowsePage() {
                                 <button
                                     onClick={() => { setGameDropdownOpen(!gameDropdownOpen); setSortDropdownOpen(false); }}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${selectedGame
-                                            ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                            : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                         }`}
                                 >
                                     <Gamepad2 className="w-3.5 h-3.5" />
@@ -342,8 +362,8 @@ export default function StoreBrowsePage() {
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-medium border transition-all duration-200 ${showFilters || minPrice || maxPrice
-                                        ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                                        : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
+                                    ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                                    : 'bg-white/[0.03] border-white/[0.06] text-white/40 hover:text-white/60 hover:bg-white/[0.05]'
                                     }`}
                             >
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -476,7 +496,7 @@ export default function StoreBrowsePage() {
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                             {listings.map((listing) => (
-                                <ListingCard key={listing._id} listing={listing} />
+                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} />
                             ))}
                         </div>
 
@@ -508,8 +528,8 @@ export default function StoreBrowsePage() {
                                             key={pageNum}
                                             onClick={() => setPage(pageNum)}
                                             className={`w-9 h-9 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-all ${page === pageNum
-                                                    ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-                                                    : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
+                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
+                                                : 'bg-white/[0.04] border border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]'
                                                 }`}
                                         >
                                             {pageNum}

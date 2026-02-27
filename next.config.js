@@ -25,6 +25,17 @@ const nextConfig = {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
   },
 
+  // HTTP Agent Options for better connection handling
+  httpAgentOptions: {
+    keepAlive: true,
+    keepAliveMsecs: 30000,
+  },
+
+  // Server runtime config for timeouts
+  serverRuntimeConfig: {
+    proxyTimeout: 60000, // 60 seconds
+  },
+
   // Proxy API requests to backend server when running in development mode
   async rewrites() {
     return [

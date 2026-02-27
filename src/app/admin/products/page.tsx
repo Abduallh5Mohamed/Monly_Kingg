@@ -27,7 +27,7 @@ const products = [
   { id: 4, name: 'Call of Duty Account - Prestige 10', game: 'COD', price: 75.50, stock: 8, sales: 178, status: 'active' },
   { id: 5, name: 'League of Legends - Diamond', game: 'LOL', price: 120.00, stock: 3, sales: 67, status: 'active' },
   { id: 6, name: 'Fortnite Account - Rare Skins', game: 'Fortnite', price: 55.00, stock: 15, sales: 201, status: 'active' },
-  { id: 7, name: 'Apex Legends - Predator', game: 'Apex', price: 95.00, stock: 4, sales: 92, status: 'active' },
+  { id: 7, name: 'Arc Raiders - Elite Rank', game: 'Arc Raiders', price: 95.00, stock: 4, sales: 92, status: 'active' },
   { id: 8, name: 'Clash of Clans - TH14', game: 'COC', price: 150.00, stock: 2, sales: 45, status: 'low_stock' },
 ];
 
@@ -141,8 +141,8 @@ export default function ProductsPage() {
                         product.status === 'active'
                           ? 'bg-emerald-500/10 text-emerald-400 border-0 text-xs'
                           : product.status === 'out_of_stock'
-                          ? 'bg-red-500/10 text-red-400 border-0 text-xs'
-                          : 'bg-amber-500/10 text-amber-400 border-0 text-xs'
+                            ? 'bg-red-500/10 text-red-400 border-0 text-xs'
+                            : 'bg-amber-500/10 text-amber-400 border-0 text-xs'
                       }
                     >
                       {product.status.replace('_', ' ')}

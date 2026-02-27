@@ -9,15 +9,14 @@ const listingSchema = new mongoose.Schema({
   details: { type: Object },
   images: [{ type: String }],
   coverImage: { type: String },
-  // in_progress = active transaction ongoing (escrow)
-  status: { type: String, enum: ["available", "in_progress", "sold"], default: "available" }
+  status: { type: String, enum: ["available", "sold"], default: "available" }
 }, { timestamps: true });
 
 // Performance indexes
-listingSchema.index({ seller: 1, status: 1, createdAt: -1 });
-listingSchema.index({ game: 1, status: 1, price: 1 });
-listingSchema.index({ status: 1, createdAt: -1 });
-listingSchema.index({ price: 1, status: 1 });
-listingSchema.index({ title: 'text', description: 'text' });
+listingSchema.index({ seller: 1, status: 1, createdAt: -1 }); // For seller's listings
+listingSchema.index({ game: 1, status: 1, price: 1 }); // For game filtering & sorting
+listingSchema.index({ status: 1, createdAt: -1 }); // For latest available listings
+listingSchema.index({ price: 1, status: 1 }); // For price filtering
+listingSchema.index({ title: 'text', description: 'text' }); // For text search
 
 export default mongoose.model("Listing", listingSchema);

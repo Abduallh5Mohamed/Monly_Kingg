@@ -4,6 +4,7 @@ import * as profileController from "./profile.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../../middlewares/roleMiddleware.js";
 import { cacheUser, invalidateUserCache, trackActivity } from "../../middlewares/cacheMiddleware.js";
+import { userWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -48,14 +49,14 @@ const upload = multer({
 });
 
 // Profile routes
-router.post("/complete-profile", authMiddleware, upload.single("avatar"), profileController.completeProfile);
+router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), profileController.completeProfile);
 router.get("/profile", authMiddleware, profileController.getProfile);
 router.get("/profile/:userId", authMiddleware, profileController.getProfile);
-router.put("/profile", authMiddleware, profileController.updateProfile);
+router.put("/profile", authMiddleware, userWriteLimiter, profileController.updateProfile);
 
 // Favorites routes
-router.post("/favorites", authMiddleware, profileController.addToFavorites);
-router.delete("/favorites/:listingId", authMiddleware, profileController.removeFromFavorites);
+router.post("/favorites", authMiddleware, userWriteLimiter, profileController.addToFavorites);
+router.delete("/favorites/:listingId", authMiddleware, userWriteLimiter, profileController.removeFromFavorites);
 
 // Search users (must be authenticated)
 router.get("/search", authMiddleware, trackActivity, userController.searchUsers);
@@ -64,9 +65,9 @@ router.get("/search", authMiddleware, trackActivity, userController.searchUsers)
 router.get("/:id", authMiddleware, trackActivity, cacheUser, userController.getUser);
 
 // Update user - invalidate cache after (Write-Through)
-router.put("/:id", authMiddleware, trackActivity, invalidateUserCache, userController.updateUser);
+router.put("/:id", authMiddleware, userWriteLimiter, trackActivity, invalidateUserCache, userController.updateUser);
 
 // Delete user - invalidate cache after
-router.delete("/:id", authMiddleware, roleMiddleware("admin"), invalidateUserCache, userController.deleteUser);
+router.delete("/:id", authMiddleware, roleMiddleware("admin"), userWriteLimiter, invalidateUserCache, userController.deleteUser);
 
 export default router;

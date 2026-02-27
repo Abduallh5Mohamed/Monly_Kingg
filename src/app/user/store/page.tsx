@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { Button } from '@/components/ui/button';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
   Plus,
   Package,
@@ -31,6 +32,7 @@ import {
   Crown,
   Edit2,
   Percent,
+  Tag,
 } from 'lucide-react';
 
 interface Listing {
@@ -56,7 +58,7 @@ interface Stats {
 const GAME_BADGES: Record<string, { color: string; label: string }> = {
   'FIFA': { color: 'bg-green-500', label: 'EA FC 25' },
   'PUBG': { color: 'bg-orange-500', label: 'GLOBAL' },
-  'Ark Rider': { color: 'bg-pink-500', label: 'ACTION' },
+  'Arc Raiders': { color: 'bg-pink-500', label: 'ACTION' },
   'Valorant': { color: 'bg-red-500', label: 'RIOT EUW' },
   'League of Legends': { color: 'bg-blue-500', label: 'RIOT EUW' },
 };
@@ -125,6 +127,14 @@ export default function SellerStorePage() {
   const [promoteSuccess, setPromoteSuccess] = useState(false);
   const PRICE_PER_DAY = 2;
 
+  // Discount modal state
+  const [showDiscountModal, setShowDiscountModal] = useState(false);
+  const [discountListing, setDiscountListing] = useState<Listing | null>(null);
+  const [discountPercent, setDiscountPercent] = useState(20);
+  const [discountDays, setDiscountDays] = useState(7);
+  const [discountLoading, setDiscountLoading] = useState(false);
+  const [discountSuccess, setDiscountSuccess] = useState(false);
+
   useEffect(() => {
     if (!authLoading && (!user || !user.isSeller)) {
       router.push('/user/dashboard');
@@ -164,16 +174,38 @@ export default function SellerStorePage() {
     }
   };
 
+  // Helper function to get or refresh CSRF token
   const handleDelete = async (id: string) => {
     setDeleteLoading(id);
     try {
-      const res = await fetch(`/api/v1/listings/${id}`, { method: 'DELETE', credentials: 'include' });
+      const csrfToken = await ensureCsrfToken();
+      const res = await fetch(`/api/v1/listings/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: csrfToken ? { 'X-XSRF-TOKEN': csrfToken } : {}
+      });
+
       if (res.ok) {
+        // Successfully deleted - clear dashboard cache
+        sessionStorage.removeItem('dashboard_data');
+        sessionStorage.removeItem('dashboard_timestamp');
         fetchListings();
         fetchStats();
+      } else if (res.status === 404) {
+        // Listing doesn't exist - refresh UI to remove ghost item
+        sessionStorage.removeItem('dashboard_data');
+        sessionStorage.removeItem('dashboard_timestamp');
+        alert('هذا الإعلان غير موجود، سيتم تحديث القائمة');
+        fetchListings();
+        fetchStats();
+      } else {
+        // Other errors
+        const data = await res.json().catch(() => ({}));
+        alert(data.message || 'فشل حذف الإعلان');
       }
     } catch (err) {
       console.error(err);
+      alert('حدث خطأ أثناء حذف الإعلان');
     } finally {
       setDeleteLoading(null);
     }
@@ -190,10 +222,14 @@ export default function SellerStorePage() {
     if (!promoteListing) return;
     setPromoteLoading(true);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch('/api/v1/promotions/request', {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
+        },
         body: JSON.stringify({
           listingId: promoteListing._id,
           days: promoteDays,
@@ -201,6 +237,9 @@ export default function SellerStorePage() {
       });
       const data = await res.json();
       if (res.ok) {
+        // Clear dashboard cache
+        sessionStorage.removeItem('dashboard_data');
+        sessionStorage.removeItem('dashboard_timestamp');
         setPromoteSuccess(true);
         setTimeout(() => {
           setShowPromoteModal(false);
@@ -214,6 +253,54 @@ export default function SellerStorePage() {
       alert('Failed to submit promotion request');
     } finally {
       setPromoteLoading(false);
+    }
+  };
+
+  const openDiscountModal = (listing: Listing) => {
+    setDiscountListing(listing);
+    setDiscountPercent(20);
+    setDiscountDays(7);
+    setDiscountSuccess(false);
+    setShowDiscountModal(true);
+  };
+
+  const handleDiscount = async () => {
+    if (!discountListing) return;
+    setDiscountLoading(true);
+    try {
+      const csrfToken = await ensureCsrfToken();
+      const res = await fetch('/api/v1/discounts/my-listing', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
+        },
+        body: JSON.stringify({
+          listingId: discountListing._id,
+          discountPercent,
+          durationDays: discountDays,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // Clear dashboard cache
+        sessionStorage.removeItem('dashboard_data');
+        sessionStorage.removeItem('dashboard_timestamp');
+        setDiscountSuccess(true);
+        setTimeout(() => {
+          setShowDiscountModal(false);
+          setDiscountSuccess(false);
+          fetchListings(); // Refresh listings
+        }, 2000);
+      } else {
+        alert(data.message || 'Failed to create discount');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to create discount');
+    } finally {
+      setDiscountLoading(false);
     }
   };
 
@@ -232,7 +319,8 @@ export default function SellerStorePage() {
   ];
 
   const getGameName = (listing: Listing) => {
-    return typeof listing.game === 'object' ? listing.game.name : listing.game;
+    if (!listing.game) return 'Unknown Game';
+    return typeof listing.game === 'object' && listing.game ? listing.game.name : listing.game;
   };
 
   const getCoverImageUrl = (listing: Listing) => {
@@ -421,8 +509,8 @@ export default function SellerStorePage() {
                     {/* Price */}
                     <div className="mb-4">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold text-white">€{listing.price}</span>
-                        <span className="text-sm text-white/30 line-through">€{originalPrice}</span>
+                        <span className="text-3xl font-bold text-white">EGP {listing.price}</span>
+                        <span className="text-sm text-white/30 line-through">EGP {originalPrice}</span>
                       </div>
                     </div>
 
@@ -440,12 +528,12 @@ export default function SellerStorePage() {
 
                       {/* Discount Button */}
                       <button
-                        onClick={() => openPromoteModal(listing)}
+                        onClick={() => openDiscountModal(listing)}
                         className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
-                        title="Promote Listing"
+                        title="Add Discount"
                       >
                         <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-semibold">Promote</span>
+                        <span className="text-[10px] font-semibold">Discount</span>
                       </button>
 
                       {/* Delete Button */}
@@ -520,7 +608,7 @@ export default function SellerStorePage() {
                         <Gamepad2 className="w-3 h-3" />
                         {typeof promoteListing.game === 'object' ? promoteListing.game.name : promoteListing.game}
                       </span>
-                      <span>${promoteListing.price}</span>
+                      <span>EGP {promoteListing.price}</span>
                     </div>
                   </div>
 
@@ -568,11 +656,22 @@ export default function SellerStorePage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-white/50">Price per day</span>
-                      <span className="text-white">${PRICE_PER_DAY}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-cyan-400 font-semibold">
+                          {((PRICE_PER_DAY / promoteListing.price) * 100).toFixed(1)}%
+                        </span>
+                        <span className="text-white/30">≈</span>
+                        <span className="text-white">EGP {PRICE_PER_DAY}</span>
+                      </div>
                     </div>
                     <div className="border-t border-white/10 pt-2 mt-2 flex justify-between">
                       <span className="text-white font-medium">Total Cost</span>
-                      <span className="text-xl font-bold text-cyan-400">${promoteDays * PRICE_PER_DAY}</span>
+                      <div className="flex flex-col items-end">
+                        <span className="text-xl font-bold text-cyan-400">EGP {promoteDays * PRICE_PER_DAY}</span>
+                        <span className="text-xs text-white/40">
+                          {((PRICE_PER_DAY / promoteListing.price) * 100 * promoteDays).toFixed(1)}% of listing price
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -594,7 +693,153 @@ export default function SellerStorePage() {
                     ) : (
                       <Zap className="w-5 h-5 mr-2" />
                     )}
-                    Submit Promotion Request - ${promoteDays * PRICE_PER_DAY}
+                    Submit Promotion Request - EGP {promoteDays * PRICE_PER_DAY}
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Discount Modal */}
+      {showDiscountModal && discountListing && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowDiscountModal(false)} />
+          <div className="relative w-full max-w-md mx-4 rounded-2xl border border-white/10 bg-[#0f1419]/95 backdrop-blur-xl shadow-2xl">
+            <button onClick={() => setShowDiscountModal(false)} className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center">
+              <X className="w-4 h-4 text-white/60" />
+            </button>
+
+            <div className="p-8">
+              {discountSuccess ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Discount Created!</h3>
+                  <p className="text-white/50 text-sm">Your discount is now active and visible to buyers</p>
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                      <Percent className="w-5 h-5 text-white" />
+                    </div>
+                    Add Discount
+                  </h2>
+                  <p className="text-white/40 text-sm mb-6">Set a discount to attract more buyers instantly</p>
+
+                  {/* Listing Preview */}
+                  <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4 mb-6">
+                    <h3 className="text-white font-semibold text-sm">{discountListing.title}</h3>
+                    <div className="flex items-center gap-3 mt-1.5 text-xs text-white/40">
+                      <span className="flex items-center gap-1">
+                        <Gamepad2 className="w-3 h-3" />
+                        {typeof discountListing.game === 'object' ? discountListing.game.name : discountListing.game}
+                      </span>
+                      <span className="font-semibold text-white">Original: EGP {discountListing.price}</span>
+                    </div>
+                  </div>
+
+                  {/* Discount Percentage Selector */}
+                  <div className="mb-6">
+                    <label className="text-xs text-white/50 mb-3 block">Discount Percentage</label>
+                    <div className="grid grid-cols-4 gap-2 mb-4">
+                      {[10, 20, 30, 40].map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setDiscountPercent(p)}
+                          className={`py-3 rounded-xl text-sm font-bold transition-all ${discountPercent === p
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-lg shadow-emerald-500/10'
+                            : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                            }`}
+                        >
+                          {p}%
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Custom percentage slider */}
+                    <div>
+                      <input
+                        type="range"
+                        min="1"
+                        max="99"
+                        value={discountPercent}
+                        onChange={(e) => setDiscountPercent(Number(e.target.value))}
+                        className="w-full accent-emerald-500"
+                      />
+                      <div className="flex justify-between text-[10px] text-white/30 mt-1">
+                        <span>1%</span>
+                        <span className="text-emerald-400 font-bold">{discountPercent}%</span>
+                        <span>99%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Duration Selector */}
+                  <div className="mb-6">
+                    <label className="text-xs text-white/50 mb-3 block">Duration (optional)</label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {[1, 3, 7, 14, 30].map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => setDiscountDays(d)}
+                          className={`py-2 rounded-lg text-xs font-bold transition-all ${discountDays === d
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                            : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                            }`}
+                        >
+                          {d}d
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Price Breakdown */}
+                  <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/20 p-4 mb-6 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-white/50">Original Price</span>
+                      <span className="text-white font-semibold">EGP {discountListing.price}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-white/50">Discount Amount</span>
+                      <div className="text-right">
+                        <div className="text-emerald-400 font-bold text-lg">
+                          {discountPercent}% = EGP {(discountListing.price * discountPercent / 100).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t border-emerald-500/20 pt-3 flex justify-between items-center">
+                      <span className="text-white font-medium">New Price</span>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-emerald-400">
+                          EGP {(discountListing.price * (1 - discountPercent / 100)).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Info Note */}
+                  <div className="rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-3 mb-6">
+                    <p className="text-xs text-emerald-400/70 leading-relaxed">
+                      Your discount will be applied immediately and buyers will see the discounted price. You can cancel or modify it anytime.
+                    </p>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    onClick={handleDiscount}
+                    disabled={discountLoading}
+                    className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                  >
+                    {discountLoading ? (
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    ) : (
+                      <Tag className="w-5 h-5 mr-2" />
+                    )}
+                    Apply {discountPercent}% Discount
                   </Button>
                 </>
               )}

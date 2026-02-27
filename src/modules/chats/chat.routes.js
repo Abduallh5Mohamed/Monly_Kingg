@@ -10,6 +10,7 @@ import {
     getOnlineUsers
 } from "./chat.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { chatMessageLimiter, userWriteLimiter } from "../../middlewares/rateLimiter.js";
 
 const router = express.Router();
 
@@ -23,21 +24,21 @@ router.get("/", getUserChats);
 router.get("/online", getOnlineUsers);
 
 // Create or get chat with user
-router.post("/", createChat);
+router.post("/", userWriteLimiter, createChat);
 
 // Create support / user chats
-router.post("/support", createSupportChat);
+router.post("/support", userWriteLimiter, createSupportChat);
 
 // Send message to chat (MUST be before /:chatId route)
-router.post("/:chatId/messages", sendMessage);
+router.post("/:chatId/messages", chatMessageLimiter, sendMessage);
 
 // Delete message from chat (soft delete — admin can still see)
-router.delete("/:chatId/messages/:messageId", deleteMessage);
+router.delete("/:chatId/messages/:messageId", userWriteLimiter, deleteMessage);
 
 // Get chat messages
 router.get("/:chatId", getChatMessages);
 
 // Delete chat (soft delete — admin can still see)
-router.delete("/:chatId", deleteChat);
+router.delete("/:chatId", userWriteLimiter, deleteChat);
 
 export default router;

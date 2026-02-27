@@ -31,6 +31,8 @@ import {
   ChevronDown,
   LayoutGrid,
 } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { Button } from '@/components/ui/button';
 
 /* ── SVG Platform Icons ── */
 const SteamIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
@@ -56,7 +58,7 @@ interface Listing {
   _id: string;
   title: string;
   game: { _id: string; name: string } | null;
-  seller: { _id: string; username: string } | null;
+  seller: { _id: string; username: string; avatar?: string } | null;
   price: number;
   coverImage: string | null;
   images: string[];
@@ -97,44 +99,6 @@ interface ActiveDiscount {
 }
 
 /* ═══════════ STATIC DEMO DATA ═══════════ */
-const STATIC_PRODUCTS = [
-  { id: 's1', title: 'GTA V Premium Edition - Full Access Account', game: 'Grand Theft Auto V', price: 12.99, originalPrice: 29.99, discount: 57, rating: 4.8, sold: 1240, image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
-  { id: 's2', title: 'Fortnite Account - 150+ Skins Rare Collection', game: 'Fortnite', price: 24.99, originalPrice: 89.99, discount: 72, rating: 4.9, sold: 890, image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=300&fit=crop', platform: 'Epic', region: 'Global', verified: true },
-  { id: 's3', title: 'Valorant Account - Diamond Rank + 30 Skins', game: 'Valorant', price: 34.99, originalPrice: 79.99, discount: 56, rating: 4.7, sold: 567, image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=300&fit=crop', platform: 'Riot', region: 'EU', verified: true },
-  { id: 's4', title: 'Minecraft Java + Bedrock Premium Account', game: 'Minecraft', price: 8.49, originalPrice: 26.95, discount: 69, rating: 4.9, sold: 3200, image: 'https://images.unsplash.com/photo-1587573089734-599ef9a138e1?w=400&h=300&fit=crop', platform: 'Microsoft', region: 'Global', verified: true },
-  { id: 's5', title: 'CS2 Prime Status + 500hrs Gameplay', game: 'Counter-Strike 2', price: 15.99, originalPrice: 35.99, discount: 56, rating: 4.6, sold: 2100, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
-  { id: 's6', title: 'Apex Legends - Heirloom Account Level 500', game: 'Apex Legends', price: 44.99, originalPrice: 149.99, discount: 70, rating: 4.8, sold: 456, image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
-  { id: 's7', title: 'League of Legends - 200+ Champions All Skins', game: 'League of Legends', price: 29.99, originalPrice: 99.99, discount: 70, rating: 4.7, sold: 780, image: 'https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?w=400&h=300&fit=crop', platform: 'Riot', region: 'EUW', verified: true },
-  { id: 's8', title: 'Roblox Account - 10,000 Robux + Premium', game: 'Roblox', price: 19.99, originalPrice: 49.99, discount: 60, rating: 4.5, sold: 1500, image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&h=300&fit=crop', platform: 'Roblox', region: 'Global', verified: true },
-];
-
-const STATIC_GIFT_CARDS = [
-  { id: 'g1', title: 'Steam Gift Card $50 USD', game: 'Steam', price: 42.99, originalPrice: 50.00, discount: 14, rating: 5.0, sold: 5600, image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=300&fit=crop', platform: 'Steam', region: 'US', verified: true },
-  { id: 'g2', title: 'PlayStation Store Gift Card $25', game: 'PlayStation', price: 21.49, originalPrice: 25.00, discount: 14, rating: 4.9, sold: 3400, image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop', platform: 'PlayStation', region: 'US', verified: true },
-  { id: 'g3', title: 'Xbox Game Pass Ultimate 3 Months', game: 'Xbox', price: 28.99, originalPrice: 44.99, discount: 36, rating: 4.8, sold: 2800, image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=300&fit=crop', platform: 'Xbox', region: 'Global', verified: true },
-  { id: 'g4', title: 'Nintendo eShop Gift Card $35', game: 'Nintendo', price: 30.49, originalPrice: 35.00, discount: 13, rating: 4.9, sold: 1900, image: 'https://images.unsplash.com/photo-1585620385456-4759f9b5c7d9?w=400&h=300&fit=crop', platform: 'Nintendo', region: 'US', verified: true },
-  { id: 'g5', title: 'Google Play Gift Card $100', game: 'Google Play', price: 89.99, originalPrice: 100.00, discount: 10, rating: 4.8, sold: 4200, image: 'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=400&h=300&fit=crop', platform: 'Google', region: 'Global', verified: true },
-  { id: 'g6', title: 'iTunes / Apple Gift Card $50', game: 'Apple', price: 43.99, originalPrice: 50.00, discount: 12, rating: 4.9, sold: 3100, image: 'https://images.unsplash.com/photo-1591337676887-a217a6c1e926?w=400&h=300&fit=crop', platform: 'Apple', region: 'US', verified: true },
-];
-
-const STATIC_TRENDING = [
-  { id: 't1', title: 'Elden Ring - Full Access Steam Account', game: 'Elden Ring', price: 18.99, originalPrice: 59.99, discount: 68, rating: 4.9, sold: 670, image: 'https://images.unsplash.com/photo-1580327344181-c1163234db17?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
-  { id: 't2', title: 'Hogwarts Legacy Deluxe + All DLC', game: 'Hogwarts Legacy', price: 22.99, originalPrice: 69.99, discount: 67, rating: 4.8, sold: 890, image: 'https://images.unsplash.com/photo-1535572290543-960a8046f5af?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
-  { id: 't3', title: 'FIFA 24 Ultimate Team Account', game: 'EA FC 24', price: 14.99, originalPrice: 39.99, discount: 63, rating: 4.6, sold: 1200, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
-  { id: 't4', title: 'Call of Duty MW3 - Level 155 Account', game: 'Call of Duty', price: 27.99, originalPrice: 69.99, discount: 60, rating: 4.7, sold: 540, image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=300&fit=crop', platform: 'Battle.net', region: 'EU', verified: true },
-  { id: 't5', title: 'Diablo IV Season Pass + Campaign', game: 'Diablo IV', price: 32.99, originalPrice: 89.99, discount: 63, rating: 4.5, sold: 340, image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop', platform: 'Battle.net', region: 'Global', verified: true },
-  { id: 't6', title: 'Cyberpunk 2077 Phantom Liberty Account', game: 'Cyberpunk 2077', price: 16.99, originalPrice: 49.99, discount: 66, rating: 4.8, sold: 780, image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=400&h=300&fit=crop', platform: 'Steam', region: 'Global', verified: true },
-];
-
-const STATIC_SUBSCRIPTIONS = [
-  { id: 'sub1', title: 'Netflix Premium 1 Year Subscription', game: 'Netflix', price: 29.99, originalPrice: 155.88, discount: 81, rating: 4.9, sold: 8900, image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8d6f28?w=400&h=300&fit=crop', platform: 'Netflix', region: 'Global', verified: true },
-  { id: 'sub2', title: 'Spotify Premium 12 Months Account', game: 'Spotify', price: 19.99, originalPrice: 119.88, discount: 83, rating: 4.8, sold: 12400, image: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=400&h=300&fit=crop', platform: 'Spotify', region: 'Global', verified: true },
-  { id: 'sub3', title: 'YouTube Premium 1 Year - No Ads', game: 'YouTube', price: 24.99, originalPrice: 143.88, discount: 83, rating: 4.9, sold: 7600, image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=400&h=300&fit=crop', platform: 'Google', region: 'Global', verified: true },
-  { id: 'sub4', title: 'Discord Nitro 1 Year Full Access', game: 'Discord', price: 34.99, originalPrice: 99.99, discount: 65, rating: 4.7, sold: 4500, image: 'https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?w=400&h=300&fit=crop', platform: 'Discord', region: 'Global', verified: true },
-  { id: 'sub5', title: 'Xbox Game Pass Ultimate 12 Months', game: 'Xbox', price: 59.99, originalPrice: 179.88, discount: 67, rating: 4.8, sold: 3200, image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=300&fit=crop', platform: 'Xbox', region: 'Global', verified: true },
-  { id: 'sub6', title: 'EA Play Pro 1 Year Membership', game: 'EA Play', price: 39.99, originalPrice: 99.99, discount: 60, rating: 4.6, sold: 2100, image: 'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&h=300&fit=crop', platform: 'EA', region: 'Global', verified: true },
-];
-
 /* ── Category Icons ── */
 const CATEGORIES = [
   { icon: SteamIcon, label: 'Steam', count: '2.4K' },
@@ -148,16 +112,42 @@ const CATEGORIES = [
   { icon: Gift, label: 'Lifestyle', count: '310' },
 ];
 
-
 /* ── Platform Filter Tabs ── */
 const PLATFORM_TABS = [
   { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
   { id: 'fifa', name: 'FIFA', icon: Gamepad2, color: 'from-green-500 to-green-600' },
   { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
-  { id: 'ark-rider', name: 'Ark Rider', icon: Gamepad2, color: 'from-pink-500 to-pink-600' },
+  { id: 'arc-raiders', name: 'Arc Raiders', icon: Gamepad2, color: 'from-pink-500 to-pink-600' },
   { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
   { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
 ];
+
+/* ═══════════ EMPTY STATE COMPONENT ═══════════ */
+function EmptyGameSection({ gameName, isSeller }: { gameName: string; isSeller?: boolean }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 px-6 bg-white/[0.02] border border-white/[0.04] rounded-2xl">
+      <div className="w-16 h-16 rounded-2xl bg-white/[0.04] flex items-center justify-center mb-4">
+        <Package className="w-8 h-8 text-white/20" />
+      </div>
+      <h3 className="text-base font-semibold text-white/60 mb-2">
+        لا توجد حسابات متاحة حالياً
+      </h3>
+      <p className="text-sm text-white/30 text-center mb-5">
+        {isSeller
+          ? `ابدأ بإضافة حسابات ${gameName} من لوحة البائع`
+          : `لم يتم عرض أي حسابات ${gameName} بعد`}
+      </p>
+      {isSeller && (
+        <Link href="/user/store/new">
+          <Button className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20">
+            <Plus className="w-4 h-4 mr-2" />
+            أضف حساب جديد
+          </Button>
+        </Link>
+      )}
+    </div>
+  );
+}
 
 /* ═══════════ HORIZONTAL SCROLL COMPONENT ═══════════ */
 function HorizontalScroll({ children, className = '' }: { children: React.ReactNode; className?: string }) {
@@ -213,72 +203,23 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
   );
 }
 
-/* ═══════════ STATIC PRODUCT CARD ═══════════ */
-function StaticProductCard({ product, gridMode = false }: { product: typeof STATIC_PRODUCTS[0]; gridMode?: boolean }) {
-  return (
-    <div className={`group/card relative isolate ${gridMode ? '' : 'flex-shrink-0 w-[280px]'}`}>
-      {/* Hover border glow - Enhanced */}
-      <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
-
-      <div className="relative bg-gradient-to-b from-[#0f1425] to-[#0a0d18] rounded-3xl border border-white/[0.08] group-hover/card:border-white/[0.15] overflow-hidden transition-all duration-500 group-hover/card:shadow-[0_20px_60px_-15px_rgba(6,182,212,0.2)] group-hover/card:-translate-y-2">
-        {/* Image section */}
-        <div className="relative aspect-[5/4] overflow-hidden">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-1000 ease-out"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-[#0a0d18]/50 to-transparent" />
-
-          {/* Top row badges - Enhanced */}
-          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1 backdrop-blur-sm">
-              <Zap className="w-3 h-3" /> -{product.discount}%
-            </span>
-            <span className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-xl border border-white/[0.12] flex items-center justify-center shadow-lg">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
-            </span>
-          </div>
-
-          {/* Bottom row: rating */}
-          <div className="absolute bottom-3 right-3">
-            <span className="bg-black/50 backdrop-blur-xl text-white text-[10px] font-bold px-2 py-1 rounded-xl flex items-center gap-1 border border-white/[0.1] shadow-lg">
-              <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {product.rating}
-            </span>
-          </div>
-        </div>
-
-        {/* Content - Enhanced */}
-        <div className="p-4">
-          <h3 className="text-sm font-bold text-white/90 line-clamp-2 min-h-[40px] group-hover/card:text-white transition-colors leading-tight mb-3">
-            {product.title}
-          </h3>
-
-          <div className="flex items-center gap-1.5 mt-3 flex-wrap">
-            <span className="text-[10px] text-cyan-400/70 bg-cyan-500/[0.1] px-2 py-1 rounded-lg font-bold border border-cyan-500/[0.12]">{product.platform}</span>
-            <span className="text-[10px] text-purple-400/70 bg-purple-500/[0.1] px-2 py-1 rounded-lg font-bold border border-purple-500/[0.12]">{product.region}</span>
-            <span className="text-[10px] text-white/20 ml-auto font-medium">{product.sold.toLocaleString()} sold</span>
-          </div>
-
-          <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
-            <div>
-              <p className="text-[10px] text-white/30 line-through font-medium">${product.originalPrice.toFixed(2)}</p>
-              <p className="text-xl font-black text-white mt-0.5">${product.price.toFixed(2)}</p>
-            </div>
-            <button className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/[0.15] flex items-center justify-center text-cyan-400 hover:text-cyan-300 hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/30 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_24px_rgba(6,182,212,0.25)]">
-              <ShoppingCart className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing, gridMode = false }: { listing: Listing; gridMode?: boolean }) {
-  const discount = Math.floor(10 + ((listing.price * 7) % 60));
-  const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
+function ProductCard({ listing, currentUserId, discount }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount }) {
+  const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
+
+  // Only show discount if it exists from API
+  const hasDiscount = discount && discount.listing?._id === listing._id;
+  const discountPercent = hasDiscount ? discount.discountPercent : 0;
+  const originalPrice = hasDiscount ? discount.originalPrice : listing.price;
+  const displayPrice = hasDiscount ? discount.discountedPrice : listing.price;
+
+  // Helper to get full avatar URL
+  const getAvatarUrl = (avatar?: string) => {
+    if (!avatar) return null;
+    if (avatar.startsWith('http')) return avatar;
+    if (avatar.startsWith('/uploads/')) return `http://localhost:5000${avatar}`;
+    return avatar;
+  };
 
   return (
     <Link
@@ -304,29 +245,61 @@ function ProductCard({ listing, gridMode = false }: { listing: Listing; gridMode
             <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
               <Zap className="w-3 h-3" /> -{discount}%
             </span>
-            <span className="w-8 h-8 rounded-xl bg-black/40 backdrop-blur-xl border border-white/[0.12] flex items-center justify-center shadow-lg">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+          ) : hasDiscount ? (
+            <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
+              -{discountPercent}%
             </span>
-          </div>
+          ) : null}
         </div>
 
         <div className="p-4">
           <h3 className="text-sm font-bold text-white/90 line-clamp-2 min-h-[40px] group-hover/card:text-white transition-colors leading-tight mb-3">
             {listing.title}
           </h3>
-          <div className="flex items-center gap-1.5 mt-3 flex-wrap">
-            {listing.game && <span className="text-[10px] text-cyan-400/70 bg-cyan-500/[0.1] px-2 py-1 rounded-lg font-bold border border-cyan-500/[0.12]">{listing.game.name}</span>}
-            <span className="text-[10px] text-purple-400/70 bg-purple-500/[0.1] px-2 py-1 rounded-lg font-bold border border-purple-500/[0.12]">GLOBAL</span>
+
+          {/* Seller Info */}
+          {listing.seller && !isOwner && (
+            <div className="flex items-center gap-1.5 mt-2">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white/[0.04] border border-white/[0.06]">
+                {listing.seller.avatar ? (
+                  <img
+                    src={getAvatarUrl(listing.seller.avatar) || ''}
+                    alt={listing.seller.username}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to initial if image fails to load
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`w-full h-full flex items-center justify-center text-white/20 text-[8px] font-bold ${listing.seller.avatar ? 'hidden' : ''}`}>
+                  {listing.seller.username.charAt(0).toUpperCase()}
+                </div>
+              </div>
+              <span className="text-[9px] text-white/50 font-medium">@{listing.seller.username}</span>
+            </div>
+          )}
+
+          <div className="flex items-center gap-1 mt-2">
+            {listing.game && <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{listing.game.name}</span>}
+            <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
           </div>
           <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
-              <p className="text-[10px] text-white/30 line-through font-medium">${originalPrice}</p>
-              <p className="text-xl font-black text-white mt-0.5">${listing.price}</p>
+              {hasDiscount && <p className="text-[10px] text-white/20 line-through">${originalPrice.toFixed(2)}</p>}
+              <p className="text-base font-black text-white">${displayPrice.toFixed(2)}</p>
             </div>
-            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/[0.15] flex items-center justify-center text-cyan-400 hover:text-cyan-300 hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/30 transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-[0_0_24px_rgba(6,182,212,0.25)]">
-              <ShoppingCart className="w-5 h-5" />
-            </button>
           </div>
+          {!isOwner && (
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              className="w-full mt-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-[12px] font-bold py-2 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-1.5"
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+              Buy Now
+            </button>
+          )}
         </div>
       </div>
     </Link>
@@ -374,6 +347,19 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
   );
 }
 
+/* ═══════════ GAME COLOR MAPPING ═══════════ */
+const GAME_COLORS: Record<string, string> = {
+  'valorant': 'from-red-500 to-pink-600',
+  'pubg': 'from-amber-500 to-orange-600',
+  'fifa': 'from-green-500 to-emerald-600',
+  'league of legends': 'from-purple-500 to-indigo-600',
+  'fortnite': 'from-blue-500 to-cyan-600',
+  'arc raiders': 'from-rose-500 to-red-600',
+};
+
+function getGameColor(gameName: string): string {
+  const normalized = gameName.toLowerCase();
+  return GAME_COLORS[normalized] || 'from-cyan-500 to-blue-600';
 /* ═══════════ INLINE FILTER BAR ═══════════ */
 function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, priceRange, setPriceRange }: {
   searchQuery: string;
@@ -521,8 +507,10 @@ function useProductFilter(products: typeof STATIC_PRODUCTS) {
    MAIN PAGE
    ═══════════════════════════════════ */
 export default function UserDashboardPage() {
+  const { user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [trendingListings, setTrendingListings] = useState<Listing[]>([]);
+  const [popularListings, setPopularListings] = useState<Listing[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPlatform, setSelectedPlatform] = useState('all');
@@ -540,44 +528,129 @@ export default function UserDashboardPage() {
     setExpandedSection(prev => prev === section ? null : section);
   };
 
+  // ═══ DYNAMIC GAME LISTINGS ═══
+  const [gameListings, setGameListings] = useState<Record<string, Listing[]>>({});
+
+  // ═══ OPTIMIZED: Fetch all data in parallel with caching ═══
   useEffect(() => {
-    fetch('/api/v1/listings/games')
-      .then((r) => r.json())
-      .then((d) => { if (d.data) setGames(d.data); })
-      .catch(() => { });
+    const fetchAllData = async () => {
+      try {
+        // Check cache first (valid for 5 minutes)
+        const cacheKey = 'dashboard_data';
+        const cacheTimestamp = 'dashboard_timestamp';
+        const cachedData = sessionStorage.getItem(cacheKey);
+        const cachedTime = sessionStorage.getItem(cacheTimestamp);
+        const now = Date.now();
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-    // Fetch ads for dashboard
-    fetch('/api/v1/ads/active?position=hero')
-      .then((r) => r.json())
-      .then((d) => { if (d.data) setDashboardAds(d.data); })
-      .catch(() => { });
+        if (cachedData && cachedTime && (now - parseInt(cachedTime)) < CACHE_DURATION) {
+          const data = JSON.parse(cachedData);
+          setGames(data.games || []);
+          setGameListings(data.gameListings || {});
+          setDashboardAds(data.ads || []);
+          setActiveDiscounts(data.discounts || []);
+          setListings(data.listings || []);
+          setTrendingListings(data.trending || []);
+          setPopularListings(data.popular || []);
+          setLoading(false);
+          return;
+        }
 
-    // Fetch active discounts
-    fetch('/api/v1/discounts/active')
-      .then((r) => r.json())
-      .then((d) => { if (d.data) setActiveDiscounts(d.data); })
-      .catch(() => { });
-  }, []);
+        // Fetch games, ads, and discounts first (critical)
+        const [gamesRes, adsRes, discountsRes] = await Promise.all([
+          fetch('/api/v1/games'),
+          fetch('/api/v1/ads/active?position=hero'),
+          fetch('/api/v1/discounts/active'),
+        ]);
 
-  const fetchListings = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [bestRes, trendRes] = await Promise.all([
-        fetch('/api/v1/listings/browse?limit=10&sort=newest'),
-        fetch('/api/v1/listings/browse?limit=10&sort=price_asc'),
-      ]);
-      const bestData = await bestRes.json();
-      const trendData = await trendRes.json();
-      if (bestData.data) setListings(bestData.data);
-      if (trendData.data) setTrendingListings(trendData.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+        const [gamesData, adsData, discountsData] = await Promise.all([
+          gamesRes.json(),
+          adsRes.json(),
+          discountsRes.json(),
+        ]);
+
+        let gameListingsData: Record<string, Listing[]> = {};
+        let rankingsListings = { listings: [], trending: [], popular: [] };
+
+        // Set games and fetch their listings
+        if (gamesData.data) {
+          setGames(gamesData.data);
+
+          // Fetch listings for all games in parallel
+          const listingsPromises = gamesData.data.map((game: Game) =>
+            fetch(`/api/v1/listings/browse?game=${game._id}&limit=12&sort=newest`)
+              .then((r) => r.json())
+              .then((data) => ({ gameId: game._id, listings: data.data || [] }))
+              .catch(() => ({ gameId: game._id, listings: [] }))
+          );
+
+          const allListings = await Promise.all(listingsPromises);
+          allListings.forEach(({ gameId, listings }) => {
+            gameListingsData[gameId] = listings;
+          });
+          setGameListings(gameListingsData);
+        }
+
+        // Set ads
+        if (adsData.data) setDashboardAds(adsData.data);
+
+        // Set discounts
+        if (discountsData.data) setActiveDiscounts(discountsData.data);
+
+        // Fetch rankings separately with shorter timeout (non-blocking)
+        fetch('/api/v1/rankings/homepage?limit=10', {
+          signal: AbortSignal.timeout(5000) // 5 second timeout
+        })
+          .then(r => r.json())
+          .then(rankingsData => {
+            if (rankingsData.success && rankingsData.data) {
+              const bs = rankingsData.data.bestSeller || [];
+              const tr = rankingsData.data.trending || [];
+              const pop = rankingsData.data.popular || [];
+
+              rankingsListings.listings = bs;
+              rankingsListings.trending = tr;
+              rankingsListings.popular = pop;
+
+              setListings(bs);
+              setTrendingListings(tr);
+              setPopularListings(pop);
+            }
+          })
+          .catch(err => {
+            console.warn('Rankings fetch failed or timed out:', err.message);
+            // Continue without rankings - not critical
+          });
+
+        // Cache the data
+        const dataToCache = {
+          games: gamesData.data || [],
+          gameListings: gameListingsData,
+          ads: adsData.data || [],
+          discounts: discountsData.data || [],
+          listings: rankingsListings.listings,
+          trending: rankingsListings.trending,
+          popular: rankingsListings.popular,
+        };
+        sessionStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+        sessionStorage.setItem(cacheTimestamp, now.toString());
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, []); // Run only once on mount
+
+  // Create a map of listing ID to discount for efficient lookup
+  const discountMap = activeDiscounts.reduce((map, discount) => {
+    if (discount.listing?._id) {
+      map[discount.listing._id] = discount;
     }
-  }, []);
-
-  useEffect(() => { fetchListings(); }, [fetchListings]);
+    return map;
+  }, {} as Record<string, ActiveDiscount>);
 
   return (
     <UserDashboardLayout>
@@ -588,7 +661,7 @@ export default function UserDashboardPage() {
           {/* Decorative orbs */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/[0.04] rounded-full blur-[80px]" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/[0.04] rounded-full blur-[60px]" />
-          
+
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-white">
@@ -646,7 +719,7 @@ export default function UserDashboardPage() {
                   href={ad.link || '#'}
                   target={ad.link ? '_blank' : undefined}
                   rel="noopener noreferrer"
-                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => {}); }}
+                  onClick={() => { fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { }); }}
                   className="flex-shrink-0 relative w-[300px] md:w-[380px] aspect-[16/9] rounded-2xl overflow-hidden group border border-white/[0.04] hover:border-white/[0.1] transition-all duration-500"
                 >
                   <img src={ad.image} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -764,6 +837,31 @@ export default function UserDashboardPage() {
           </section>
         )}
 
+        {/* ═══════════ 🔥 BEST SELLERS (RANKED BY ALGORITHM) ═══════════ */}
+        {listings.length > 0 && (
+          <section>
+            <SectionHeader icon={Flame} title="Best Sellers" color="from-orange-500 to-red-500" subtitle="Top performing accounts by sales" />
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="w-7 h-7 text-orange-400 animate-spin" />
+                  <span className="text-[11px] text-white/20">Loading best sellers...</span>
+                </div>
+              </div>
+            ) : (
+              <HorizontalScroll>
+                {listings.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                ))}
+              </HorizontalScroll>
+            )}
+          </section>
+        )}
+
+        {/* ═══════════ DYNAMIC GAME SECTIONS ═══════════ */}
+        {games.map((game) => {
+          const listings = gameListings[game._id] || [];
+          const gameColor = getGameColor(game.name);
         {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
         <section>
           <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" subtitle="Most popular gaming accounts" isExpanded={expandedSection === 'best-selling'} onToggle={() => toggleSection('best-selling')} />
@@ -818,12 +916,33 @@ export default function UserDashboardPage() {
           )}
         </section>
 
-        {/* ═══════════ SEAL+PASS BANNER - Premium Design ═══════════ */}
+          return (
+            <section key={game._id}>
+              <SectionHeader
+                icon={Gamepad2}
+                title={`${game.name} Accounts`}
+                color={gameColor}
+                subtitle={`Premium ${game.name} accounts`}
+              />
+              {listings.length > 0 ? (
+                <HorizontalScroll>
+                  {listings.map((listing) => (
+                    <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                  ))}
+                </HorizontalScroll>
+              ) : (
+                <EmptyGameSection gameName={game.name} isSeller={user?.role === 'seller'} />
+              )}
+            </section>
+          );
+        })}
+
+        {/* ═══════════ TRUST BADGES - Minimal ═══════════ */}
         <section className="relative overflow-hidden rounded-3xl border border-white/[0.06]">
           {/* Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-fuchsia-600/10" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(168,85,247,0.15),transparent_60%)]" />
-          
+
           {/* Animated grid pattern */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
@@ -849,11 +968,11 @@ export default function UserDashboardPage() {
               <div className="inline-block mb-4">
                 <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
               </div>
-              
+
               <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
                 SEAL<span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">+</span>PASS
               </h3>
-              
+
               <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
                 Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
               </p>
@@ -928,8 +1047,8 @@ export default function UserDashboardPage() {
             {loading ? (
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-7 h-7 text-cyan-400 animate-spin" />
-                  <span className="text-[11px] text-white/20">Loading listings...</span>
+                  <Loader2 className="w-7 h-7 text-purple-400 animate-spin" />
+                  <span className="text-[11px] text-white/20">Loading trending...</span>
                 </div>
               </div>
             ) : expandedSection === 'latest' ? (
@@ -940,40 +1059,34 @@ export default function UserDashboardPage() {
               </div>
             ) : (
               <HorizontalScroll>
-                {listings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} />
+                {trendingListings.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
                 ))}
               </HorizontalScroll>
             )}
           </section>
         )}
 
-        {/* ═══════════ POPULAR SUBSCRIPTIONS (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={Timer} title="Popular Subscriptions" color="from-pink-500 to-rose-600" subtitle="Best subscription deals" isExpanded={expandedSection === 'subscriptions'} onToggle={() => toggleSection('subscriptions')} />
-          {expandedSection === 'subscriptions' ? (
-            <>
-              <InlineFilterBar {...subscriptionsFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {subscriptionsFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {subscriptionsFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
+        {/* ═══════════ ⭐ POPULAR (RANKED BY ALGORITHM) ═══════════ */}
+        {popularListings.length > 0 && (
+          <section>
+            <SectionHeader icon={Star} title="Most Popular" color="from-amber-500 to-yellow-600" subtitle="Community favorites" />
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="w-7 h-7 text-amber-400 animate-spin" />
+                  <span className="text-[11px] text-white/20">Loading popular...</span>
+                </div>
               </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_SUBSCRIPTIONS.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
-        </section>
+            ) : (
+              <HorizontalScroll>
+                {popularListings.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                ))}
+              </HorizontalScroll>
+            )}
+          </section>
+        )}
 
         {/* ═══════════ TRUST BADGES - Minimal ═══════════ */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-2.5">

@@ -3,7 +3,22 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// These are the ONLY games that should exist in the database
 const GAMES = [
+    {
+        name: "League of Legends",
+        slug: "league-of-legends",
+        category: "MOBA",
+        icon: "swords",
+        status: "active",
+    },
+    {
+        name: "Valorant",
+        slug: "valorant",
+        category: "FPS",
+        icon: "crosshair",
+        status: "active",
+    },
     {
         name: "FIFA",
         slug: "fifa",
@@ -19,26 +34,13 @@ const GAMES = [
         status: "active",
     },
     {
-        name: "Ark Rider",
-        slug: "ark-rider",
+        name: "Arc Raiders",
+        slug: "arc-raiders",
         category: "Action",
         icon: "zap",
         status: "active",
     },
-    {
-        name: "Valorant",
-        slug: "valorant",
-        category: "FPS",
-        icon: "crosshair",
-        status: "active",
-    },
-    {
-        name: "League of Legends",
-        slug: "league-of-legends",
-        category: "MOBA",
-        icon: "swords",
-        status: "active",
-    },
+];
 ];
 
 async function seedGames() {

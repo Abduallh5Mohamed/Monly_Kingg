@@ -7,6 +7,7 @@ import fs from "fs";
 import * as uploadController from "./upload.controller.js";
 import { protect } from "../../middlewares/authMiddleware.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { uploadLimiter, userWriteLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -79,7 +80,7 @@ const upload = multer({
  * رفع ملف جديد
  * يتطلب: authentication
  */
-router.post("/", protect, upload.single("file"), uploadController.uploadFile);
+router.post("/", protect, uploadLimiter, upload.single("file"), uploadController.uploadFile);
 
 /**
  * GET /api/v1/uploads
@@ -102,14 +103,14 @@ router.get("/:id", protect, uploadController.getUploadById);
  * حذف ملف
  * يتطلب: authentication
  */
-router.delete("/:id", protect, uploadController.deleteUpload);
+router.delete("/:id", protect, userWriteLimiter, uploadController.deleteUpload);
 
 /**
  * PATCH /api/v1/uploads/:id/status
  * تحديث حالة الملف (للأدمن فقط)
  * يتطلب: authentication + admin role
  */
-router.patch("/:id/status", protect, requireAdmin, uploadController.updateUploadStatus);
+router.patch("/:id/status", protect, requireAdmin, adminLimiter, uploadController.updateUploadStatus);
 
 /**
  * GET /api/v1/uploads/related/:model/:id

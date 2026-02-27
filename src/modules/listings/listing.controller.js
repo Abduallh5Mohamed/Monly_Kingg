@@ -1,6 +1,8 @@
 import Listing from "./listing.model.js";
 import User from "../users/user.model.js";
 import Game from "../games/game.model.js";
+import Discount from "../discounts/discount.model.js";
+import rankingService from "../../services/rankingService.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -243,7 +245,7 @@ export const browseListings = async (req, res) => {
     const [listings, total] = await Promise.all([
       Listing.find(filter)
         .populate("game", "name")
-        .populate("seller", "username")
+        .populate("seller", "username avatar")
         .sort(sortOption)
         .skip(skip)
         .limit(Number(limit)),
@@ -327,6 +329,30 @@ export const getListingById = async (req, res) => {
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
+
+    // Check for active discount
+    const now = new Date();
+    const activeDiscount = await Discount.findOne({
+      listing: req.params.id,
+      status: "active",
+      $or: [
+        { endDate: null },
+        { endDate: { $gte: now } },
+      ],
+    }).lean();
+
+    // Add discount info to response if exists
+    if (activeDiscount) {
+      listing.discount = {
+        originalPrice: activeDiscount.originalPrice,
+        discountedPrice: activeDiscount.discountedPrice,
+        discountPercent: activeDiscount.discountPercent,
+      };
+    }
+
+    // Track view (fire-and-forget, never blocks the response)
+    const ip = req.ip || req.headers['x-forwarded-for'] || 'unknown';
+    rankingService.recordView(req.params.id, ip).catch(() => { });
 
     return res.status(200).json({ success: true, data: listing });
   } catch (error) {

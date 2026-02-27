@@ -1,7 +1,7 @@
 import express from "express";
 import * as authController from "./auth.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { passwordResetLimiter, loginLimiter, registerLimiter, verifyEmailLimiter, resendLimiter } from "../../middlewares/rateLimiter.js";
+import { passwordResetLimiter, loginLimiter, refreshLimiter, registerLimiter, verifyEmailLimiter, resendLimiter } from "../../middlewares/rateLimiter.js";
 import crypto from "crypto";
 import passport from "../../config/passport.js";
 
@@ -23,8 +23,8 @@ router.post("/register", registerLimiter, authController.register);
 router.post("/verify-email", verifyEmailLimiter, authController.verifyEmail);
 router.post("/login", loginLimiter, authController.login);
 router.post("/resend-code", resendLimiter, authController.resendCode);
-router.post("/refresh", authController.refresh);
-router.post("/logout", authController.logout);
+router.post("/refresh", refreshLimiter, authController.refresh);
+router.post("/logout", refreshLimiter, authController.logout);
 
 // Get current user (protected)
 router.get("/me", authMiddleware, authController.getCurrentUser);

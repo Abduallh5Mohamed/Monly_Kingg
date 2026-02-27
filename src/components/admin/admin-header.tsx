@@ -27,7 +27,8 @@ export function AdminHeader() {
     };
 
     fetchAdminData();
-    const interval = setInterval(fetchAdminData, 30000);
+    // 120s fallback — primary updates via event
+    const interval = setInterval(fetchAdminData, 120000);
 
     const handleDataUpdate = () => {
       fetchAdminData();

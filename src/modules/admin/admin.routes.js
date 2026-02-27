@@ -12,13 +12,15 @@ import {
 } from "./admin.controller.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { adminLimiter } from "../../middlewares/rateLimiter.js";
 import cacheRoutes from "./cache.routes.js";
 
 const router = express.Router();
 
-// Apply authentication to all admin routes
+// Apply authentication and rate limiting to all admin routes
 router.use(authMiddleware);
 router.use(requireAdmin);
+router.use(adminLimiter);
 
 // User management routes
 router.get("/users", getAllUsers);
