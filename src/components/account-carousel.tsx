@@ -6,6 +6,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 import Image from "next/image"
+import AutoScroll from "embla-carousel-auto-scroll"
+import { useEffect, useState } from "react"
 
 type TrendingGame = {
   name: string;
@@ -30,18 +32,44 @@ const trendingGames: TrendingGame[] = [
 ];
 
 export function AccountCarousel() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <>
-      <Carousel opts={{ loop: true, align: "start" }} className="w-full">
+      <Carousel 
+        opts={{ 
+          loop: true, 
+          align: "start",
+          dragFree: isMobile,
+        }} 
+        plugins={isMobile ? [
+          AutoScroll({
+            speed: 0.5,
+            stopOnInteraction: true,
+            stopOnMouseEnter: true,
+          })
+        ] : []}
+        className="w-full"
+      >
         <CarouselContent className="-ml-4">
           {trendingGames.map((game, index) => (
-            <CarouselItem key={index} className="pl-4 basis-2/3 sm:pl-8 sm:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={index} className="pl-4 basis-3/5 sm:pl-6 sm:basis-1/2 md:pl-6 md:basis-2/5 lg:pl-8 lg:basis-1/3 xl:basis-1/3">
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2rem]">
                 <Image
                   src={game.logo}
                   alt={'Trending Game'}
                   fill
-                  sizes="(max-width: 640px) 66vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   style={{ objectPosition: game.objectPosition || 'center' }}
                 />
