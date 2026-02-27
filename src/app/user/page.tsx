@@ -24,9 +24,12 @@ import {
   Sparkles,
   Megaphone,
   Percent,
-  Tag,
-  Package,
-  Plus,
+  Search,
+  X,
+  ArrowUpDown,
+  SlidersHorizontal,
+  ChevronDown,
+  LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
@@ -221,7 +224,7 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
   return (
     <Link
       href={`/listings/${listing._id}`}
-      className="group/card flex-shrink-0 w-[280px] relative isolate"
+      className={`group/card relative isolate ${gridMode ? '' : 'flex-shrink-0 w-[280px]'}`}
     >
       {/* Hover border glow - Enhanced */}
       <div className="absolute -inset-[2px] rounded-3xl bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover/card:from-cyan-500/40 group-hover/card:via-blue-500/30 group-hover/card:to-purple-500/40 transition-all duration-700 opacity-0 group-hover/card:opacity-100 blur-xl" />
@@ -235,16 +238,12 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
               <Gamepad2 className="w-12 h-12 text-white/[0.08]" />
             </div>
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d18] via-[#0a0d18]/50 to-transparent" />
 
-          {/* Verified badge */}
-          <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
-            <ShieldCheck className="w-3 h-3 text-cyan-400" />
-          </span>
-
-          {/* Discount badge / Owner badge */}
-          {isOwner ? (
-            <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
-              <Tag className="w-3 h-3" /> Your Listing
+          {/* Top row badges */}
+          <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
+              <Zap className="w-3 h-3" /> -{discount}%
             </span>
           ) : hasDiscount ? (
             <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
@@ -252,8 +251,9 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
             </span>
           ) : null}
         </div>
-        <div className="p-3">
-          <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
+
+        <div className="p-4">
+          <h3 className="text-sm font-bold text-white/90 line-clamp-2 min-h-[40px] group-hover/card:text-white transition-colors leading-tight mb-3">
             {listing.title}
           </h3>
 
@@ -285,7 +285,7 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
             {listing.game && <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{listing.game.name}</span>}
             <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
           </div>
-          <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+          <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
               {hasDiscount && <p className="text-[10px] text-white/20 line-through">${originalPrice.toFixed(2)}</p>}
               <p className="text-base font-black text-white">${displayPrice.toFixed(2)}</p>
@@ -307,7 +307,7 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
 }
 
 /* ═══════════ SECTION HEADER ═══════════ */
-function SectionHeader({ icon: Icon, title, color, subtitle }: { icon: React.ElementType; title: string; color: string; subtitle?: string }) {
+function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggle }: { icon: React.ElementType; title: string; color: string; subtitle?: string; isExpanded?: boolean; onToggle?: () => void }) {
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-3">
@@ -320,10 +320,29 @@ function SectionHeader({ icon: Icon, title, color, subtitle }: { icon: React.Ele
           {subtitle && <p className="text-[10px] text-white/25 mt-0.5">{subtitle}</p>}
         </div>
       </div>
-      <Link href="/user/dashboard" className="text-[11px] text-white/25 hover:text-cyan-400 transition-colors font-medium flex items-center gap-1 group">
-        View All
-        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-      </Link>
+      {onToggle && (
+        <button
+          onClick={onToggle}
+          className={`text-[12px] font-semibold flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-all duration-300 group ${
+            isExpanded
+              ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/25'
+              : 'text-white/30 border-white/[0.06] hover:text-cyan-400 hover:bg-white/[0.04] hover:border-cyan-500/15'
+          }`}
+        >
+          {isExpanded ? (
+            <>
+              <X className="w-3.5 h-3.5" />
+              Show Less
+            </>
+          ) : (
+            <>
+              <LayoutGrid className="w-3.5 h-3.5" />
+              View All
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </>
+          )}
+        </button>
+      )}
     </div>
   );
 }
@@ -341,6 +360,147 @@ const GAME_COLORS: Record<string, string> = {
 function getGameColor(gameName: string): string {
   const normalized = gameName.toLowerCase();
   return GAME_COLORS[normalized] || 'from-cyan-500 to-blue-600';
+/* ═══════════ INLINE FILTER BAR ═══════════ */
+function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, priceRange, setPriceRange }: {
+  searchQuery: string;
+  setSearchQuery: (v: string) => void;
+  sortBy: string;
+  setSortBy: (v: string) => void;
+  priceRange: { min: string; max: string };
+  setPriceRange: (v: { min: string; max: string }) => void;
+}) {
+  const [sortOpen, setSortOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(false);
+
+  const sortOptions = [
+    { value: 'default', label: 'Default' },
+    { value: 'price_asc', label: 'Price: Low → High' },
+    { value: 'price_desc', label: 'Price: High → Low' },
+    { value: 'rating', label: 'Top Rated' },
+    { value: 'popular', label: 'Most Popular' },
+  ];
+
+  return (
+    <div className="mb-6 animate-in slide-in-from-top-4 duration-500">
+      <div className="flex flex-wrap items-center gap-2.5">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[200px] max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search in this section..."
+            className="w-full h-10 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-[13px] placeholder:text-white/20 focus:outline-none focus:border-cyan-500/30 focus:bg-white/[0.06] transition-all duration-300"
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white/[0.06] flex items-center justify-center text-white/30 hover:text-white/60 transition-colors">
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+
+        {/* Sort dropdown */}
+        <div className="relative" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={() => { setSortOpen(!sortOpen); setPriceOpen(false); }}
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium bg-white/[0.04] border border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06] transition-all duration-200"
+          >
+            <ArrowUpDown className="w-3.5 h-3.5" />
+            {sortOptions.find(s => s.value === sortBy)?.label || 'Sort'}
+            <ChevronDown className={`w-3 h-3 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {sortOpen && (
+            <div className="absolute top-full right-0 mt-1.5 w-48 rounded-xl bg-[#12162a] border border-white/[0.08] shadow-2xl shadow-black/50 z-50 py-1.5">
+              {sortOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => { setSortBy(opt.value); setSortOpen(false); }}
+                  className={`w-full text-left px-3.5 py-2 text-[12px] transition-colors ${sortBy === opt.value ? 'text-cyan-400 bg-cyan-500/10' : 'text-white/50 hover:bg-white/[0.04] hover:text-white/70'}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Price filter */}
+        <div className="relative" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={() => { setPriceOpen(!priceOpen); setSortOpen(false); }}
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium border transition-all duration-200 ${
+              priceRange.min || priceRange.max
+                ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                : 'bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]'
+            }`}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            Price
+          </button>
+          {priceOpen && (
+            <div className="absolute top-full right-0 mt-1.5 w-56 rounded-xl bg-[#12162a] border border-white/[0.08] shadow-2xl shadow-black/50 z-50 p-3">
+              <p className="text-[11px] text-white/30 mb-2 font-medium">Price Range</p>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] rounded-lg px-2.5 py-1.5 flex-1">
+                  <span className="text-[11px] text-white/25">$</span>
+                  <input type="number" value={priceRange.min} onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })} placeholder="Min" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
+                </div>
+                <span className="text-white/15 text-[11px]">—</span>
+                <div className="flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] rounded-lg px-2.5 py-1.5 flex-1">
+                  <span className="text-[11px] text-white/25">$</span>
+                  <input type="number" value={priceRange.max} onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })} placeholder="Max" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
+                </div>
+              </div>
+              {(priceRange.min || priceRange.max) && (
+                <button onClick={() => setPriceRange({ min: '', max: '' })} className="text-[11px] text-red-400/60 hover:text-red-400 mt-2 transition-colors">
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Clear all filters */}
+        {(searchQuery || sortBy !== 'default' || priceRange.min || priceRange.max) && (
+          <button
+            onClick={() => { setSearchQuery(''); setSortBy('default'); setPriceRange({ min: '', max: '' }); }}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[11px] font-medium text-red-400/60 hover:text-red-400 bg-red-500/5 border border-red-500/10 hover:bg-red-500/10 transition-all duration-200"
+          >
+            <X className="w-3 h-3" />
+            Clear All
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════ FILTER & SORT HELPER ═══════════ */
+function useProductFilter(products: typeof STATIC_PRODUCTS) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('default');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+
+  const filtered = products.filter((p) => {
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      if (!p.title.toLowerCase().includes(q) && !p.game.toLowerCase().includes(q) && !p.platform.toLowerCase().includes(q)) return false;
+    }
+    if (priceRange.min && p.price < parseFloat(priceRange.min)) return false;
+    if (priceRange.max && p.price > parseFloat(priceRange.max)) return false;
+    return true;
+  }).sort((a, b) => {
+    switch (sortBy) {
+      case 'price_asc': return a.price - b.price;
+      case 'price_desc': return b.price - a.price;
+      case 'rating': return b.rating - a.rating;
+      case 'popular': return b.sold - a.sold;
+      default: return 0;
+    }
+  });
+
+  return { filtered, searchQuery, setSearchQuery, sortBy, setSortBy, priceRange, setPriceRange };
 }
 
 /* ═══════════════════════════════════
@@ -356,6 +516,17 @@ export default function UserDashboardPage() {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [dashboardAds, setDashboardAds] = useState<DashboardAd[]>([]);
   const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  // Filter hooks for each section
+  const bestSellingFilter = useProductFilter(STATIC_PRODUCTS);
+  const giftCardsFilter = useProductFilter(STATIC_GIFT_CARDS);
+  const trendingFilter = useProductFilter(STATIC_TRENDING);
+  const subscriptionsFilter = useProductFilter(STATIC_SUBSCRIPTIONS);
+
+  const toggleSection = (section: string) => {
+    setExpandedSection(prev => prev === section ? null : section);
+  };
 
   // ═══ DYNAMIC GAME LISTINGS ═══
   const [gameListings, setGameListings] = useState<Record<string, Listing[]>>({});
@@ -691,6 +862,59 @@ export default function UserDashboardPage() {
         {games.map((game) => {
           const listings = gameListings[game._id] || [];
           const gameColor = getGameColor(game.name);
+        {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" subtitle="Most popular gaming accounts" isExpanded={expandedSection === 'best-selling'} onToggle={() => toggleSection('best-selling')} />
+          {expandedSection === 'best-selling' ? (
+            <>
+              <InlineFilterBar {...bestSellingFilter} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+                {bestSellingFilter.filtered.map((product) => (
+                  <StaticProductCard key={product.id} product={product} gridMode />
+                ))}
+                {bestSellingFilter.filtered.length === 0 && (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
+                    <Search className="w-8 h-8 text-white/10" />
+                    <p className="text-white/30 text-sm">No products match your filters</p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <HorizontalScroll>
+              {STATIC_PRODUCTS.map((product) => (
+                <StaticProductCard key={product.id} product={product} />
+              ))}
+            </HorizontalScroll>
+          )}
+        </section>
+
+        {/* ═══════════ BEST SELLING GIFT CARDS (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" subtitle="Top rated digital gift cards" isExpanded={expandedSection === 'gift-cards'} onToggle={() => toggleSection('gift-cards')} />
+          {expandedSection === 'gift-cards' ? (
+            <>
+              <InlineFilterBar {...giftCardsFilter} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+                {giftCardsFilter.filtered.map((product) => (
+                  <StaticProductCard key={product.id} product={product} gridMode />
+                ))}
+                {giftCardsFilter.filtered.length === 0 && (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
+                    <Search className="w-8 h-8 text-white/10" />
+                    <p className="text-white/30 text-sm">No products match your filters</p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <HorizontalScroll>
+              {STATIC_GIFT_CARDS.map((product) => (
+                <StaticProductCard key={product.id} product={product} />
+              ))}
+            </HorizontalScroll>
+          )}
+        </section>
 
           return (
             <section key={game._id}>
@@ -789,16 +1013,49 @@ export default function UserDashboardPage() {
           </div>
         </section>
 
-        {/* ═══════════ 🚀 TRENDING NOW (RANKED BY ALGORITHM) ═══════════ */}
-        {trendingListings.length > 0 && (
+        {/* ═══════════ TRENDING GAMES (STATIC) ═══════════ */}
+        <section>
+          <SectionHeader icon={TrendingUp} title="Trending Now" color="from-purple-500 to-violet-600" subtitle="What everyone's buying" isExpanded={expandedSection === 'trending'} onToggle={() => toggleSection('trending')} />
+          {expandedSection === 'trending' ? (
+            <>
+              <InlineFilterBar {...trendingFilter} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+                {trendingFilter.filtered.map((product) => (
+                  <StaticProductCard key={product.id} product={product} gridMode />
+                ))}
+                {trendingFilter.filtered.length === 0 && (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
+                    <Search className="w-8 h-8 text-white/10" />
+                    <p className="text-white/30 text-sm">No products match your filters</p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <HorizontalScroll>
+              {STATIC_TRENDING.map((product) => (
+                <StaticProductCard key={product.id} product={product} />
+              ))}
+            </HorizontalScroll>
+          )}
+        </section>
+
+        {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}
+        {listings.length > 0 && (
           <section>
-            <SectionHeader icon={TrendingUp} title="Trending Now" color="from-purple-500 to-violet-600" subtitle="What's hot right now" />
+            <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" subtitle="Fresh from our sellers" isExpanded={expandedSection === 'latest'} onToggle={() => toggleSection('latest')} />
             {loading ? (
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="w-7 h-7 text-purple-400 animate-spin" />
                   <span className="text-[11px] text-white/20">Loading trending...</span>
                 </div>
+              </div>
+            ) : expandedSection === 'latest' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+                {listings.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} gridMode />
+                ))}
               </div>
             ) : (
               <HorizontalScroll>

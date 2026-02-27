@@ -9911,6 +9911,7 @@
 [2026-02-16T14:54:45.809Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
 [2026-02-16T14:54:46.297Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 780ms
 [2026-02-16T14:55:07.561Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1944ms
+<<<<<<< HEAD
 [2026-02-16T15:01:06.935Z] [WARN]: ⚠️ Slow Request: GET /user - 3981ms
 [2026-02-16T15:01:28.976Z] [WARN]: ⚠️ Slow Request: GET /profile - 1478ms
 [2026-02-16T15:05:38.013Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 1000ms
@@ -11784,3 +11785,9 @@
 [2026-02-27T12:59:21.054Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 3357ms
 [2026-02-27T12:59:22.093Z] [INFO]: Admin fetched stats: 9 total users
 [2026-02-27T12:59:22.366Z] [INFO]: Admin fetched users: page 1, 9 users
+=======
+[2026-02-27T12:57:45.600Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:57:49.543Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T12:57:53.980Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:57:55.625Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+>>>>>>> dc8d28c91ddc3d5801ca9057890d925248ba0724
