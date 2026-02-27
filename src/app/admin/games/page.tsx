@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Search, 
+import {
+  Search,
   Plus,
   Edit,
   Trash2,
@@ -32,7 +32,7 @@ const gameIcons: Record<string, React.ReactNode> = {
   'League of Legends': <Swords className="h-5 w-5 text-white/70" />,
   'Fortnite': <Castle className="h-5 w-5 text-white/70" />,
   'Call of Duty': <Target className="h-5 w-5 text-white/70" />,
-  'Apex Legends': <Flame className="h-5 w-5 text-white/70" />,
+  'Arc Raiders': <Flame className="h-5 w-5 text-white/70" />,
   'Genshin Impact': <Star className="h-5 w-5 text-white/70" />,
 };
 
@@ -43,7 +43,7 @@ const games = [
   { id: 4, name: 'League of Legends', category: 'MOBA', accounts: 78, revenue: '$6,340', status: 'active', trend: 'down', change: '-5%' },
   { id: 5, name: 'Fortnite', category: 'Battle Royale', accounts: 112, revenue: '$9,870', status: 'active', trend: 'up', change: '+12%' },
   { id: 6, name: 'Call of Duty', category: 'FPS', accounts: 95, revenue: '$11,230', status: 'active', trend: 'up', change: '+6%' },
-  { id: 7, name: 'Apex Legends', category: 'Battle Royale', accounts: 67, revenue: '$5,450', status: 'active', trend: 'down', change: '-3%' },
+  { id: 7, name: 'Arc Raiders', category: 'Battle Royale', accounts: 67, revenue: '$5,450', status: 'active', trend: 'up', change: '+8%' },
   { id: 8, name: 'Genshin Impact', category: 'RPG', accounts: 145, revenue: '$18,900', status: 'active', trend: 'up', change: '+28%' },
 ];
 

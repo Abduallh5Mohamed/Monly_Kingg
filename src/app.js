@@ -16,6 +16,7 @@ import adsRoutes from "./modules/ads/ad.routes.js";
 import discountRoutes from "./modules/discounts/discount.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import cacheRoutes from "./routes/cache.routes.js";
+import rankingRoutes from "./routes/ranking.routes.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -108,12 +109,13 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/seller", sellerRoutes);
-app.use("/api/v1/listings", listingRoutes);
-app.use("/api/v1/promotions", promotionRoutes);
+app.use("/api/v1/listings", csrfProtection, listingRoutes);
+app.use("/api/v1/promotions", csrfProtection, promotionRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/games", gamesRoutes);
 app.use("/api/v1/ads", adsRoutes);
-app.use("/api/v1/discounts", discountRoutes);
+app.use("/api/v1/discounts", csrfProtection, discountRoutes);
+app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
 
 app.get("/", (req, res) => {

@@ -5,6 +5,10 @@
 
 import logger from '../utils/logger.js';
 
+// Track recently logged slow requests to avoid flooding logs
+const _slowRequestLog = new Map(); // path -> lastLoggedAt
+const SLOW_LOG_INTERVAL = 10_000; // Only log same path once per 10 seconds
+
 // Response time tracking
 export const responseTimeTracker = (req, res, next) => {
     const startTime = Date.now();
@@ -21,9 +25,23 @@ export const responseTimeTracker = (req, res, next) => {
             res.setHeader('X-Response-Time', `${duration}ms`);
         }
 
-        // Log slow requests (> 500ms)
-        if (duration > 500) {
-            logger.warn(`⚠️ Slow Request: ${req.method} ${req.path} - ${duration}ms`);
+        // Log slow requests (> 1000ms), deduplicated per path
+        if (duration > 1000) {
+            const now = Date.now();
+            const key = `${req.method}:${req.path}`;
+            const lastLogged = _slowRequestLog.get(key) || 0;
+
+            if (now - lastLogged > SLOW_LOG_INTERVAL) {
+                _slowRequestLog.set(key, now);
+                logger.warn(`⚠️ Slow Request: ${req.method} ${req.path} - ${duration}ms`);
+            }
+
+            // Periodically clean up old entries
+            if (_slowRequestLog.size > 200) {
+                for (const [k, t] of _slowRequestLog) {
+                    if (now - t > 60_000) _slowRequestLog.delete(k);
+                }
+            }
         }
 
         // Call original end function

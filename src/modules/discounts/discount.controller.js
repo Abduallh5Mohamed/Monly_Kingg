@@ -224,3 +224,120 @@ export const getActiveDiscounts = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch discounts" });
   }
 };
+
+/**
+ * Create discount on own listing (seller)
+ */
+export const createSellerDiscount = async (req, res) => {
+  try {
+    const sellerId = req.user._id;
+    const { listingId, discountPercent, durationDays } = req.body;
+
+    if (!listingId || !discountPercent) {
+      return res.status(400).json({ success: false, message: "Listing ID and discount percent are required" });
+    }
+
+    if (discountPercent < 1 || discountPercent > 99) {
+      return res.status(400).json({ success: false, message: "Discount percent must be between 1 and 99" });
+    }
+
+    // Verify listing belongs to seller
+    const listing = await Listing.findOne({ _id: listingId, seller: sellerId });
+    if (!listing) {
+      return res.status(404).json({ success: false, message: "Listing not found or does not belong to you" });
+    }
+
+    if (listing.status !== "available") {
+      return res.status(400).json({ success: false, message: "Can only discount available listings" });
+    }
+
+    // Cancel existing active discounts for this listing
+    await Discount.updateMany(
+      { listing: listingId, status: "active" },
+      { status: "cancelled" }
+    );
+
+    const originalPrice = listing.price;
+    const discountedPrice = parseFloat((originalPrice * (1 - discountPercent / 100)).toFixed(2));
+
+    // Calculate end date if duration is specified
+    let endDate = null;
+    if (durationDays && durationDays > 0) {
+      endDate = new Date();
+      endDate.setDate(endDate.getDate() + durationDays);
+    }
+
+    const discount = await Discount.create({
+      listing: listingId,
+      originalPrice,
+      discountedPrice,
+      discountPercent,
+      reason: `Seller discount - ${discountPercent}% off`,
+      endDate,
+      createdBy: sellerId,
+    });
+
+    res.status(201).json({ success: true, data: discount });
+  } catch (error) {
+    console.error("Create seller discount error:", error);
+    res.status(500).json({ success: false, message: "Failed to create discount" });
+  }
+};
+
+/**
+ * Get discount on own listing (seller)
+ */
+export const getMyListingDiscount = async (req, res) => {
+  try {
+    const sellerId = req.user._id;
+    const { listingId } = req.params;
+
+    // Verify listing belongs to seller
+    const listing = await Listing.findOne({ _id: listingId, seller: sellerId });
+    if (!listing) {
+      return res.status(404).json({ success: false, message: "Listing not found" });
+    }
+
+    const discount = await Discount.findOne({
+      listing: listingId,
+      status: "active",
+    }).lean();
+
+    res.json({ success: true, data: discount });
+  } catch (error) {
+    console.error("Get listing discount error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch discount" });
+  }
+};
+
+/**
+ * Cancel discount on own listing (seller)
+ */
+export const cancelMyListingDiscount = async (req, res) => {
+  try {
+    const sellerId = req.user._id;
+    const { listingId } = req.params;
+
+    // Verify listing belongs to seller
+    const listing = await Listing.findOne({ _id: listingId, seller: sellerId });
+    if (!listing) {
+      return res.status(404).json({ success: false, message: "Listing not found" });
+    }
+
+    const discount = await Discount.findOneAndUpdate(
+      { listing: listingId, status: "active" },
+      { status: "cancelled" },
+      { new: true }
+    );
+
+    if (!discount) {
+      return res.status(404).json({ success: false, message: "No active discount found" });
+    }
+
+    res.json({ success: true, data: discount });
+  } catch (error) {
+    console.error("Cancel listing discount error:", error);
+    res.status(500).json({ success: false, message: "Failed to cancel discount" });
+  }
+};
+

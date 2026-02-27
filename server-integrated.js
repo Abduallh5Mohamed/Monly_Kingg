@@ -89,6 +89,11 @@ nextApp.prepare().then(async () => {
   const app = express();
   const server = createServer(app);
 
+  // Set server timeouts for better performance and reliability
+  server.timeout = 60000; // 60 seconds timeout
+  server.keepAliveTimeout = 65000; // 65 seconds (longer than timeout)
+  server.headersTimeout = 66000; // Slightly longer than keepAliveTimeout
+
   // Silence Chrome DevTools .well-known probe
   app.use('/.well-known', (req, res) => res.status(204).end());
 

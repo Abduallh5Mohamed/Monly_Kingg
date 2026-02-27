@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { useAuth } from '@/lib/auth-context';
 import { useToast } from '@/hooks/use-toast';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
     User,
     Phone,
@@ -74,19 +75,18 @@ export default function ProfilePage() {
         if (user) {
             fetchProfile();
 
-            const interval = setInterval(fetchProfile, 15000);
-
+            // Listen for updates from other components (e.g. after deposit, purchase)
+            // NO polling here — the layout already handles periodic refresh
             const handleDataUpdate = () => {
                 fetchProfile();
             };
             window.addEventListener('userDataUpdated', handleDataUpdate);
 
             return () => {
-                clearInterval(interval);
                 window.removeEventListener('userDataUpdated', handleDataUpdate);
             };
         }
-    }, [user]);
+    }, [user?.username]);  // stable primitive dependency
 
     const fetchProfile = async () => {
         setLoading(true);
@@ -179,10 +179,31 @@ export default function ProfilePage() {
 
         setSaving(true);
         try {
+            // Get fresh CSRF token
+            const csrfToken = await ensureCsrfToken();
+
+            if (!csrfToken) {
+                toast({
+                    title: 'Error',
+                    description: 'Failed to get security token. Please refresh the page.',
+                    variant: 'destructive',
+                });
+                setSaving(false);
+                return;
+            }
+
+            console.log('🔐 Sending profile update with CSRF token');
+            console.log('📤 Avatar preview length:', avatarPreview?.length || 0);
+            console.log('📤 Avatar preview type:', typeof avatarPreview);
+            console.log('📤 Avatar starts with data:image:', avatarPreview?.startsWith('data:image/'));
+
             const res = await fetch('/api/v1/users/profile', {
                 method: 'PUT',
                 credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken
+                },
                 body: JSON.stringify({
                     username: editedProfile.username,
                     phone: editedProfile.phone,
@@ -192,12 +213,20 @@ export default function ProfilePage() {
                 }),
             });
 
+            console.log('📥 Profile update response status:', res.status);
             const data = await res.json();
+            console.log('📥 Profile update response data:', data);
+            console.log('📥 Avatar in response:', data.data?.avatar);
 
             if (data.success) {
                 setProfile(data.data);
                 setIsEditing(false);
                 setAvatarPreview('');
+
+                // Clear dashboard cache so profile image updates there too
+                sessionStorage.removeItem('dashboard_data');
+                sessionStorage.removeItem('dashboard_timestamp');
+
                 toast({
                     title: 'Success',
                     description: 'Profile updated successfully',

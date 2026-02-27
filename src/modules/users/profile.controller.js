@@ -2,6 +2,63 @@ import User from "./user.model.js";
 import Listing from "../listings/listing.model.js";
 import Favorite from "../favorites/favorite.model.js";
 import cacheService from '../../services/cacheService.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Helper function to save base64 image
+const saveBase64Image = (base64String, userId) => {
+    try {
+        console.log('🖼️ [saveBase64Image] Called with userId:', userId);
+        console.log('🖼️ [saveBase64Image] Base64 string length:', base64String ? base64String.length : 0);
+        console.log('🖼️ [saveBase64Image] Starts with data:image:', base64String?.startsWith('data:image/'));
+
+        // Check if it's a base64 string
+        if (!base64String || !base64String.startsWith('data:image/')) {
+            console.log('❌ [saveBase64Image] Invalid base64 string');
+            return null;
+        }
+
+        // Extract image data
+        const matches = base64String.match(/^data:image\/(\w+);base64,(.+)$/);
+        if (!matches) {
+            console.log('❌ [saveBase64Image] Regex match failed');
+            return null;
+        }
+
+        const ext = matches[1];
+        const data = matches[2];
+        const buffer = Buffer.from(data, 'base64');
+
+        // Create unique filename
+        const filename = `avatar-${userId}-${Date.now()}.${ext}`;
+        const uploadsDir = path.join(__dirname, '../../../uploads/avatars');
+
+        console.log('📁 [saveBase64Image] Upload dir:', uploadsDir);
+
+        // Ensure directory exists
+        if (!fs.existsSync(uploadsDir)) {
+            console.log('📁 [saveBase64Image] Creating directory...');
+            fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+
+        const filepath = path.join(uploadsDir, filename);
+        fs.writeFileSync(filepath, buffer);
+
+        console.log('✅ [saveBase64Image] File saved:', filepath);
+
+        const avatarPath = `/uploads/avatars/${filename}`;
+        console.log('✅ [saveBase64Image] Returning path:', avatarPath);
+
+        return avatarPath;
+    } catch (error) {
+        console.error('❌ [saveBase64Image] Error:', error);
+        return null;
+    }
+};
 
 // Get user profile with stats
 export const getProfile = async (req, res) => {
@@ -80,6 +137,9 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
     try {
+        console.log('🔧 [updateProfile] Called - User:', req.user?._id);
+        console.log('🔧 [updateProfile] Body keys:', Object.keys(req.body));
+
         const userId = req.user._id;
         const { fullName, username, phone, address, avatar, bio } = req.body;
 
@@ -139,8 +199,35 @@ export const updateProfile = async (req, res) => {
 
         // Other fields can be updated freely
         if (address !== undefined) updates.address = address;
-        if (avatar !== undefined) updates.avatar = avatar;
         if (bio !== undefined) updates.bio = bio;
+
+        // Handle avatar - convert base64 to file if needed
+        if (avatar !== undefined) {
+            console.log('🎨 [updateProfile] Avatar received, type:', typeof avatar, 'length:', avatar?.length);
+            console.log('🎨 [updateProfile] Avatar starts with data:image/:', avatar?.startsWith('data:image/'));
+
+            if (avatar.startsWith('data:image/')) {
+                // Base64 image - save it
+                console.log('🎨 [updateProfile] Converting base64 to file...');
+                const avatarPath = saveBase64Image(avatar, userId);
+
+                if (avatarPath) {
+                    console.log('✅ [updateProfile] Avatar saved, setting path:', avatarPath);
+                    updates.avatar = avatarPath;
+
+                    // Delete old avatar if exists
+                    if (user.avatar && user.avatar.startsWith('/uploads/avatars/')) {
+                        const oldPath = path.join(__dirname, '../../../', user.avatar);
+                        if (fs.existsSync(oldPath)) {
+                            fs.unlinkSync(oldPath);
+                        }
+                    }
+                }
+            } else if (avatar.startsWith('/uploads/') || avatar.startsWith('http')) {
+                // Already a valid URL - keep it
+                updates.avatar = avatar;
+            }
+        }
 
         const updatedUser = await cacheService.updateUserWithSync(
             userId,

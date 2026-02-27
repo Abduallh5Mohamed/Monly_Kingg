@@ -44,8 +44,12 @@ interface AuthResponse {
 class ApiClient {
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    timeout: number = 30000
   ): Promise<ApiResponse<T>> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
     try {
       const url = `${API_BASE_URL}${endpoint}`;
 
@@ -54,13 +58,17 @@ class ApiClient {
 
       const response = await fetch(url, {
         credentials: 'include',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
+          'Connection': 'keep-alive',
           ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken }),
           ...options.headers,
         },
         ...options,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -78,10 +86,26 @@ class ApiClient {
         message: data.message,
       };
     } catch (error) {
+      clearTimeout(timeoutId);
       console.error('API Error:', error);
+
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          return {
+            success: false,
+            message: 'Request timeout - الطلب استغرق وقتاً طويلاً',
+          };
+        }
+        return {
+          success: false,
+          message: error.message,
+        };
+      }
+
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Network error',
+        message: 'Network error - خطأ في الاتصال',
       };
     }
   }

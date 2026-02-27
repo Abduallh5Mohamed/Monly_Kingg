@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
     ArrowLeft,
     Upload,
@@ -70,9 +71,23 @@ export default function NewListingPage() {
 
     const fetchGames = async () => {
         try {
+            const cachedGames = sessionStorage.getItem('games_list');
+            const cacheTime = sessionStorage.getItem('games_list_time');
+            const now = Date.now();
+            const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+            if (cachedGames && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+                setGames(JSON.parse(cachedGames));
+                return;
+            }
+
             const res = await fetch('/api/v1/games', { credentials: 'include' });
             const data = await res.json();
-            if (data.data) setGames(data.data);
+            if (data.data) {
+                setGames(data.data);
+                sessionStorage.setItem('games_list', JSON.stringify(data.data));
+                sessionStorage.setItem('games_list_time', now.toString());
+            }
         } catch (err) {
             console.error(err);
         }
@@ -200,6 +215,14 @@ export default function NewListingPage() {
         setLoading(true);
 
         try {
+            // Get CSRF token
+            const csrfToken = await ensureCsrfToken();
+            if (!csrfToken) {
+                setError('Failed to get security token. Please refresh and try again.');
+                setLoading(false);
+                return;
+            }
+
             const data = new FormData();
             data.append('title', formData.title);
             data.append('game', formData.gameId);
@@ -222,12 +245,18 @@ export default function NewListingPage() {
             const res = await fetch('/api/v1/listings', {
                 method: 'POST',
                 credentials: 'include',
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken,
+                },
                 body: data,
             });
 
             const result = await res.json();
 
             if (res.ok) {
+                // Clear dashboard cache
+                sessionStorage.removeItem('dashboard_data');
+                sessionStorage.removeItem('dashboard_timestamp');
                 setSuccess(true);
                 setTimeout(() => {
                     router.push('/user/store');
@@ -310,8 +339,8 @@ export default function NewListingPage() {
                             </div>
                         </div>
                         <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${progressPercent === 100
-                                ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                                : 'bg-white/5 text-white/40 border-white/10'
+                            ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                            : 'bg-white/5 text-white/40 border-white/10'
                             }`}>
                             {progressPercent}%
                         </div>
@@ -525,11 +554,10 @@ export default function NewListingPage() {
                                     <p className="text-xs text-white/30">Show buyers what they're getting</p>
                                 </div>
                             </div>
-                            <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${
-                                accountImages.length > 0
-                                    ? 'bg-green-500/10 text-green-400 border-green-500/20'
-                                    : 'bg-white/5 text-white/30 border-white/10'
-                            }`}>
+                            <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${accountImages.length > 0
+                                ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                : 'bg-white/5 text-white/30 border-white/10'
+                                }`}>
                                 {accountImages.length} / 10
                             </div>
                         </div>
@@ -541,13 +569,12 @@ export default function NewListingPage() {
                                 onDragLeave={handleAccountDragLeave}
                                 onDrop={handleAccountDrop}
                                 onClick={() => accountInputRef.current?.click()}
-                                className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-10 sm:p-14 text-center transition-all duration-300 ${
-                                    isDraggingAccount
-                                        ? 'border-cyan-400/60 bg-cyan-500/[0.06] scale-[1.01]'
-                                        : accountImages.length >= 10
+                                className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-10 sm:p-14 text-center transition-all duration-300 ${isDraggingAccount
+                                    ? 'border-cyan-400/60 bg-cyan-500/[0.06] scale-[1.01]'
+                                    : accountImages.length >= 10
                                         ? 'border-white/5 bg-white/[0.01] opacity-50 cursor-not-allowed'
                                         : 'border-white/[0.12] bg-white/[0.02] hover:border-cyan-400/30 hover:bg-white/[0.03]'
-                                }`}
+                                    }`}
                             >
                                 <input
                                     ref={accountInputRef}
@@ -558,11 +585,10 @@ export default function NewListingPage() {
                                     className="hidden"
                                     disabled={accountImages.length >= 10}
                                 />
-                                <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all ${
-                                    isDraggingAccount
-                                        ? 'bg-cyan-500/20 border border-cyan-500/30'
-                                        : 'bg-white/[0.04] border border-white/[0.08]'
-                                }`}>
+                                <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all ${isDraggingAccount
+                                    ? 'bg-cyan-500/20 border border-cyan-500/30'
+                                    : 'bg-white/[0.04] border border-white/[0.08]'
+                                    }`}>
                                     <Upload className={`w-6 h-6 ${isDraggingAccount ? 'text-cyan-400' : 'text-white/30'}`} />
                                 </div>
                                 <p className="text-sm text-white/60 mb-1 font-medium">
@@ -638,11 +664,10 @@ export default function NewListingPage() {
                                     onDragLeave={handleCoverDragLeave}
                                     onDrop={handleCoverDrop}
                                     onClick={() => coverInputRef.current?.click()}
-                                    className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-10 sm:p-14 text-center transition-all duration-300 ${
-                                        isDraggingCover
-                                            ? 'border-amber-400/60 bg-amber-500/[0.06] scale-[1.01]'
-                                            : 'border-white/[0.12] bg-white/[0.02] hover:border-amber-400/30 hover:bg-white/[0.03]'
-                                    }`}
+                                    className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-10 sm:p-14 text-center transition-all duration-300 ${isDraggingCover
+                                        ? 'border-amber-400/60 bg-amber-500/[0.06] scale-[1.01]'
+                                        : 'border-white/[0.12] bg-white/[0.02] hover:border-amber-400/30 hover:bg-white/[0.03]'
+                                        }`}
                                 >
                                     <input
                                         ref={coverInputRef}
@@ -651,11 +676,10 @@ export default function NewListingPage() {
                                         onChange={handleCoverImageChange}
                                         className="hidden"
                                     />
-                                    <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all ${
-                                        isDraggingCover
-                                            ? 'bg-amber-500/20 border border-amber-500/30'
-                                            : 'bg-white/[0.04] border border-white/[0.08]'
-                                    }`}>
+                                    <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-all ${isDraggingCover
+                                        ? 'bg-amber-500/20 border border-amber-500/30'
+                                        : 'bg-white/[0.04] border border-white/[0.08]'
+                                        }`}>
                                         <ImageIcon className={`w-6 h-6 ${isDraggingCover ? 'text-amber-400' : 'text-white/30'}`} />
                                     </div>
                                     <p className="text-sm text-white/60 mb-1 font-medium">

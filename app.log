@@ -9911,3 +9911,1876 @@
 [2026-02-16T14:54:45.809Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
 [2026-02-16T14:54:46.297Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 780ms
 [2026-02-16T14:55:07.561Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 1944ms
+[2026-02-16T15:01:06.935Z] [WARN]: ⚠️ Slow Request: GET /user - 3981ms
+[2026-02-16T15:01:28.976Z] [WARN]: ⚠️ Slow Request: GET /profile - 1478ms
+[2026-02-16T15:05:38.013Z] [WARN]: ⚠️ Slow Request: GET /user/browse - 1000ms
+[2026-02-16T15:09:51.392Z] [WARN]: ⚠️ Slow Request: GET /user - 518ms
+[2026-02-16T15:11:19.262Z] [WARN]: ⚠️ Slow Request: GET /user - 2239ms
+[2026-02-16T15:29:49.309Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-16T15:50:55.220Z] [WARN]: ⚠️ Slow Request: GET /user - 1529ms
+[2026-02-16T15:50:56.800Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-16T15:50:57.262Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-16T15:50:57.299Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-16T15:50:57.300Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T15:51:09.766Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-16T15:51:10.612Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-16T15:51:11.286Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-16T15:51:12.163Z] [WARN]: ⚠️ Slow Request: GET /profile - 1210ms
+[2026-02-16T15:51:12.240Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-16T15:51:12.241Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-16T15:51:13.135Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2548ms
+[2026-02-16T15:51:32.201Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 4129ms
+[2026-02-16T15:51:32.784Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-16T16:06:03.144Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-16T21:23:47.265Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-16T21:23:47.315Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-16T21:23:47.315Z] [INFO]: 📝 Server will continue without caching
+[2026-02-16T21:23:47.608Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-16T21:23:57.618Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-16T21:23:57.618Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-16T21:23:57.620Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-16T21:24:32.424Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-16T21:24:32.473Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-16T21:24:32.473Z] [INFO]: 📝 Server will continue without caching
+[2026-02-16T21:24:32.712Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-16T21:24:42.722Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-16T21:24:42.723Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-16T21:24:42.724Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-16T21:27:25.676Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 8326ms
+[2026-02-16T21:27:27.546Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 720ms
+[2026-02-16T21:27:37.829Z] [WARN]: ⚠️ Slow Request: GET /games - 10012ms
+[2026-02-16T21:27:37.830Z] [WARN]: ⚠️ Slow Request: GET /browse - 10009ms
+[2026-02-16T21:27:47.833Z] [WARN]: ⚠️ Slow Request: POST /refresh - 20037ms
+[2026-02-16T21:27:48.878Z] [WARN]: ⚠️ Slow Request: GET / - 1034ms
+[2026-02-16T21:27:59.097Z] [WARN]: ⚠️ Slow Request: GET /login - 789ms
+[2026-02-16T21:28:05.551Z] [WARN]: ⚠️ Slow Request: GET /admin - 1470ms
+[2026-02-16T21:28:05.650Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 591ms
+[2026-02-16T21:28:17.179Z] [WARN]: ⚠️ Slow Request: GET /games - 10011ms
+[2026-02-16T21:28:17.180Z] [WARN]: ⚠️ Slow Request: GET /browse - 10008ms
+[2026-02-16T21:28:27.168Z] [WARN]: ⚠️ Slow Request: POST /refresh - 20015ms
+[2026-02-16T21:29:20.093Z] [WARN]: ⚠️ Slow Request: GET /login - 525ms
+[2026-02-16T21:29:36.987Z] [ERROR]: ❌ [LOGIN ERROR] abduallhshadow@gmail.com: Operation `users.findOne()` buffering timed out after 10000ms (10027ms)
+[2026-02-16T21:29:36.990Z] [WARN]: ⚠️ Slow Request: POST /login - 10035ms
+[2026-02-16T21:35:06.872Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-16T21:35:06.945Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-16T21:35:06.945Z] [INFO]: 📝 Server will continue without caching
+[2026-02-16T21:35:07.298Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-16T21:35:17.307Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-16T21:35:17.308Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-16T21:35:17.309Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-16T22:21:19.512Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-16T22:21:19.616Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-16T22:21:19.616Z] [INFO]: 📝 Server will continue without caching
+[2026-02-16T22:21:19.839Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-16T22:21:29.847Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-16T22:21:29.847Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-16T22:21:29.848Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-22T06:04:50.460Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:04:50.556Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-22T06:04:50.556Z] [INFO]: 📝 Server will continue without caching
+[2026-02-22T06:04:50.948Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:05:00.962Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:05:00.963Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:05:00.964Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-22T06:21:21.875Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 7551ms
+[2026-02-22T06:21:23.600Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 586ms
+[2026-02-22T06:21:33.879Z] [WARN]: ⚠️ Slow Request: GET /games - 10016ms
+[2026-02-22T06:21:33.881Z] [WARN]: ⚠️ Slow Request: GET /browse - 10013ms
+[2026-02-22T06:21:43.885Z] [WARN]: ⚠️ Slow Request: POST /refresh - 20041ms
+[2026-02-22T06:21:45.472Z] [WARN]: ⚠️ Slow Request: GET / - 1579ms
+[2026-02-22T06:21:57.027Z] [WARN]: ⚠️ Slow Request: GET /login - 793ms
+[2026-02-22T06:22:32.747Z] [ERROR]: ❌ [LOGIN ERROR] abduallhshadow@gmail.com: Operation `users.findOne()` buffering timed out after 10000ms (10011ms)
+[2026-02-22T06:22:32.749Z] [WARN]: ⚠️ Slow Request: POST /login - 10017ms
+[2026-02-22T06:26:20.234Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:26:20.275Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-22T06:26:20.275Z] [INFO]: 📝 Server will continue without caching
+[2026-02-22T06:26:20.462Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:26:30.476Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:26:30.476Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:26:30.477Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-22T06:27:27.678Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:27:27.741Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T06:27:27.741Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T06:27:28.085Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:27:28.105Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:27:28.105Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:27:28.124Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T06:27:28.130Z] [INFO]: ✅ Cleanup complete in 25ms
+[2026-02-22T06:27:28.130Z] [INFO]:    Users removed: 0
+[2026-02-22T06:27:28.130Z] [INFO]:    Cached users before: undefined
+[2026-02-22T06:27:28.130Z] [INFO]:    Cached users after: undefined
+[2026-02-22T06:27:28.130Z] [INFO]:    Memory before: 1.06M
+[2026-02-22T06:27:28.130Z] [INFO]:    Memory after: 1.08M
+[2026-02-22T06:27:41.700Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (580ms)
+[2026-02-22T06:27:41.710Z] [WARN]: ⚠️ Slow Request: POST /login - 606ms
+[2026-02-22T06:27:52.113Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/_app-pages-browser_node_modules_socket_io-client_build_esm_index_js.js - 10322ms
+[2026-02-22T06:27:53.577Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 11838ms
+[2026-02-22T06:29:00.469Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:29:00.547Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T06:29:00.547Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T06:29:01.060Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:29:01.078Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:29:01.078Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:29:01.098Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T06:29:01.105Z] [INFO]: ✅ Cleanup complete in 27ms
+[2026-02-22T06:29:01.105Z] [INFO]:    Users removed: 0
+[2026-02-22T06:29:01.105Z] [INFO]:    Cached users before: undefined
+[2026-02-22T06:29:01.106Z] [INFO]:    Cached users after: undefined
+[2026-02-22T06:29:01.106Z] [INFO]:    Memory before: 1.13M
+[2026-02-22T06:29:01.106Z] [INFO]:    Memory after: 1.16M
+[2026-02-22T06:29:08.767Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 7615ms
+[2026-02-22T06:29:11.032Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T06:29:11.185Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T06:29:11.343Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T06:29:11.343Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T06:29:40.045Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T06:29:40.048Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T06:29:53.548Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:29:53.614Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T06:29:53.615Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T06:29:54.202Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:29:54.235Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:29:54.236Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:29:54.386Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T06:29:54.402Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T06:29:54.441Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T06:29:54.442Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T06:29:54.449Z] [INFO]: ✅ Cleanup complete in 213ms
+[2026-02-22T06:29:54.450Z] [INFO]:    Users removed: 0
+[2026-02-22T06:29:54.450Z] [INFO]:    Cached users before: undefined
+[2026-02-22T06:29:54.450Z] [INFO]:    Cached users after: undefined
+[2026-02-22T06:29:54.450Z] [INFO]:    Memory before: 1.22M
+[2026-02-22T06:29:54.450Z] [INFO]:    Memory after: 1.23M
+[2026-02-22T06:30:44.054Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 506ms
+[2026-02-22T06:30:44.055Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 512ms
+[2026-02-22T06:30:44.056Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 519ms
+[2026-02-22T06:30:44.058Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 528ms
+[2026-02-22T06:30:44.059Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 534ms
+[2026-02-22T06:30:44.060Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 540ms
+[2026-02-22T06:30:44.062Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 548ms
+[2026-02-22T06:30:44.064Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 556ms
+[2026-02-22T06:30:44.065Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 563ms
+[2026-02-22T06:30:44.067Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 570ms
+[2026-02-22T06:30:44.068Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 580ms
+[2026-02-22T06:30:44.069Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 588ms
+[2026-02-22T06:30:44.071Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 596ms
+[2026-02-22T06:30:44.072Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 604ms
+[2026-02-22T06:30:44.073Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 611ms
+[2026-02-22T06:30:44.074Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 618ms
+[2026-02-22T06:30:44.075Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 625ms
+[2026-02-22T06:30:44.077Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 633ms
+[2026-02-22T06:30:44.079Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 641ms
+[2026-02-22T06:30:44.080Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 648ms
+[2026-02-22T06:30:44.081Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 659ms
+[2026-02-22T06:30:44.082Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 668ms
+[2026-02-22T06:30:44.083Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 678ms
+[2026-02-22T06:30:44.084Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 688ms
+[2026-02-22T06:30:44.085Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 696ms
+[2026-02-22T06:30:44.087Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 705ms
+[2026-02-22T06:30:44.088Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 713ms
+[2026-02-22T06:30:44.089Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 722ms
+[2026-02-22T06:30:44.090Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 733ms
+[2026-02-22T06:30:44.092Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 745ms
+[2026-02-22T06:30:44.093Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 755ms
+[2026-02-22T06:30:44.094Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 763ms
+[2026-02-22T06:30:44.096Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 773ms
+[2026-02-22T06:30:44.096Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 780ms
+[2026-02-22T06:30:44.098Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 792ms
+[2026-02-22T06:30:44.100Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 803ms
+[2026-02-22T06:30:44.101Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 813ms
+[2026-02-22T06:30:44.102Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 826ms
+[2026-02-22T06:30:44.103Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 839ms
+[2026-02-22T06:30:44.104Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 848ms
+[2026-02-22T06:30:44.106Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 857ms
+[2026-02-22T06:30:44.107Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 867ms
+[2026-02-22T06:30:44.109Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 877ms
+[2026-02-22T06:30:44.111Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 889ms
+[2026-02-22T06:30:44.112Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 898ms
+[2026-02-22T06:30:44.114Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 911ms
+[2026-02-22T06:30:44.115Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 923ms
+[2026-02-22T06:30:44.116Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 933ms
+[2026-02-22T06:30:44.118Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 944ms
+[2026-02-22T06:30:44.119Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 951ms
+[2026-02-22T06:30:44.121Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 960ms
+[2026-02-22T06:30:44.121Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 967ms
+[2026-02-22T06:30:44.122Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 975ms
+[2026-02-22T06:30:44.124Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 982ms
+[2026-02-22T06:30:44.124Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 991ms
+[2026-02-22T06:30:44.125Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1005ms
+[2026-02-22T06:30:44.126Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1021ms
+[2026-02-22T06:30:44.127Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1032ms
+[2026-02-22T06:30:44.128Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1042ms
+[2026-02-22T06:30:44.128Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1053ms
+[2026-02-22T06:30:44.129Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1065ms
+[2026-02-22T06:30:44.130Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1076ms
+[2026-02-22T06:30:44.131Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1086ms
+[2026-02-22T06:30:44.132Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1095ms
+[2026-02-22T06:30:44.133Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1102ms
+[2026-02-22T06:30:44.134Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1110ms
+[2026-02-22T06:30:44.134Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1117ms
+[2026-02-22T06:30:44.135Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1126ms
+[2026-02-22T06:30:44.136Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1134ms
+[2026-02-22T06:30:44.137Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1141ms
+[2026-02-22T06:30:44.137Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1148ms
+[2026-02-22T06:30:44.138Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1155ms
+[2026-02-22T06:30:44.138Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1163ms
+[2026-02-22T06:30:44.140Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1174ms
+[2026-02-22T06:30:44.141Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1183ms
+[2026-02-22T06:30:44.142Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1190ms
+[2026-02-22T06:30:44.143Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1199ms
+[2026-02-22T06:30:44.143Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1205ms
+[2026-02-22T06:30:44.144Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1214ms
+[2026-02-22T06:30:44.144Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1221ms
+[2026-02-22T06:30:44.145Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1229ms
+[2026-02-22T06:30:44.146Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1238ms
+[2026-02-22T06:30:44.146Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1245ms
+[2026-02-22T06:30:44.147Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1253ms
+[2026-02-22T06:30:44.148Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1264ms
+[2026-02-22T06:30:44.149Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1274ms
+[2026-02-22T06:30:44.149Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1283ms
+[2026-02-22T06:30:44.150Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1293ms
+[2026-02-22T06:30:44.150Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1303ms
+[2026-02-22T06:30:44.151Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1314ms
+[2026-02-22T06:30:44.152Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1327ms
+[2026-02-22T06:30:44.153Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1340ms
+[2026-02-22T06:30:44.154Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1350ms
+[2026-02-22T06:30:44.154Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1360ms
+[2026-02-22T06:30:44.155Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1370ms
+[2026-02-22T06:30:44.156Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1380ms
+[2026-02-22T06:30:44.157Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1388ms
+[2026-02-22T06:30:44.158Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1396ms
+[2026-02-22T06:30:44.159Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1405ms
+[2026-02-22T06:30:44.159Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1411ms
+[2026-02-22T06:30:44.160Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1418ms
+[2026-02-22T06:30:44.161Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1425ms
+[2026-02-22T06:30:44.161Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1430ms
+[2026-02-22T06:30:44.162Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1437ms
+[2026-02-22T06:30:44.163Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1444ms
+[2026-02-22T06:30:44.164Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1451ms
+[2026-02-22T06:30:44.165Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1458ms
+[2026-02-22T06:30:44.165Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1465ms
+[2026-02-22T06:30:44.166Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1477ms
+[2026-02-22T06:30:44.167Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1488ms
+[2026-02-22T06:30:44.167Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1494ms
+[2026-02-22T06:30:44.168Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1501ms
+[2026-02-22T06:30:44.169Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1508ms
+[2026-02-22T06:30:44.170Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1515ms
+[2026-02-22T06:30:44.170Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1522ms
+[2026-02-22T06:30:44.171Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1529ms
+[2026-02-22T06:30:44.172Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1536ms
+[2026-02-22T06:30:44.173Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1543ms
+[2026-02-22T06:30:44.173Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1550ms
+[2026-02-22T06:30:44.174Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1557ms
+[2026-02-22T06:30:44.175Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1565ms
+[2026-02-22T06:30:44.175Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1572ms
+[2026-02-22T06:30:44.176Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1579ms
+[2026-02-22T06:30:44.177Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1585ms
+[2026-02-22T06:30:44.178Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1592ms
+[2026-02-22T06:30:44.178Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1600ms
+[2026-02-22T06:30:44.179Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1606ms
+[2026-02-22T06:30:44.180Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1612ms
+[2026-02-22T06:30:44.181Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1619ms
+[2026-02-22T06:30:44.181Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1625ms
+[2026-02-22T06:30:44.182Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1632ms
+[2026-02-22T06:30:44.183Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1642ms
+[2026-02-22T06:30:44.184Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1649ms
+[2026-02-22T06:30:44.185Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1656ms
+[2026-02-22T06:30:44.186Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1663ms
+[2026-02-22T06:30:44.187Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1670ms
+[2026-02-22T06:30:44.187Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1677ms
+[2026-02-22T06:30:44.188Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1686ms
+[2026-02-22T06:30:44.188Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1692ms
+[2026-02-22T06:30:44.189Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1699ms
+[2026-02-22T06:30:44.189Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1704ms
+[2026-02-22T06:30:44.190Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1712ms
+[2026-02-22T06:30:44.190Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1721ms
+[2026-02-22T06:30:44.191Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1731ms
+[2026-02-22T06:30:44.192Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1741ms
+[2026-02-22T06:30:44.193Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1749ms
+[2026-02-22T06:30:44.194Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1755ms
+[2026-02-22T06:30:44.195Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1762ms
+[2026-02-22T06:30:44.195Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1768ms
+[2026-02-22T06:30:44.196Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1775ms
+[2026-02-22T06:30:44.197Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1782ms
+[2026-02-22T06:30:44.198Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1789ms
+[2026-02-22T06:30:44.199Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1797ms
+[2026-02-22T06:30:44.199Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1802ms
+[2026-02-22T06:30:44.200Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1809ms
+[2026-02-22T06:30:44.200Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1814ms
+[2026-02-22T06:30:44.201Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1820ms
+[2026-02-22T06:30:44.201Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1825ms
+[2026-02-22T06:30:44.202Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1831ms
+[2026-02-22T06:30:44.203Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1838ms
+[2026-02-22T06:30:44.204Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1848ms
+[2026-02-22T06:30:44.204Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1853ms
+[2026-02-22T06:30:44.205Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1860ms
+[2026-02-22T06:30:44.206Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1868ms
+[2026-02-22T06:30:44.207Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1875ms
+[2026-02-22T06:30:44.208Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1883ms
+[2026-02-22T06:30:44.208Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1890ms
+[2026-02-22T06:30:44.209Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1899ms
+[2026-02-22T06:30:44.210Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1906ms
+[2026-02-22T06:30:44.210Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1915ms
+[2026-02-22T06:30:44.211Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1923ms
+[2026-02-22T06:30:44.211Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1930ms
+[2026-02-22T06:30:44.212Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1938ms
+[2026-02-22T06:30:44.212Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1945ms
+[2026-02-22T06:30:44.213Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1954ms
+[2026-02-22T06:30:44.214Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1961ms
+[2026-02-22T06:30:44.214Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1969ms
+[2026-02-22T06:30:44.216Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1981ms
+[2026-02-22T06:30:44.217Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1990ms
+[2026-02-22T06:30:44.217Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1996ms
+[2026-02-22T06:30:44.218Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2006ms
+[2026-02-22T06:30:44.219Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2015ms
+[2026-02-22T06:30:44.220Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2023ms
+[2026-02-22T06:30:44.221Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2030ms
+[2026-02-22T06:30:44.222Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2038ms
+[2026-02-22T06:30:44.223Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2047ms
+[2026-02-22T06:30:44.224Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2055ms
+[2026-02-22T06:30:44.224Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2062ms
+[2026-02-22T06:30:44.225Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2072ms
+[2026-02-22T06:30:44.225Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2080ms
+[2026-02-22T06:30:44.226Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2088ms
+[2026-02-22T06:30:44.227Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2095ms
+[2026-02-22T06:30:44.228Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2104ms
+[2026-02-22T06:30:44.228Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2110ms
+[2026-02-22T06:30:44.229Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2120ms
+[2026-02-22T06:30:44.230Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2128ms
+[2026-02-22T06:30:44.231Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2136ms
+[2026-02-22T06:30:44.232Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2144ms
+[2026-02-22T06:30:44.232Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2151ms
+[2026-02-22T06:30:44.233Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2163ms
+[2026-02-22T06:30:44.234Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2172ms
+[2026-02-22T06:30:44.235Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2180ms
+[2026-02-22T06:30:44.236Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2187ms
+[2026-02-22T06:30:44.237Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2195ms
+[2026-02-22T06:30:44.238Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2203ms
+[2026-02-22T06:30:44.239Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2211ms
+[2026-02-22T06:30:44.240Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2218ms
+[2026-02-22T06:30:44.244Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2228ms
+[2026-02-22T06:30:44.245Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2235ms
+[2026-02-22T06:30:44.246Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2242ms
+[2026-02-22T06:30:44.247Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2249ms
+[2026-02-22T06:30:44.248Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2261ms
+[2026-02-22T06:30:44.248Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2269ms
+[2026-02-22T06:30:44.249Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2275ms
+[2026-02-22T06:30:44.249Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2281ms
+[2026-02-22T06:30:44.250Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2289ms
+[2026-02-22T06:30:44.252Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2295ms
+[2026-02-22T06:30:44.252Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2302ms
+[2026-02-22T06:30:44.253Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2311ms
+[2026-02-22T06:30:44.254Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2319ms
+[2026-02-22T06:30:44.255Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2328ms
+[2026-02-22T06:30:44.256Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2336ms
+[2026-02-22T06:30:44.257Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2343ms
+[2026-02-22T06:30:44.258Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2350ms
+[2026-02-22T06:30:44.259Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2358ms
+[2026-02-22T06:30:44.259Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2364ms
+[2026-02-22T06:30:44.260Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2371ms
+[2026-02-22T06:30:44.261Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2379ms
+[2026-02-22T06:30:44.262Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2386ms
+[2026-02-22T06:30:44.263Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2395ms
+[2026-02-22T06:30:44.263Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2403ms
+[2026-02-22T06:30:44.264Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2414ms
+[2026-02-22T06:30:44.265Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2423ms
+[2026-02-22T06:30:44.266Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2431ms
+[2026-02-22T06:30:44.266Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2436ms
+[2026-02-22T06:30:44.267Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2445ms
+[2026-02-22T06:30:44.268Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2455ms
+[2026-02-22T06:30:44.269Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2464ms
+[2026-02-22T06:30:44.269Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2471ms
+[2026-02-22T06:30:44.270Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2480ms
+[2026-02-22T06:30:44.271Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2488ms
+[2026-02-22T06:30:44.272Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2497ms
+[2026-02-22T06:30:44.273Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2506ms
+[2026-02-22T06:30:44.273Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2517ms
+[2026-02-22T06:30:44.274Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2526ms
+[2026-02-22T06:30:44.275Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2555ms
+[2026-02-22T06:30:44.275Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2569ms
+[2026-02-22T06:30:44.276Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2582ms
+[2026-02-22T06:30:44.277Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2593ms
+[2026-02-22T06:30:44.278Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2614ms
+[2026-02-22T06:30:44.279Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2630ms
+[2026-02-22T06:30:44.279Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2646ms
+[2026-02-22T06:30:44.280Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2668ms
+[2026-02-22T06:30:44.281Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2682ms
+[2026-02-22T06:30:44.281Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2695ms
+[2026-02-22T06:30:44.282Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2706ms
+[2026-02-22T06:30:44.283Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2716ms
+[2026-02-22T06:30:44.284Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2726ms
+[2026-02-22T06:30:44.285Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2736ms
+[2026-02-22T06:30:44.285Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2742ms
+[2026-02-22T06:30:44.286Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2752ms
+[2026-02-22T06:30:44.287Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2760ms
+[2026-02-22T06:30:44.288Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2769ms
+[2026-02-22T06:30:44.289Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2778ms
+[2026-02-22T06:30:44.289Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2786ms
+[2026-02-22T06:30:44.290Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2794ms
+[2026-02-22T06:30:44.291Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2804ms
+[2026-02-22T06:30:44.292Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2815ms
+[2026-02-22T06:30:44.292Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2825ms
+[2026-02-22T06:30:44.293Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2836ms
+[2026-02-22T06:30:44.293Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2847ms
+[2026-02-22T06:30:44.294Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2859ms
+[2026-02-22T06:30:44.295Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2872ms
+[2026-02-22T06:30:44.296Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2885ms
+[2026-02-22T06:30:44.297Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2897ms
+[2026-02-22T06:30:44.298Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2908ms
+[2026-02-22T06:30:44.299Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2920ms
+[2026-02-22T06:30:44.300Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2931ms
+[2026-02-22T06:30:44.300Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2941ms
+[2026-02-22T06:30:44.301Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2954ms
+[2026-02-22T06:30:44.302Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2968ms
+[2026-02-22T06:30:44.302Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2983ms
+[2026-02-22T06:30:44.303Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2997ms
+[2026-02-22T06:30:44.304Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3013ms
+[2026-02-22T06:30:44.305Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3026ms
+[2026-02-22T06:30:44.306Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3042ms
+[2026-02-22T06:30:44.306Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3056ms
+[2026-02-22T06:30:44.307Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3071ms
+[2026-02-22T06:30:44.308Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3084ms
+[2026-02-22T06:30:44.309Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3098ms
+[2026-02-22T06:30:44.310Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3110ms
+[2026-02-22T06:30:44.311Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3129ms
+[2026-02-22T06:30:44.313Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3147ms
+[2026-02-22T06:30:44.314Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3168ms
+[2026-02-22T06:30:44.315Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3191ms
+[2026-02-22T06:30:44.316Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3206ms
+[2026-02-22T06:30:44.317Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3220ms
+[2026-02-22T06:30:44.318Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3228ms
+[2026-02-22T06:30:44.318Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3236ms
+[2026-02-22T06:30:44.319Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3243ms
+[2026-02-22T06:30:44.320Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3252ms
+[2026-02-22T06:30:44.321Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3261ms
+[2026-02-22T06:30:44.322Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3271ms
+[2026-02-22T06:30:44.323Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3280ms
+[2026-02-22T06:30:44.324Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3293ms
+[2026-02-22T06:30:44.324Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3303ms
+[2026-02-22T06:30:44.325Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3313ms
+[2026-02-22T06:30:44.326Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3322ms
+[2026-02-22T06:30:44.326Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3330ms
+[2026-02-22T06:30:44.327Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3338ms
+[2026-02-22T06:30:44.327Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3346ms
+[2026-02-22T06:30:44.328Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3356ms
+[2026-02-22T06:30:44.329Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3367ms
+[2026-02-22T06:30:44.330Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3379ms
+[2026-02-22T06:30:44.331Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3388ms
+[2026-02-22T06:30:44.332Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3398ms
+[2026-02-22T06:30:44.332Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3408ms
+[2026-02-22T06:30:44.333Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3421ms
+[2026-02-22T06:30:44.334Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3432ms
+[2026-02-22T06:30:44.334Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3441ms
+[2026-02-22T06:30:44.335Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3451ms
+[2026-02-22T06:30:44.335Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3459ms
+[2026-02-22T06:30:44.336Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3468ms
+[2026-02-22T06:30:44.337Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3477ms
+[2026-02-22T06:30:44.337Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3484ms
+[2026-02-22T06:30:44.338Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3493ms
+[2026-02-22T06:30:44.339Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3506ms
+[2026-02-22T06:30:44.340Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3513ms
+[2026-02-22T06:30:44.340Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3518ms
+[2026-02-22T06:30:44.341Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3525ms
+[2026-02-22T06:30:44.342Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3534ms
+[2026-02-22T06:30:44.343Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3542ms
+[2026-02-22T06:30:44.343Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3549ms
+[2026-02-22T06:30:44.344Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3557ms
+[2026-02-22T06:30:44.345Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3565ms
+[2026-02-22T06:30:44.346Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3571ms
+[2026-02-22T06:30:44.346Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3577ms
+[2026-02-22T06:30:44.347Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3584ms
+[2026-02-22T06:30:44.348Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3591ms
+[2026-02-22T06:30:44.349Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3598ms
+[2026-02-22T06:30:44.349Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3603ms
+[2026-02-22T06:30:44.350Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3610ms
+[2026-02-22T06:30:44.351Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3618ms
+[2026-02-22T06:30:44.351Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3623ms
+[2026-02-22T06:30:44.352Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3630ms
+[2026-02-22T06:30:44.353Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3638ms
+[2026-02-22T06:30:44.353Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3645ms
+[2026-02-22T06:30:44.354Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3652ms
+[2026-02-22T06:30:44.355Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3661ms
+[2026-02-22T06:30:44.355Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3668ms
+[2026-02-22T06:30:44.356Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3675ms
+[2026-02-22T06:30:44.357Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3682ms
+[2026-02-22T06:30:44.357Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3687ms
+[2026-02-22T06:30:44.358Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3694ms
+[2026-02-22T06:30:44.359Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3701ms
+[2026-02-22T06:30:44.360Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3707ms
+[2026-02-22T06:30:44.360Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3712ms
+[2026-02-22T06:30:44.361Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3719ms
+[2026-02-22T06:30:44.361Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3724ms
+[2026-02-22T06:30:44.362Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3731ms
+[2026-02-22T06:30:44.363Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3737ms
+[2026-02-22T06:30:44.364Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3744ms
+[2026-02-22T06:30:44.365Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3751ms
+[2026-02-22T06:30:44.366Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3759ms
+[2026-02-22T06:30:44.366Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3767ms
+[2026-02-22T06:30:44.367Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3775ms
+[2026-02-22T06:30:44.368Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3781ms
+[2026-02-22T06:30:44.370Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3788ms
+[2026-02-22T06:30:44.370Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3795ms
+[2026-02-22T06:30:44.371Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3801ms
+[2026-02-22T06:30:44.372Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3808ms
+[2026-02-22T06:30:44.373Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3815ms
+[2026-02-22T06:30:44.374Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3824ms
+[2026-02-22T06:30:44.374Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3831ms
+[2026-02-22T06:30:44.375Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3839ms
+[2026-02-22T06:30:44.376Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3847ms
+[2026-02-22T06:30:44.377Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3854ms
+[2026-02-22T06:30:44.379Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3863ms
+[2026-02-22T06:30:44.380Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3877ms
+[2026-02-22T06:30:44.381Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3886ms
+[2026-02-22T06:30:44.382Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3898ms
+[2026-02-22T06:30:44.382Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3906ms
+[2026-02-22T06:30:44.383Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3914ms
+[2026-02-22T06:30:44.384Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3923ms
+[2026-02-22T06:30:44.385Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3932ms
+[2026-02-22T06:30:44.386Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3940ms
+[2026-02-22T06:30:44.386Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3950ms
+[2026-02-22T06:30:44.387Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3962ms
+[2026-02-22T06:30:44.388Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3973ms
+[2026-02-22T06:30:44.389Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3984ms
+[2026-02-22T06:30:44.390Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3999ms
+[2026-02-22T06:30:44.391Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4011ms
+[2026-02-22T06:30:44.391Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4017ms
+[2026-02-22T06:30:44.392Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4025ms
+[2026-02-22T06:30:44.393Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4032ms
+[2026-02-22T06:30:44.394Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4039ms
+[2026-02-22T06:30:44.394Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4048ms
+[2026-02-22T06:30:44.395Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4057ms
+[2026-02-22T06:30:44.396Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4065ms
+[2026-02-22T06:30:44.396Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4071ms
+[2026-02-22T06:30:44.397Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4078ms
+[2026-02-22T06:30:44.398Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4085ms
+[2026-02-22T06:30:44.399Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4093ms
+[2026-02-22T06:30:44.400Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4100ms
+[2026-02-22T06:30:44.400Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4107ms
+[2026-02-22T06:30:44.401Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4116ms
+[2026-02-22T06:30:44.402Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4124ms
+[2026-02-22T06:30:44.402Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4130ms
+[2026-02-22T06:30:44.403Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4138ms
+[2026-02-22T06:30:44.404Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4146ms
+[2026-02-22T06:30:44.404Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4154ms
+[2026-02-22T06:30:44.405Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4162ms
+[2026-02-22T06:30:44.406Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4169ms
+[2026-02-22T06:30:44.406Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4175ms
+[2026-02-22T06:30:44.407Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4184ms
+[2026-02-22T06:30:44.408Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4193ms
+[2026-02-22T06:30:44.409Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4201ms
+[2026-02-22T06:30:44.410Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4210ms
+[2026-02-22T06:30:44.412Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4223ms
+[2026-02-22T06:30:44.413Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4233ms
+[2026-02-22T06:30:44.414Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4243ms
+[2026-02-22T06:30:44.415Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4253ms
+[2026-02-22T06:30:44.416Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4272ms
+[2026-02-22T06:30:44.417Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4284ms
+[2026-02-22T06:30:44.418Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4300ms
+[2026-02-22T06:30:44.419Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4312ms
+[2026-02-22T06:30:44.420Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4561ms
+[2026-02-22T06:31:12.170Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T06:36:29.113Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:36:29.359Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T06:36:29.359Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T06:36:29.630Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:36:29.657Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:36:29.658Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:36:29.672Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T06:36:29.675Z] [INFO]: ✅ Cleanup complete in 17ms
+[2026-02-22T06:36:29.675Z] [INFO]:    Users removed: 0
+[2026-02-22T06:36:29.676Z] [INFO]:    Cached users before: undefined
+[2026-02-22T06:36:29.676Z] [INFO]:    Cached users after: undefined
+[2026-02-22T06:36:29.676Z] [INFO]:    Memory before: 1.22M
+[2026-02-22T06:36:29.676Z] [INFO]:    Memory after: 1.22M
+[2026-02-22T06:36:51.648Z] [WARN]: ⚠️ Slow Request: GET / - 5159ms
+[2026-02-22T06:36:53.582Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T06:36:53.852Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T06:36:53.942Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T06:36:53.943Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T06:36:57.955Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 966ms
+[2026-02-22T06:37:31.532Z] [WARN]: ⚠️ Slow Request: GET /user - 1245ms
+[2026-02-22T06:37:38.405Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 506ms
+[2026-02-22T06:37:38.406Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 519ms
+[2026-02-22T06:37:38.407Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 532ms
+[2026-02-22T06:37:38.409Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 546ms
+[2026-02-22T06:37:38.413Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 561ms
+[2026-02-22T06:37:38.415Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 573ms
+[2026-02-22T06:37:38.418Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 586ms
+[2026-02-22T06:37:38.420Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 599ms
+[2026-02-22T06:37:38.424Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 615ms
+[2026-02-22T06:37:38.430Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 629ms
+[2026-02-22T06:37:38.439Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 649ms
+[2026-02-22T06:37:38.443Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 669ms
+[2026-02-22T06:37:38.446Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 682ms
+[2026-02-22T06:37:38.451Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 699ms
+[2026-02-22T06:37:38.456Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 716ms
+[2026-02-22T06:37:38.462Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 730ms
+[2026-02-22T06:37:38.469Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 749ms
+[2026-02-22T06:37:38.473Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 767ms
+[2026-02-22T06:37:38.477Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 779ms
+[2026-02-22T06:37:38.483Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 795ms
+[2026-02-22T06:37:38.486Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 809ms
+[2026-02-22T06:37:38.490Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 822ms
+[2026-02-22T06:37:38.497Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 840ms
+[2026-02-22T06:37:38.502Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 857ms
+[2026-02-22T06:37:38.504Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 875ms
+[2026-02-22T06:37:38.509Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 894ms
+[2026-02-22T06:37:38.513Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 909ms
+[2026-02-22T06:37:38.516Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 921ms
+[2026-02-22T06:37:38.518Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 935ms
+[2026-02-22T06:37:38.525Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 950ms
+[2026-02-22T06:37:38.529Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 964ms
+[2026-02-22T06:37:38.532Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 975ms
+[2026-02-22T06:37:38.535Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 988ms
+[2026-02-22T06:37:38.543Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1006ms
+[2026-02-22T06:37:38.547Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1018ms
+[2026-02-22T06:37:38.549Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1030ms
+[2026-02-22T06:37:38.554Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1049ms
+[2026-02-22T06:37:38.557Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1062ms
+[2026-02-22T06:37:38.560Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1073ms
+[2026-02-22T06:37:38.564Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1086ms
+[2026-02-22T06:37:38.565Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1096ms
+[2026-02-22T06:37:38.569Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1107ms
+[2026-02-22T06:37:38.572Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1120ms
+[2026-02-22T06:37:38.576Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1134ms
+[2026-02-22T06:37:38.579Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1143ms
+[2026-02-22T06:37:38.580Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1153ms
+[2026-02-22T06:37:38.583Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1163ms
+[2026-02-22T06:37:38.586Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1175ms
+[2026-02-22T06:37:38.589Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1187ms
+[2026-02-22T06:37:38.592Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1200ms
+[2026-02-22T06:37:38.594Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1211ms
+[2026-02-22T06:37:38.598Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1224ms
+[2026-02-22T06:37:38.601Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1235ms
+[2026-02-22T06:37:38.604Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1247ms
+[2026-02-22T06:37:38.607Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1258ms
+[2026-02-22T06:37:38.610Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1269ms
+[2026-02-22T06:37:38.614Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1281ms
+[2026-02-22T06:37:38.617Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1292ms
+[2026-02-22T06:37:38.620Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1304ms
+[2026-02-22T06:37:38.622Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1312ms
+[2026-02-22T06:37:38.626Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1326ms
+[2026-02-22T06:37:38.629Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1341ms
+[2026-02-22T06:37:38.632Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1351ms
+[2026-02-22T06:37:38.635Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1364ms
+[2026-02-22T06:37:38.638Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1376ms
+[2026-02-22T06:37:38.642Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1387ms
+[2026-02-22T06:37:38.645Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1398ms
+[2026-02-22T06:37:38.648Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1409ms
+[2026-02-22T06:37:38.649Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1419ms
+[2026-02-22T06:37:38.652Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1433ms
+[2026-02-22T06:37:38.655Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1444ms
+[2026-02-22T06:37:38.657Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1457ms
+[2026-02-22T06:37:38.660Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1471ms
+[2026-02-22T06:37:38.662Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1484ms
+[2026-02-22T06:37:38.663Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1496ms
+[2026-02-22T06:37:38.664Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1507ms
+[2026-02-22T06:37:38.667Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1521ms
+[2026-02-22T06:37:38.670Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1535ms
+[2026-02-22T06:37:38.672Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1545ms
+[2026-02-22T06:37:38.677Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1560ms
+[2026-02-22T06:37:38.681Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1575ms
+[2026-02-22T06:37:38.684Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1588ms
+[2026-02-22T06:37:38.687Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1601ms
+[2026-02-22T06:37:38.691Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1616ms
+[2026-02-22T06:37:38.693Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1629ms
+[2026-02-22T06:37:38.696Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1643ms
+[2026-02-22T06:37:38.698Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1659ms
+[2026-02-22T06:37:38.702Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1671ms
+[2026-02-22T06:37:38.705Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1685ms
+[2026-02-22T06:37:38.706Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1697ms
+[2026-02-22T06:37:38.709Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1714ms
+[2026-02-22T06:37:38.712Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1728ms
+[2026-02-22T06:37:38.716Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1742ms
+[2026-02-22T06:37:38.719Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1757ms
+[2026-02-22T06:37:38.724Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1772ms
+[2026-02-22T06:37:38.726Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1785ms
+[2026-02-22T06:37:38.729Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1796ms
+[2026-02-22T06:37:38.732Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1812ms
+[2026-02-22T06:37:38.733Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1827ms
+[2026-02-22T06:37:38.736Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1850ms
+[2026-02-22T06:37:38.740Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1870ms
+[2026-02-22T06:37:38.742Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1894ms
+[2026-02-22T06:37:38.746Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1916ms
+[2026-02-22T06:37:38.750Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1936ms
+[2026-02-22T06:37:38.754Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1956ms
+[2026-02-22T06:37:38.757Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1973ms
+[2026-02-22T06:37:38.761Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1990ms
+[2026-02-22T06:37:38.764Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2007ms
+[2026-02-22T06:37:38.767Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2022ms
+[2026-02-22T06:37:38.769Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2038ms
+[2026-02-22T06:37:38.774Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2056ms
+[2026-02-22T06:37:38.775Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2072ms
+[2026-02-22T06:37:38.779Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2086ms
+[2026-02-22T06:37:38.781Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2096ms
+[2026-02-22T06:37:38.783Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2108ms
+[2026-02-22T06:37:38.786Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2118ms
+[2026-02-22T06:37:38.790Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2131ms
+[2026-02-22T06:37:38.796Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2146ms
+[2026-02-22T06:37:38.799Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2156ms
+[2026-02-22T06:37:38.805Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2171ms
+[2026-02-22T06:37:38.810Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2184ms
+[2026-02-22T06:37:38.812Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2194ms
+[2026-02-22T06:37:38.816Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2207ms
+[2026-02-22T06:37:38.823Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2224ms
+[2026-02-22T06:37:38.826Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2236ms
+[2026-02-22T06:37:38.828Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2247ms
+[2026-02-22T06:37:38.832Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2258ms
+[2026-02-22T06:37:38.837Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2272ms
+[2026-02-22T06:37:38.841Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2284ms
+[2026-02-22T06:37:38.844Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2297ms
+[2026-02-22T06:37:38.846Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2310ms
+[2026-02-22T06:37:38.850Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2325ms
+[2026-02-22T06:37:38.851Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2333ms
+[2026-02-22T06:37:38.856Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2346ms
+[2026-02-22T06:37:38.858Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2355ms
+[2026-02-22T06:37:38.864Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2371ms
+[2026-02-22T06:37:38.865Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2383ms
+[2026-02-22T06:37:38.868Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2393ms
+[2026-02-22T06:37:38.869Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2402ms
+[2026-02-22T06:37:38.872Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2415ms
+[2026-02-22T06:37:38.876Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2428ms
+[2026-02-22T06:37:38.878Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2438ms
+[2026-02-22T06:37:38.884Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2452ms
+[2026-02-22T06:37:38.886Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2462ms
+[2026-02-22T06:37:38.889Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2475ms
+[2026-02-22T06:37:38.893Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2485ms
+[2026-02-22T06:37:38.895Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2497ms
+[2026-02-22T06:37:38.898Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2507ms
+[2026-02-22T06:37:38.899Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2519ms
+[2026-02-22T06:37:38.901Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2530ms
+[2026-02-22T06:37:38.902Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2539ms
+[2026-02-22T06:37:38.907Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2551ms
+[2026-02-22T06:37:38.909Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2564ms
+[2026-02-22T06:37:38.912Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2575ms
+[2026-02-22T06:37:38.914Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2585ms
+[2026-02-22T06:37:38.916Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2595ms
+[2026-02-22T06:37:38.920Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2608ms
+[2026-02-22T06:37:38.922Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2620ms
+[2026-02-22T06:37:38.929Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2635ms
+[2026-02-22T06:37:38.934Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2649ms
+[2026-02-22T06:37:38.937Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2664ms
+[2026-02-22T06:37:38.940Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2677ms
+[2026-02-22T06:37:38.949Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2696ms
+[2026-02-22T06:37:38.952Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2709ms
+[2026-02-22T06:37:38.955Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2722ms
+[2026-02-22T06:37:38.957Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2733ms
+[2026-02-22T06:37:38.963Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2749ms
+[2026-02-22T06:37:38.967Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2763ms
+[2026-02-22T06:37:38.972Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2779ms
+[2026-02-22T06:37:38.975Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2790ms
+[2026-02-22T06:37:38.983Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2809ms
+[2026-02-22T06:37:38.988Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2824ms
+[2026-02-22T06:37:38.990Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2833ms
+[2026-02-22T06:37:38.993Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2847ms
+[2026-02-22T06:37:38.998Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2862ms
+[2026-02-22T06:37:39.004Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2875ms
+[2026-02-22T06:37:39.007Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2888ms
+[2026-02-22T06:37:39.011Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2902ms
+[2026-02-22T06:37:39.020Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2919ms
+[2026-02-22T06:37:39.023Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2931ms
+[2026-02-22T06:37:39.027Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2945ms
+[2026-02-22T06:37:39.032Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2957ms
+[2026-02-22T06:37:39.039Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2974ms
+[2026-02-22T06:37:39.042Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 2990ms
+[2026-02-22T06:37:39.046Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3002ms
+[2026-02-22T06:37:39.052Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3027ms
+[2026-02-22T06:37:39.057Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3039ms
+[2026-02-22T06:37:39.060Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3053ms
+[2026-02-22T06:37:39.063Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3067ms
+[2026-02-22T06:37:39.070Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3087ms
+[2026-02-22T06:37:39.077Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3107ms
+[2026-02-22T06:37:39.107Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3151ms
+[2026-02-22T06:37:39.113Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3170ms
+[2026-02-22T06:37:39.117Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3189ms
+[2026-02-22T06:37:39.121Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3203ms
+[2026-02-22T06:37:39.122Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3213ms
+[2026-02-22T06:37:39.125Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3228ms
+[2026-02-22T06:37:39.133Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3251ms
+[2026-02-22T06:37:39.139Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3270ms
+[2026-02-22T06:37:39.140Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3284ms
+[2026-02-22T06:37:39.143Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3300ms
+[2026-02-22T06:37:39.146Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3317ms
+[2026-02-22T06:37:39.149Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3333ms
+[2026-02-22T06:37:39.151Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3348ms
+[2026-02-22T06:37:39.155Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3365ms
+[2026-02-22T06:37:39.159Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3383ms
+[2026-02-22T06:37:39.162Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3401ms
+[2026-02-22T06:37:39.164Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3414ms
+[2026-02-22T06:37:39.166Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3428ms
+[2026-02-22T06:37:39.170Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3444ms
+[2026-02-22T06:37:39.173Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3464ms
+[2026-02-22T06:37:39.177Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3479ms
+[2026-02-22T06:37:39.178Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3491ms
+[2026-02-22T06:37:39.182Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3507ms
+[2026-02-22T06:37:39.188Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3527ms
+[2026-02-22T06:37:39.192Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3544ms
+[2026-02-22T06:37:39.196Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3562ms
+[2026-02-22T06:37:39.201Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3582ms
+[2026-02-22T06:37:39.204Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3601ms
+[2026-02-22T06:37:39.208Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3623ms
+[2026-02-22T06:37:39.210Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3641ms
+[2026-02-22T06:37:39.213Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3669ms
+[2026-02-22T06:37:39.219Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3698ms
+[2026-02-22T06:37:39.224Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3720ms
+[2026-02-22T06:37:39.227Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3748ms
+[2026-02-22T06:37:39.231Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3777ms
+[2026-02-22T06:37:39.236Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3797ms
+[2026-02-22T06:37:39.240Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3820ms
+[2026-02-22T06:37:39.242Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3843ms
+[2026-02-22T06:37:39.244Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3859ms
+[2026-02-22T06:37:39.247Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3879ms
+[2026-02-22T06:37:39.252Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3898ms
+[2026-02-22T06:37:39.258Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3916ms
+[2026-02-22T06:37:39.260Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3930ms
+[2026-02-22T06:37:39.265Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3954ms
+[2026-02-22T06:37:39.270Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3972ms
+[2026-02-22T06:37:39.274Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 3988ms
+[2026-02-22T06:37:39.277Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4009ms
+[2026-02-22T06:37:39.285Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4030ms
+[2026-02-22T06:37:39.289Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4048ms
+[2026-02-22T06:37:39.292Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4063ms
+[2026-02-22T06:37:39.295Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4082ms
+[2026-02-22T06:37:39.301Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4101ms
+[2026-02-22T06:37:39.307Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4116ms
+[2026-02-22T06:37:39.309Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4137ms
+[2026-02-22T06:37:39.313Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4158ms
+[2026-02-22T06:37:39.318Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4178ms
+[2026-02-22T06:37:39.322Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4202ms
+[2026-02-22T06:37:39.324Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4219ms
+[2026-02-22T06:37:39.332Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4241ms
+[2026-02-22T06:37:39.337Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4260ms
+[2026-02-22T06:37:39.340Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4277ms
+[2026-02-22T06:37:39.348Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4299ms
+[2026-02-22T06:37:39.355Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4323ms
+[2026-02-22T06:37:39.358Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4341ms
+[2026-02-22T06:37:39.362Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4366ms
+[2026-02-22T06:37:39.367Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4384ms
+[2026-02-22T06:37:39.373Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4413ms
+[2026-02-22T06:37:39.376Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4434ms
+[2026-02-22T06:37:39.379Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4455ms
+[2026-02-22T06:37:39.389Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4484ms
+[2026-02-22T06:37:39.393Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4503ms
+[2026-02-22T06:37:39.398Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4529ms
+[2026-02-22T06:37:39.400Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4546ms
+[2026-02-22T06:37:39.402Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4561ms
+[2026-02-22T06:37:39.408Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4580ms
+[2026-02-22T06:37:39.414Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4599ms
+[2026-02-22T06:37:39.419Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4616ms
+[2026-02-22T06:37:39.423Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4640ms
+[2026-02-22T06:37:39.429Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4663ms
+[2026-02-22T06:37:39.435Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4688ms
+[2026-02-22T06:37:39.438Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4714ms
+[2026-02-22T06:37:39.445Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4741ms
+[2026-02-22T06:37:39.452Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4767ms
+[2026-02-22T06:37:39.454Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4792ms
+[2026-02-22T06:37:39.458Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4816ms
+[2026-02-22T06:37:39.461Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4837ms
+[2026-02-22T06:37:39.465Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4863ms
+[2026-02-22T06:37:39.467Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4880ms
+[2026-02-22T06:37:39.470Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4899ms
+[2026-02-22T06:37:39.473Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4921ms
+[2026-02-22T06:37:39.478Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4945ms
+[2026-02-22T06:37:39.485Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4975ms
+[2026-02-22T06:37:39.490Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 4994ms
+[2026-02-22T06:37:39.501Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5021ms
+[2026-02-22T06:37:39.503Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5041ms
+[2026-02-22T06:37:39.507Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5060ms
+[2026-02-22T06:37:39.513Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5081ms
+[2026-02-22T06:37:39.519Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5104ms
+[2026-02-22T06:37:39.521Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5125ms
+[2026-02-22T06:37:39.523Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5146ms
+[2026-02-22T06:37:39.532Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5169ms
+[2026-02-22T06:37:39.536Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5190ms
+[2026-02-22T06:37:39.540Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5212ms
+[2026-02-22T06:37:39.543Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5245ms
+[2026-02-22T06:37:39.545Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5274ms
+[2026-02-22T06:37:39.551Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5318ms
+[2026-02-22T06:37:39.555Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5357ms
+[2026-02-22T06:37:39.559Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5403ms
+[2026-02-22T06:37:39.561Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5447ms
+[2026-02-22T06:37:39.563Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5464ms
+[2026-02-22T06:37:39.569Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5489ms
+[2026-02-22T06:37:39.577Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5508ms
+[2026-02-22T06:37:39.603Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5547ms
+[2026-02-22T06:37:39.619Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5579ms
+[2026-02-22T06:37:39.641Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5611ms
+[2026-02-22T06:37:39.656Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5644ms
+[2026-02-22T06:37:39.674Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5677ms
+[2026-02-22T06:37:39.686Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5705ms
+[2026-02-22T06:37:39.692Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5724ms
+[2026-02-22T06:37:39.694Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5742ms
+[2026-02-22T06:37:39.700Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5763ms
+[2026-02-22T06:37:39.703Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5784ms
+[2026-02-22T06:37:39.706Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5800ms
+[2026-02-22T06:37:39.708Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5817ms
+[2026-02-22T06:37:39.710Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5834ms
+[2026-02-22T06:37:39.715Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5855ms
+[2026-02-22T06:37:39.718Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5874ms
+[2026-02-22T06:37:39.739Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5908ms
+[2026-02-22T06:37:39.744Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5925ms
+[2026-02-22T06:37:39.746Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5936ms
+[2026-02-22T06:37:39.749Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5948ms
+[2026-02-22T06:37:39.754Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5963ms
+[2026-02-22T06:37:39.757Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5975ms
+[2026-02-22T06:37:39.760Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5986ms
+[2026-02-22T06:37:39.761Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 5993ms
+[2026-02-22T06:37:39.765Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6003ms
+[2026-02-22T06:37:39.768Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6013ms
+[2026-02-22T06:37:39.770Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6022ms
+[2026-02-22T06:37:39.773Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6032ms
+[2026-02-22T06:37:39.774Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6045ms
+[2026-02-22T06:37:39.775Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6059ms
+[2026-02-22T06:37:39.778Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6070ms
+[2026-02-22T06:37:39.782Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6087ms
+[2026-02-22T06:37:39.785Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6109ms
+[2026-02-22T06:37:39.789Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6129ms
+[2026-02-22T06:37:39.792Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6145ms
+[2026-02-22T06:37:39.796Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6167ms
+[2026-02-22T06:37:39.799Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6185ms
+[2026-02-22T06:37:39.802Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6200ms
+[2026-02-22T06:37:39.805Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6222ms
+[2026-02-22T06:37:39.810Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6239ms
+[2026-02-22T06:37:39.815Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6260ms
+[2026-02-22T06:37:39.821Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6282ms
+[2026-02-22T06:37:39.825Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6302ms
+[2026-02-22T06:37:39.827Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6311ms
+[2026-02-22T06:37:39.829Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6323ms
+[2026-02-22T06:37:39.831Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6341ms
+[2026-02-22T06:37:39.833Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6366ms
+[2026-02-22T06:37:39.837Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6385ms
+[2026-02-22T06:37:39.841Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6407ms
+[2026-02-22T06:37:39.844Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6425ms
+[2026-02-22T06:37:39.846Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6442ms
+[2026-02-22T06:37:39.850Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6461ms
+[2026-02-22T06:37:39.853Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6482ms
+[2026-02-22T06:37:39.856Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6501ms
+[2026-02-22T06:37:39.858Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6523ms
+[2026-02-22T06:37:39.861Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6546ms
+[2026-02-22T06:37:39.864Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6568ms
+[2026-02-22T06:37:39.867Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6585ms
+[2026-02-22T06:37:39.870Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6602ms
+[2026-02-22T06:37:39.871Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6618ms
+[2026-02-22T06:37:39.875Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6638ms
+[2026-02-22T06:37:39.878Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6665ms
+[2026-02-22T06:37:39.882Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6690ms
+[2026-02-22T06:37:39.884Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6713ms
+[2026-02-22T06:37:39.885Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6732ms
+[2026-02-22T06:37:39.886Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6756ms
+[2026-02-22T06:37:39.887Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6774ms
+[2026-02-22T06:37:39.890Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6801ms
+[2026-02-22T06:37:39.893Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6820ms
+[2026-02-22T06:37:39.895Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6838ms
+[2026-02-22T06:37:39.897Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6855ms
+[2026-02-22T06:37:39.900Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6881ms
+[2026-02-22T06:37:39.903Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6904ms
+[2026-02-22T06:37:39.906Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6930ms
+[2026-02-22T06:37:39.908Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6953ms
+[2026-02-22T06:37:39.911Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 6978ms
+[2026-02-22T06:37:39.912Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7001ms
+[2026-02-22T06:37:39.913Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7027ms
+[2026-02-22T06:37:39.914Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7052ms
+[2026-02-22T06:37:39.915Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7078ms
+[2026-02-22T06:37:39.918Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7098ms
+[2026-02-22T06:37:39.921Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7116ms
+[2026-02-22T06:37:39.924Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7133ms
+[2026-02-22T06:37:39.926Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7151ms
+[2026-02-22T06:37:39.927Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7167ms
+[2026-02-22T06:37:39.929Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7181ms
+[2026-02-22T06:37:39.932Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7197ms
+[2026-02-22T06:37:39.934Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7214ms
+[2026-02-22T06:37:39.936Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7229ms
+[2026-02-22T06:37:39.939Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7244ms
+[2026-02-22T06:37:39.940Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7262ms
+[2026-02-22T06:37:39.941Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7276ms
+[2026-02-22T06:37:39.942Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7291ms
+[2026-02-22T06:37:39.945Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7310ms
+[2026-02-22T06:37:39.949Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7328ms
+[2026-02-22T06:37:39.952Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7342ms
+[2026-02-22T06:37:39.953Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7350ms
+[2026-02-22T06:37:39.955Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7361ms
+[2026-02-22T06:37:39.958Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7374ms
+[2026-02-22T06:37:39.964Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7390ms
+[2026-02-22T06:37:39.967Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7402ms
+[2026-02-22T06:37:39.970Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7415ms
+[2026-02-22T06:37:39.975Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7432ms
+[2026-02-22T06:37:39.978Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7444ms
+[2026-02-22T06:37:39.980Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7454ms
+[2026-02-22T06:37:39.982Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7465ms
+[2026-02-22T06:37:39.983Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7474ms
+[2026-02-22T06:37:39.984Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7485ms
+[2026-02-22T06:37:39.988Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7499ms
+[2026-02-22T06:37:39.991Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7513ms
+[2026-02-22T06:37:39.994Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7528ms
+[2026-02-22T06:37:39.996Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7537ms
+[2026-02-22T06:37:39.997Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7547ms
+[2026-02-22T06:37:39.999Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7558ms
+[2026-02-22T06:37:40.002Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7569ms
+[2026-02-22T06:37:40.009Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7588ms
+[2026-02-22T06:37:40.011Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7598ms
+[2026-02-22T06:37:40.015Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7609ms
+[2026-02-22T06:37:40.019Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7620ms
+[2026-02-22T06:37:40.022Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7630ms
+[2026-02-22T06:37:40.024Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7640ms
+[2026-02-22T06:37:40.026Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7650ms
+[2026-02-22T06:37:40.030Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7664ms
+[2026-02-22T06:37:40.032Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7681ms
+[2026-02-22T06:37:40.035Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7696ms
+[2026-02-22T06:37:40.037Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7715ms
+[2026-02-22T06:37:40.038Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7733ms
+[2026-02-22T06:37:40.039Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7749ms
+[2026-02-22T06:37:40.041Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7765ms
+[2026-02-22T06:37:40.045Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7779ms
+[2026-02-22T06:37:40.047Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7792ms
+[2026-02-22T06:37:40.049Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7804ms
+[2026-02-22T06:37:40.051Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7817ms
+[2026-02-22T06:37:40.052Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7829ms
+[2026-02-22T06:37:40.057Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7844ms
+[2026-02-22T06:37:40.060Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7857ms
+[2026-02-22T06:37:40.063Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7868ms
+[2026-02-22T06:37:40.065Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7882ms
+[2026-02-22T06:37:40.066Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7892ms
+[2026-02-22T06:37:40.067Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7902ms
+[2026-02-22T06:37:40.070Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7913ms
+[2026-02-22T06:37:40.074Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7926ms
+[2026-02-22T06:37:40.077Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7942ms
+[2026-02-22T06:37:40.079Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7959ms
+[2026-02-22T06:37:40.079Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7971ms
+[2026-02-22T06:37:40.080Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 7986ms
+[2026-02-22T06:37:40.081Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 8073ms
+[2026-02-22T06:38:28.957Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T06:45:14.326Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T06:45:22.407Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T06:45:22.530Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T06:45:22.530Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T06:45:22.779Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T06:45:22.798Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T06:45:22.798Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T06:45:22.809Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T06:45:22.811Z] [INFO]: ✅ Cleanup complete in 13ms
+[2026-02-22T06:45:22.811Z] [INFO]:    Users removed: 0
+[2026-02-22T06:45:22.812Z] [INFO]:    Cached users before: undefined
+[2026-02-22T06:45:22.812Z] [INFO]:    Cached users after: undefined
+[2026-02-22T06:45:22.812Z] [INFO]:    Memory before: 1.22M
+[2026-02-22T06:45:22.812Z] [INFO]:    Memory after: 1.22M
+[2026-02-22T06:45:34.832Z] [WARN]: ⚠️ Slow Request: GET / - 4430ms
+[2026-02-22T06:45:38.983Z] [WARN]: ⚠️ Slow Request: GET /login - 1273ms
+[2026-02-22T06:45:46.264Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (431ms)
+[2026-02-22T06:45:46.438Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T06:45:46.502Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T06:45:46.502Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T06:45:47.488Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1204ms
+[2026-02-22T06:46:03.454Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1005ms
+[2026-02-22T12:49:54.482Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T12:49:54.568Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T12:49:54.569Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T12:49:54.867Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T12:49:54.903Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T12:49:54.903Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T12:49:54.910Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T12:49:54.913Z] [INFO]: ✅ Cleanup complete in 10ms
+[2026-02-22T12:49:54.913Z] [INFO]:    Users removed: 0
+[2026-02-22T12:49:54.913Z] [INFO]:    Cached users before: undefined
+[2026-02-22T12:49:54.914Z] [INFO]:    Cached users after: undefined
+[2026-02-22T12:49:54.914Z] [INFO]:    Memory before: 1.03M
+[2026-02-22T12:49:54.914Z] [INFO]:    Memory after: 1.06M
+[2026-02-22T12:52:05.678Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T12:52:05.815Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T12:52:05.835Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T12:52:05.835Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T12:53:00.568Z] [WARN]: ⚠️ Slow Request: GET /user - 1207ms
+[2026-02-22T12:53:12.749Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1007ms
+[2026-02-22T13:06:54.036Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T13:13:48.059Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T13:13:48.322Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T13:13:48.344Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T13:13:48.345Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T13:13:56.085Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T13:13:57.055Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T13:13:57.297Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T13:13:57.314Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T13:13:57.315Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T13:14:03.360Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1011ms
+[2026-02-22T13:19:09.402Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T13:24:02.471Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T13:24:02.584Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T13:24:02.585Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T13:24:03.028Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T13:24:03.052Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T13:24:03.052Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T13:24:03.075Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T13:24:03.083Z] [INFO]: ✅ Cleanup complete in 31ms
+[2026-02-22T13:24:03.083Z] [INFO]:    Users removed: 0
+[2026-02-22T13:24:03.083Z] [INFO]:    Cached users before: undefined
+[2026-02-22T13:24:03.083Z] [INFO]:    Cached users after: undefined
+[2026-02-22T13:24:03.083Z] [INFO]:    Memory before: 1.17M
+[2026-02-22T13:24:03.083Z] [INFO]:    Memory after: 1.17M
+[2026-02-22T13:25:00.702Z] [WARN]: ⚠️ Slow Request: GET /user - 4903ms
+[2026-02-22T13:25:02.009Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T13:25:02.422Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T13:25:02.451Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T13:25:02.451Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T13:25:15.919Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1020ms
+[2026-02-22T13:25:34.385Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:14:52.202Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:14:52.305Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:14:52.305Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:14:52.698Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:14:52.727Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:14:52.727Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:14:52.742Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:14:52.750Z] [INFO]: ✅ Cleanup complete in 23ms
+[2026-02-22T14:14:52.751Z] [INFO]:    Users removed: 0
+[2026-02-22T14:14:52.751Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:14:52.751Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:14:52.751Z] [INFO]:    Memory before: 1.17M
+[2026-02-22T14:14:52.751Z] [INFO]:    Memory after: 1.17M
+[2026-02-22T14:16:07.666Z] [WARN]: ⚠️ Slow Request: GET /user - 5030ms
+[2026-02-22T14:16:09.320Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:16:10.006Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:16:10.062Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:16:10.065Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:16:21.788Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1002ms
+[2026-02-22T14:16:49.941Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:19:19.828Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:19:20.151Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:19:20.152Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:20:09.356Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:20:09.420Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:20:09.420Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:20:09.724Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:20:09.748Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:20:09.748Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:20:09.761Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:20:09.764Z] [INFO]: ✅ Cleanup complete in 16ms
+[2026-02-22T14:20:09.764Z] [INFO]:    Users removed: 0
+[2026-02-22T14:20:09.764Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:20:09.764Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:20:09.765Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T14:20:09.765Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T14:21:32.670Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:21:32.769Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:21:32.769Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:21:33.027Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:21:33.044Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:21:33.044Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:21:33.060Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:21:33.070Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-22T14:21:33.070Z] [INFO]:    Users removed: 0
+[2026-02-22T14:21:33.071Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:21:33.071Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:21:33.071Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T14:21:33.071Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T14:22:37.725Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:22:37.822Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:22:37.822Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:23:06.056Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:23:06.106Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:23:06.107Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:23:06.354Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:23:06.375Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:23:06.375Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:23:06.386Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:23:06.390Z] [INFO]: ✅ Cleanup complete in 15ms
+[2026-02-22T14:23:06.390Z] [INFO]:    Users removed: 0
+[2026-02-22T14:23:06.391Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:23:06.391Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:23:06.391Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T14:23:06.391Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T14:26:55.646Z] [WARN]: ⚠️ Slow Request: GET /user - 5325ms
+[2026-02-22T14:26:57.237Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:26:57.588Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:26:57.617Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:26:57.617Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:27:08.291Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1003ms
+[2026-02-22T14:30:30.596Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:30:32.820Z] [WARN]: ⚠️ Slow Request: GET / - 1029ms
+[2026-02-22T14:40:59.268Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:40:59.327Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:40:59.328Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:40:59.627Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:40:59.658Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:40:59.660Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:40:59.682Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:40:59.691Z] [INFO]: ✅ Cleanup complete in 30ms
+[2026-02-22T14:40:59.691Z] [INFO]:    Users removed: 0
+[2026-02-22T14:40:59.691Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:40:59.692Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:40:59.693Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T14:40:59.693Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T14:45:51.642Z] [WARN]: ⚠️ Slow Request: GET /login - 7825ms
+[2026-02-22T14:45:54.023Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:45:54.239Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:45:54.317Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:45:54.318Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:45:58.378Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (303ms)
+[2026-02-22T14:45:59.873Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1474ms
+[2026-02-22T14:46:03.334Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:46:04.629Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:46:04.797Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:46:04.814Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:46:04.814Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:46:07.283Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:46:09.377Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:46:09.564Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:46:09.584Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:46:09.585Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:46:17.634Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:46:19.010Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:46:19.440Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:46:19.456Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:46:19.456Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:46:21.296Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:46:23.257Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T14:46:23.579Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T14:46:23.604Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T14:46:23.604Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T14:46:48.828Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1006ms
+[2026-02-22T14:47:25.444Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T14:47:28.191Z] [WARN]: ⚠️ Slow Request: GET / - 1005ms
+[2026-02-22T14:54:22.176Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T14:54:22.235Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T14:54:22.235Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T14:54:22.592Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T14:54:22.609Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T14:54:22.609Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T14:54:22.620Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T14:54:22.623Z] [INFO]: ✅ Cleanup complete in 14ms
+[2026-02-22T14:54:22.623Z] [INFO]:    Users removed: 0
+[2026-02-22T14:54:22.623Z] [INFO]:    Cached users before: undefined
+[2026-02-22T14:54:22.624Z] [INFO]:    Cached users after: undefined
+[2026-02-22T14:54:22.624Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T14:54:22.624Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T14:57:33.080Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1003ms
+[2026-02-22T15:03:43.547Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T15:03:43.666Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T15:03:43.666Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T15:03:44.036Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T15:03:44.064Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T15:03:44.064Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T15:03:44.084Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T15:03:44.090Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-22T15:03:44.091Z] [INFO]:    Users removed: 0
+[2026-02-22T15:03:44.091Z] [INFO]:    Cached users before: undefined
+[2026-02-22T15:03:44.091Z] [INFO]:    Cached users after: undefined
+[2026-02-22T15:03:44.091Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T15:03:44.091Z] [INFO]:    Memory after: 1.29M
+[2026-02-22T15:03:53.633Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (441ms)
+[2026-02-22T15:03:54.131Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:03:54.257Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:03:54.257Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:03:59.719Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 6024ms
+[2026-02-22T15:06:44.524Z] [WARN]: ⚠️ Slow Request: GET /user - 1208ms
+[2026-02-22T15:06:54.292Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:06:55.497Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:06:55.712Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:06:55.744Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:06:55.745Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:06:56.865Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:06:57.456Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:06:57.656Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:06:57.666Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:06:57.666Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:06:58.910Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:06:59.494Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:06:59.681Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:06:59.693Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:06:59.693Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:09.587Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:07:10.832Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:07:11.199Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:07:11.222Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:07:11.222Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:13.061Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:07:15.103Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:07:15.470Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:07:15.486Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:07:15.487Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:16.583Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:07:20.176Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:07:20.510Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:07:20.537Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:07:20.537Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:21.442Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:07:22.742Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:07:23.060Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:07:23.084Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:07:23.084Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:25.370Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:07:26.666Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T15:07:26.972Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T15:07:26.991Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T15:07:26.991Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:07:34.443Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1004ms
+[2026-02-22T15:10:06.769Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T15:10:08.185Z] [WARN]: ⚠️ Slow Request: GET / - 1439ms
+[2026-02-22T15:10:27.552Z] [WARN]: ⚠️ Slow Request: GET /login - 2188ms
+[2026-02-22T15:18:05.531Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T15:18:05.691Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T15:18:05.692Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T15:18:06.245Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T15:18:06.280Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T15:18:06.280Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T15:18:06.303Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T15:18:06.310Z] [INFO]: ✅ Cleanup complete in 30ms
+[2026-02-22T15:18:06.310Z] [INFO]:    Users removed: 0
+[2026-02-22T15:18:06.310Z] [INFO]:    Cached users before: undefined
+[2026-02-22T15:18:06.310Z] [INFO]:    Cached users after: undefined
+[2026-02-22T15:18:06.310Z] [INFO]:    Memory before: 1.29M
+[2026-02-22T15:18:06.310Z] [INFO]:    Memory after: 1.30M
+[2026-02-22T15:19:28.603Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (383ms)
+[2026-02-22T15:19:28.897Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T15:19:29.043Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T15:19:29.043Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:19:35.049Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 6390ms
+[2026-02-22T15:19:42.411Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1561ms
+[2026-02-22T15:26:38.693Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1450ms
+[2026-02-22T15:26:38.729Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T15:26:40.296Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T15:26:40.491Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T15:26:40.522Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T15:26:40.523Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T15:42:40.961Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T15:42:42.501Z] [WARN]: ⚠️ Slow Request: GET / - 1593ms
+[2026-02-22T15:42:42.876Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1932ms
+[2026-02-22T16:30:22.299Z] [WARN]: ⚠️ Slow Request: GET /login - 12672ms
+[2026-02-22T16:30:54.719Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (396ms)
+[2026-02-22T16:30:54.848Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T16:30:54.941Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T16:30:54.943Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T16:34:31.692Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T16:34:41.964Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T16:34:42.280Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T16:34:42.329Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T16:34:42.331Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T16:43:29.560Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T16:43:30.957Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T16:43:31.096Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T16:43:31.129Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T16:43:31.130Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T16:59:05.098Z] [WARN]: ⚠️ Slow Request: GET /user/store/edit/698f578b7026740e1a472645 - 5242ms
+[2026-02-22T16:59:10.199Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T16:59:13.485Z] [WARN]: ⚠️ Slow Request: GET /login - 1421ms
+[2026-02-22T16:59:19.989Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (415ms)
+[2026-02-22T16:59:20.172Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T16:59:20.219Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T16:59:20.219Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T17:06:40.470Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T17:06:42.388Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T17:06:42.665Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T17:06:42.713Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T17:06:42.714Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T17:23:04.955Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T17:23:06.885Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:06.933Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:06.934Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:07.063Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:07.063Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:11.423Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T17:23:11.423Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T18:43:18.853Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T18:43:19.302Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T18:43:19.302Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T18:43:20.044Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T18:43:20.156Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T18:43:20.157Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T18:43:20.201Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T18:43:20.226Z] [INFO]: ✅ Cleanup complete in 69ms
+[2026-02-22T18:43:20.226Z] [INFO]:    Users removed: 0
+[2026-02-22T18:43:20.227Z] [INFO]:    Cached users before: undefined
+[2026-02-22T18:43:20.227Z] [INFO]:    Cached users after: undefined
+[2026-02-22T18:43:20.227Z] [INFO]:    Memory before: 1.04M
+[2026-02-22T18:43:20.227Z] [INFO]:    Memory after: 1.06M
+[2026-02-22T18:56:02.514Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T18:56:02.611Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T18:56:02.627Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T18:56:02.628Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T18:56:23.417Z] [WARN]: ⚠️ Slow Request: GET /user - 1453ms
+[2026-02-22T18:56:53.870Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30091ms
+[2026-02-22T19:04:17.042Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:04:17.431Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T19:04:17.491Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:04:17.517Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:04:17.517Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:04:25.001Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1003ms
+[2026-02-22T19:08:16.799Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:14:47.237Z] [WARN]: ⚠️ Slow Request: GET /user - 1291ms
+[2026-02-22T19:14:48.599Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T19:14:48.990Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:14:49.172Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:14:49.173Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:15:09.800Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:15:09.968Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T19:15:09.979Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:15:10.001Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:15:10.001Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:15:18.511Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30179ms
+[2026-02-22T19:15:36.598Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1009ms
+[2026-02-22T19:17:59.841Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:18:02.305Z] [WARN]: ⚠️ Slow Request: GET / - 1068ms
+[2026-02-22T19:18:19.105Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T19:22:25.010Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T19:22:25.098Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T19:22:25.098Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T19:22:25.353Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T19:22:25.378Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T19:22:25.378Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T19:22:25.393Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T19:22:25.397Z] [INFO]: ✅ Cleanup complete in 19ms
+[2026-02-22T19:22:25.397Z] [INFO]:    Users removed: 0
+[2026-02-22T19:22:25.397Z] [INFO]:    Cached users before: undefined
+[2026-02-22T19:22:25.397Z] [INFO]:    Cached users after: undefined
+[2026-02-22T19:22:25.397Z] [INFO]:    Memory before: 1.22M
+[2026-02-22T19:22:25.397Z] [INFO]:    Memory after: 1.22M
+[2026-02-22T19:22:41.961Z] [WARN]: ⚠️ Slow Request: GET /login - 8727ms
+[2026-02-22T19:22:44.004Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 1422ms
+[2026-02-22T19:30:52.876Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (605ms)
+[2026-02-22T19:30:53.140Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:30:53.235Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:30:53.236Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:30:55.331Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2414ms
+[2026-02-22T19:40:13.494Z] [WARN]: ⚠️ Slow Request: GET /user - 2346ms
+[2026-02-22T19:40:21.272Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:40:22.671Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T19:40:22.799Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:40:22.825Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:40:22.825Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:40:52.666Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30079ms
+[2026-02-22T19:41:10.145Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1002ms
+[2026-02-22T19:41:25.221Z] [WARN]: ⚠️ High Memory Usage:
+[2026-02-22T19:41:29.132Z] [WARN]: ⚠️ Slow Request: GET /user/store - 3030ms
+[2026-02-22T19:45:04.057Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 3006ms
+[2026-02-22T19:48:35.456Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30254ms
+[2026-02-22T19:49:05.737Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30267ms
+[2026-02-22T19:49:25.263Z] [WARN]: ⚠️ High Memory Usage:
+[2026-02-22T19:49:26.094Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 1005ms
+[2026-02-22T19:54:07.205Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:54:11.760Z] [WARN]: ⚠️ Slow Request: GET / - 2787ms
+[2026-02-22T19:58:15.486Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T19:58:24.728Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T19:58:24.933Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T19:58:24.934Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T19:58:25.373Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T19:58:25.407Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T19:58:25.407Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T19:58:25.427Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T19:58:25.433Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-22T19:58:25.433Z] [INFO]:    Users removed: 0
+[2026-02-22T19:58:25.433Z] [INFO]:    Cached users before: undefined
+[2026-02-22T19:58:25.433Z] [INFO]:    Cached users after: undefined
+[2026-02-22T19:58:25.433Z] [INFO]:    Memory before: 1.23M
+[2026-02-22T19:58:25.433Z] [INFO]:    Memory after: 1.23M
+[2026-02-22T19:58:55.624Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (477ms)
+[2026-02-22T19:58:55.848Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T19:58:55.976Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T19:58:55.976Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T19:59:05.438Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 9773ms
+[2026-02-22T19:59:27.114Z] [WARN]: ⚠️ Slow Request: GET /user - 1457ms
+[2026-02-22T19:59:34.057Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1157ms
+[2026-02-22T19:59:34.516Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T19:59:42.454Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T19:59:52.436Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T20:03:05.416Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T20:03:05.512Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T20:03:05.512Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T20:03:05.756Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T20:03:05.779Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T20:03:05.780Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T20:03:05.793Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T20:03:05.799Z] [INFO]: ✅ Cleanup complete in 19ms
+[2026-02-22T20:03:05.800Z] [INFO]:    Users removed: 0
+[2026-02-22T20:03:05.800Z] [INFO]:    Cached users before: undefined
+[2026-02-22T20:03:05.800Z] [INFO]:    Cached users after: undefined
+[2026-02-22T20:03:05.800Z] [INFO]:    Memory before: 1.23M
+[2026-02-22T20:03:05.800Z] [INFO]:    Memory after: 1.23M
+[2026-02-22T20:03:16.708Z] [WARN]: ⚠️ Slow Request: GET /user/store - 6603ms
+[2026-02-22T20:03:18.358Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:03:18.618Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:03:18.676Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:03:18.676Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:03:27.426Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 1335ms
+[2026-02-22T20:03:32.093Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:03:32.844Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:03:32.952Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:03:32.967Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:03:32.967Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:10:48.419Z] [WARN]: ⚠️ Slow Request: GET /user - 1635ms
+[2026-02-22T20:11:18.734Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30122ms
+[2026-02-22T20:11:22.146Z] [WARN]: ⚠️ Slow Request: GET /user - 1168ms
+[2026-02-22T20:12:05.584Z] [WARN]: ⚠️ High Memory Usage:
+[2026-02-22T20:12:43.584Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:12:45.380Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:12:45.674Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:12:45.740Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:12:45.741Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:13:15.407Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30204ms
+[2026-02-22T20:17:29.392Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:17:30.909Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:17:31.089Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:17:31.128Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:17:31.128Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:18:00.933Z] [WARN]: ⚠️ Slow Request: GET /api/v1/rankings/homepage - 30170ms
+[2026-02-22T20:18:05.618Z] [WARN]: ⚠️ High Memory Usage:
+[2026-02-22T20:20:36.216Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 3993ms
+[2026-02-22T20:21:06.954Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:21:09.409Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:21:09.705Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:21:09.738Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:21:09.739Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:31:43.519Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:31:44.756Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T20:31:45.029Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T20:31:45.051Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T20:31:45.052Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T20:32:27.090Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 5094ms
+[2026-02-22T20:36:59.330Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:36:59.393Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:36:59.396Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:36:59.605Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:36:59.606Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:37:03.941Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:37:03.942Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T20:49:49.947Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T20:49:53.199Z] [WARN]: ⚠️ Slow Request: GET / - 3332ms
+[2026-02-22T21:06:04.077Z] [WARN]: ⚠️ Slow Request: GET /login - 4013ms
+[2026-02-22T21:06:38.431Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T21:07:30.479Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T21:07:30.483Z] [ERROR]: Set user offline error: Socket closed unexpectedly
+[2026-02-22T21:07:30.484Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-22T21:07:30.486Z] [WARN]: ⚠️ Slow Request: POST /v1/auth/logout - 1120452ms
+[2026-02-22T21:07:33.450Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (730ms)
+[2026-02-22T21:07:33.456Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (744ms)
+[2026-02-22T21:07:33.462Z] [WARN]: ⚠️ Slow Request: POST /login - 61362ms
+[2026-02-22T21:07:33.565Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T21:07:33.597Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T21:07:33.597Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T21:07:34.560Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1076ms
+[2026-02-22T21:07:34.875Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T21:08:32.039Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T21:08:32.089Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T21:08:32.089Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T21:08:32.344Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T21:08:32.357Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T21:08:32.357Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T21:08:32.368Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T21:08:32.370Z] [INFO]: ✅ Cleanup complete in 13ms
+[2026-02-22T21:08:32.371Z] [INFO]:    Users removed: 0
+[2026-02-22T21:08:32.371Z] [INFO]:    Cached users before: undefined
+[2026-02-22T21:08:32.371Z] [INFO]:    Cached users after: undefined
+[2026-02-22T21:08:32.371Z] [INFO]:    Memory before: 1.18M
+[2026-02-22T21:08:32.371Z] [INFO]:    Memory after: 1.20M
+[2026-02-22T21:08:44.276Z] [WARN]: ⚠️ Slow Request: GET /login - 6240ms
+[2026-02-22T21:08:46.052Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T21:08:46.224Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T21:08:46.294Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T21:08:46.295Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T21:08:50.300Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (319ms)
+[2026-02-22T21:08:51.748Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1431ms
+[2026-02-22T21:09:18.665Z] [WARN]: ⚠️ Slow Request: GET /user/store/new - 1130ms
+[2026-02-22T21:09:26.366Z] [WARN]: ⚠️ Slow Request: GET /user/store/edit/699b62bbe87723631e2a39c5 - 1348ms
+[2026-02-22T21:13:20.952Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T21:13:22.133Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T21:13:22.303Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T21:13:22.330Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T21:13:22.331Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T21:22:05.109Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T21:22:06.266Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T21:22:06.440Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T21:22:06.476Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T21:22:06.477Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T21:24:34.031Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 2057ms
+[2026-02-22T21:40:33.153Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 5331ms
+[2026-02-22T21:40:38.794Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 1272ms
+[2026-02-22T21:42:15.839Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T21:42:19.175Z] [WARN]: ⚠️ Slow Request: GET / - 3361ms
+[2026-02-22T21:42:31.276Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (586ms)
+[2026-02-22T21:42:31.533Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T21:42:31.617Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T21:42:31.618Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T21:42:33.264Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1943ms
+[2026-02-22T21:43:00.629Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 2713ms
+[2026-02-22T21:43:00.946Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-22T21:43:17.056Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-22T22:00:46.630Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 1738ms
+[2026-02-22T22:00:47.096Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-22T22:03:25.396Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 4430ms
+[2026-02-22T22:04:01.919Z] [WARN]: ⚠️ Slow Request: GET / - 4028ms
+[2026-02-22T22:04:02.025Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:04:05.388Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:04:05.736Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:04:05.826Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:04:05.828Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:09:28.777Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1594ms
+[2026-02-22T22:09:39.317Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-22T22:09:39.346Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:09:58.337Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (323ms)
+[2026-02-22T22:09:58.456Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T22:09:58.526Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T22:09:58.526Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:13:38.611Z] [WARN]: ⚠️ Slow Request: GET /user - 1122ms
+[2026-02-22T22:13:46.221Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T22:13:48.030Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T22:13:48.221Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T22:13:48.253Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T22:13:48.254Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:17:07.438Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-22T22:17:07.462Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T22:17:17.120Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (342ms)
+[2026-02-22T22:17:17.225Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:17:17.330Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:17:17.331Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:22:18.436Z] [WARN]: ⚠️ Slow Request: GET /user - 1439ms
+[2026-02-22T22:22:18.489Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:22:20.053Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:22:20.311Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:22:20.428Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:22:20.429Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:25:58.723Z] [WARN]: ⚠️ Slow Request: GET /user - 2021ms
+[2026-02-22T22:25:58.807Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:26:02.150Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:26:02.409Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:26:02.480Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:26:02.482Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:27:49.203Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:27:50.643Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:27:50.894Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:27:50.949Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:27:50.949Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:28:38.365Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 1680ms
+[2026-02-22T22:28:38.719Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-22T22:28:43.753Z] [WARN]: ⚠️ Slow Request: GET /user/seller/698a00a5323f816e36f98461 - 1681ms
+[2026-02-22T22:28:44.304Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:28:46.066Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:28:46.138Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:28:46.189Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:28:46.189Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:28:48.016Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:28:48.786Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T22:28:48.864Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:28:48.901Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:28:48.901Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:29:19.197Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-22T22:29:19.216Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:29:26.523Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (395ms)
+[2026-02-22T22:29:26.689Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T22:29:26.760Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T22:29:26.760Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:34:31.459Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1596ms
+[2026-02-22T22:34:32.526Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T22:34:37.377Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T22:34:37.640Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T22:34:37.673Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T22:34:37.674Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:39:46.987Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 2244ms
+[2026-02-22T22:39:47.203Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T22:39:49.224Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T22:39:49.861Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T22:39:49.923Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T22:39:49.924Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:40:30.822Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-22T22:40:30.835Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T22:40:32.083Z] [WARN]: ⚠️ Slow Request: GET / - 1251ms
+[2026-02-22T22:40:44.694Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (342ms)
+[2026-02-22T22:40:44.779Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T22:40:44.908Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T22:40:44.908Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T22:55:50.196Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T22:56:41.805Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T22:56:41.905Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T22:56:41.905Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T22:58:11.299Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T22:58:11.410Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T22:58:11.411Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T22:58:11.757Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T22:58:11.790Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T22:58:11.790Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T22:58:11.814Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T22:58:11.822Z] [INFO]: ✅ Cleanup complete in 32ms
+[2026-02-22T22:58:11.822Z] [INFO]:    Users removed: 0
+[2026-02-22T22:58:11.822Z] [INFO]:    Cached users before: undefined
+[2026-02-22T22:58:11.823Z] [INFO]:    Cached users after: undefined
+[2026-02-22T22:58:11.823Z] [INFO]:    Memory before: 1.22M
+[2026-02-22T22:58:11.823Z] [INFO]:    Memory after: 1.22M
+[2026-02-22T23:01:12.305Z] [WARN]: ⚠️ Slow Request: GET / - 16767ms
+[2026-02-22T23:01:14.525Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/main-app.js - 1130ms
+[2026-02-22T23:01:16.351Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-22T23:01:16.830Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-22T23:01:17.175Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-22T23:01:17.176Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T23:01:59.068Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2290ms
+[2026-02-22T23:04:29.584Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1943ms
+[2026-02-22T23:04:46.744Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-22T23:04:46.767Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-22T23:04:56.290Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (426ms)
+[2026-02-22T23:04:56.482Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T23:04:56.574Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T23:04:56.575Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T23:07:59.022Z] [WARN]: ⚠️ Slow Request: GET /user - 2472ms
+[2026-02-22T23:08:22.096Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T23:08:22.194Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T23:08:22.194Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T23:08:22.681Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T23:08:22.710Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T23:08:22.711Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T23:08:22.765Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T23:08:22.779Z] [INFO]: ✅ Cleanup complete in 68ms
+[2026-02-22T23:08:22.780Z] [INFO]:    Users removed: 0
+[2026-02-22T23:08:22.780Z] [INFO]:    Cached users before: undefined
+[2026-02-22T23:08:22.780Z] [INFO]:    Cached users after: undefined
+[2026-02-22T23:08:22.780Z] [INFO]:    Memory before: 3.85M
+[2026-02-22T23:08:22.780Z] [INFO]:    Memory after: 3.85M
+[2026-02-22T23:08:30.462Z] [WARN]: ⚠️ Slow Request: GET /user - 7713ms
+[2026-02-22T23:08:33.757Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-22T23:08:34.260Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T23:08:34.370Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T23:08:34.371Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T23:15:47.231Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 2207ms
+[2026-02-22T23:18:47.547Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-22T23:18:47.604Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-22T23:20:14.133Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-22T23:20:14.306Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-22T23:20:14.307Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-22T23:20:15.610Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-22T23:20:15.683Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-22T23:20:15.684Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-22T23:20:15.902Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-22T23:20:15.962Z] [INFO]: ✅ Cleanup complete in 278ms
+[2026-02-22T23:20:15.963Z] [INFO]:    Users removed: 0
+[2026-02-22T23:20:15.963Z] [INFO]:    Cached users before: undefined
+[2026-02-22T23:20:15.964Z] [INFO]:    Cached users after: undefined
+[2026-02-22T23:20:15.964Z] [INFO]:    Memory before: 3.85M
+[2026-02-22T23:20:15.964Z] [INFO]:    Memory after: 3.86M
+[2026-02-22T23:20:16.134Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-22T23:20:16.360Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-22T23:20:16.360Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-22T23:20:38.920Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T12:00:38.187Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T12:00:38.331Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T12:00:38.331Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T12:00:38.717Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T12:00:38.753Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T12:00:38.753Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T12:00:38.766Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T12:00:38.771Z] [INFO]: ✅ Cleanup complete in 18ms
+[2026-02-27T12:00:38.771Z] [INFO]:    Users removed: 0
+[2026-02-27T12:00:38.771Z] [INFO]:    Cached users before: undefined
+[2026-02-27T12:00:38.771Z] [INFO]:    Cached users after: undefined
+[2026-02-27T12:00:38.771Z] [INFO]:    Memory before: 1.03M
+[2026-02-27T12:00:38.771Z] [INFO]:    Memory after: 1.06M
+[2026-02-27T12:01:00.839Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 6274ms
+[2026-02-27T12:01:00.860Z] [WARN]: ⚠️ Slow Request: GET /_next/static/chunks/webpack.js - 1283ms
+[2026-02-27T12:01:00.864Z] [WARN]: ⚠️ Slow Request: GET /_next/static/css/app/layout.css - 1294ms
+[2026-02-27T12:01:02.403Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T12:01:03.250Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T12:01:03.453Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T12:01:03.453Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:01:22.950Z] [WARN]: ⚠️ Slow Request: GET /user - 1805ms
+[2026-02-27T12:01:59.993Z] [WARN]: ⚠️ Slow Request: GET /user/store - 1568ms
+[2026-02-27T12:02:09.672Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T12:02:09.693Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T12:02:12.006Z] [WARN]: ⚠️ Slow Request: GET / - 2326ms
+[2026-02-27T12:02:12.010Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2288ms
+[2026-02-27T12:02:19.637Z] [WARN]: ⚠️ Slow Request: GET /login - 2751ms
+[2026-02-27T12:03:13.263Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (708ms)
+[2026-02-27T12:03:13.550Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:03:13.721Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:03:13.722Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:03:30.020Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T12:03:30.028Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:03:41.748Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (383ms)
+[2026-02-27T12:03:42.033Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T12:03:42.279Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T12:03:42.283Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:05:44.395Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T12:05:44.451Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T12:05:52.284Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (384ms)
+[2026-02-27T12:05:52.469Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:05:52.587Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:05:52.587Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:06:28.953Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T12:06:28.967Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:06:41.572Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (443ms)
+[2026-02-27T12:06:41.777Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T12:06:41.897Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T12:06:41.903Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:07:35.222Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T12:07:35.230Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T12:07:47.547Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (328ms)
+[2026-02-27T12:07:47.617Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:07:47.906Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:07:47.907Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:10:06.466Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 5331ms
+[2026-02-27T12:10:06.999Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-27T12:11:55.532Z] [WARN]: ⚠️ Slow Request: GET /user/seller/698a00a5323f816e36f98461 - 3933ms
+[2026-02-27T12:11:57.536Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:12:00.641Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:12:00.891Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:12:01.099Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:12:01.100Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:12:02.101Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:12:03.677Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:12:03.759Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:12:03.933Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:12:03.941Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:12:33.521Z] [WARN]: ⚠️ Slow Request: GET /user - 1546ms
+[2026-02-27T12:17:17.804Z] [WARN]: ⚠️ Slow Request: GET /user - 1002ms
+[2026-02-27T12:20:18.628Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-27T12:20:23.522Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:20:23.532Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 1122ms
+[2026-02-27T12:20:25.519Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:20:25.695Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:20:25.828Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:20:25.829Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:21:52.941Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T12:21:53.049Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T12:21:53.050Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T12:21:53.494Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T12:21:53.524Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T12:21:53.524Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T12:21:53.608Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T12:21:53.614Z] [INFO]: ✅ Cleanup complete in 90ms
+[2026-02-27T12:21:53.615Z] [INFO]:    Users removed: 0
+[2026-02-27T12:21:53.615Z] [INFO]:    Cached users before: undefined
+[2026-02-27T12:21:53.616Z] [INFO]:    Cached users after: undefined
+[2026-02-27T12:21:53.616Z] [INFO]:    Memory before: 2.10M
+[2026-02-27T12:21:53.616Z] [INFO]:    Memory after: 2.10M
+[2026-02-27T12:21:55.087Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:21:55.229Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:21:55.230Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:22:17.972Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 16042ms
+[2026-02-27T12:22:18.034Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:22:20.192Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T12:22:20.290Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T12:22:20.361Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T12:22:20.361Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T12:23:45.194Z] [WARN]: ⚠️ Slow Request: GET /user - 5074ms
+[2026-02-27T12:25:47.138Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T12:25:47.662Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T12:25:53.106Z] [WARN]: ⚠️ Slow Request: GET / - 5829ms
+[2026-02-27T12:27:55.775Z] [WARN]: ⚠️ Slow Request: GET /login - 2328ms
+[2026-02-27T12:28:04.073Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (1080ms)
+[2026-02-27T12:28:04.114Z] [WARN]: ⚠️ Slow Request: POST /login - 1183ms
+[2026-02-27T12:28:04.512Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T12:28:04.521Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T12:28:04.754Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T12:28:04.755Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T12:28:07.746Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 3581ms
+[2026-02-27T12:28:11.868Z] [WARN]: ⚠️ Slow Request: GET /admin - 3855ms
+[2026-02-27T12:28:13.429Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-27T12:28:13.732Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-27T12:29:38.172Z] [WARN]: ⚠️ Slow Request: GET /admin/users - 1480ms
+[2026-02-27T12:29:38.683Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-27T12:29:46.212Z] [WARN]: ⚠️ Slow Request: GET /admin/promotions - 2277ms
+[2026-02-27T12:29:49.555Z] [WARN]: ⚠️ Slow Request: GET /admin/ads - 1053ms
+[2026-02-27T12:30:06.572Z] [WARN]: ⚠️ Slow Request: GET /admin/discounts - 1224ms
+[2026-02-27T12:46:49.262Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T12:46:52.905Z] [WARN]: ⚠️ Slow Request: GET /login - 3695ms
+[2026-02-27T12:46:52.911Z] [WARN]: ⚠️ Slow Request: GET / - 3782ms
+[2026-02-27T12:59:17.549Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (782ms)
+[2026-02-27T12:59:18.087Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T12:59:18.091Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T12:59:18.289Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T12:59:18.290Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T12:59:21.054Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 3357ms
+[2026-02-27T12:59:22.093Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-27T12:59:22.366Z] [INFO]: Admin fetched users: page 1, 9 users

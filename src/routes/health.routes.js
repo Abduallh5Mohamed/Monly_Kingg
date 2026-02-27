@@ -2,10 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import redis from '../config/redis.js';
 import os from 'os';
-
 const router = express.Router();
 
-// Health check endpoint
+// Health check endpoint — protected by global limiter
 router.get('/health', async (req, res) => {
     const health = {
         status: 'ok',

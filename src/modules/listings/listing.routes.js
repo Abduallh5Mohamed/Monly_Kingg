@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
+import { listingWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
 import {
   createListing,
   getMyListings,
@@ -98,6 +99,8 @@ router.get("/public", cacheResponse(120), getAllListings);
 router.post(
   "/",
   authMiddleware,
+  listingWriteLimiter,
+  uploadLimiter,
   upload.fields([
     { name: 'accountImages', maxCount: 10 },
     { name: 'coverImage', maxCount: 1 }
@@ -109,8 +112,8 @@ router.post(
 router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
 router.get("/my-listings/:id", authMiddleware, getMyListingById);
 router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats);
-router.put("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
-router.delete("/:id", authMiddleware, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
+router.put("/:id", authMiddleware, listingWriteLimiter, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
+router.delete("/:id", authMiddleware, listingWriteLimiter, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
 
 // Generic routes at the end
 router.get("/:id/public", cacheResponse(300), getListingById);

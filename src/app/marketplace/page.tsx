@@ -42,7 +42,7 @@ const PROMO_BADGES = [
 const GAME_BADGES: Record<string, { color: string; label: string; textColor: string }> = {
     'FIFA': { color: 'bg-green-600', label: 'EA FC 25', textColor: 'text-white' },
     'PUBG': { color: 'bg-orange-600', label: 'GLOBAL', textColor: 'text-white' },
-    'Ark Rider': { color: 'bg-pink-600', label: 'ACTION', textColor: 'text-white' },
+    'Arc Raiders': { color: 'bg-pink-600', label: 'ACTION', textColor: 'text-white' },
     'Valorant': { color: 'bg-red-600', label: 'RIOT EUW', textColor: 'text-white' },
     'League of Legends': { color: 'bg-blue-600', label: 'RIOT EUW', textColor: 'text-white' },
 };
@@ -155,8 +155,8 @@ export default function MarketplacePage() {
                             <button
                                 onClick={() => setSelectedGame('all')}
                                 className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${selectedGame === 'all'
-                                        ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                                        : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                                    ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                                    : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
                                     }`}
                             >
                                 All Games
@@ -166,8 +166,8 @@ export default function MarketplacePage() {
                                     key={game._id}
                                     onClick={() => setSelectedGame(game.name)}
                                     className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${selectedGame === game.name
-                                            ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                                            : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                                        ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                                        : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
                                         }`}
                                 >
                                     {game.name}
@@ -270,8 +270,8 @@ export default function MarketplacePage() {
                                             {/* Price */}
                                             <div className="mb-4">
                                                 <div className="flex items-baseline gap-2 mb-1">
-                                                    <span className="text-3xl font-bold text-white">€{listing.price}</span>
-                                                    <span className="text-sm text-white/30 line-through">€{originalPrice}</span>
+                                                    <span className="text-3xl font-bold text-white">EGP {listing.price}</span>
+                                                    <span className="text-sm text-white/30 line-through">EGP {originalPrice}</span>
                                                 </div>
                                             </div>
 

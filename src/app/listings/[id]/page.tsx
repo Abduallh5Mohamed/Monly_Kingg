@@ -34,6 +34,11 @@ interface Listing {
   status: string;
   createdAt: string;
   details: any;
+  discount?: {
+    originalPrice: number;
+    discountedPrice: number;
+    discountPercent: number;
+  };
   game: {
     _id: string;
     name: string;
@@ -222,11 +227,10 @@ export default function ListingDetailsPage() {
                       <button
                         key={idx}
                         onClick={() => setSelectedImageIndex(idx)}
-                        className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                          idx === selectedImageIndex
+                        className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${idx === selectedImageIndex
                             ? 'border-cyan-500 ring-2 ring-cyan-500/20'
                             : 'border-white/10 hover:border-white/30'
-                        }`}
+                          }`}
                       >
                         <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
                       </button>
@@ -286,10 +290,30 @@ export default function ListingDetailsPage() {
 
                 {/* Price */}
                 <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                  <div className="flex items-baseline gap-2 mb-6">
-                    <span className="text-4xl font-bold text-white">${listing.price}</span>
-                    <span className="text-white/50 text-sm">USD</span>
-                  </div>
+                  {listing.discount ? (
+                    /* With Discount */
+                    <div className="mb-6">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-4xl font-bold text-white">${listing.discount.discountedPrice}</span>
+                        <span className="text-white/50 text-sm">USD</span>
+                        <span className="px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
+                          -{listing.discount.discountPercent}%
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg text-white/40 line-through">${listing.discount.originalPrice}</span>
+                        <span className="text-xs text-green-400 font-medium">
+                          Save ${(listing.discount.originalPrice - listing.discount.discountedPrice).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    /* No Discount */
+                    <div className="flex items-baseline gap-2 mb-6">
+                      <span className="text-4xl font-bold text-white">${listing.price}</span>
+                      <span className="text-white/50 text-sm">USD</span>
+                    </div>
+                  )}
 
                   {/* Action Buttons */}
                   {listing.status === 'available' && (

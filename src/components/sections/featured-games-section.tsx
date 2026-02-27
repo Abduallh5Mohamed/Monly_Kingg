@@ -74,10 +74,10 @@ const gameCategories: GameCategory[] = [
     ]
   },
   {
-    name: 'Ark Rider',
+    name: 'Arc Raiders',
     description: 'Action-packed accounts with rare items',
     bgImage: 'https://images.unsplash.com/photo-1552820728-8b83bb6b2b28?w=800',
-    logo: 'https://placehold.co/80x80/1a1f2e/ec4899?text=ARK',
+    logo: 'https://placehold.co/80x80/1a1f2e/ec4899?text=ARC',
     color: '#ec4899',
     accounts: [
       { id: 'a1', title: 'Legendary Rider', rank: 'S-Rank', price: 280, image: 'https://placehold.co/400x300/1a1f2e/ec4899?text=Legendary', rating: 4.9, seller: 'ArkMaster', features: ['Rare Mount', 'Epic Gear', 'Max Level'] },
@@ -136,8 +136,8 @@ export function FeaturedGamesSection() {
                 key={game.name}
                 onClick={() => handleGameSelect(game)}
                 className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 text-left flex-shrink-0 w-[200px] sm:w-auto snap-start ${isSelected
-                    ? 'border-primary shadow-[0_0_30px_rgba(34,211,238,0.3)] scale-[1.02]'
-                    : 'border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-primary/10'
+                  ? 'border-primary shadow-[0_0_30px_rgba(34,211,238,0.3)] scale-[1.02]'
+                  : 'border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-primary/10'
                   }`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">

@@ -868,7 +868,7 @@ export default function PaymentsPage() {
                       <option value="" className="bg-[#1a1d2e] text-gray-400">-- Not Specified --</option>
                       <option value="FIFA" className="bg-[#1a1d2e] text-[#f5f5dc]">⚽ FIFA</option>
                       <option value="PUBG" className="bg-[#1a1d2e] text-[#f5f5dc]">🎮 PUBG</option>
-                      <option value="Ark Rider" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ Ark Rider</option>
+                      <option value="Arc Raiders" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ Arc Raiders</option>
                       <option value="Valorant" className="bg-[#1a1d2e] text-[#f5f5dc]">🎯 Valorant</option>
                       <option value="League of Legends" className="bg-[#1a1d2e] text-[#f5f5dc]">🏆 League of Legends</option>
                     </select>

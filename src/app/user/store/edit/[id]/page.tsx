@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
     ArrowLeft,
     Loader2,
@@ -67,9 +68,23 @@ export default function EditListingPage() {
 
     const fetchGames = async () => {
         try {
+            const cachedGames = sessionStorage.getItem('games_list');
+            const cacheTime = sessionStorage.getItem('games_list_time');
+            const now = Date.now();
+            const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+            if (cachedGames && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+                setGames(JSON.parse(cachedGames));
+                return;
+            }
+
             const res = await fetch('/api/v1/games', { credentials: 'include' });
             const data = await res.json();
-            if (data.data) setGames(data.data);
+            if (data.data) {
+                setGames(data.data);
+                sessionStorage.setItem('games_list', JSON.stringify(data.data));
+                sessionStorage.setItem('games_list_time', now.toString());
+            }
         } catch (err) {
             console.error(err);
         }
@@ -132,10 +147,21 @@ export default function EditListingPage() {
             if (formData.rank) details.rank = formData.rank;
             if (formData.skinsCount) details.skinsCount = formData.skinsCount;
 
+            // Get CSRF token
+            const csrfToken = await ensureCsrfToken();
+            if (!csrfToken) {
+                setError('Failed to get security token. Please refresh and try again.');
+                setSaving(false);
+                return;
+            }
+
             const res = await fetch(`/api/v1/listings/${listingId}`, {
                 method: 'PUT',
                 credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                },
                 body: JSON.stringify({
                     title: formData.title,
                     game: formData.gameId,
@@ -149,6 +175,9 @@ export default function EditListingPage() {
             const result = await res.json();
 
             if (res.ok) {
+                // Clear dashboard cache
+                sessionStorage.removeItem('dashboard_data');
+                sessionStorage.removeItem('dashboard_timestamp');
                 setSuccess(true);
                 setTimeout(() => {
                     router.push('/user/store');
@@ -258,7 +287,7 @@ export default function EditListingPage() {
                                 {/* Price */}
                                 <div>
                                     <label className="block text-sm font-semibold text-white/80 mb-2">
-                                        Price (€) <span className="text-red-400">*</span>
+                                        Price (EGP) <span className="text-red-400">*</span>
                                     </label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
