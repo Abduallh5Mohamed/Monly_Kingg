@@ -64,6 +64,7 @@ export default function CompleteProfilePage() {
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [avatarPreview, setAvatarPreview] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [csrfTokenState, setCsrfTokenState] = useState<string | null>(null);
 
     // Auth guard: redirect if no user or profile already completed
     useEffect(() => {
@@ -82,6 +83,18 @@ export default function CompleteProfilePage() {
         }
 
         console.log('✅ User authenticated and needs to complete profile');
+
+        // Fetch fresh CSRF token and store in state + cookie
+        fetch('/api/v1/auth/csrf-token', { credentials: 'include' })
+            .then(r => r.json())
+            .then(data => {
+                if (data?.csrfToken) {
+                    setCsrfTokenState(data.csrfToken);
+                    // Set the cookie manually so the backend can read it
+                    document.cookie = `XSRF-TOKEN=${data.csrfToken}; path=/; max-age=900; SameSite=Lax`;
+                }
+            })
+            .catch(() => null);
     }, [user, authLoading, router]);
 
     const handleInputChange = (
@@ -181,8 +194,24 @@ export default function CompleteProfilePage() {
         setIsSubmitting(true);
 
         try {
-            // Get CSRF token first
-            const csrfToken = getCsrfToken();
+            // Get CSRF token from state, cookie, or fetch fresh
+            let csrfToken = csrfTokenState || getCsrfToken();
+
+            if (!csrfToken) {
+                try {
+                    const csrfRes = await fetch('/api/v1/auth/csrf-token', {
+                        credentials: 'include',
+                    });
+                    const csrfData = await csrfRes.json();
+                    csrfToken = csrfData.csrfToken;
+                    if (csrfToken) {
+                        setCsrfTokenState(csrfToken);
+                        document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; max-age=900; SameSite=Lax`;
+                    }
+                } catch {
+                    // ignore
+                }
+            }
 
             if (!csrfToken) {
                 toast({
@@ -193,6 +222,9 @@ export default function CompleteProfilePage() {
                 router.replace('/login');
                 return;
             }
+
+            // Ensure cookie is set for the backend to validate
+            document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; max-age=900; SameSite=Lax`;
 
             // Create FormData for file upload
             const data = new FormData();
@@ -209,7 +241,7 @@ export default function CompleteProfilePage() {
                 formFields: Object.keys(formData)
             });
 
-            const response = await fetch('http://localhost:5000/api/v1/users/complete-profile', {
+            const response = await fetch('/api/v1/users/complete-profile', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

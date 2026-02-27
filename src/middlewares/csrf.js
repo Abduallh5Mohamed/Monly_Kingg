@@ -10,7 +10,8 @@ export default function csrfProtection(req, res, next) {
     '/v1/auth/resend-code',
     '/v1/auth/forgot-password',
     '/v1/auth/reset-password',
-    '/v1/auth/csrf-token'
+    '/v1/auth/csrf-token',
+    '/v1/users/complete-profile'
   ];
 
   if (publicPaths.includes(req.path)) {
