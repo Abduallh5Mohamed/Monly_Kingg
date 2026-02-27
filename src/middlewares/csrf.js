@@ -10,10 +10,22 @@ export default function csrfProtection(req, res, next) {
     '/v1/auth/resend-code',
     '/v1/auth/forgot-password',
     '/v1/auth/reset-password',
-    '/v1/auth/csrf-token'
+    '/v1/auth/csrf-token',
+    '/v1/auth/google',
+    '/v1/auth/google/callback'
   ];
 
+  // Exact path match
   if (publicPaths.includes(req.path)) {
+    return next();
+  }
+
+  // Pattern-based public routes (e.g., ad click tracking)
+  const publicPatterns = [
+    /^\/v1\/ads\/[a-f0-9]+\/click$/  // POST /v1/ads/:id/click
+  ];
+
+  if (publicPatterns.some(pattern => pattern.test(req.path))) {
     return next();
   }
 

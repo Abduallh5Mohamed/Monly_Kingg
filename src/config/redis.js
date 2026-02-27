@@ -33,7 +33,12 @@ class RedisService {
       const redisConfig = {
         socket: {
           host: redisHost,
-          port: parseInt(redisPort)
+          port: parseInt(redisPort),
+          connectTimeout: 5000,
+          reconnectStrategy: (retries) => {
+            if (retries > 3) return new Error('Redis max retries reached');
+            return Math.min(retries * 500, 3000);
+          }
         },
         database: redisDb
       };
@@ -58,8 +63,12 @@ class RedisService {
         this.isConnected = false;
       });
 
-      // Connect
-      await this.client.connect();
+      // Connect with timeout
+      const connectPromise = this.client.connect();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Redis connection timed out after 5 seconds')), 5000)
+      );
+      await Promise.race([connectPromise, timeoutPromise]);
 
       // Test with ping
       await this.client.ping();
@@ -75,7 +84,7 @@ class RedisService {
       this.isConnected = false;
       if (this.client) {
         try {
-          await this.client.quit();
+          this.client.disconnect();
         } catch (e) {
           // Ignore
         }

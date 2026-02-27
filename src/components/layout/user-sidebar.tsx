@@ -4,13 +4,14 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Home, Store, MessageCircle, CreditCard, User } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { useEffect, useState } from 'react';
+import { useSocket } from '@/lib/socket-context';
+import { useEffect, useRef, useState } from 'react';
 
 interface NavItem {
     icon: React.ComponentType<{ className?: string }>;
     label: string;
     path: string;
-    badge?: number;
+    dot?: boolean;        // show red dot (no number)
     activeColor: string;
     glowColor: string;
 }
@@ -18,14 +19,57 @@ interface NavItem {
 export function UserSidebar() {
     const pathname = usePathname();
     const { user } = useAuth();
+    const { on } = useSocket();
     const [mounted, setMounted] = useState(false);
+    const [chatUnread, setChatUnread] = useState(false);
+
+    // Keep a ref so the socket callback always sees the latest pathname
+    const pathnameRef = useRef(pathname);
+    useEffect(() => { pathnameRef.current = pathname; }, [pathname]);
+
+    const isOnChatPage = !!(pathname?.startsWith('/user/chat'));
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
+    // ── Fetch initial unread count ─────────────────────────────────────────
+    useEffect(() => {
+        if (!user) return;
+        (async () => {
+            try {
+                const res = await fetch('/api/v1/chats', { credentials: 'include' });
+                if (!res.ok) return;
+                const data = await res.json();
+                const total: number = (data.data?.chats ?? []).reduce(
+                    (sum: number, c: any) => sum + (c.unreadCount || 0), 0
+                );
+                setChatUnread(total > 0);
+            } catch { /* silent */ }
+        })();
+    }, [user]);
+
+    // ── Clear dot immediately when user enters any chat page ──────────────
+    useEffect(() => {
+        if (isOnChatPage) setChatUnread(false);
+    }, [isOnChatPage]);
+
+    // ── Listen for new socket messages ────────────────────────────────────
+    useEffect(() => {
+        return on('new_message', () => {
+            // Only light up if user is NOT on the chat page
+            if (!pathnameRef.current?.startsWith('/user/chat')) {
+                setChatUnread(true);
+            }
+        });
+    }, [on]);
+
     const leftItems: NavItem[] = [
-        { icon: MessageCircle, label: 'Chat', path: '/user/chat', badge: 2, activeColor: 'from-pink-500 to-rose-500', glowColor: 'rgba(236,72,153,0.35)' },
+        {
+            icon: MessageCircle, label: 'Chat', path: '/user/chat',
+            dot: chatUnread && !isOnChatPage,
+            activeColor: 'from-pink-500 to-rose-500', glowColor: 'rgba(236,72,153,0.35)'
+        },
         { icon: Store, label: 'Store', path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
     ];
 
@@ -60,22 +104,18 @@ export function UserSidebar() {
                 )}
 
                 <div className="relative">
-                    <Icon className={`w-[20px] h-[20px] transition-all duration-300 ${
-                        isActive
+                    <Icon className={`w-[20px] h-[20px] transition-all duration-300 ${isActive
                             ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'
                             : 'text-white/30 group-hover:text-white/55'
-                    }`} />
-                    
-                    {item.badge && item.badge > 0 && (
-                        <div className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center px-1 shadow-[0_2px_8px_rgba(239,68,68,0.5)]">
-                            <span className="text-[8px] font-black text-white leading-none">{item.badge}</span>
-                        </div>
+                        }`} />
+
+                    {item.dot && (
+                        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full shadow-[0_0_6px_rgba(239,68,68,0.7)] ring-2 ring-[#0f1322]" />
                     )}
                 </div>
 
-                <span className={`text-[9px] font-medium transition-all duration-300 ${
-                    isActive ? 'text-white/80' : 'text-white/25 group-hover:text-white/40'
-                }`}>
+                <span className={`text-[9px] font-medium transition-all duration-300 ${isActive ? 'text-white/80' : 'text-white/25 group-hover:text-white/40'
+                    }`}>
                     {item.label}
                 </span>
             </Link>
@@ -105,11 +145,10 @@ export function UserSidebar() {
                         />
 
                         {/* Soft glow behind */}
-                        <div className={`absolute w-16 h-16 rounded-full transition-all duration-500 ${
-                            isHomeActive 
+                        <div className={`absolute w-16 h-16 rounded-full transition-all duration-500 ${isHomeActive
                                 ? 'bg-blue-500/40 blur-2xl scale-150'
                                 : 'bg-blue-500/20 blur-xl scale-125 group-hover:bg-blue-500/35 group-hover:scale-150'
-                        }`} />
+                            }`} />
 
                         {/* Main circle button */}
                         <div className={`
@@ -117,21 +156,20 @@ export function UserSidebar() {
                             transition-all duration-300
                             group-hover:scale-110 group-hover:-translate-y-1
                             active:scale-95
-                            ${isHomeActive 
+                            ${isHomeActive
                                 ? 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 shadow-[0_6px_30px_rgba(59,130,246,0.6)]'
                                 : 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[0_4px_20px_rgba(59,130,246,0.35)]'
                             }
                         `}>
                             {/* Glass sheen */}
                             <div className="absolute inset-[2px] rounded-full bg-gradient-to-b from-white/25 via-transparent to-transparent pointer-events-none" />
-                            
+
                             <Home className={`w-6 h-6 text-white relative z-10 transition-all duration-300 ${isHomeActive ? 'scale-110' : 'group-hover:scale-105'}`} />
                         </div>
 
                         {/* Home label below button */}
-                        <span className={`mt-1 text-[9px] font-bold transition-all duration-300 ${
-                            isHomeActive ? 'text-cyan-400' : 'text-white/20 group-hover:text-white/40'
-                        }`}>
+                        <span className={`mt-1 text-[9px] font-bold transition-all duration-300 ${isHomeActive ? 'text-cyan-400' : 'text-white/20 group-hover:text-white/40'
+                            }`}>
                             Home
                         </span>
                     </Link>
@@ -139,7 +177,7 @@ export function UserSidebar() {
 
                 {/* ── Main Bar ── */}
                 <div className="relative bg-[#0f1322]/95 backdrop-blur-2xl rounded-full shadow-[0_4px_30px_rgba(0,0,0,0.5)] border border-white/[0.06]">
-                    
+
                     {/* Nav Items */}
                     <div className="relative flex items-center justify-between px-2 py-1.5">
                         {/* Left Items */}

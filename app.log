@@ -11791,3 +11791,706 @@
 [2026-02-27T12:57:53.980Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
 [2026-02-27T12:57:55.625Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
 >>>>>>> dc8d28c91ddc3d5801ca9057890d925248ba0724
+[2026-02-27T13:05:31.130Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:05:31.146Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T13:05:42.111Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T13:05:42.192Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T13:05:42.192Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T13:05:42.598Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T13:05:42.610Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T13:05:42.610Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T13:05:42.621Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T13:05:42.625Z] [INFO]: ✅ Cleanup complete in 15ms
+[2026-02-27T13:05:42.625Z] [INFO]:    Users removed: 0
+[2026-02-27T13:05:42.625Z] [INFO]:    Cached users before: undefined
+[2026-02-27T13:05:42.625Z] [INFO]:    Cached users after: undefined
+[2026-02-27T13:05:42.626Z] [INFO]:    Memory before: 1.23M
+[2026-02-27T13:05:42.626Z] [INFO]:    Memory after: 1.23M
+[2026-02-27T13:05:45.010Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T13:05:45.011Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T13:05:45.047Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:05:45.047Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T13:06:09.104Z] [WARN]: ⚠️ Slow Request: GET /admin/discounts - 16902ms
+[2026-02-27T13:06:10.620Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:06:19.023Z] [WARN]: ⚠️ Slow Request: GET /favicon.svg - 1184ms
+[2026-02-27T13:06:19.864Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T13:06:20.045Z] [WARN]: ⚠️ Slow Request: POST /refresh - 1789ms
+[2026-02-27T13:06:21.367Z] [WARN]: ⚠️ Slow Request: GET /stats - 1052ms
+[2026-02-27T13:06:21.475Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T13:06:21.478Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T13:06:21.624Z] [WARN]: ⚠️ Slow Request: GET / - 1312ms
+[2026-02-27T13:06:21.645Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:06:21.648Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T13:06:25.891Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T13:06:25.926Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:06:48.625Z] [WARN]: ⚠️ Slow Request: GET /login - 22704ms
+[2026-02-27T13:06:48.636Z] [WARN]: ⚠️ Slow Request: GET / - 22730ms
+[2026-02-27T13:11:02.452Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T13:11:10.458Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T13:11:10.697Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T13:11:10.698Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T13:11:11.179Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T13:11:11.210Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T13:11:11.210Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T13:11:11.242Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T13:11:11.258Z] [INFO]: ✅ Cleanup complete in 48ms
+[2026-02-27T13:11:11.259Z] [INFO]:    Users removed: 0
+[2026-02-27T13:11:11.259Z] [INFO]:    Cached users before: undefined
+[2026-02-27T13:11:11.260Z] [INFO]:    Cached users after: undefined
+[2026-02-27T13:11:11.260Z] [INFO]:    Memory before: 1.23M
+[2026-02-27T13:11:11.260Z] [INFO]:    Memory after: 1.23M
+[2026-02-27T13:11:31.007Z] [WARN]: ⚠️ Slow Request: GET /login - 6122ms
+[2026-02-27T13:14:32.610Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T13:14:32.778Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T13:14:32.778Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T13:14:33.767Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T13:14:33.802Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T13:14:33.802Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T13:14:33.828Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T13:14:33.852Z] [INFO]: ✅ Cleanup complete in 49ms
+[2026-02-27T13:14:33.852Z] [INFO]:    Users removed: 0
+[2026-02-27T13:14:33.852Z] [INFO]:    Cached users before: undefined
+[2026-02-27T13:14:33.852Z] [INFO]:    Cached users after: undefined
+[2026-02-27T13:14:33.853Z] [INFO]:    Memory before: 1.23M
+[2026-02-27T13:14:33.853Z] [INFO]:    Memory after: 1.23M
+[2026-02-27T13:20:54.182Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T13:20:55.467Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T13:20:55.480Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T13:20:57.661Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T13:20:57.720Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T13:20:57.720Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T13:20:57.764Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T13:20:57.778Z] [INFO]: ✅ Cleanup complete in 58ms
+[2026-02-27T13:20:57.778Z] [INFO]:    Users removed: 0
+[2026-02-27T13:20:57.778Z] [INFO]:    Cached users before: undefined
+[2026-02-27T13:20:57.779Z] [INFO]:    Cached users after: undefined
+[2026-02-27T13:20:57.779Z] [INFO]:    Memory before: 1.23M
+[2026-02-27T13:20:57.779Z] [INFO]:    Memory after: 1.23M
+[2026-02-27T13:26:10.851Z] [WARN]: ⚠️ Slow Request: GET /google/callback - 1024ms
+[2026-02-27T13:26:13.274Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 2410ms
+[2026-02-27T13:26:14.582Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T13:26:14.777Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T13:26:14.778Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T13:26:14.842Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:26:14.843Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T13:26:17.088Z] [WARN]: ⚠️ Slow Request: GET /admin - 2416ms
+[2026-02-27T13:26:17.368Z] [INFO]: Admin fetched stats: 9 total users
+[2026-02-27T13:26:17.617Z] [INFO]: Admin fetched users: page 1, 9 users
+[2026-02-27T13:26:20.891Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T13:26:20.908Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T13:26:22.042Z] [WARN]: ⚠️ Slow Request: GET /login - 1137ms
+[2026-02-27T13:26:22.049Z] [WARN]: ⚠️ Slow Request: GET / - 1150ms
+[2026-02-27T13:26:28.389Z] [WARN]: ⚠️ Slow Request: GET /register - 2395ms
+[2026-02-27T13:26:43.580Z] [INFO]: Refresh token rotated for user: mennamahmoud72005@gmail.com
+[2026-02-27T13:26:43.718Z] [INFO]: 🔌 User connected: 69a19b91c314a72de7492c9b (mennamahmoud72005@gmail.com)
+[2026-02-27T13:26:43.727Z] [INFO]: 📬 Sending 0 chats to user 69a19b91c314a72de7492c9b
+[2026-02-27T13:27:37.556Z] [INFO]: Refresh token rotated for user: mennamahmoud72005@gmail.com
+[2026-02-27T13:27:39.250Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1662ms
+[2026-02-27T13:27:50.097Z] [WARN]: ⚠️ Slow Request: GET /user - 8102ms
+[2026-02-27T13:27:50.452Z] [INFO]: 🔌 User disconnected: 69a19b91c314a72de7492c9b
+[2026-02-27T13:30:16.472Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 18606ms
+[2026-02-27T13:30:18.764Z] [WARN]: ⚠️ Slow Request: GET /user - 1063ms
+[2026-02-27T13:30:27.522Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 1738ms
+[2026-02-27T13:32:46.795Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 5246ms
+[2026-02-27T13:33:32.444Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 3963ms
+[2026-02-27T13:37:28.709Z] [WARN]: ⚠️ Slow Request: GET /_next/static/webpack/5410979480a23b22.webpack.hot-update.json - 4488ms
+[2026-02-27T13:37:32.053Z] [WARN]: ⚠️ Slow Request: GET /user - 2962ms
+[2026-02-27T13:37:36.763Z] [INFO]: Refresh token rotated for user: mennamahmoud72005@gmail.com
+[2026-02-27T13:37:37.978Z] [WARN]: ⚠️ Slow Request: GET /browse - 1134ms
+[2026-02-27T13:37:38.336Z] [INFO]: 🔌 User connected: 69a19b91c314a72de7492c9b (mennamahmoud72005@gmail.com)
+[2026-02-27T13:37:38.360Z] [INFO]: 📬 Sending 0 chats to user 69a19b91c314a72de7492c9b
+[2026-02-27T13:37:59.795Z] [WARN]: ⚠️ Slow Request: GET /user/payments - 4416ms
+[2026-02-27T13:38:20.581Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1671ms
+[2026-02-27T13:40:22.218Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 4646ms
+[2026-02-27T13:40:22.595Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-27T13:40:39.871Z] [INFO]: 🔌 User disconnected: 69a19b91c314a72de7492c9b
+[2026-02-27T13:40:42.007Z] [INFO]: Refresh token rotated for user: mennamahmoud72005@gmail.com
+[2026-02-27T13:40:42.321Z] [INFO]: 🔌 User connected: 69a19b91c314a72de7492c9b (mennamahmoud72005@gmail.com)
+[2026-02-27T13:40:42.334Z] [INFO]: 📬 Sending 0 chats to user 69a19b91c314a72de7492c9b
+[2026-02-27T13:57:49.301Z] [INFO]: 🔌 User disconnected: 69a19b91c314a72de7492c9b
+[2026-02-27T13:57:51.998Z] [WARN]: ⚠️ Slow Request: GET / - 2799ms
+[2026-02-27T14:12:08.798Z] [WARN]: ⚠️ Slow Request: GET /login - 3135ms
+[2026-02-27T14:12:15.595Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (546ms)
+[2026-02-27T14:12:15.791Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T14:12:15.792Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T14:12:15.942Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:12:15.944Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T14:12:17.011Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 1373ms
+[2026-02-27T14:12:18.438Z] [WARN]: ⚠️ Slow Request: GET /admin - 1163ms
+[2026-02-27T14:12:18.713Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T14:12:19.005Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T14:12:29.226Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers - 2208ms
+[2026-02-27T14:12:50.155Z] [WARN]: ⚠️ Slow Request: GET /admin/sellers/698df62c45e40bd6e1b6f049 - 1752ms
+[2026-02-27T14:13:39.872Z] [WARN]: ⚠️ Slow Request: GET /admin/discounts - 2186ms
+[2026-02-27T14:14:01.283Z] [WARN]: ⚠️ Slow Request: GET /admin/orders - 1721ms
+[2026-02-27T14:14:56.971Z] [WARN]: ⚠️ Slow Request: GET / - 1600ms
+[2026-02-27T14:14:57.303Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:15:00.034Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T14:15:00.615Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T14:15:00.624Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T14:15:00.728Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:15:00.729Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T14:15:24.867Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:15:28.746Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T14:15:28.900Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T14:15:28.901Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T14:15:28.973Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:15:28.974Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T14:17:01.448Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T14:17:01.505Z] [WARN]: ⚠️ Slow Request: POST /logout - 1822ms
+[2026-02-27T14:17:01.641Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:17:05.982Z] [WARN]: ⚠️ Slow Request: GET /login - 3504ms
+[2026-02-27T14:17:13.594Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (786ms)
+[2026-02-27T14:17:14.809Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:17:16.245Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:17:16.246Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:17:16.356Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2676ms
+[2026-02-27T14:17:22.022Z] [WARN]: ⚠️ Slow Request: GET /user - 2983ms
+[2026-02-27T14:17:35.019Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T14:19:06.876Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T14:19:07.009Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T14:19:07.009Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T14:19:07.331Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T14:19:07.363Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T14:19:07.364Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T14:19:07.384Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T14:19:07.391Z] [INFO]: ✅ Cleanup complete in 27ms
+[2026-02-27T14:19:07.392Z] [INFO]:    Users removed: 0
+[2026-02-27T14:19:07.392Z] [INFO]:    Cached users before: undefined
+[2026-02-27T14:19:07.392Z] [INFO]:    Cached users after: undefined
+[2026-02-27T14:19:07.392Z] [INFO]:    Memory before: 3.86M
+[2026-02-27T14:19:07.392Z] [INFO]:    Memory after: 3.86M
+[2026-02-27T14:19:19.168Z] [WARN]: ⚠️ Slow Request: GET / - 6627ms
+[2026-02-27T14:19:22.824Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T14:19:23.167Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:19:23.365Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:19:23.365Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:19:26.364Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 2306ms
+[2026-02-27T14:19:29.742Z] [WARN]: ⚠️ Slow Request: GET /user - 1047ms
+[2026-02-27T14:20:00.880Z] [WARN]: ⚠️ Slow Request: GET /listings/699b62bbe87723631e2a39c5 - 1983ms
+[2026-02-27T14:20:01.322Z] [ERROR]: Redis SET error for key view:699b62bbe87723631e2a39c5:::1: ERR value is not an integer or out of range
+[2026-02-27T14:20:24.829Z] [WARN]: ⚠️ Slow Request: GET /user/profile - 1005ms
+[2026-02-27T14:21:00.995Z] [WARN]: ⚠️ Slow Request: GET /register - 1287ms
+[2026-02-27T14:21:55.592Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T14:21:55.616Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T14:21:58.311Z] [WARN]: ⚠️ Slow Request: GET /login - 1531ms
+[2026-02-27T14:22:04.145Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (392ms)
+[2026-02-27T14:22:04.276Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T14:22:04.454Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T14:22:04.455Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:23:28.779Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 3793ms
+[2026-02-27T14:23:29.239Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T14:23:34.902Z] [INFO]: User abduallhshadow@gmail.com fetched 14 messages from chat 68def23b0cc030df58db6b02
+[2026-02-27T14:40:11.550Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T14:53:45.176Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (676ms)
+[2026-02-27T14:53:45.846Z] [INFO]: 🔌 User connected: 68d8ff2507dbca5b8253d47c (baraawael7901@gmail.com)
+[2026-02-27T14:53:45.849Z] [INFO]: 👑 Admin 68d8ff2507dbca5b8253d47c joined admin room
+[2026-02-27T14:53:46.174Z] [INFO]: 📬 Sending 3 chats to user 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:53:46.175Z] [INFO]: 👥 First chat participants: baraa7 (68d8ff2507dbca5b8253d47c)
+[2026-02-27T14:53:50.543Z] [WARN]: ⚠️ Slow Request: GET /admin/dashboard - 5314ms
+[2026-02-27T14:53:53.789Z] [WARN]: ⚠️ Slow Request: GET /admin - 3036ms
+[2026-02-27T14:53:53.993Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T14:53:54.415Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T14:53:55.234Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T14:53:55.255Z] [INFO]: 🔌 User disconnected: 68d8ff2507dbca5b8253d47c
+[2026-02-27T14:53:59.218Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (456ms)
+[2026-02-27T14:53:59.548Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:53:59.801Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:53:59.802Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:54:06.263Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:54:06.387Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:54:06.387Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:54:13.626Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T14:55:04.298Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T14:55:04.964Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T14:56:11.456Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T14:56:20.464Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T14:56:20.595Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T14:56:20.595Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T14:56:20.886Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T14:56:20.915Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T14:56:20.915Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T14:56:20.932Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T14:56:20.936Z] [INFO]: ✅ Cleanup complete in 21ms
+[2026-02-27T14:56:20.936Z] [INFO]:    Users removed: 0
+[2026-02-27T14:56:20.937Z] [INFO]:    Cached users before: undefined
+[2026-02-27T14:56:20.937Z] [INFO]:    Cached users after: undefined
+[2026-02-27T14:56:20.937Z] [INFO]:    Memory before: 3.86M
+[2026-02-27T14:56:20.937Z] [INFO]:    Memory after: 3.86M
+[2026-02-27T14:56:22.094Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (373ms)
+[2026-02-27T14:56:22.448Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T14:56:22.565Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T14:56:22.774Z] [WARN]: ⚠️ Slow Request: GET /me - 1119ms
+[2026-02-27T14:56:22.794Z] [WARN]: ⚠️ Slow Request: GET / - 1139ms
+[2026-02-27T14:56:22.809Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T14:56:22.810Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:56:26.146Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 3926ms
+[2026-02-27T14:56:40.963Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 1112ms
+[2026-02-27T14:56:41.119Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T14:56:41.178Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T14:56:41.220Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T14:56:41.220Z] [INFO]: 👥 First chat participants: abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:56:45.415Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T14:56:45.545Z] [ERROR]: Get chat messages error: chat.deletedMessagesFor?.get is not a function
+[2026-02-27T14:56:51.276Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 68d9b957e9a319acf7221479
+[2026-02-27T14:57:25.862Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T14:57:25.872Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T14:57:26.084Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T14:57:28.998Z] [WARN]: ⚠️ Slow Request: GET /login - 1516ms
+[2026-02-27T14:57:37.524Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (411ms)
+[2026-02-27T14:57:37.726Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:57:37.862Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:57:37.863Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:57:39.560Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T14:57:39.670Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T14:57:39.694Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T14:57:39.695Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T14:57:45.431Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T14:57:45.525Z] [ERROR]: Get chat messages error: chat.deletedMessagesFor?.get is not a function
+[2026-02-27T15:01:41.845Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 2082ms
+[2026-02-27T15:01:42.670Z] [WARN]: ⚠️ Slow Request: GET /profile - 2954ms
+[2026-02-27T15:02:10.868Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 1003ms
+[2026-02-27T15:03:42.114Z] [WARN]: ⚠️ Slow Request: GET /unread-count - 1980ms
+[2026-02-27T15:03:42.253Z] [WARN]: ⚠️ Slow Request: GET /profile - 2103ms
+[2026-02-27T15:10:10.117Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 698a00a5323f816e36f98461
+[2026-02-27T15:10:11.645Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 698a00a5323f816e36f98461
+[2026-02-27T15:19:29.911Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:19:29.920Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:19:29.926Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 5406ms
+[2026-02-27T15:19:32.105Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:19:32.277Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:19:32.360Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:19:32.361Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:19:36.219Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T15:19:36.233Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:19:48.519Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:19:48.805Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:19:48.884Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:19:48.885Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:20:19.548Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:20:19.773Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:20:19.774Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:20:19.798Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:20:21.086Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:20:21.252Z] [ERROR]: Get chat messages error: chat.deletedMessagesFor?.get is not a function
+[2026-02-27T15:20:24.386Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 698a00a5323f816e36f98461
+[2026-02-27T15:20:30.308Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T15:20:30.326Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:20:30.744Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:20:41.860Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (361ms)
+[2026-02-27T15:20:42.017Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:20:42.092Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:20:42.093Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:20:45.645Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:20:45.763Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:20:45.888Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:20:45.894Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:20:47.597Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:20:47.784Z] [ERROR]: Get chat messages error: chat.deletedMessagesFor?.get is not a function
+[2026-02-27T15:27:21.007Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T15:27:21.099Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T15:27:21.099Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T15:27:21.361Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T15:27:21.382Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T15:27:21.382Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T15:27:21.396Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T15:27:21.399Z] [INFO]: ✅ Cleanup complete in 17ms
+[2026-02-27T15:27:21.399Z] [INFO]:    Users removed: 0
+[2026-02-27T15:27:21.399Z] [INFO]:    Cached users before: undefined
+[2026-02-27T15:27:21.399Z] [INFO]:    Cached users after: undefined
+[2026-02-27T15:27:21.400Z] [INFO]:    Memory before: 3.91M
+[2026-02-27T15:27:21.400Z] [INFO]:    Memory after: 3.91M
+[2026-02-27T15:27:21.488Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:27:21.509Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:27:21.522Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:27:21.573Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:27:21.573Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:27:25.679Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:27:25.729Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:27:25.729Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:28:57.058Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:28:57.062Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:28:57.068Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 13131ms
+[2026-02-27T15:28:59.204Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:28:59.232Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T15:28:59.307Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:28:59.371Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:28:59.379Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:28:59.379Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:28:59.490Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:28:59.491Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:29:15.822Z] [WARN]: ⚠️ Slow Request: GET /user - 1844ms
+[2026-02-27T15:29:15.999Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:29:21.764Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:29:21.839Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:29:21.878Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:29:21.880Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:29:23.132Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:29:23.232Z] [INFO]: User abduallhshadow@gmail.com fetched 4 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:29:30.723Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 68d9b957e9a319acf7221479
+[2026-02-27T15:29:39.041Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 68d9b957e9a319acf7221479
+[2026-02-27T15:29:42.877Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T15:29:42.893Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:29:44.343Z] [WARN]: ⚠️ Slow Request: GET / - 1452ms
+[2026-02-27T15:29:44.624Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:29:47.147Z] [WARN]: ⚠️ Slow Request: GET /login - 1099ms
+[2026-02-27T15:29:56.721Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (384ms)
+[2026-02-27T15:29:56.968Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:29:57.476Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:29:57.477Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:30:00.391Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:30:00.477Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:30:00.518Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:30:00.518Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:30:01.746Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:30:01.880Z] [INFO]: User baraaweal24@gmail.com fetched 6 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:34:59.434Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:34:59.440Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:34:59.786Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:34:59.792Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:34:59.834Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:34:59.873Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:34:59.874Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:34:59.898Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:34:59.899Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:34:59.930Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:35:05.740Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:35:40.820Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:35:40.925Z] [INFO]: User baraaweal24@gmail.com fetched 6 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:35:43.698Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:35:43.738Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:35:45.788Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:35:45.800Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:35:45.835Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:35:45.889Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:35:45.889Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:35:46.041Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:35:46.068Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:35:46.145Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:35:46.145Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:35:47.691Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:35:47.777Z] [INFO]: User baraaweal24@gmail.com fetched 6 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:35:51.631Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 698a00a5323f816e36f98461
+[2026-02-27T15:35:55.559Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T15:35:55.573Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:35:55.737Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:36:07.480Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:36:07.711Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:36:07.779Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:36:07.779Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:09.370Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:36:09.516Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:36:09.516Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:09.568Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:36:11.340Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:36:11.491Z] [INFO]: User baraaweal24@gmail.com fetched 7 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:36:19.483Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T15:36:19.495Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:36:19.650Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:36:25.288Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (409ms)
+[2026-02-27T15:36:25.385Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:25.467Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:25.467Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:27.281Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:27.357Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:27.357Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:27.388Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:36:29.219Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:36:29.309Z] [INFO]: User abduallhshadow@gmail.com fetched 7 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:36:32.422Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:36:32.427Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:36:33.616Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T15:36:33.648Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:33.729Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:36:33.755Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:33.755Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:33.781Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:33.891Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:33.892Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:33.957Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:36:38.968Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:36:38.969Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:36:38.973Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T15:36:49.425Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T15:36:49.510Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T15:36:49.510Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T15:36:49.869Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T15:36:49.885Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T15:36:49.886Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T15:36:49.899Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T15:36:49.906Z] [INFO]: ✅ Cleanup complete in 20ms
+[2026-02-27T15:36:49.906Z] [INFO]:    Users removed: 0
+[2026-02-27T15:36:49.906Z] [INFO]:    Cached users before: undefined
+[2026-02-27T15:36:49.906Z] [INFO]:    Cached users after: undefined
+[2026-02-27T15:36:49.906Z] [INFO]:    Memory before: 7.42M
+[2026-02-27T15:36:49.907Z] [INFO]:    Memory after: 7.42M
+[2026-02-27T15:36:51.847Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:54.782Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:36:54.817Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:54.818Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:36:54.819Z] [WARN]: ⚠️ Slow Request: GET / - 4762ms
+[2026-02-27T15:36:56.044Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T15:36:56.194Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:36:56.283Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:36:56.283Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:38:01.295Z] [WARN]: ⚠️ Slow Request: GET /user/dashboard - 1661ms
+[2026-02-27T15:38:04.453Z] [WARN]: ⚠️ Slow Request: GET /user/chat - 1129ms
+[2026-02-27T15:38:04.631Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:38:04.716Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:38:04.754Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:38:04.756Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:38:06.401Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:38:06.532Z] [INFO]: User abduallhshadow@gmail.com fetched 7 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:38:09.124Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 68d9b957e9a319acf7221479
+[2026-02-27T15:38:13.088Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T15:38:13.106Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:38:13.206Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:38:24.318Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:38:24.554Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:38:24.609Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:38:24.609Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:38:26.734Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:38:26.919Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:38:26.960Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:38:26.962Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:05.376Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:40:05.562Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:40:05.767Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:40:05.770Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:05.845Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:40:23.236Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:40:23.245Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:40:24.703Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:40:24.719Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T15:40:24.806Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:40:24.882Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:40:24.882Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:25.033Z] [INFO]: 🔌 User connected: 698a00a5323f816e36f98461 (baraaweal24@gmail.com)
+[2026-02-27T15:40:25.044Z] [INFO]: User baraaweal24@gmail.com fetched 1 chats
+[2026-02-27T15:40:25.180Z] [INFO]: 📬 Sending 1 chats to user 698a00a5323f816e36f98461
+[2026-02-27T15:40:25.181Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:28.469Z] [INFO]: User 698a00a5323f816e36f98461 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:40:28.568Z] [INFO]: User baraaweal24@gmail.com fetched 8 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:40:32.452Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 698a00a5323f816e36f98461
+[2026-02-27T15:40:36.692Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T15:40:36.704Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:40:36.932Z] [INFO]: 🔌 User disconnected: 698a00a5323f816e36f98461
+[2026-02-27T15:40:47.719Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (372ms)
+[2026-02-27T15:40:47.779Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:40:48.088Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:40:48.089Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:48.791Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:40:50.346Z] [INFO]: 🔌 User connected: 68d9b957e9a319acf7221479 (abduallhshadow@gmail.com)
+[2026-02-27T15:40:50.413Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:40:50.457Z] [INFO]: 📬 Sending 4 chats to user 68d9b957e9a319acf7221479
+[2026-02-27T15:40:50.458Z] [INFO]: 👥 First chat participants: baraa72 (698a00a5323f816e36f98461), abduallh (68d9b957e9a319acf7221479)
+[2026-02-27T15:40:50.594Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:40:53.954Z] [INFO]: User 68d9b957e9a319acf7221479 joined chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:40:54.033Z] [INFO]: User abduallhshadow@gmail.com fetched 9 messages from chat 698dee4845e40bd6e1b6e7f9
+[2026-02-27T15:41:00.651Z] [INFO]: Message sent in chat 698dee4845e40bd6e1b6e7f9 by 68d9b957e9a319acf7221479
+[2026-02-27T15:45:24.366Z] [INFO]: User abduallhshadow@gmail.com fetched 3 chats
+[2026-02-27T15:56:49.208Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T15:56:49.664Z] [INFO]: 🔌 User disconnected: 68d9b957e9a319acf7221479
+[2026-02-27T16:50:50.278Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T16:50:50.374Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T16:50:50.374Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T16:50:50.601Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T16:50:50.626Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T16:50:50.627Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T16:50:50.640Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T16:50:50.644Z] [INFO]: ✅ Cleanup complete in 17ms
+[2026-02-27T16:50:50.644Z] [INFO]:    Users removed: 0
+[2026-02-27T16:50:50.644Z] [INFO]:    Cached users before: undefined
+[2026-02-27T16:50:50.644Z] [INFO]:    Cached users after: undefined
+[2026-02-27T16:50:50.644Z] [INFO]:    Memory before: 3.91M
+[2026-02-27T16:50:50.645Z] [INFO]:    Memory after: 3.91M
+[2026-02-27T16:51:58.060Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-27T17:02:07.063Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-27T17:02:19.769Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (388ms)
+[2026-02-27T17:02:24.001Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T17:02:24.106Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T17:08:02.027Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T17:08:18.417Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (371ms)
+[2026-02-27T17:08:36.980Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T17:11:19.409Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T17:11:39.662Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (489ms)
+[2026-02-27T17:11:42.251Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T17:11:51.910Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T17:11:53.425Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T17:11:53.547Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T17:28:22.972Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T17:28:32.617Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T17:28:32.742Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T17:28:32.742Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T17:28:33.085Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T17:28:33.121Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T17:28:33.121Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T17:28:33.188Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T17:28:33.231Z] [INFO]: ✅ Cleanup complete in 110ms
+[2026-02-27T17:28:33.231Z] [INFO]:    Users removed: 0
+[2026-02-27T17:28:33.232Z] [INFO]:    Cached users before: undefined
+[2026-02-27T17:28:33.232Z] [INFO]:    Cached users after: undefined
+[2026-02-27T17:28:33.232Z] [INFO]:    Memory before: 3.92M
+[2026-02-27T17:28:33.232Z] [INFO]:    Memory after: 3.92M
+[2026-02-27T17:28:50.737Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T17:28:51.765Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T17:28:51.925Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T17:31:46.632Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T17:33:59.113Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T17:34:04.754Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (420ms)
+[2026-02-27T17:40:05.258Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T17:40:06.247Z] [WARN]: Slow Request: GET /browse - 1329ms
+[2026-02-27T17:40:06.858Z] [WARN]: Slow Request: GET /profile - 1381ms
+[2026-02-27T17:40:06.917Z] [WARN]: Slow Request: GET / - 1466ms
+[2026-02-27T17:40:22.825Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:22.880Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:22.880Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.000Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.000Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.201Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.201Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.549Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T17:40:23.550Z] [WARN]: Redis error: Socket closed unexpectedly
+[2026-02-27T18:40:51.830Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T18:41:00.279Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:42:07.778Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:43:44.878Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:47:27.829Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:48:47.374Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:49:47.620Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:51:28.857Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:53:09.521Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:53:14.557Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T18:53:14.558Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T18:56:46.854Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:56:51.886Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T18:56:51.887Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T18:59:34.890Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T18:59:39.937Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T18:59:39.937Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T19:03:13.640Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T19:03:18.672Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T19:03:18.672Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T19:03:18.683Z] [WARN]: Redis error: Cannot read properties of undefined (reading 'destroy')
+[2026-02-27T19:03:18.910Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:03:18.942Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:03:18.943Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:03:18.944Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-27T19:04:50.399Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T19:04:55.432Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T19:04:55.432Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T19:04:55.441Z] [WARN]: Redis error: Cannot read properties of undefined (reading 'destroy')
+[2026-02-27T19:04:55.619Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:04:55.636Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:04:55.636Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:04:55.637Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-27T19:07:31.789Z] [INFO]: Redis: Connecting to localhost:6379 (DB: 0)
+[2026-02-27T19:07:36.834Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-02-27T19:07:36.834Z] [INFO]: 📝 Server will continue without caching
+[2026-02-27T19:07:36.847Z] [WARN]: Redis error: Cannot read properties of undefined (reading 'destroy')
+[2026-02-27T19:07:37.024Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:07:37.047Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:07:37.047Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:07:37.048Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-02-27T19:13:53.558Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-27T19:13:53.646Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T19:13:53.646Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T19:13:53.991Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:13:54.036Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:13:54.037Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:13:54.070Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T19:13:54.083Z] [INFO]: ✅ Cleanup complete in 46ms
+[2026-02-27T19:13:54.083Z] [INFO]:    Users removed: 0
+[2026-02-27T19:13:54.083Z] [INFO]:    Cached users before: undefined
+[2026-02-27T19:13:54.083Z] [INFO]:    Cached users after: undefined
+[2026-02-27T19:13:54.083Z] [INFO]:    Memory before: 3.68M
+[2026-02-27T19:13:54.084Z] [INFO]:    Memory after: 3.71M
+[2026-02-27T19:16:32.846Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:17:11.989Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T19:17:20.425Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (358ms)
+[2026-02-27T19:17:23.954Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T19:17:24.078Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:31:08.276Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T19:32:28.846Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-27T19:32:28.922Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T19:32:28.923Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T19:32:29.169Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:32:29.205Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:32:29.205Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:32:29.223Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T19:32:29.231Z] [INFO]: ✅ Cleanup complete in 26ms
+[2026-02-27T19:32:29.232Z] [INFO]:    Users removed: 0
+[2026-02-27T19:32:29.232Z] [INFO]:    Cached users before: undefined
+[2026-02-27T19:32:29.232Z] [INFO]:    Cached users after: undefined
+[2026-02-27T19:32:29.232Z] [INFO]:    Memory before: 3.88M
+[2026-02-27T19:32:29.232Z] [INFO]:    Memory after: 3.88M
+[2026-02-27T19:33:25.155Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T19:33:58.514Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T19:33:59.329Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:34:24.489Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-27T19:34:56.779Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-27T19:34:56.833Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-27T19:34:56.833Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-27T19:34:57.070Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-27T19:34:57.101Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-27T19:34:57.102Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-27T19:34:57.113Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-27T19:34:57.123Z] [INFO]: ✅ Cleanup complete in 21ms
+[2026-02-27T19:34:57.124Z] [INFO]:    Users removed: 0
+[2026-02-27T19:34:57.124Z] [INFO]:    Cached users before: undefined
+[2026-02-27T19:34:57.124Z] [INFO]:    Cached users after: undefined
+[2026-02-27T19:34:57.124Z] [INFO]:    Memory before: 3.87M
+[2026-02-27T19:34:57.124Z] [INFO]:    Memory after: 3.88M
+[2026-02-27T19:35:08.034Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T19:35:14.740Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T19:35:27.975Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:36:10.100Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T19:36:21.195Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (443ms)
+[2026-02-27T19:36:25.473Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:36:46.072Z] [WARN]: Slow Request: POST / - 2012ms
+[2026-02-27T19:37:28.828Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T19:37:36.104Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (400ms)
+[2026-02-27T19:38:43.785Z] [WARN]: Slow Request: GET /unread-count - 4541ms
+[2026-02-27T19:42:35.105Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T19:42:44.306Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T19:42:44.671Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T19:42:44.792Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:43:34.641Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T19:43:42.920Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (493ms)
+[2026-02-27T19:45:27.155Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:55:11.411Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T19:55:27.517Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T19:55:27.795Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T19:55:27.919Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:57:23.250Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T19:57:30.814Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:57:44.977Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:57:51.575Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T19:57:56.215Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T19:59:04.273Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-27T19:59:04.724Z] [INFO]: Admin fetched stats: 10 total users
+[2026-02-27T19:59:04.898Z] [INFO]: Admin fetched users: page 1, 10 users
+[2026-02-27T19:59:12.311Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-27T19:59:17.721Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (404ms)
+[2026-02-27T19:59:30.794Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T20:00:33.247Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-27T20:00:42.976Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (338ms)
+[2026-02-27T20:23:26.930Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (735ms)
+[2026-02-27T20:23:28.869Z] [WARN]: Slow Request: GET /profile - 1482ms
+[2026-02-27T20:23:28.903Z] [WARN]: Slow Request: GET / - 1538ms
+[2026-02-27T20:23:28.910Z] [WARN]: Slow Request: GET /browse - 1528ms
+[2026-02-27T20:43:49.218Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T20:45:49.747Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T20:48:57.437Z] [WARN]: High Memory Usage:
+[2026-02-27T20:49:57.438Z] [WARN]: High Memory Usage:
+[2026-02-27T20:59:30.220Z] [WARN]: Slow Request: GET /profile - 1087ms
+[2026-02-27T20:59:30.308Z] [WARN]: Slow Request: GET / - 1188ms
+[2026-02-27T21:37:14.272Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T21:37:16.293Z] [WARN]: Slow Request: GET / - 1860ms
+[2026-02-27T21:37:16.313Z] [WARN]: Slow Request: GET /profile - 1865ms
+[2026-02-27T21:37:28.382Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T21:46:39.803Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-27T22:01:17.503Z] [WARN]: Slow Request: GET /profile - 1110ms
+[2026-02-27T22:01:17.582Z] [WARN]: Slow Request: GET / - 1226ms
+[2026-02-27T22:06:49.484Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (979ms)
+[2026-02-27T22:06:49.575Z] [WARN]: Slow Request: POST /login - 1153ms

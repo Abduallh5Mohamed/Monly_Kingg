@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { ensureCsrfToken } from '@/utils/csrf';
+
 import {
   Image as ImageIcon,
   Plus,
@@ -28,7 +30,7 @@ interface Ad {
   description: string;
   image: string;
   link: string;
-  position: 'hero' | 'banner' | 'sidebar' | 'popup';
+  position: 'hero' | 'between_games' | 'banner' | 'sidebar' | 'popup';
   priority: number;
   status: 'active' | 'inactive' | 'scheduled';
   startDate: string | null;
@@ -49,7 +51,8 @@ interface Stats {
 }
 
 const positionLabels: Record<string, string> = {
-  hero: 'Hero Banner',
+  hero: 'بانر البطل',
+  between_games: 'بين أقسام الألعاب',
   banner: 'Dashboard Banner',
   sidebar: 'Sidebar',
   popup: 'Popup',
@@ -57,6 +60,7 @@ const positionLabels: Record<string, string> = {
 
 const positionColors: Record<string, string> = {
   hero: 'from-orange-500 to-red-500',
+  between_games: 'from-emerald-500 to-teal-500',
   banner: 'from-blue-500 to-cyan-500',
   sidebar: 'from-purple-500 to-pink-500',
   popup: 'from-yellow-500 to-orange-500',
@@ -114,7 +118,7 @@ export default function AdminAdsPage() {
       const res = await fetch(`/api/v1/ads?status=${filter}`, { credentials: 'include' });
       const data = await res.json();
       if (data.success) setAds(data.data);
-    } catch {}
+    } catch { }
     finally { setLoading(false); }
   };
 
@@ -123,7 +127,7 @@ export default function AdminAdsPage() {
       const res = await fetch('/api/v1/ads/stats', { credentials: 'include' });
       const data = await res.json();
       if (data.success) setStats(data.data);
-    } catch {}
+    } catch { }
   };
 
   const openCreate = () => {
@@ -162,15 +166,16 @@ export default function AdminAdsPage() {
     // Upload
     setUploading(true);
     try {
+      const csrf = await ensureCsrfToken() || '';
       const fd = new FormData();
       fd.append('file', file);
       fd.append('type', 'ads');
-      const res = await fetch('/api/v1/uploads', { method: 'POST', body: fd, credentials: 'include' });
+      const res = await fetch('/api/v1/uploads', { method: 'POST', body: fd, credentials: 'include', headers: { 'X-XSRF-TOKEN': csrf } });
       const data = await res.json();
       if (data.success) {
         setForm(prev => ({ ...prev, image: data.data.url }));
       }
-    } catch {}
+    } catch { }
     finally { setUploading(false); }
   };
 
@@ -182,12 +187,13 @@ export default function AdminAdsPage() {
 
     setSaving(true);
     try {
+      const csrf = await ensureCsrfToken() || '';
       const url = editingAd ? `/api/v1/ads/${editingAd._id}` : '/api/v1/ads';
       const method = editingAd ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrf },
         body: JSON.stringify({
           ...form,
           priority: Number(form.priority),
@@ -214,7 +220,8 @@ export default function AdminAdsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`/api/v1/ads/${id}`, { method: 'DELETE', credentials: 'include' });
+      const csrf = await ensureCsrfToken() || '';
+      const res = await fetch(`/api/v1/ads/${id}`, { method: 'DELETE', credentials: 'include', headers: { 'X-XSRF-TOKEN': csrf } });
       const data = await res.json();
       if (data.success) {
         setToast({ type: 'success', msg: 'Ad deleted' });
@@ -230,24 +237,24 @@ export default function AdminAdsPage() {
   const toggleStatus = async (ad: Ad) => {
     const newStatus = ad.status === 'active' ? 'inactive' : 'active';
     try {
+      const csrf = await ensureCsrfToken() || '';
       await fetch(`/api/v1/ads/${ad._id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrf },
         body: JSON.stringify({ status: newStatus }),
         credentials: 'include',
       });
       fetchAds();
       fetchStats();
-    } catch {}
+    } catch { }
   };
 
   return (
     <div className="space-y-6">
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-6 right-6 z-[200] flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border ${
-          toast.type === 'success' ? 'bg-green-500/15 border-green-500/20 text-green-400' : 'bg-red-500/15 border-red-500/20 text-red-400'
-        }`}>
+        <div className={`fixed top-6 right-6 z-[200] flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium shadow-2xl border ${toast.type === 'success' ? 'bg-green-500/15 border-green-500/20 text-green-400' : 'bg-red-500/15 border-red-500/20 text-red-400'
+          }`}>
           {toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
           {toast.msg}
         </div>
@@ -301,11 +308,10 @@ export default function AdminAdsPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all capitalize ${
-              filter === f
-                ? 'bg-white/10 text-white border border-white/20'
-                : 'text-white/40 hover:text-white/60 border border-transparent'
-            }`}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all capitalize ${filter === f
+              ? 'bg-white/10 text-white border border-white/20'
+              : 'text-white/40 hover:text-white/60 border border-transparent'
+              }`}
           >
             {f}
           </button>
@@ -379,11 +385,10 @@ export default function AdminAdsPage() {
                   <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/[0.04]">
                     <button
                       onClick={() => toggleStatus(ad)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${
-                        ad.status === 'active'
-                          ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
-                          : 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
-                      }`}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${ad.status === 'active'
+                        ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20'
+                        : 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                        }`}
                     >
                       {ad.status === 'active' ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       {ad.status === 'active' ? 'Disable' : 'Enable'}
@@ -525,7 +530,8 @@ export default function AdminAdsPage() {
                     onChange={e => setForm(p => ({ ...p, position: e.target.value }))}
                     className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30"
                   >
-                    <option value="hero" className="bg-[#131620]">Hero Banner</option>
+                    <option value="hero" className="bg-[#131620]">بانر البطل (أعلى الصفحة)</option>
+                    <option value="between_games" className="bg-[#131620]">بين أقسام الألعاب</option>
                     <option value="banner" className="bg-[#131620]">Dashboard Banner</option>
                     <option value="sidebar" className="bg-[#131620]">Sidebar</option>
                     <option value="popup" className="bg-[#131620]">Popup</option>
@@ -552,11 +558,10 @@ export default function AdminAdsPage() {
                     <button
                       key={s}
                       onClick={() => setForm(p => ({ ...p, status: s }))}
-                      className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold capitalize transition-all ${
-                        form.status === s
-                          ? `${statusConfig[s].bg} ${statusConfig[s].color} ${statusConfig[s].border} border`
-                          : 'bg-white/[0.03] text-white/30 border border-transparent hover:bg-white/[0.06]'
-                      }`}
+                      className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold capitalize transition-all ${form.status === s
+                        ? `${statusConfig[s].bg} ${statusConfig[s].color} ${statusConfig[s].border} border`
+                        : 'bg-white/[0.03] text-white/30 border border-transparent hover:bg-white/[0.06]'
+                        }`}
                     >
                       {s}
                     </button>

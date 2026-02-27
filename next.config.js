@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance optimizations
-  reactStrictMode: false, // Avoid double renders in dev
+  reactStrictMode: false,
   poweredByHeader: false,
   compress: true,
-  swcMinify: true, // Use SWC for faster builds
 
   // Production optimizations
   compiler: {
@@ -13,22 +12,22 @@ const nextConfig = {
     } : false,
   },
 
-  // Reduce bundle size
+  // Reduce bundle size via tree-shaking
   modularizeImports: {
     'lucide-react': {
       transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
     },
   },
 
-  // Enable experimental features for better performance
+  // Experimental perf features
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    scrollRestoration: true,
   },
 
   // HTTP Agent Options for better connection handling
   httpAgentOptions: {
     keepAlive: true,
-    keepAliveMsecs: 30000,
   },
 
   // Server runtime config for timeouts

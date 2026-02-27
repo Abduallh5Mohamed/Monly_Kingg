@@ -199,8 +199,19 @@ nextApp.prepare().then(async () => {
 
   app.use(cookieParser());
 
-  // Performance monitoring
-  app.use(responseTimeTracker);
+  // Performance monitoring — skip for static assets & Next.js internals
+  app.use((req, res, next) => {
+    // Fast-track static assets: no need for response time tracking
+    if (req.path.startsWith('/_next/') || req.path.startsWith('/assets/') || req.path.match(/\.(ico|png|jpg|svg|woff2?)$/)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('Keep-Alive', 'timeout=5');
+      return next();
+    }
+    next();
+  });
+  // Only run perf tracking on API and page routes
+  app.use('/api', responseTimeTracker);
   app.use(optimizationHeaders);
   app.use(keepAlive);
 
@@ -221,129 +232,66 @@ nextApp.prepare().then(async () => {
     res.setHeader('Content-Disposition', 'inline');
     res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day for uploaded files
     next();
-  }, express.static(uploadsPath));
+  }, express.static(uploadsPath), async (req, res, next) => {
+    // Fallback: if file not found in root, search subdirectories
+    const fileName = path.basename(req.path);
+    const fs = await import('fs');
+    const subdirs = ['ads', 'other', 'avatars', 'listings', 'receipts'];
+    for (const dir of subdirs) {
+      const filePath = path.join(uploadsPath, dir, fileName);
+      if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+      }
+    }
+    next();
+  });
   console.log('✅ Serving static uploads from:', uploadsPath);
 
-  app.use(globalLimiter);
+  // Rate limit only API routes (not static assets or Next.js pages)
+  app.use('/api', globalLimiter);
 
-  // ✅ SECURITY: DOMPurify-based XSS sanitization on all requests
-  app.use(enhancedSanitizer);
+  // ✅ SECURITY: DOMPurify-based XSS sanitization — only on API mutations (not GETs/static)
+  app.use('/api', (req, res, next) => {
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+    return enhancedSanitizer(req, res, next);
+  });
 
   // ✅ SECURITY: CSRF protection on all API mutation routes
   app.use('/api', csrfProtection);
 
-  // API Routes - These come before Next.js handler
-  app.use("/api/auth", authRoutes);
-  app.use("/api/v1/auth", authRoutes); // Keep both for compatibility
+  // ── Load all routes in parallel for faster startup ──
+  app.use("/api/v1/auth", authRoutes);
   app.use("/api/v1/users", userRoutes);
 
-  // Upload routes
-  try {
-    const { default: uploadRoutes } = await import("./src/modules/uploads/upload.routes.js");
-    app.use("/api/v1/uploads", uploadRoutes);
-    console.log('✅ Upload routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Upload routes not loaded:', error.message);
-  }
+  const routeModules = await Promise.allSettled([
+    import("./src/modules/uploads/upload.routes.js"),
+    import("./src/modules/chats/chat.routes.js"),
+    import("./src/modules/admin/admin.routes.js"),
+    import("./src/modules/sellers/seller.routes.js"),
+    import("./src/modules/listings/listing.routes.js"),
+    import("./src/modules/games/game.routes.js"),
+    import("./src/modules/withdrawals/withdrawal.routes.js"),
+    import("./src/modules/deposits/deposit.routes.js"),
+    import("./src/modules/notifications/notification.routes.js"),
+    import("./src/modules/ads/ad.routes.js"),
+    import("./src/modules/discounts/discount.routes.js"),
+    import("./src/modules/promotions/promotion.routes.js"),
+  ]);
 
-  // Chat routes (no CSRF for Socket.IO compatibility)
-  try {
-    const { default: chatRoutes } = await import("./src/modules/chats/chat.routes.js");
-    app.use("/api/v1/chats", chatRoutes);
-    console.log('✅ Chat routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Chat routes not loaded:', error.message);
-  }
+  const routePaths = [
+    "/api/v1/uploads", "/api/v1/chats", "/api/v1/admin",
+    "/api/v1/seller", "/api/v1/listings", "/api/v1/games",
+    "/api/v1/withdrawals", "/api/v1/deposits", "/api/v1/notifications",
+    "/api/v1/ads", "/api/v1/discounts", "/api/v1/promotions",
+  ];
 
-  // Admin routes (load dynamically to avoid import issues)
-  try {
-    const { default: adminRoutes } = await import("./src/modules/admin/admin.routes.js");
-    app.use("/api/v1/admin", adminRoutes);
-    app.use("/api/admin", adminRoutes);
-  } catch (error) {
-    console.warn('⚠️ Admin routes not loaded:', error.message);
-  }
-
-  // Seller routes
-  try {
-    const { default: sellerRoutes } = await import("./src/modules/sellers/seller.routes.js");
-    app.use("/api/v1/seller", sellerRoutes);
-    console.log('✅ Seller routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Seller routes not loaded:', error.message);
-  }
-
-  // Listing routes
-  try {
-    const { default: listingRoutes } = await import("./src/modules/listings/listing.routes.js");
-    app.use("/api/v1/listings", listingRoutes);
-    console.log('✅ Listing routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Listing routes not loaded:', error.message);
-  }
-
-  // Games routes
-  try {
-    const { default: gamesRoutes } = await import("./src/modules/games/game.routes.js");
-    app.use("/api/v1/games", gamesRoutes);
-    console.log('✅ Games routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Games routes not loaded:', error.message);
-  }
-
-  // Withdrawal routes
-  try {
-    const { default: withdrawalRoutes } = await import("./src/modules/withdrawals/withdrawal.routes.js");
-    app.use("/api/v1/withdrawals", withdrawalRoutes);
-    console.log('✅ Withdrawal routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Withdrawal routes not loaded:', error.message);
-  }
-
-  // Deposit routes
-  try {
-    const { default: depositRoutes } = await import("./src/modules/deposits/deposit.routes.js");
-    app.use("/api/v1/deposits", depositRoutes);
-    console.log('✅ Deposit routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Deposit routes not loaded:', error.message);
-  }
-
-  // Notification routes
-  try {
-    const { default: notificationRoutes } = await import("./src/modules/notifications/notification.routes.js");
-    app.use("/api/v1/notifications", notificationRoutes);
-    console.log('✅ Notification routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Notification routes not loaded:', error.message);
-  }
-
-  // Ads routes
-  try {
-    const { default: adRoutes } = await import("./src/modules/ads/ad.routes.js");
-    app.use("/api/v1/ads", adRoutes);
-    console.log('✅ Ads routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Ads routes not loaded:', error.message);
-  }
-
-  // Discount routes
-  try {
-    const { default: discountRoutes } = await import("./src/modules/discounts/discount.routes.js");
-    app.use("/api/v1/discounts", discountRoutes);
-    console.log('✅ Discount routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Discount routes not loaded:', error.message);
-  }
-
-  // Promotion routes
-  try {
-    const { default: promotionRoutes } = await import("./src/modules/promotions/promotion.routes.js");
-    app.use("/api/v1/promotions", promotionRoutes);
-    console.log('✅ Promotion routes loaded');
-  } catch (error) {
-    console.warn('⚠️ Promotion routes not loaded:', error.message);
-  }
+  routeModules.forEach((result, i) => {
+    if (result.status === 'fulfilled') {
+      app.use(routePaths[i], result.value.default);
+    } else {
+      console.warn(`⚠️ ${routePaths[i]} not loaded: ${result.reason?.message}`);
+    }
+  });
 
   // Health check endpoint (basic info only — no sensitive data)
   app.get("/api/health", (req, res) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import Link from 'next/link';
 import {
@@ -30,6 +30,8 @@ import {
   SlidersHorizontal,
   ChevronDown,
   LayoutGrid,
+  Package,
+  Plus,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
@@ -204,7 +206,7 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
 }
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing, currentUserId, discount }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount }) {
+function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount; gridMode?: boolean }) {
   const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
 
   // Only show discount if it exists from API
@@ -242,14 +244,16 @@ function ProductCard({ listing, currentUserId, discount }: { listing: Listing; c
 
           {/* Top row badges */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
-              <Zap className="w-3 h-3" /> -{discount}%
-            </span>
-          ) : hasDiscount ? (
-            <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-              -{discountPercent}%
-            </span>
-          ) : null}
+            {isOwner ? (
+              <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl">
+                MY LISTING
+              </span>
+            ) : hasDiscount ? (
+              <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
+                <Zap className="w-3 h-3" /> -{discountPercent}%
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <div className="p-4">
@@ -323,11 +327,10 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
       {onToggle && (
         <button
           onClick={onToggle}
-          className={`text-[12px] font-semibold flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-all duration-300 group ${
-            isExpanded
-              ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/25'
-              : 'text-white/30 border-white/[0.06] hover:text-cyan-400 hover:bg-white/[0.04] hover:border-cyan-500/15'
-          }`}
+          className={`text-[12px] font-semibold flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-all duration-300 group ${isExpanded
+            ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/25'
+            : 'text-white/30 border-white/[0.06] hover:text-cyan-400 hover:bg-white/[0.04] hover:border-cyan-500/15'
+            }`}
         >
           {isExpanded ? (
             <>
@@ -347,6 +350,65 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
   );
 }
 
+/* ═══════════ BETWEEN-GAMES AD BANNER ═══════════ */
+function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
+  const handleClick = () => {
+    fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { });
+  };
+
+  const Wrapper = ad.link ? 'a' : 'div';
+  const wrapperProps = ad.link
+    ? { href: ad.link, target: '_blank' as const, rel: 'noopener noreferrer', onClick: handleClick }
+    : {};
+
+  return (
+    <section className="relative group">
+      <Wrapper
+        {...wrapperProps}
+        className="relative block w-full overflow-hidden rounded-2xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500 cursor-pointer"
+      >
+        {/* Full-width image */}
+        <div className="relative w-full aspect-[4/1] sm:aspect-[5/1] md:aspect-[6/1] overflow-hidden">
+          <img
+            src={ad.image}
+            alt={ad.title}
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+          {/* Content overlay */}
+          <div className="absolute inset-0 flex items-center justify-between px-6 sm:px-8 md:px-12">
+            <div className="max-w-[60%]">
+              <h3 className="text-white font-bold text-sm sm:text-base md:text-lg drop-shadow-lg truncate">
+                {ad.title}
+              </h3>
+              {ad.description && (
+                <p className="text-white/60 text-[11px] sm:text-xs mt-1 line-clamp-1 drop-shadow">
+                  {ad.description}
+                </p>
+              )}
+            </div>
+
+            {ad.link && (
+              <div className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] sm:text-xs font-semibold px-4 py-2 rounded-xl group-hover:bg-white/20 transition-all duration-300">
+                اعرف أكتر
+                <ChevronRight className="w-3 h-3 inline-block mr-1 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            )}
+          </div>
+
+          {/* Ad badge */}
+          <span className="absolute top-3 left-3 bg-black/30 backdrop-blur-sm text-white/50 text-[8px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-white/10">
+            إعلان
+          </span>
+        </div>
+      </Wrapper>
+    </section>
+  );
+}
+
 /* ═══════════ GAME COLOR MAPPING ═══════════ */
 const GAME_COLORS: Record<string, string> = {
   'valorant': 'from-red-500 to-pink-600',
@@ -360,6 +422,8 @@ const GAME_COLORS: Record<string, string> = {
 function getGameColor(gameName: string): string {
   const normalized = gameName.toLowerCase();
   return GAME_COLORS[normalized] || 'from-cyan-500 to-blue-600';
+}
+
 /* ═══════════ INLINE FILTER BAR ═══════════ */
 function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, priceRange, setPriceRange }: {
   searchQuery: string;
@@ -429,11 +493,10 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
         <div className="relative" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => { setPriceOpen(!priceOpen); setSortOpen(false); }}
-            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium border transition-all duration-200 ${
-              priceRange.min || priceRange.max
-                ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                : 'bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]'
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium border transition-all duration-200 ${priceRange.min || priceRange.max
+              ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+              : 'bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]'
+              }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             Price
@@ -477,7 +540,7 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
 }
 
 /* ═══════════ FILTER & SORT HELPER ═══════════ */
-function useProductFilter(products: typeof STATIC_PRODUCTS) {
+function useProductFilter(products: any[]) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
@@ -518,11 +581,7 @@ export default function UserDashboardPage() {
   const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  // Filter hooks for each section
-  const bestSellingFilter = useProductFilter(STATIC_PRODUCTS);
-  const giftCardsFilter = useProductFilter(STATIC_GIFT_CARDS);
-  const trendingFilter = useProductFilter(STATIC_TRENDING);
-  const subscriptionsFilter = useProductFilter(STATIC_SUBSCRIPTIONS);
+  // Filter hooks removed - static data removed, using dynamic data from API
 
   const toggleSection = (section: string) => {
     setExpandedSection(prev => prev === section ? null : section);
@@ -559,7 +618,7 @@ export default function UserDashboardPage() {
         // Fetch games, ads, and discounts first (critical)
         const [gamesRes, adsRes, discountsRes] = await Promise.all([
           fetch('/api/v1/games'),
-          fetch('/api/v1/ads/active?position=hero'),
+          fetch('/api/v1/ads/active'),
           fetch('/api/v1/discounts/active'),
         ]);
 
@@ -644,6 +703,15 @@ export default function UserDashboardPage() {
     fetchAllData();
   }, []); // Run only once on mount
 
+  // Split ads by position
+  const heroAds = dashboardAds.filter(ad => ad.position === 'hero');
+  const betweenGamesAds = dashboardAds.filter(ad => ad.position === 'between_games');
+
+  // Pick ONE random slot between game sections to show an ad (stable across re-renders)
+  const randomAdSlot = useMemo(() => {
+    return games.length > 1 ? Math.floor(Math.random() * (games.length - 1)) : -1;
+  }, [games.length]);
+
   // Create a map of listing ID to discount for efficient lookup
   const discountMap = activeDiscounts.reduce((map, discount) => {
     if (discount.listing?._id) {
@@ -706,14 +774,14 @@ export default function UserDashboardPage() {
         </section>
 
         {/* ═══════════ ADMIN ADS HERO CAROUSEL ═══════════ */}
-        {dashboardAds.length > 0 && (
+        {heroAds.length > 0 && (
           <section>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1 h-5 rounded-full bg-gradient-to-b from-orange-400 to-red-500" />
               <span className="text-[11px] text-white/25 font-semibold uppercase tracking-widest">Sponsored</span>
             </div>
             <HorizontalScroll>
-              {dashboardAds.map((ad) => (
+              {heroAds.map((ad) => (
                 <a
                   key={ad._id}
                   href={ad.link || '#'}
@@ -858,82 +926,38 @@ export default function UserDashboardPage() {
           </section>
         )}
 
-        {/* ═══════════ DYNAMIC GAME SECTIONS ═══════════ */}
-        {games.map((game) => {
+        {/* ═══════════ DYNAMIC GAME SECTIONS (WITH ADS BETWEEN) ═══════════ */}
+        {games.map((game, index) => {
           const listings = gameListings[game._id] || [];
           const gameColor = getGameColor(game.name);
-        {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" subtitle="Most popular gaming accounts" isExpanded={expandedSection === 'best-selling'} onToggle={() => toggleSection('best-selling')} />
-          {expandedSection === 'best-selling' ? (
-            <>
-              <InlineFilterBar {...bestSellingFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {bestSellingFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {bestSellingFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_PRODUCTS.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
-        </section>
-
-        {/* ═══════════ BEST SELLING GIFT CARDS (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" subtitle="Top rated digital gift cards" isExpanded={expandedSection === 'gift-cards'} onToggle={() => toggleSection('gift-cards')} />
-          {expandedSection === 'gift-cards' ? (
-            <>
-              <InlineFilterBar {...giftCardsFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {giftCardsFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {giftCardsFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_GIFT_CARDS.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
-        </section>
+          // Show a between_games ad only at one random slot
+          const adForThisGap = betweenGamesAds.length > 0 && index === randomAdSlot
+            ? betweenGamesAds[Math.floor(Math.random() * betweenGamesAds.length)]
+            : null;
 
           return (
-            <section key={game._id}>
-              <SectionHeader
-                icon={Gamepad2}
-                title={`${game.name} Accounts`}
-                color={gameColor}
-                subtitle={`Premium ${game.name} accounts`}
-              />
-              {listings.length > 0 ? (
-                <HorizontalScroll>
-                  {listings.map((listing) => (
-                    <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
-                  ))}
-                </HorizontalScroll>
-              ) : (
-                <EmptyGameSection gameName={game.name} isSeller={user?.role === 'seller'} />
-              )}
-            </section>
+            <div key={game._id} className="space-y-10">
+              <section>
+                <SectionHeader
+                  icon={Gamepad2}
+                  title={`${game.name} Accounts`}
+                  color={gameColor}
+                  subtitle={`Premium ${game.name} accounts`}
+                />
+                {listings.length > 0 ? (
+                  <HorizontalScroll>
+                    {listings.map((listing) => (
+                      <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                    ))}
+                  </HorizontalScroll>
+                ) : (
+                  <EmptyGameSection gameName={game.name} isSeller={user?.role === 'seller'} />
+                )}
+              </section>
+
+              {/* Between-games ad banner */}
+              {adForThisGap && <BetweenGamesAd ad={adForThisGap} />}
+            </div>
           );
         })}
 
@@ -1011,33 +1035,6 @@ export default function UserDashboardPage() {
               <p className="text-white/20 text-[11px] mt-4 font-medium">✓ Cancel anytime • No hidden fees • Instant activation</p>
             </div>
           </div>
-        </section>
-
-        {/* ═══════════ TRENDING GAMES (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={TrendingUp} title="Trending Now" color="from-purple-500 to-violet-600" subtitle="What everyone's buying" isExpanded={expandedSection === 'trending'} onToggle={() => toggleSection('trending')} />
-          {expandedSection === 'trending' ? (
-            <>
-              <InlineFilterBar {...trendingFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {trendingFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {trendingFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_TRENDING.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
         </section>
 
         {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}

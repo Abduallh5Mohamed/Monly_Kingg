@@ -16,16 +16,17 @@ export const uploadFile = async (req, res) => {
 
     const { type, relatedModel, relatedId } = req.body;
     const file = req.file;
+    const subDir = type || "other";
 
     // إنشاء سجل في قاعدة البيانات
     const upload = await Upload.create({
-      type: type || "other",
+      type: subDir,
       fileName: file.filename,
       originalName: file.originalname,
       mimeType: file.mimetype,
       fileSize: file.size,
       filePath: file.path,
-      url: `/uploads/${file.filename}`, // أو رابط CDN
+      url: `/uploads/${subDir}/${file.filename}`,
       uploadedBy: req.user._id,
       relatedTo: relatedModel && relatedId ? {
         model: relatedModel,
