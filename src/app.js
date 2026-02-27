@@ -16,7 +16,6 @@ import adsRoutes from "./modules/ads/ad.routes.js";
 import discountRoutes from "./modules/discounts/discount.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import cacheRoutes from "./routes/cache.routes.js";
-import rankingRoutes from "./routes/ranking.routes.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -37,6 +36,7 @@ dotenv.config();
 // Connect to database and create indexes after models are registered
 connectDB().then(() => {
   createIndexes();
+  startAutoConfirmJob();
 });
 
 const app = express();
@@ -119,6 +119,7 @@ app.use("/api/v1/ads", adsRoutes);
 app.use("/api/v1/discounts", csrfProtection, discountRoutes);
 app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
+app.use("/api/v1/transactions", transactionRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

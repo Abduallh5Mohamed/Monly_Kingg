@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Snowfall from '@/components/layout/snowfall';
 import { Providers } from '@/lib/providers';
+import PendingTransactionsBar from '@/components/layout/PendingTransactionsBar';
 
 export const metadata: Metadata = {
   title: 'Monly King',
@@ -26,9 +27,10 @@ export default function RootLayout({
         <Providers>
           <div className="relative flex flex-col min-h-screen">
             <Snowfall />
-            <main className="flex-grow z-20">
+            <main className="flex-grow z-20 pb-16">
               {children}
             </main>
+            <PendingTransactionsBar />
           </div>
         </Providers>
       </body>

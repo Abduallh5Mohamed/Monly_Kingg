@@ -64,6 +64,9 @@ export default function ListingDetailsPage() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showBuyModal, setShowBuyModal] = useState(false);
+  const [buying, setBuying] = useState(false);
+  const [buyError, setBuyError] = useState('');
 
   useEffect(() => {
     if (params.id) {
@@ -102,8 +105,35 @@ export default function ListingDetailsPage() {
       router.push('/login');
       return;
     }
-    // Handle purchase logic
-    alert('Purchase functionality coming soon!');
+    setBuyError('');
+    setShowBuyModal(true);
+  };
+
+  const handleConfirmBuy = async () => {
+    if (!listing) return;
+    setBuying(true);
+    setBuyError('');
+    try {
+      const res = await fetch('/api/v1/transactions', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listingId: listing._id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setShowBuyModal(false);
+        router.push(`/user/transactions/${data.data.transactionId}`);
+      } else if (res.status === 400 && data.required) {
+        setBuyError(`Insufficient balance. You need ${data.required} EGP but have ${data.available} EGP.`);
+      } else {
+        setBuyError(data.message || 'Purchase failed. Please try again.');
+      }
+    } catch {
+      setBuyError('Network error. Please try again.');
+    } finally {
+      setBuying(false);
+    }
   };
 
   const handleReport = () => {
@@ -352,6 +382,12 @@ export default function ListingDetailsPage() {
                     </div>
                   )}
 
+                  {listing.status === 'in_progress' && (
+                    <div className="text-center py-4">
+                      <p className="text-yellow-400 font-medium">Transaction in progress</p>
+                    </div>
+                  )}
+
                   {listing.status === 'sold' && (
                     <div className="text-center py-4">
                       <p className="text-red-400 font-medium">This account has been sold</p>
@@ -426,6 +462,45 @@ export default function ListingDetailsPage() {
             className="max-w-full max-h-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
+        </div>
+      )}
+
+      {/* Buy Confirmation Modal */}
+      {showBuyModal && listing && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0a0d16] rounded-2xl border border-white/10 p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold text-white mb-2">Confirm Purchase</h3>
+            <p className="text-white/50 text-sm mb-6">Funds will be held in escrow until you confirm receipt of account credentials.</p>
+            <div className="bg-white/[0.03] rounded-xl border border-white/10 p-4 mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-white/70 text-sm">Listing</span>
+                <span className="text-white text-sm font-medium truncate max-w-[180px]">{listing.title}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70 text-sm">Price</span>
+                <span className="text-cyan-400 font-bold text-lg">{listing.price} EGP</span>
+              </div>
+            </div>
+            {buyError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
+                <p className="text-red-400 text-sm">{buyError}</p>
+                {buyError.includes('balance') && (
+                  <button onClick={() => { setShowBuyModal(false); router.push('/user/payments'); }}
+                    className="text-cyan-400 text-sm underline mt-1">Top up balance →</button>
+                )}
+              </div>
+            )}
+            <div className="flex gap-3">
+              <Button onClick={() => setShowBuyModal(false)} variant="outline"
+                className="flex-1 bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06]">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmBuy} disabled={buying}
+                className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold">
+                {buying ? 'Processing…' : 'Confirm Buy'}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 

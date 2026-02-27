@@ -480,6 +480,49 @@ class SocketService {
     notifyUserWithdrawalStatus(userId, withdrawal) {
         this.sendToUser(userId, 'withdrawal_status_updated', withdrawal);
     }
+
+    // ── Transaction / Escrow events ─────────────────────────────────────────
+
+    // Seller: a buyer just purchased your listing
+    notifySellerNewPurchase(sellerId, payload) {
+        logger.info(`📢 Notifying seller ${sellerId} of new purchase: ${payload.transactionId}`);
+        this.sendToUser(sellerId, 'new_purchase', payload);
+    }
+
+    // Buyer: seller submitted credentials
+    notifyBuyerCredentialsSent(buyerId, payload) {
+        logger.info(`📢 Notifying buyer ${buyerId} credentials sent: ${payload.transactionId}`);
+        this.sendToUser(buyerId, 'credentials_sent', payload);
+    }
+
+    // Seller: buyer confirmed receipt
+    notifySellerPurchaseConfirmed(sellerId, payload) {
+        logger.info(`📢 Notifying seller ${sellerId} purchase confirmed: ${payload.transactionId}`);
+        this.sendToUser(sellerId, 'purchase_confirmed', payload);
+    }
+
+    // Admin: buyer opened dispute
+    notifyAdminsDispute(payload) {
+        logger.info(`📢 Notifying admins of dispute: ${payload.transactionId}`);
+        this.io.to('admin').emit('new_dispute', payload);
+    }
+
+    // Buyer/Seller: admin resolved dispute
+    notifyDisputeResolved(userId, payload) {
+        logger.info(`📢 Notifying user ${userId} dispute resolved: ${payload.transactionId}`);
+        this.sendToUser(userId, 'dispute_resolved', payload);
+    }
+
+    // Seller: auto-confirmed after 48h
+    notifySellerAutoConfirmed(sellerId, payload) {
+        logger.info(`📢 Notifying seller ${sellerId} auto-confirmed: ${payload.transactionId}`);
+        this.sendToUser(sellerId, 'auto_confirmed', payload);
+    }
+
+    // Both: broadcast updated pending-transactions count
+    notifyTransactionUpdate(userId, payload) {
+        this.sendToUser(userId, 'transaction_updated', payload);
+    }
 }
 
 export default new SocketService();
