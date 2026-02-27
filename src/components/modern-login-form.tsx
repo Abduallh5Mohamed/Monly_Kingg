@@ -163,7 +163,13 @@ export default function ModernLoginForm() {
           </div>
 
           <div className="w-full">
-            <Button variant="outline" className="w-full h-12 border-white/30 hover:bg-white/10 text-white">
+            <Button 
+              variant="outline" 
+              className="w-full h-12 border-white/30 hover:bg-white/10 text-white"
+              onClick={() => {
+                window.location.href = '/api/v1/auth/google';
+              }}
+            >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"

@@ -368,3 +368,86 @@ export const getCsrfToken = async (req, res) => {
     });
   }
 };
+
+/* ---------------- Google OAuth Callback ---------------- */
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+      return res.redirect(frontendUrl + "/login?error=google_failed");
+    }
+
+    const ip = req.ip;
+    const userAgent = req.get("User-Agent");
+
+    // Generate tokens (same as normal login flow)
+    const accessToken = jwt.sign(
+      { id: user._id.toString(), role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m" }
+    );
+
+    const refreshTokenString = crypto.randomBytes(64).toString("hex");
+    const refreshDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
+
+    // Store refresh token
+    user.refreshTokens.push({
+      token: refreshTokenString,
+      expiresAt: new Date(Date.now() + refreshDays * 24 * 60 * 60 * 1000),
+      ip,
+      userAgent
+    });
+
+    // Log the auth event
+    user.authLogs.push({
+      action: "google_login",
+      success: true,
+      ip,
+      userAgent,
+      createdAt: new Date()
+    });
+
+    await user.save();
+
+    // Set cookies
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    });
+
+    res.cookie("refresh_token", refreshTokenString, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: refreshDays * 24 * 60 * 60 * 1000,
+      path: "/"
+    });
+
+    const csrfToken = crypto.randomBytes(24).toString("hex");
+    res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    });
+
+    // Redirect to frontend based on profile completion
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    if (user.profileCompleted !== true) {
+      return res.redirect(frontendUrl + "/complete-profile");
+    } else if (user.role === "admin") {
+      return res.redirect(frontendUrl + "/admin/dashboard");
+    } else {
+      return res.redirect(frontendUrl + "/user/dashboard");
+    }
+  } catch (err) {
+    console.error("Google callback error:", err);
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    return res.redirect(frontendUrl + "/login?error=google_failed");
+  }
+};

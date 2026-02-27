@@ -22,6 +22,7 @@ import cookieParser from "cookie-parser";
 import { globalLimiter } from "./middlewares/rateLimiter.js";
 import csrfProtection from "./middlewares/csrf.js";
 import compression from "compression";
+import passport from "./config/passport.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -94,6 +95,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet.hsts({ maxAge: 31536000 }));
 }
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
