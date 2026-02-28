@@ -4,7 +4,7 @@ const uploadSchema = new mongoose.Schema({
   // نوع الملف المرفوع
   type: {
     type: String,
-    enum: ["profile_picture", "payment_proof", "account_image", "chat_media", "ticket_attachment", "other"],
+    enum: ["profile_picture", "payment_proof", "account_image", "chat_media", "ticket_attachment", "ads", "other"],
     required: true,
     index: true
   },

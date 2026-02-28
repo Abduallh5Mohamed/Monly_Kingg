@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance optimizations
-  reactStrictMode: false, // Avoid double renders in dev
+  reactStrictMode: false,
   poweredByHeader: false,
   compress: true,
-  swcMinify: true, // Use SWC for faster builds
 
   // Production optimizations
   compiler: {
@@ -13,16 +12,17 @@ const nextConfig = {
     } : false,
   },
 
-  // Reduce bundle size
+  // Reduce bundle size via tree-shaking
   modularizeImports: {
     'lucide-react': {
       transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
     },
   },
 
-  // Enable experimental features for better performance
+  // Experimental perf features
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    scrollRestoration: true,
   },
 
   // HTTP Agent Options for better connection handling
@@ -35,15 +35,10 @@ const nextConfig = {
     proxyTimeout: 60000, // 60 seconds
   },
 
-  // Proxy API requests to backend server when running in development mode
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:5000/api/:path*',
-      },
-    ];
-  },
+  // Note: API proxy rewrites removed — server-integrated.js handles API routes
+  // directly via Express middleware before the Next.js handler.
+  // The old rewrite (source: '/api/:path*' → 'http://localhost:5000/api/:path*')
+  // caused infinite loops when unmatched API paths fell through to Next.js.
 
   async redirects() {
     return [

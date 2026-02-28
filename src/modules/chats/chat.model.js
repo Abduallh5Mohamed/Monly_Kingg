@@ -101,18 +101,26 @@ chatSchema.methods.addMessage = async function (messageData) {
   return await this.save();
 };
 
-// Method to mark messages as read
-chatSchema.methods.markAsRead = async function (userId) {
-  this.unreadCount.set(userId.toString(), 0);
-
-  // Mark messages as read
-  this.messages.forEach(msg => {
-    if (msg.sender.toString() !== userId.toString()) {
-      msg.read = true;
+// Method to mark messages as read — uses atomic update (no full doc load)
+chatSchema.statics.markAsReadAtomic = async function (chatId, userId) {
+  const userIdStr = userId.toString();
+  await this.updateOne(
+    { _id: chatId },
+    {
+      $set: { [`unreadCount.${userIdStr}`]: 0 },
     }
-  });
+  );
+  // Mark individual messages as read (bulk — only unread from others)
+  await this.updateOne(
+    { _id: chatId },
+    { $set: { 'messages.$[elem].read': true } },
+    { arrayFilters: [{ 'elem.sender': { $ne: userId }, 'elem.read': false }] }
+  );
+};
 
-  return await this.save();
+// Keep the instance method for backward compatibility but use the static version in hot paths
+chatSchema.methods.markAsRead = async function (userId) {
+  await this.constructor.markAsReadAtomic(this._id, userId);
 };
 
 export default mongoose.model("Chat", chatSchema);

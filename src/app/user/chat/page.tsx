@@ -67,6 +67,7 @@ export default function SupportPage() {
   const [messageText, setMessageText] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [messagesLoading, setMessagesLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [typingUsers, setTypingUsers] = useState<Map<string, string>>(new Map());
@@ -92,6 +93,21 @@ export default function SupportPage() {
   const audioChunksRef = useRef<Blob[]>([]);
   const router = useRouter();
 
+  // Refs to avoid stale closures in socket event handlers
+  const selectedChatRef = useRef<Chat | null>(null);
+  const currentUserIdRef = useRef<string>('');
+
+  // Read the XSRF-TOKEN cookie (non-HttpOnly, safe for JS)
+  const getCsrfToken = (): string | null => {
+    if (typeof window === 'undefined') return null;
+    const cookieName = 'XSRF-TOKEN';
+    for (const cookie of document.cookie.split(';')) {
+      const [name, ...rest] = cookie.trim().split('=');
+      if (name === cookieName) return decodeURIComponent(rest.join('='));
+    }
+    return null;
+  };
+
   // Get token from cookies or localStorage
   const getToken = () => {
     if (typeof window !== 'undefined') {
@@ -101,7 +117,6 @@ export default function SupportPage() {
         const [name, value] = cookie.trim().split('=');
         if (name === 'access_token' || name === process.env.NEXT_PUBLIC_ACCESS_TOKEN_COOKIE_NAME) {
           const token = decodeURIComponent(value).replace(/^"|"$/g, '');
-          console.log(' Token found in cookies ');
           return token;
         }
       }
@@ -109,11 +124,9 @@ export default function SupportPage() {
       // Fallback to localStorage
       const accessToken = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
       if (accessToken) {
-        console.log(' Token found in localStorage ');
         return accessToken;
       }
 
-      console.log(' No token found in cookies or localStorage');
     }
     return null;
   };
@@ -151,11 +164,8 @@ export default function SupportPage() {
           if (data.success && data.data) {
             const userId = data.data._id || data.data.id;
             setCurrentUserId(userId);
-            console.log(' Current User ID set from API:', userId);
-            console.log(' Current User:', data.data.username);
           }
         } else {
-          console.warn(' Failed to fetch current user');
         }
       } catch (error) {
         console.error(' Failed to fetch current user:', error);
@@ -165,168 +175,113 @@ export default function SupportPage() {
     fetchCurrentUser();
   }, []);
 
-  // Initialize Socket.IO
+  // Keep refs in sync with state
+  useEffect(() => { selectedChatRef.current = selectedChat; }, [selectedChat]);
+  useEffect(() => { currentUserIdRef.current = currentUserId; }, [currentUserId]);
+
+  // ─── Socket initialization (connection lifecycle only) ────────────────────
   useEffect(() => {
     const token = getToken();
-    if (!token) {
-      console.warn(' No token found');
-      setIsLoading(false);
-      // Don't redirect immediately, user might be using cookie-based auth
-      return;
-    }
-
-    console.log(' Initializing Socket.IO with token...');
-
-    const newSocket = io('http://localhost:5000', {
-      auth: { token },
+    const socketOptions: any = {
       transports: ['websocket', 'polling'],
-      withCredentials: true // Important for cookie-based auth
-    });
+      withCredentials: true,
+    };
+    if (token) socketOptions.auth = { token };
+
+    const newSocket = io('http://localhost:5000', socketOptions);
 
     newSocket.on('connect', () => {
-      console.log(' Connected to Socket.IO');
       setIsConnected(true);
       newSocket.emit('get_online_users');
-
-      // Rejoin selected chat if any
-      if (selectedChat) {
-        console.log(' Rejoining chat:', selectedChat._id);
-        newSocket.emit('join_chat', selectedChat._id);
-      }
+      if (selectedChatRef.current) newSocket.emit('join_chat', selectedChatRef.current._id);
     });
+    newSocket.on('disconnect', () => setIsConnected(false));
+    newSocket.on('connect_error', () => setIsConnected(false));
 
-    newSocket.on('disconnect', () => {
-      console.log(' Disconnected from Socket.IO');
-      setIsConnected(false);
-    });
+    newSocket.on('online_users', (users: string[]) => setOnlineUsers(users));
+    newSocket.on('user_online', ({ userId }: { userId: string }) =>
+      setOnlineUsers(prev => prev.includes(userId) ? prev : [...prev, userId]));
+    newSocket.on('user_offline', ({ userId }: { userId: string }) =>
+      setOnlineUsers(prev => prev.filter(id => id !== userId)));
 
-    newSocket.on('connect_error', (error) => {
-      console.error(' Socket connection error:', error.message);
-      setIsConnected(false);
-    });
-
-    newSocket.on('error', (error) => {
-      console.error(' Socket error:', error);
-    });
-
-    newSocket.on('user_chats', (userChats: Chat[]) => {
-      setChats(userChats);
-      setIsLoading(false);
-    });
-
-    newSocket.on('new_message', ({ chatId, message }) => {
-      console.log(' New message received:', message);
-
-      if (selectedChat?._id === chatId) {
-        setMessages(prev => [...prev, message]);
-        scrollToBottom();
-
-        // Mark as delivered if I'm the receiver
-        if (message.sender?._id && message.sender._id !== currentUserId) {
-          newSocket.emit('message_delivered', {
-            chatId,
-            messageId: message._id
-          });
-
-          // Auto mark as read if chat is open
-          setTimeout(() => {
-            newSocket.emit('mark_read', { chatId });
-          }, 500);
-        }
-      }
-
-      setChats(prev => prev.map(chat =>
-        chat._id === chatId
-          ? { ...chat, lastMessage: { content: message.content, timestamp: message.timestamp } }
-          : chat
-      ));
-    });
-
-    newSocket.on('user_typing', ({ chatId, userId, username }) => {
+    newSocket.on('user_typing', ({ chatId, username }: { chatId: string; username: string }) => {
       if (!chatId) return;
-      setTypingUsers(prev => {
-        const next = new Map(prev);
-        next.set(chatId, username || 'Someone');
-        return next;
-      });
+      setTypingUsers(prev => { const m = new Map(prev); m.set(chatId, username || 'Someone'); return m; });
     });
-
-    newSocket.on('user_stop_typing', ({ chatId }) => {
+    newSocket.on('user_stop_typing', ({ chatId }: { chatId: string }) => {
       if (!chatId) return;
-      setTypingUsers(prev => {
-        const next = new Map(prev);
-        next.delete(chatId);
-        return next;
-      });
+      setTypingUsers(prev => { const m = new Map(prev); m.delete(chatId); return m; });
     });
 
-    newSocket.on('online_users', (users: string[]) => {
-      setOnlineUsers(users);
-    });
-
-    newSocket.on('user_online', ({ userId }) => {
-      setOnlineUsers(prev => [...prev, userId]);
-    });
-
-    newSocket.on('user_offline', ({ userId }) => {
-      setOnlineUsers(prev => prev.filter(id => id !== userId));
-    });
-
-    newSocket.on('messages_read', ({ chatId, readBy }) => {
-      console.log(' Messages read in chat:', chatId, 'by:', readBy);
-      if (selectedChat?._id === chatId) {
-        setMessages(prev => prev.map(msg => ({ ...msg, read: true })));
-      }
-      // Update chats list: mark messages as read and clear unread count
-      setChats(prev => prev.map(chat => {
-        if (chat._id === chatId) {
-          return {
-            ...chat,
-            unreadCount: 0, // Clear unread count
-            lastMessage: chat.lastMessage ? {
-              content: chat.lastMessage.content || '',
-              timestamp: chat.lastMessage.timestamp || new Date(),
-              sender: chat.lastMessage.sender,
-              read: true
-            } : undefined
-          };
-        }
-        return chat;
-      }));
-    });
-
-    newSocket.on('message_delivered', ({ chatId, messageId }) => {
-      console.log(' Message delivered:', messageId);
-      if (selectedChat?._id === chatId) {
-        setMessages(prev => prev.map(msg =>
-          msg._id === messageId
-            ? { ...msg, delivered: true }
-            : msg
-        ));
-      }
-    });
-
-    newSocket.on('message_sent', ({ chatId, message }) => {
-      console.log(' Message sent confirmation:', message);
-      if (selectedChat?._id === chatId) {
-        // Replace temp message with real message
-        setMessages(prev => {
-          const filtered = prev.filter(m => !m._id.startsWith('temp-'));
-          return [...filtered, message];
-        });
-      }
-    });
-
-    newSocket.on('error', (error) => {
-      console.error('Socket error:', error);
-    });
+    newSocket.on('user_chats', (userChats: Chat[]) => setChats(userChats));
 
     setSocket(newSocket);
+    return () => { newSocket.close(); };
+  }, []);
+
+  // ─── Message-specific socket events (fresh values via refs) ──────────────
+  useEffect(() => {
+    if (!socket) return;
+
+    const onNewMessage = ({ chatId, message }: { chatId: string; message: Message }) => {
+      setChats(prev => prev.map(chat => {
+        if (chat._id !== chatId) return chat;
+        const isOpen = selectedChatRef.current?._id === chatId;
+        return {
+          ...chat,
+          lastMessage: { content: message.content, timestamp: message.timestamp },
+          unreadCount: isOpen ? 0 : (chat.unreadCount ?? 0) + 1
+        };
+      }));
+      if (selectedChatRef.current?._id !== chatId) return;
+      setMessages(prev => {
+        if (prev.some(m => m._id === message._id)) return prev;
+        return [...prev, message];
+      });
+      scrollToBottom();
+      if (message.sender._id !== currentUserIdRef.current) {
+        socket.emit('message_delivered', { chatId, messageId: message._id });
+        setTimeout(() => socket.emit('mark_read', { chatId }), 500);
+      }
+    };
+
+    const onMessageSent = ({ chatId, message, tempId }: { chatId: string; message: Message; tempId?: string }) => {
+      if (selectedChatRef.current?._id !== chatId) return;
+      setMessages(prev => {
+        const withoutTemp = tempId
+          ? prev.filter(m => m._id !== tempId)
+          : prev.filter(m => !m._id.startsWith('temp-') || m.content !== message.content);
+        if (withoutTemp.some(m => m._id === message._id)) return withoutTemp;
+        return [...withoutTemp, message];
+      });
+      scrollToBottom();
+    };
+
+    const onMessagesRead = ({ chatId }: { chatId: string }) => {
+      if (selectedChatRef.current?._id === chatId)
+        setMessages(prev => prev.map(msg => ({ ...msg, read: true })));
+      setChats(prev => prev.map(chat =>
+        chat._id === chatId ? { ...chat, unreadCount: 0 } : chat
+      ));
+    };
+
+    const onMessageDelivered = ({ chatId, messageId }: { chatId: string; messageId: string }) => {
+      if (selectedChatRef.current?._id === chatId)
+        setMessages(prev => prev.map(msg => msg._id === messageId ? { ...msg, delivered: true } : msg));
+    };
+
+    socket.on('new_message', onNewMessage);
+    socket.on('message_sent', onMessageSent);
+    socket.on('messages_read', onMessagesRead);
+    socket.on('message_delivered', onMessageDelivered);
 
     return () => {
-      newSocket.close();
+      socket.off('new_message', onNewMessage);
+      socket.off('message_sent', onMessageSent);
+      socket.off('messages_read', onMessagesRead);
+      socket.off('message_delivered', onMessageDelivered);
     };
-  }, [router]);
+  }, [socket]);
 
   // Load chats
   useEffect(() => {
@@ -335,22 +290,24 @@ export default function SupportPage() {
 
   // Load messages when chat selected
   useEffect(() => {
-    if (selectedChat) {
-      loadMessages(selectedChat._id);
-
-      // Clear unread count immediately when opening chat
-      setChats(prev => prev.map(chat =>
-        chat._id === selectedChat._id
-          ? { ...chat, unreadCount: 0 }
-          : chat
-      ));
-
-      if (socket) {
-        socket.emit('join_chat', selectedChat._id);
-        socket.emit('mark_read', { chatId: selectedChat._id });
-      }
+    if (!selectedChat) return;
+    setMessages([]);
+    setChats(prev => prev.map(chat =>
+      chat._id === selectedChat._id ? { ...chat, unreadCount: 0 } : chat
+    ));
+    loadMessages(selectedChat._id);
+    if (socket?.connected) {
+      socket.emit('join_chat', selectedChat._id);
+      socket.emit('mark_read', { chatId: selectedChat._id });
     }
-  }, [selectedChat, socket]);
+  }, [selectedChat]);
+
+  // Rejoin chat on reconnect
+  useEffect(() => {
+    if (socket?.connected && selectedChat) {
+      socket.emit('join_chat', selectedChat._id);
+    }
+  }, [socket, isConnected]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -359,23 +316,11 @@ export default function SupportPage() {
 
   const loadChats = async () => {
     try {
-      const token = getToken();
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json'
-      };
-
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
       const response = await fetch('http://localhost:5000/api/v1/chats', {
-        headers,
-        credentials: 'include' // Important for cookie-based auth
+        credentials: 'include'
       });
       const data = await response.json();
-      if (data.success) {
-        setChats(data.data.chats);
-      }
+      if (data.success) setChats(data.data.chats);
     } catch (error) {
       console.error('Failed to load chats:', error);
     } finally {
@@ -384,52 +329,36 @@ export default function SupportPage() {
   };
 
   const loadMessages = async (chatId: string) => {
+    setMessagesLoading(true);
     try {
-      console.log(' Loading messages for chat:', chatId);
-
-      const token = getToken();
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json'
-      };
-
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
       const response = await fetch(`http://localhost:5000/api/v1/chats/${chatId}`, {
-        headers,
-        credentials: 'include' // Important for cookie-based auth
+        credentials: 'include',
       });
       const data = await response.json();
-      console.log(' Messages loaded:', data);
-
-      if (data.success) {
+      if (data.success && Array.isArray(data.data?.messages)) {
         setMessages(data.data.messages);
-        console.log(' Set messages:', data.data.messages.length, 'messages');
-        setTimeout(scrollToBottom, 100);
+        setTimeout(scrollToBottom, 50);
+      } else {
+        setMessages([]);
       }
     } catch (error) {
       console.error('Failed to load messages:', error);
+      setMessages([]);
+    } finally {
+      setMessagesLoading(false);
     }
   };
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || isSending) {
-      console.warn(' Cannot send: empty message or already sending');
       return;
     }
 
     if (!selectedChat) {
-      console.error(' No chat selected');
       alert('Please select a chat first');
       return;
     }
 
-    console.log(' Sending message...', {
-      chatId: selectedChat._id,
-      socketConnected: socket?.connected,
-      hasCurrentUserId: !!currentUserId
-    });
 
     setIsSending(true);
     const messageContent = messageText.trim();
@@ -456,28 +385,28 @@ export default function SupportPage() {
     try {
       // Send via socket if connected
       if (socket && socket.connected) {
-        console.log(' Sending via Socket.IO...');
         socket.emit('send_message', {
           chatId: selectedChat._id,
           content: messageContent,
-          type: 'text'
+          type: 'text',
+          tempId: tempMessage._id
         });
-
-        if (typingTimeoutRef.current) {
-          clearTimeout(typingTimeoutRef.current);
-        }
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         socket.emit('stop_typing', { chatId: selectedChat._id });
       } else {
         // Fallback to API if socket not connected
-        console.warn(' Socket not connected, using API fallback');
 
         const token = getToken();
+        const csrfToken = getCsrfToken();
         const headers: HeadersInit = {
           'Content-Type': 'application/json'
         };
 
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
+        }
+        if (csrfToken) {
+          headers['X-XSRF-TOKEN'] = csrfToken;
         }
 
         const response = await fetch(`http://localhost:5000/api/v1/chats/${selectedChat._id}/messages`, {
@@ -495,10 +424,17 @@ export default function SupportPage() {
         }
 
         const data = await response.json();
-        console.log(' Message sent via API:', data);
 
-        // Reload messages to get the real message
-        await loadMessages(selectedChat._id);
+        if (data.success && data.data?.message) {
+          const realMsg = data.data.message;
+          setMessages(prev => {
+            const withoutTemp = prev.filter(m => m._id !== tempMessage._id);
+            if (withoutTemp.some(m => m._id === realMsg._id)) return withoutTemp;
+            return [...withoutTemp, realMsg];
+          });
+        } else {
+          await loadMessages(selectedChat._id);
+        }
       }
     } catch (error) {
       console.error(' Failed to send message:', error);
@@ -579,11 +515,13 @@ export default function SupportPage() {
 
   const handleDeleteChat = async (chatId: string) => {
     try {
+      const csrfToken = getCsrfToken();
       const response = await fetch(`http://localhost:5000/api/v1/chats/${chatId}`, {
         method: 'DELETE',
-        credentials: 'include', // Important: sends httpOnly cookies
+        credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(csrfToken ? { 'X-XSRF-TOKEN': csrfToken } : {})
         }
       });
 
@@ -605,10 +543,9 @@ export default function SupportPage() {
       setShowDeleteConfirm(false);
       setDeletingChatId(null);
 
-      console.log('✅ Chat deleted successfully');
     } catch (error) {
       console.error('Failed to delete chat:', error);
-      alert('فشل حذف المحادثة. حاول مرة أخرى.');
+      alert('Failed to delete conversation. Please try again.');
     }
   };
 
@@ -706,54 +643,30 @@ export default function SupportPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Create chat response:', data);
 
         if (data.success) {
-          // The API returns the chat directly in data.data
           const newChat = data.data;
-          console.log('📝 New chat created:', newChat._id);
-
-          // Check if chat already exists in list
           const existingChat = chats.find(c => c._id === newChat._id);
 
           if (!existingChat) {
-            console.log('➕ Adding new chat to list');
             setChats(prev => [newChat, ...prev]);
-          } else {
-            console.log('🔄 Chat already exists in list');
           }
 
-          // Set the selected chat FIRST
-          console.log('🎯 Setting selected chat:', newChat._id);
           setSelectedChat(newChat);
-          setMessages([]); // Clear old messages
+          setMessages([]);
 
-          // Join the chat room via socket BEFORE loading messages
           if (socket?.connected) {
-            console.log('🔌 Joining chat room via socket');
             socket.emit('join_chat', newChat._id);
-          } else {
-            console.warn('⚠️ Socket not connected');
           }
 
-          // Load messages for this chat
-          console.log('📨 Loading messages for chat:', newChat._id);
           await loadMessages(newChat._id);
 
-          // Clear search
           setSearchQuery('');
           setUserSearchResults([]);
           setSearchResults([]);
-
-          console.log('✅ Chat opened successfully!');
         }
-      } else {
-        console.error('❌ Failed to create chat:', response.status, response.statusText);
-        const errorData = await response.json();
-        console.error('Error details:', errorData);
       }
     } catch (error) {
-      console.error('Failed to start new chat:', error);
     }
   };
 
@@ -1150,9 +1063,7 @@ export default function SupportPage() {
                               {formatRelativeTime(chat.lastMessage?.timestamp)}
                             </p>
                             {unread > 0 && (
-                              <span className="mt-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-cyan-500/80 px-2 text-xs font-semibold text-white">
-                                {unread}
-                              </span>
+                              <span className="mt-1.5 inline-block h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.7)]" />
                             )}
                           </div>
                         </div>
@@ -1231,38 +1142,49 @@ export default function SupportPage() {
                 </div>
               </header>
 
-              <ScrollArea className="mt-4 flex-1 pr-2">
-                <div className="space-y-4">
-                  {messages.map(message => {
-                    const isOwn = message.sender?._id === currentUserId;
+              <div className="mt-4 flex-1 min-h-0 overflow-y-auto pr-2">
+                {messagesLoading ? (
+                  <div className="flex h-full items-center justify-center py-16">
+                    <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+                  </div>
+                ) : messages.length === 0 ? (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 py-16 text-center text-white/40">
+                    <MessageCircle className="h-10 w-10" />
+                    <p className="text-sm">No messages yet. Say hello!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4 px-1 pb-2">
+                    {messages.map(message => {
+                      const isOwn = message.sender?._id === currentUserId;
 
-                    return (
-                      <div key={message._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                        <div
-                          className={`max-w-[75%] rounded-3xl border px-5 py-4 shadow-lg ${isOwn
-                            ? 'border-cyan-400/40 bg-cyan-500/10 text-white'
-                            : 'border-white/10 bg-white/5 text-white/90'
-                            }`}
-                        >
-                          {!isOwn && message.sender && (
-                            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/60">
-                              {message.sender.username}
-                            </p>
-                          )}
+                      return (
+                        <div key={message._id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                          <div
+                            className={`max-w-[75%] rounded-3xl border px-5 py-4 shadow-lg ${isOwn
+                              ? 'border-cyan-400/40 bg-cyan-500/10 text-white'
+                              : 'border-white/10 bg-white/5 text-white/90'
+                              } ${message._id.startsWith('temp-') ? 'opacity-70' : ''}`}
+                          >
+                            {!isOwn && message.sender && (
+                              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-white/60">
+                                {message.sender.username}
+                              </p>
+                            )}
 
-                          {renderMessageContent(message)}
+                            {renderMessageContent(message)}
 
-                          <div className="mt-3 flex items-center justify-end gap-2 text-xs text-white/60">
-                            <span>{formatTimestamp(message.timestamp)}</span>
-                            {renderStatusIcon(message)}
+                            <div className="mt-3 flex items-center justify-end gap-2 text-xs text-white/60">
+                              <span>{formatTimestamp(message.timestamp)}</span>
+                              {renderStatusIcon(message)}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
+                  </div>
+                )}
+              </div>
 
               {typingIndicator && (
                 <div className="mt-2 px-4 text-sm text-white/60">
@@ -1457,13 +1379,13 @@ export default function SupportPage() {
                 <Trash2 className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">حذف المحادثة</h3>
-                <p className="text-sm text-white/60">سيتم إخفاء المحادثة من قائمتك فقط</p>
+                <h3 className="text-lg font-semibold text-white">Delete Conversation</h3>
+                <p className="text-sm text-white/60">The conversation will be hidden from your list only</p>
               </div>
             </div>
 
             <p className="mb-6 text-sm text-white/70">
-              المحادثة سيتم إخفاؤها من عندك فقط. الشخص الآخر سيظل يراها، والرسائل ستبقى محفوظة في قاعدة البيانات.
+              The conversation will be hidden from your side only. The other person will still see it, and messages will remain stored in the database.
             </p>
 
             <div className="flex gap-3">
@@ -1472,13 +1394,13 @@ export default function SupportPage() {
                 variant="outline"
                 className="flex-1 border-white/10 bg-white/5 text-white hover:bg-white/10"
               >
-                إلغاء
+                Cancel
               </Button>
               <Button
                 onClick={() => deletingChatId && handleDeleteChat(deletingChatId)}
                 className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
               >
-                حذف المحادثة
+                Delete Conversation
               </Button>
             </div>
           </div>

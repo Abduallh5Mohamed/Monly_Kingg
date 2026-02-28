@@ -133,8 +133,8 @@ export default function PaymentsPage() {
       toast({
         title: `${emoji} Deposit ${deposit.status === 'approved' ? 'Approved' : 'Rejected'}`,
         description: deposit.status === 'approved'
-          ? `Your deposit of ${deposit.amount} LE has been approved!`
-          : `Your deposit of ${deposit.amount} LE was rejected.`,
+          ? `Your deposit of ${deposit.amount} EGP has been approved!`
+          : `Your deposit of ${deposit.amount} EGP was rejected.`,
         duration: 8000,
       });
     }));
@@ -146,7 +146,7 @@ export default function PaymentsPage() {
       toast({
         title: `${emoji} Withdrawal ${withdrawal.status === 'approved' ? 'Approved' : 'Rejected'}`,
         description: withdrawal.status === 'approved'
-          ? `Your withdrawal of ${withdrawal.amount} LE has been approved!`
+          ? `Your withdrawal of ${withdrawal.amount} EGP has been approved!`
           : `Your withdrawal was rejected${withdrawal.rejectionReason ? ': ' + withdrawal.rejectionReason : ''}.`,
         duration: 8000,
       });
@@ -217,7 +217,7 @@ export default function PaymentsPage() {
     }
 
     if (Number(depositAmount) < 100) {
-      setDepositError('Minimum deposit amount is 100 LE');
+      setDepositError('Minimum deposit amount is 100 EGP');
       return;
     }
 
@@ -280,7 +280,7 @@ export default function PaymentsPage() {
       return;
     }
     if (Number(withdrawAmount) < 500) {
-      setWithdrawError('Minimum withdrawal amount is 500 LE');
+      setWithdrawError('Minimum withdrawal amount is 500 EGP');
       return;
     }
     if (!/^\d{11}$/.test(withdrawPhoneNumber)) {
@@ -476,7 +476,7 @@ export default function PaymentsPage() {
                       <div className="flex items-center gap-2 pl-15">
                         <span className="text-gray-400 text-sm">Amount:</span>
                         <span className="text-2xl font-bold text-cyan-400">
-                          {deposit.amount.toLocaleString()} LE
+                          {deposit.amount.toLocaleString()} EGP
                         </span>
                       </div>
 
@@ -745,7 +745,7 @@ export default function PaymentsPage() {
                       <div className="flex items-center gap-2 pl-15 mb-3">
                         <span className="text-gray-400 text-sm">Amount:</span>
                         <span className="text-2xl font-bold text-emerald-400">
-                          {withdrawal.amount.toLocaleString()} LE
+                          {withdrawal.amount.toLocaleString()} EGP
                         </span>
                       </div>
 
@@ -841,7 +841,7 @@ export default function PaymentsPage() {
                   <div>
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <DollarSign className="w-4 h-4 text-cyan-400" />
-                      Amount (LE) <span className="text-red-400">*</span>
+                      Amount (EGP) <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="number"
@@ -851,7 +851,7 @@ export default function PaymentsPage() {
                       min="100"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
-                    <p className="text-xs text-gray-400 mt-1.5 ml-1">⚠️ Minimum: 100 LE</p>
+                    <p className="text-xs text-gray-400 mt-1.5 ml-1">⚠️ Minimum: 100 EGP</p>
                   </div>
 
                   {/* Game Title (Optional) */}

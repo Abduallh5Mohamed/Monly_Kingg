@@ -1,9 +1,10 @@
 import Chat from "./chat.model.js";
 import User from "../users/user.model.js";
+import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
 import socketService from "../../services/socketService.js";
 
-/* ---------------- Send Message ---------------- */
+/* ---------------- Send Message (HTTP fallback — socket is preferred) ---------------- */
 export const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
@@ -11,83 +12,61 @@ export const sendMessage = async (req, res) => {
         const { content, type = 'text', fileUrl } = req.body;
 
         if (!content) {
-            return res.status(400).json({
-                success: false,
-                message: "Message content is required"
-            });
+            return res.status(400).json({ success: false, message: "Message content is required" });
         }
 
-        const chat = await Chat.findOne({
-            _id: chatId,
-            participants: userId
-        });
+        const now = new Date();
+        const msgId = new mongoose.Types.ObjectId();
+
+        // Atomic push — no full-document load
+        const chat = await Chat.findOneAndUpdate(
+            { _id: chatId, participants: userId },
+            {
+                $push: {
+                    messages: { _id: msgId, sender: userId, content, type, fileUrl, timestamp: now, read: false, delivered: true }
+                },
+                $set: {
+                    lastMessage: { content, sender: userId, timestamp: now, messageType: type }
+                }
+            },
+            { new: false, projection: { participants: 1 } }
+        ).lean();
 
         if (!chat) {
-            return res.status(404).json({
-                success: false,
-                message: "Chat not found"
-            });
+            return res.status(404).json({ success: false, message: "Chat not found" });
         }
 
-        // Create message
-        const message = {
-            sender: userId,
-            content,
-            type,
-            fileUrl,
-            timestamp: new Date(),
-            read: false,
-            delivered: true
+        // Increment unread for other participants (separate op — avoids conflicts with $push)
+        const otherParticipants = chat.participants.filter(p => p.toString() !== userId.toString());
+        if (otherParticipants.length) {
+            const incObj = {};
+            for (const pid of otherParticipants) incObj[`unreadCount.${pid}`] = 1;
+            Chat.updateOne({ _id: chatId }, { $inc: incObj }).catch(() => { });
+        }
+
+        // Build response with sender info from req.user (already authenticated)
+        const savedMessage = {
+            _id: msgId.toString(),
+            sender: {
+                _id: userId.toString(),
+                username: req.user.username,
+                email: req.user.email,
+                avatar: req.user.avatar
+            },
+            content, type, fileUrl, timestamp: now, read: false, delivered: true
         };
 
-        // Add message and save
-        await chat.addMessage(message);
-
-        // Reload chat with populated fields
-        const updatedChat = await Chat.findById(chatId)
-            .populate('messages.sender', 'username email avatar')
-            .populate('participants', 'username email avatar role');
-
-        const savedMessage = updatedChat.messages[updatedChat.messages.length - 1];
-
-        logger.info(`Message sent in chat ${chatId} by ${req.user.email}`);
-
-        // Broadcast via Socket.IO if available
+        // Broadcast via Socket.IO
         if (socketService.io) {
-            const messageToSend = {
-                _id: savedMessage._id.toString(),
-                sender: {
-                    _id: savedMessage.sender._id.toString(),
-                    username: savedMessage.sender.username,
-                    email: savedMessage.sender.email,
-                    avatar: savedMessage.sender.avatar
-                },
-                content: savedMessage.content,
-                type: savedMessage.type,
-                fileUrl: savedMessage.fileUrl,
-                timestamp: savedMessage.timestamp,
-                read: savedMessage.read || false,
-                delivered: savedMessage.delivered || true
-            };
-
-            socketService.io.to(`chat:${chatId}`).emit('new_message', {
-                chatId,
-                message: messageToSend
-            });
+            for (const pid of otherParticipants) {
+                socketService.io.to(`user:${pid}`).emit('new_message', { chatId, message: savedMessage });
+            }
         }
 
-        res.json({
-            success: true,
-            data: {
-                message: savedMessage
-            }
-        });
+        res.json({ success: true, data: { message: savedMessage } });
     } catch (error) {
         logger.error(`Send message error: ${error.message}`);
-        res.status(500).json({
-            success: false,
-            message: "Failed to send message"
-        });
+        res.status(500).json({ success: false, message: "Failed to send message" });
     }
 };
 
@@ -122,8 +101,6 @@ export const getUserChats = async (req, res) => {
             hiddenFor: { $ne: userId }
         });
 
-        logger.info(`User ${req.user.email} fetched ${chats.length} chats`);
-
         res.json({
             success: true,
             data: {
@@ -145,66 +122,57 @@ export const getUserChats = async (req, res) => {
     }
 };
 
-/* ---------------- Get Chat Messages ---------------- */
+/* ---------------- Get Chat Messages (paginated, no N+1 populate) ---------------- */
 export const getChatMessages = async (req, res) => {
     try {
         const { chatId } = req.params;
         const userId = req.user._id;
-        const { page = 1, limit = 50 } = req.query;
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
+        const skip = (page - 1) * limit;
+        const userIdStr = userId.toString();
 
-        const chat = await Chat.findOne({
-            _id: chatId,
-            participants: userId
-        })
-            .populate('messages.sender', 'username email avatar')
-            .populate('participants', 'username email avatar role')
-            .lean();
+        // Single query — populate only participants (2 users max), NOT messages.sender
+        const chat = await Chat.findOne(
+            { _id: chatId, participants: userId },
+            { participants: 1, type: 1, lastMessage: 1, deletedMessagesFor: 1, messages: 1 }
+        ).populate('participants', 'username email avatar role').lean();
 
         if (!chat) {
-            return res.status(404).json({
-                success: false,
-                message: "Chat not found"
-            });
+            return res.status(404).json({ success: false, message: "Chat not found" });
         }
 
-        // Filter out soft-deleted messages for this user (admin sees everything)
-        const userIdStr = userId.toString();
-        const deletedMsgIds = chat.deletedMessagesFor?.get(userIdStr) || [];
+        // Build a lookup map for participant info (direct chat = 2 users max)
+        const participantMap = {};
+        for (const p of chat.participants) {
+            participantMap[p._id.toString()] = { _id: p._id, username: p.username, email: p.email, avatar: p.avatar };
+        }
+
+        // Filter out soft-deleted messages
+        const rawDeleted = chat.deletedMessagesFor;
+        const deletedMsgIds = (rawDeleted instanceof Map ? rawDeleted.get(userIdStr) : rawDeleted?.[userIdStr]) || [];
         const deletedSet = new Set(deletedMsgIds.map(id => id.toString()));
 
-        const allMessages = (chat.messages || []).filter(msg =>
-            !deletedSet.has(msg._id.toString())
-        );
+        const allMessages = (chat.messages || []).filter(msg => !deletedSet.has(msg._id.toString()));
         const totalMessages = allMessages.length;
-        const messages = allMessages
-            .slice((page - 1) * limit, page * limit);
 
-        logger.info(`User ${req.user.email} fetched ${messages.length} messages from chat ${chatId}`);
+        // Paginate (latest messages last)
+        const pageMessages = allMessages.slice(skip, skip + limit).map(msg => ({
+            ...msg,
+            sender: participantMap[msg.sender.toString()] || { _id: msg.sender }
+        }));
 
         res.json({
             success: true,
             data: {
-                chat: {
-                    _id: chat._id,
-                    type: chat.type,
-                    participants: chat.participants,
-                    lastMessage: chat.lastMessage
-                },
-                messages,
-                pagination: {
-                    page: parseInt(page),
-                    limit: parseInt(limit),
-                    total: totalMessages,
-                    pages: Math.ceil(totalMessages / limit)
-                }
+                chat: { _id: chat._id, type: chat.type, participants: chat.participants, lastMessage: chat.lastMessage },
+                messages: pageMessages,
+                pagination: { page, limit, total: totalMessages, pages: Math.ceil(totalMessages / limit) }
             }
         });
     } catch (error) {
         logger.error(`Get chat messages error: ${error.message}`);
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch messages"
-        });
+        res.status(500).json({ success: false, message: "Failed to fetch messages" });
     }
 };
 
@@ -255,18 +223,11 @@ export const createChat = async (req, res) => {
 
             await chat.populate('participants', 'username email avatar role');
 
-            logger.info(`✅ New chat created with participants: ${userId} (creator) and ${otherUserId} (recipient)`);
+            logger.info(`New chat created: ${chat._id}`);
 
             // Notify via socket
             socketService.sendToUser(otherUserId.toString(), 'new_chat', { chat });
-        } else {
-            logger.info(`📝 Existing chat found: ${chat._id}`);
         }
-
-        // Log participants for debugging
-        logger.info(`👥 Chat participants: ${chat.participants.map(p => `${p.username} (${p._id})`).join(', ')}`);
-
-        logger.info(`Chat created/retrieved between ${userId} and ${otherUserId}`);
 
         res.json({
             success: true,
@@ -274,8 +235,6 @@ export const createChat = async (req, res) => {
         });
     } catch (error) {
         logger.error(`Create chat error: ${error.message}`);
-        logger.error(`Error stack: ${error.stack}`);
-        console.error('Full error:', error);
         res.status(500).json({
             success: false,
             message: "Failed to create chat",
@@ -303,14 +262,14 @@ export const createSupportChat = async (req, res) => {
                 participants: [userId],
                 messages: [{
                     sender: userId,
-                    content: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+                    content: 'Hello! How can I help you today?',
                     type: 'text',
                     timestamp: new Date(),
                     read: false,
                     delivered: true
                 }],
                 lastMessage: {
-                    content: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+                    content: 'Hello! How can I help you today?',
                     sender: userId,
                     timestamp: new Date(),
                     type: 'text'
@@ -320,8 +279,6 @@ export const createSupportChat = async (req, res) => {
 
             await chat.populate('participants', 'username email avatar role');
         }
-
-        logger.info(`Support chat created for ${req.user.email}`);
 
         res.json({
             success: true,
@@ -336,97 +293,48 @@ export const createSupportChat = async (req, res) => {
     }
 };
 
-/* ---------------- Delete Chat (Soft Delete — Admin Can Still See) ---------------- */
+/* ---------------- Delete Chat (Soft Delete — atomic) ---------------- */
 export const deleteChat = async (req, res) => {
     try {
         const { chatId } = req.params;
         const userId = req.user._id;
 
-        const chat = await Chat.findOne({
-            _id: chatId,
-            participants: userId
-        });
+        const result = await Chat.updateOne(
+            { _id: chatId, participants: userId },
+            { $addToSet: { hiddenFor: userId } }
+        );
 
-        if (!chat) {
-            return res.status(404).json({
-                success: false,
-                message: "Chat not found"
-            });
+        if (!result.matchedCount) {
+            return res.status(404).json({ success: false, message: "Chat not found" });
         }
 
-        // Soft delete: hide chat for this user only (admin can still see it)
-        if (!chat.hiddenFor) {
-            chat.hiddenFor = [];
-        }
-
-        if (!chat.hiddenFor.includes(userId)) {
-            chat.hiddenFor.push(userId);
-            await chat.save();
-        }
-
-        logger.info(`✅ User ${req.user.email} soft-deleted chat ${chatId} (admin can still view)`);
-
-        res.json({
-            success: true,
-            message: "Chat deleted successfully"
-        });
+        res.json({ success: true, message: "Chat deleted successfully" });
     } catch (error) {
         logger.error(`Delete chat error: ${error.message}`);
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete chat"
-        });
+        res.status(500).json({ success: false, message: "Failed to delete chat" });
     }
 };
 
-/* ---------------- Delete Message (Soft Delete — Admin Can Still See) ---------------- */
+/* ---------------- Delete Message (Soft Delete — atomic) ---------------- */
 export const deleteMessage = async (req, res) => {
     try {
         const { chatId, messageId } = req.params;
         const userId = req.user._id;
-
-        const chat = await Chat.findOne({
-            _id: chatId,
-            participants: userId
-        });
-
-        if (!chat) {
-            return res.status(404).json({
-                success: false,
-                message: "Chat not found"
-            });
-        }
-
-        // Check if message exists
-        const message = chat.messages.id(messageId);
-        if (!message) {
-            return res.status(404).json({
-                success: false,
-                message: "Message not found"
-            });
-        }
-
-        // Soft delete: add messageId to deletedMessagesFor map for this user
         const userIdStr = userId.toString();
-        const deletedMsgs = chat.deletedMessagesFor.get(userIdStr) || [];
-        if (!deletedMsgs.includes(messageId)) {
-            deletedMsgs.push(messageId);
-            chat.deletedMessagesFor.set(userIdStr, deletedMsgs);
-            await chat.save();
+
+        const result = await Chat.updateOne(
+            { _id: chatId, participants: userId, 'messages._id': messageId },
+            { $addToSet: { [`deletedMessagesFor.${userIdStr}`]: messageId } }
+        );
+
+        if (!result.matchedCount) {
+            return res.status(404).json({ success: false, message: "Chat or message not found" });
         }
 
-        logger.info(`✅ User ${req.user.email} soft-deleted message ${messageId} in chat ${chatId} (admin can still view)`);
-
-        res.json({
-            success: true,
-            message: "Message deleted successfully"
-        });
+        res.json({ success: true, message: "Message deleted successfully" });
     } catch (error) {
         logger.error(`Delete message error: ${error.message}`);
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete message"
-        });
+        res.status(500).json({ success: false, message: "Failed to delete message" });
     }
 };
 

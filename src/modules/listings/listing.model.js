@@ -9,7 +9,7 @@ const listingSchema = new mongoose.Schema({
   details: { type: Object },
   images: [{ type: String }],
   coverImage: { type: String },
-  status: { type: String, enum: ["available", "sold"], default: "available" }
+  status: { type: String, enum: ["available", "in_progress", "sold"], default: "available" }
 }, { timestamps: true });
 
 // Performance indexes

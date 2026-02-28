@@ -13,6 +13,8 @@ const MAX_MESSAGE_LENGTH = 5000;
 
 // Simple rate limiter for socket events
 const socketRateLimits = new Map(); // key: `${userId}:${event}` -> { count, resetAt }
+let rateLimitCleanupTimer = null;
+
 function checkSocketRateLimit(userId, event, maxPerMinute = 30) {
     const key = `${userId}:${event}`;
     const now = Date.now();
@@ -22,11 +24,10 @@ function checkSocketRateLimit(userId, event, maxPerMinute = 30) {
         return true;
     }
     entry.count++;
-    if (entry.count > maxPerMinute) return false;
-    return true;
+    return entry.count <= maxPerMinute;
 }
-// Cleanup stale entries every 5 minutes
-setInterval(() => {
+// Cleanup stale entries every 5 minutes (clearable on shutdown)
+rateLimitCleanupTimer = setInterval(() => {
     const now = Date.now();
     for (const [key, val] of socketRateLimits) {
         if (val.resetAt < now) socketRateLimits.delete(key);
@@ -36,7 +37,7 @@ setInterval(() => {
 class SocketService {
     constructor() {
         this.io = null;
-        this.userSockets = new Map(); // userId -> socketId
+        this.userSockets = new Map(); // userId -> Set<socketId> (multi-tab support)
         this.redisAdapter = null;
     }
 
@@ -113,10 +114,18 @@ class SocketService {
                 }
 
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                const user = await User.findById(decoded.id).select('-passwordHash');
+                if (!decoded?.id) return next(new Error('Invalid token'));
 
+                // Use Redis cache (same as HTTP authMiddleware) to avoid DB hit on every connect
+                const cacheKey = `auth:user:${decoded.id}`;
+                let user = null;
+                if (redis.isReady()) {
+                    try { user = await redis.get(cacheKey); } catch { /* fallback to DB */ }
+                }
                 if (!user) {
-                    return next(new Error('User not found'));
+                    user = await User.findById(decoded.id).select('-passwordHash -refreshTokens -authLogs').lean();
+                    if (!user) return next(new Error('User not found'));
+                    if (redis.isReady()) redis.set(cacheKey, user, 300).catch(() => { });
                 }
 
                 socket.userId = user._id.toString();
@@ -138,10 +147,12 @@ class SocketService {
 
     handleConnection(socket) {
         const userId = socket.userId;
-        logger.info(`🔌 User connected: ${userId} (${socket.user.email})`);
 
-        // Store socket
-        this.userSockets.set(userId, socket.id);
+        // Store socket (multi-tab: use a Set of socket IDs)
+        if (!this.userSockets.has(userId)) {
+            this.userSockets.set(userId, new Set());
+        }
+        this.userSockets.get(userId).add(socket.id);
         this.setUserOnline(userId, socket.id);
 
         // Join personal room
@@ -150,10 +161,9 @@ class SocketService {
         // If user is admin, join admin room for real-time notifications
         if (socket.user.role === 'admin') {
             socket.join('admin');
-            logger.info(`👑 Admin ${userId} joined admin room`);
         }
 
-        // Send user's chats
+        // Send user's chats (lightweight — no messages loaded)
         this.sendUserChats(socket);
 
         // Event handlers
@@ -170,24 +180,20 @@ class SocketService {
 
     async handleJoinChat(socket, chatId) {
         try {
-            const chat = await Chat.findOne({
-                _id: chatId,
-                participants: socket.userId
-            });
+            if (!chatId || typeof chatId !== 'string') return;
 
-            if (!chat) {
-                return socket.emit('error', { message: 'Chat not found' });
+            // Validate chatId format to prevent DB errors
+            if (!chatId.match(/^[0-9a-fA-F]{24}$/)) {
+                return socket.emit('error', { message: 'Invalid chat ID' });
             }
 
             socket.join(`chat:${chatId}`);
-            logger.info(`User ${socket.userId} joined chat ${chatId}`);
 
             socket.to(`chat:${chatId}`).emit('user_joined', {
                 userId: socket.userId,
                 username: socket.user.username
             });
         } catch (error) {
-            logger.error(`Join chat error: ${error.message}`);
             socket.emit('error', { message: 'Failed to join chat' });
         }
     }
@@ -199,93 +205,116 @@ class SocketService {
 
     async handleSendMessage(socket, data) {
         try {
-            const { chatId, content, type = 'text', fileUrl } = data;
+            const { chatId, content, type = 'text', fileUrl, tempId } = data;
 
             if (!chatId || !content) {
                 return socket.emit('error', { message: 'Invalid message data' });
             }
 
-            // ✅ SECURITY: Rate limit messages (max 20/min)
+            // Validate chatId format
+            if (!chatId.match(/^[0-9a-fA-F]{24}$/)) {
+                return socket.emit('error', { message: 'Invalid chat ID' });
+            }
+
+            // Rate limit messages (max 20/min)
             if (!checkSocketRateLimit(socket.userId, 'send_message', 20)) {
                 return socket.emit('error', { message: 'You are sending messages too fast. Please slow down.' });
             }
 
-            // ✅ SECURITY: Enforce message length limit
+            // Enforce message length limit
             if (typeof content !== 'string' || content.length > MAX_MESSAGE_LENGTH) {
                 return socket.emit('error', { message: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` });
             }
 
-            // ✅ SECURITY: Sanitize message content to prevent stored XSS
+            // Sanitize message content
             const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
             if (!sanitizedContent) {
                 return socket.emit('error', { message: 'Message content is empty after sanitization' });
             }
 
-            const chat = await Chat.findOne({
-                _id: chatId,
-                participants: socket.userId
-            });
+            const now = new Date();
+            const messageId = new (await import('mongoose')).default.Types.ObjectId();
+
+            // Atomic update: $push message + $set lastMessage + $inc unread counts
+            // This avoids loading the entire chat document (which grows with every message)
+            const updateOps = {
+                $push: {
+                    messages: {
+                        _id: messageId,
+                        sender: socket.userId,
+                        content: sanitizedContent,
+                        type,
+                        fileUrl: fileUrl ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) : undefined,
+                        timestamp: now,
+                        read: false,
+                        delivered: true
+                    }
+                },
+                $set: {
+                    lastMessage: {
+                        content: sanitizedContent,
+                        sender: socket.userId,
+                        timestamp: now,
+                        messageType: type
+                    },
+                    updatedAt: now
+                }
+            };
+
+            const chat = await Chat.findOneAndUpdate(
+                { _id: chatId, participants: socket.userId },
+                updateOps,
+                { new: false, projection: { participants: 1 } } // Only return participants, not the full doc
+            );
 
             if (!chat) {
                 return socket.emit('error', { message: 'Chat not found' });
             }
 
-            // Create message
-            const message = {
-                sender: socket.userId,
+            // Increment unread count for other participants
+            const incOps = {};
+            for (const pId of chat.participants) {
+                const pid = pId.toString();
+                if (pid !== socket.userId) {
+                    incOps[`unreadCount.${pid}`] = 1;
+                }
+            }
+            if (Object.keys(incOps).length > 0) {
+                Chat.updateOne({ _id: chatId }, { $inc: incOps }).catch(() => { });
+            }
+
+            // Build message payload (sender info from socket — no DB populate needed)
+            const messageToSend = {
+                _id: messageId.toString(),
+                sender: {
+                    _id: socket.userId,
+                    username: socket.user.username,
+                    email: socket.user.email,
+                    avatar: socket.user.avatar
+                },
                 content: sanitizedContent,
                 type,
-                fileUrl: fileUrl ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) : undefined,
-                timestamp: new Date(),
+                fileUrl: fileUrl || undefined,
+                timestamp: now,
                 read: false,
                 delivered: true
             };
 
-            // Add to chat
-            await chat.addMessage(message);
-            await chat.populate('messages.sender', 'username email avatar');
-
-            const savedMessage = chat.messages[chat.messages.length - 1];
-
-            // Convert to plain object with _id
-            const messageToSend = {
-                _id: savedMessage._id.toString(),
-                sender: {
-                    _id: savedMessage.sender._id.toString(),
-                    username: savedMessage.sender.username,
-                    email: savedMessage.sender.email,
-                    avatar: savedMessage.sender.avatar
-                },
-                content: savedMessage.content,
-                type: savedMessage.type,
-                fileUrl: savedMessage.fileUrl,
-                timestamp: savedMessage.timestamp,
-                read: savedMessage.read || false,
-                delivered: savedMessage.delivered || true
-            };
-
-            // Broadcast to chat
-            this.io.to(`chat:${chatId}`).emit('new_message', {
-                chatId,
-                message: messageToSend
-            });
-
-            // Confirm to sender
-            socket.emit('message_sent', {
-                chatId,
-                message: messageToSend
-            });
-
-            // Cache for offline users
-            const onlineUsers = await this.getOnlineUsers();
+            // Deliver to each participant's personal room (works even if they
+            // haven't opened this chat). socket.to(room) excludes the sender.
             for (const participantId of chat.participants) {
                 const pId = participantId.toString();
-                if (pId !== socket.userId && !onlineUsers.includes(pId)) {
-                    await this.cacheOfflineMessage(pId, { chatId, message: savedMessage });
+                if (pId !== socket.userId) {
+                    this.io.to(`user:${pId}`).emit('new_message', { chatId, message: messageToSend });
                 }
             }
 
-            logger.info(`Message sent in chat ${chatId} by ${socket.userId}`);
+            // Confirm to sender with tempId for placeholder replacement
+            socket.emit('message_sent', {
+                chatId,
+                message: messageToSend,
+                tempId: tempId || null
+            });
         } catch (error) {
             logger.error(`Send message error: ${error.message}`);
             socket.emit('error', { message: 'Failed to send message' });
@@ -331,16 +360,9 @@ class SocketService {
     handleMessageDelivered(socket, data) {
         try {
             const { chatId, messageId } = data;
-
-            // Notify sender that message was delivered
-            socket.to(`chat:${chatId}`).emit('message_delivered', {
-                chatId,
-                messageId
-            });
-
-            logger.info(`Message ${messageId} delivered in chat ${chatId}`);
+            socket.to(`chat:${chatId}`).emit('message_delivered', { chatId, messageId });
         } catch (error) {
-            logger.error(`Message delivered error: ${error.message}`);
+            // silent
         }
     }
 
@@ -355,10 +377,17 @@ class SocketService {
 
     handleDisconnect(socket) {
         const userId = socket.userId;
-        logger.info(`🔌 User disconnected: ${userId}`);
-        this.userSockets.delete(userId);
-        this.setUserOffline(userId);
-        socket.broadcast.emit('user_offline', { userId });
+        // Multi-tab: remove just this socket from the Set
+        const sockets = this.userSockets.get(userId);
+        if (sockets) {
+            sockets.delete(socket.id);
+            if (sockets.size === 0) {
+                // Last tab closed — user is truly offline
+                this.userSockets.delete(userId);
+                this.setUserOffline(userId);
+                socket.broadcast.emit('user_offline', { userId });
+            }
+        }
     }
 
     async sendUserChats(socket) {
@@ -371,15 +400,8 @@ class SocketService {
                 .populate('lastMessage.sender', 'username')
                 .sort({ 'lastMessage.timestamp': -1 })
                 .limit(50)
-                .select('-messages')
+                .select('-messages') // Never load messages here — only metadata
                 .lean();
-
-            logger.info(`📬 Sending ${chats.length} chats to user ${socket.userId}`);
-
-            // Log first chat participants for debugging
-            if (chats.length > 0) {
-                logger.info(`👥 First chat participants: ${chats[0].participants.map(p => `${p.username} (${p._id})`).join(', ')}`);
-            }
 
             socket.emit('user_chats', chats);
         } catch (error) {
@@ -424,24 +446,10 @@ class SocketService {
         }
     }
 
-    async cacheOfflineMessage(userId, messageData) {
-        try {
-            const client = redis.getClient();
-            if (client) {
-                await client.lPush(`offline_messages:${userId}`, JSON.stringify(messageData));
-                await client.expire(`offline_messages:${userId}`, 86400);
-            }
-        } catch (error) {
-            logger.error(`Cache offline message error: ${error.message}`);
-        }
-    }
-
-    // Utilities
+    // Utilities — multi-tab aware
     sendToUser(userId, event, data) {
-        const socketId = this.userSockets.get(userId);
-        if (socketId) {
-            this.io.to(socketId).emit(event, data);
-        }
+        // Use the personal room (all tabs join `user:${userId}`)
+        this.io.to(`user:${userId}`).emit(event, data);
     }
 
     sendToChat(chatId, event, data) {
@@ -450,33 +458,26 @@ class SocketService {
 
     // Admin notifications for deposits/withdrawals
     notifyAdminsNewDeposit(deposit) {
-        logger.info(`📢 Notifying admins of new deposit: ${deposit._id}`);
         this.io.to('admin').emit('new_deposit', deposit);
     }
 
     notifyAdminsNewWithdrawal(withdrawal) {
-        logger.info(`📢 Notifying admins of new withdrawal: ${withdrawal._id}`);
         this.io.to('admin').emit('new_withdrawal', withdrawal);
     }
 
     notifyAdminsDepositUpdate(deposit) {
-        logger.info(`📢 Notifying admins of deposit update: ${deposit._id}`);
         this.io.to('admin').emit('deposit_updated', deposit);
     }
 
     notifyAdminsWithdrawalUpdate(withdrawal) {
-        logger.info(`📢 Notifying admins of withdrawal update: ${withdrawal._id}`);
         this.io.to('admin').emit('withdrawal_updated', withdrawal);
     }
 
-    // Notify user about their deposit/withdrawal status
     notifyUserDepositStatus(userId, deposit) {
-        logger.info(`📢 Notifying user ${userId} of deposit status: ${deposit.status}`);
         this.sendToUser(userId, 'deposit_status_updated', deposit);
     }
 
     notifyUserWithdrawalStatus(userId, withdrawal) {
-        logger.info(`📢 Notifying user ${userId} of withdrawal status: ${withdrawal.status}`);
         this.sendToUser(userId, 'withdrawal_status_updated', withdrawal);
     }
 

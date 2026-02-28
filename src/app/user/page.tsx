@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import Link from 'next/link';
 import {
@@ -100,6 +100,29 @@ interface ActiveDiscount {
   discountPercent: number;
 }
 
+interface CampaignListing extends Listing {
+  campaignDiscount?: {
+    type: 'mandatory' | 'voluntary';
+    discountPercent: number;
+    originalPrice?: number;
+    discountedPrice?: number;
+    label: string;
+  };
+}
+
+interface ActiveCampaign {
+  _id: string;
+  title: string;
+  description: string;
+  type: 'mandatory' | 'voluntary';
+  image: string;
+  discountPercent: number;
+  games: { _id: string; name: string; slug: string; icon?: string }[];
+  endDate: string;
+  listings: CampaignListing[];
+  listingCount: number;
+}
+
 /* ═══════════ STATIC DEMO DATA ═══════════ */
 /* ── Category Icons ── */
 const CATEGORIES = [
@@ -132,18 +155,18 @@ function EmptyGameSection({ gameName, isSeller }: { gameName: string; isSeller?:
         <Package className="w-8 h-8 text-white/20" />
       </div>
       <h3 className="text-base font-semibold text-white/60 mb-2">
-        لا توجد حسابات متاحة حالياً
+        No accounts available currently
       </h3>
       <p className="text-sm text-white/30 text-center mb-5">
         {isSeller
-          ? `ابدأ بإضافة حسابات ${gameName} من لوحة البائع`
-          : `لم يتم عرض أي حسابات ${gameName} بعد`}
+          ? `Start adding ${gameName} accounts from the seller dashboard`
+          : `No ${gameName} accounts listed yet`}
       </p>
       {isSeller && (
         <Link href="/user/store/new">
           <Button className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20">
             <Plus className="w-4 h-4 mr-2" />
-            أضف حساب جديد
+            Add New Account
           </Button>
         </Link>
       )}
@@ -244,14 +267,16 @@ function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: 
 
           {/* Top row badges */}
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-            <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
-              <Zap className="w-3 h-3" /> -{discount}%
-            </span>
-          ) : hasDiscount ? (
-            <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-              -{discountPercent}%
-            </span>
-          ) : null}
+            {isOwner ? (
+              <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl">
+                MY LISTING
+              </span>
+            ) : hasDiscount ? (
+              <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
+                <Zap className="w-3 h-3" /> -{discountPercent}%
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <div className="p-4">
@@ -289,8 +314,8 @@ function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: 
           </div>
           <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
-              {hasDiscount && <p className="text-[10px] text-white/20 line-through">${originalPrice.toFixed(2)}</p>}
-              <p className="text-base font-black text-white">${displayPrice.toFixed(2)}</p>
+              {hasDiscount && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice.toFixed(2)}</p>}
+              <p className="text-base font-black text-white">EGP {displayPrice.toFixed(2)}</p>
             </div>
           </div>
           {!isOwner && (
@@ -325,11 +350,10 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
       {onToggle && (
         <button
           onClick={onToggle}
-          className={`text-[12px] font-semibold flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-all duration-300 group ${
-            isExpanded
-              ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/25'
-              : 'text-white/30 border-white/[0.06] hover:text-cyan-400 hover:bg-white/[0.04] hover:border-cyan-500/15'
-          }`}
+          className={`text-[12px] font-semibold flex items-center gap-1.5 px-4 py-2 rounded-xl border transition-all duration-300 group ${isExpanded
+            ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/25'
+            : 'text-white/30 border-white/[0.06] hover:text-cyan-400 hover:bg-white/[0.04] hover:border-cyan-500/15'
+            }`}
         >
           {isExpanded ? (
             <>
@@ -349,6 +373,65 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
   );
 }
 
+/* ═══════════ BETWEEN-GAMES AD BANNER ═══════════ */
+function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
+  const handleClick = () => {
+    fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { });
+  };
+
+  const Wrapper = ad.link ? 'a' : 'div';
+  const wrapperProps = ad.link
+    ? { href: ad.link, target: '_blank' as const, rel: 'noopener noreferrer', onClick: handleClick }
+    : {};
+
+  return (
+    <section className="relative group">
+      <Wrapper
+        {...wrapperProps}
+        className="relative block w-full overflow-hidden rounded-2xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-500 cursor-pointer"
+      >
+        {/* Full-width image */}
+        <div className="relative w-full aspect-[4/1] sm:aspect-[5/1] md:aspect-[6/1] overflow-hidden">
+          <img
+            src={ad.image}
+            alt={ad.title}
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+          {/* Content overlay */}
+          <div className="absolute inset-0 flex items-center justify-between px-6 sm:px-8 md:px-12">
+            <div className="max-w-[60%]">
+              <h3 className="text-white font-bold text-sm sm:text-base md:text-lg drop-shadow-lg truncate">
+                {ad.title}
+              </h3>
+              {ad.description && (
+                <p className="text-white/60 text-[11px] sm:text-xs mt-1 line-clamp-1 drop-shadow">
+                  {ad.description}
+                </p>
+              )}
+            </div>
+
+            {ad.link && (
+              <div className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] sm:text-xs font-semibold px-4 py-2 rounded-xl group-hover:bg-white/20 transition-all duration-300">
+                Learn More
+                <ChevronRight className="w-3 h-3 inline-block mr-1 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            )}
+          </div>
+
+          {/* Ad badge */}
+          <span className="absolute top-3 left-3 bg-black/30 backdrop-blur-sm text-white/50 text-[8px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-white/10">
+            AD
+          </span>
+        </div>
+      </Wrapper>
+    </section>
+  );
+}
+
 /* ═══════════ GAME COLOR MAPPING ═══════════ */
 const GAME_COLORS: Record<string, string> = {
   'valorant': 'from-red-500 to-pink-600',
@@ -362,6 +445,8 @@ const GAME_COLORS: Record<string, string> = {
 function getGameColor(gameName: string): string {
   const normalized = gameName.toLowerCase();
   return GAME_COLORS[normalized] || 'from-cyan-500 to-blue-600';
+}
+
 /* ═══════════ INLINE FILTER BAR ═══════════ */
 function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, priceRange, setPriceRange }: {
   searchQuery: string;
@@ -431,11 +516,10 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
         <div className="relative" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => { setPriceOpen(!priceOpen); setSortOpen(false); }}
-            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium border transition-all duration-200 ${
-              priceRange.min || priceRange.max
-                ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
-                : 'bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]'
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium border transition-all duration-200 ${priceRange.min || priceRange.max
+              ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+              : 'bg-white/[0.04] border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06]'
+              }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             Price
@@ -479,7 +563,7 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
 }
 
 /* ═══════════ FILTER & SORT HELPER ═══════════ */
-function useProductFilter(products: typeof STATIC_PRODUCTS) {
+function useProductFilter(products: any[]) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
@@ -518,13 +602,10 @@ export default function UserDashboardPage() {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [dashboardAds, setDashboardAds] = useState<DashboardAd[]>([]);
   const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
+  const [activeCampaigns, setActiveCampaigns] = useState<ActiveCampaign[]>([]);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  // Filter hooks for each section
-  const bestSellingFilter = useProductFilter(STATIC_PRODUCTS);
-  const giftCardsFilter = useProductFilter(STATIC_GIFT_CARDS);
-  const trendingFilter = useProductFilter(STATIC_TRENDING);
-  const subscriptionsFilter = useProductFilter(STATIC_SUBSCRIPTIONS);
+  // Filter hooks removed - static data removed, using dynamic data from API
 
   const toggleSection = (section: string) => {
     setExpandedSection(prev => prev === section ? null : section);
@@ -551,6 +632,7 @@ export default function UserDashboardPage() {
           setGameListings(data.gameListings || {});
           setDashboardAds(data.ads || []);
           setActiveDiscounts(data.discounts || []);
+          setActiveCampaigns(data.campaigns || []);
           setListings(data.listings || []);
           setTrendingListings(data.trending || []);
           setPopularListings(data.popular || []);
@@ -558,17 +640,19 @@ export default function UserDashboardPage() {
           return;
         }
 
-        // Fetch games, ads, and discounts first (critical)
-        const [gamesRes, adsRes, discountsRes] = await Promise.all([
+        // Fetch games, ads, discounts, and campaigns first (critical)
+        const [gamesRes, adsRes, discountsRes, campaignsRes] = await Promise.all([
           fetch('/api/v1/games'),
-          fetch('/api/v1/ads/active?position=hero'),
+          fetch('/api/v1/ads/active'),
           fetch('/api/v1/discounts/active'),
+          fetch('/api/v1/campaigns/active'),
         ]);
 
-        const [gamesData, adsData, discountsData] = await Promise.all([
+        const [gamesData, adsData, discountsData, campaignsData] = await Promise.all([
           gamesRes.json(),
           adsRes.json(),
           discountsRes.json(),
+          campaignsRes.json(),
         ]);
 
         let gameListingsData: Record<string, Listing[]> = {};
@@ -598,6 +682,9 @@ export default function UserDashboardPage() {
 
         // Set discounts
         if (discountsData.data) setActiveDiscounts(discountsData.data);
+
+        // Set campaigns
+        if (campaignsData.data) setActiveCampaigns(campaignsData.data);
 
         // Fetch rankings separately with shorter timeout (non-blocking)
         fetch('/api/v1/rankings/homepage?limit=10', {
@@ -630,6 +717,7 @@ export default function UserDashboardPage() {
           gameListings: gameListingsData,
           ads: adsData.data || [],
           discounts: discountsData.data || [],
+          campaigns: campaignsData.data || [],
           listings: rankingsListings.listings,
           trending: rankingsListings.trending,
           popular: rankingsListings.popular,
@@ -645,6 +733,15 @@ export default function UserDashboardPage() {
 
     fetchAllData();
   }, []); // Run only once on mount
+
+  // Split ads by position
+  const heroAds = dashboardAds.filter(ad => ad.position === 'hero');
+  const betweenGamesAds = dashboardAds.filter(ad => ad.position === 'between_games');
+
+  // Pick ONE random slot between game sections to show an ad (stable across re-renders)
+  const randomAdSlot = useMemo(() => {
+    return games.length > 1 ? Math.floor(Math.random() * (games.length - 1)) : -1;
+  }, [games.length]);
 
   // Create a map of listing ID to discount for efficient lookup
   const discountMap = activeDiscounts.reduce((map, discount) => {
@@ -708,14 +805,14 @@ export default function UserDashboardPage() {
         </section>
 
         {/* ═══════════ ADMIN ADS HERO CAROUSEL ═══════════ */}
-        {dashboardAds.length > 0 && (
+        {heroAds.length > 0 && (
           <section>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1 h-5 rounded-full bg-gradient-to-b from-orange-400 to-red-500" />
               <span className="text-[11px] text-white/25 font-semibold uppercase tracking-widest">Sponsored</span>
             </div>
             <HorizontalScroll>
-              {dashboardAds.map((ad) => (
+              {heroAds.map((ad) => (
                 <a
                   key={ad._id}
                   href={ad.link || '#'}
@@ -824,8 +921,8 @@ export default function UserDashboardPage() {
                       )}
                       <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                         <div>
-                          <p className="text-[10px] text-white/20 line-through">${disc.originalPrice.toFixed(2)}</p>
-                          <p className="text-base font-black text-red-400">${disc.discountedPrice.toFixed(2)}</p>
+                          <p className="text-[10px] text-white/20 line-through">EGP {disc.originalPrice.toFixed(2)}</p>
+                          <p className="text-base font-black text-red-400">EGP {disc.discountedPrice.toFixed(2)}</p>
                         </div>
                         <div className="bg-red-500/10 border border-red-500/15 text-red-400 text-[9px] font-black px-2 py-1 rounded-lg">
                           DEAL
@@ -838,6 +935,154 @@ export default function UserDashboardPage() {
             </HorizontalScroll>
           </section>
         )}
+
+        {/* ═══════════ CAMPAIGN DISCOUNT SECTIONS ═══════════ */}
+        {activeCampaigns.map((campaign) => {
+          const isMandatory = campaign.type === 'mandatory';
+          const gradientColor = isMandatory ? 'from-orange-500 to-amber-600' : 'from-blue-500 to-cyan-600';
+          const badgeColor = isMandatory ? 'bg-orange-500/15 text-orange-400 border-orange-500/15' : 'bg-blue-500/15 text-blue-400 border-blue-500/15';
+          const endDate = new Date(campaign.endDate);
+          const timeLeft = endDate.getTime() - Date.now();
+          const daysLeft = Math.max(0, Math.ceil(timeLeft / (1000 * 60 * 60 * 24)));
+
+          return (
+            <section key={campaign._id}>
+              {/* Campaign Banner */}
+              {campaign.image && (
+                <div className="relative w-full aspect-[5/1] sm:aspect-[6/1] rounded-2xl overflow-hidden mb-4 border border-white/[0.06]">
+                  <img src={campaign.image} alt={campaign.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/60" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex items-end justify-between">
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white drop-shadow-lg">{campaign.title}</h2>
+                      {campaign.description && <p className="text-white/50 text-xs mt-1 line-clamp-1">{campaign.description}</p>}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-black px-3 py-1.5 rounded-xl shadow-lg">
+                        -{campaign.discountPercent}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Section header when no image */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className={`relative w-9 h-9 rounded-xl bg-gradient-to-br ${gradientColor} flex items-center justify-center shadow-lg`}>
+                    <Percent className="w-4 h-4 text-white" />
+                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${gradientColor} blur-lg opacity-30`} />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-white leading-tight flex items-center gap-2">
+                      {!campaign.image && campaign.title}
+                      {campaign.image && `${campaign.title} — Accounts`}
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}>
+                        {isMandatory ? 'Commission Discount' : 'Price Discount'}
+                      </span>
+                      {daysLeft <= 3 && (
+                        <span className="bg-red-500/15 text-red-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-500/15 animate-pulse">
+                          {daysLeft === 0 ? 'Last Day!' : `${daysLeft} days left`}
+                        </span>
+                      )}
+                    </h2>
+                    <p className="text-[10px] text-white/20 mt-0.5 flex items-center gap-2">
+                      {campaign.games.map(g => g.name).join(' • ')}
+                      <span className="text-white/10">|</span>
+                      <span>{campaign.listingCount} accounts</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Campaign Listings */}
+              <HorizontalScroll>
+                {campaign.listings.map((listing) => {
+                  const cd = listing.campaignDiscount;
+                  const coverImg = listing.coverImage || (listing.images?.length > 0 ? listing.images[0] : null);
+                  const isVoluntary = cd?.type === 'voluntary';
+                  const displayPrice = isVoluntary && cd?.discountedPrice ? cd.discountedPrice : listing.price;
+                  const originalPrice = isVoluntary && cd?.originalPrice ? cd.originalPrice : listing.price;
+                  const hasRealDiscount = isVoluntary && cd?.discountedPrice;
+
+                  return (
+                    <Link
+                      key={listing._id}
+                      href={`/listings/${listing._id}`}
+                      className={`group flex-shrink-0 w-[220px] bg-[#0c0f18] rounded-2xl border overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 relative ${isMandatory
+                        ? 'border-orange-500/[0.06] hover:border-orange-500/20 hover:shadow-orange-500/[0.07]'
+                        : 'border-blue-500/[0.06] hover:border-blue-500/20 hover:shadow-blue-500/[0.07]'
+                        }`}
+                    >
+                      {/* Top accent line */}
+                      <div className={`absolute top-0 left-0 right-0 h-[2px] z-10 ${isMandatory ? 'bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500' : 'bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500'}`} />
+
+                      <div className="relative aspect-[5/4] overflow-hidden">
+                        {coverImg ? (
+                          <img src={coverImg} alt={listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
+                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
+
+                        {/* Discount badge */}
+                        <span className={`absolute top-2 left-2 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg ${isMandatory ? 'bg-orange-500' : 'bg-blue-500'}`}>
+                          -{cd?.discountPercent || campaign.discountPercent}%
+                        </span>
+
+                        {/* Shield */}
+                        <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+                          <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                        </span>
+
+                        {/* Type label */}
+                        <span className={`absolute bottom-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm ${isMandatory ? 'bg-orange-500/20 text-orange-300 border border-orange-500/20' : 'bg-blue-500/20 text-blue-300 border border-blue-500/20'}`}>
+                          {isMandatory ? 'Reduced Commission' : 'Discounted Price'}
+                        </span>
+                      </div>
+
+                      <div className="p-3">
+                        <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
+                          {listing.title}
+                        </h3>
+
+                        {listing.seller && (
+                          <div className="flex items-center gap-1 mt-1.5">
+                            <span className="text-[9px] text-white/40">@{listing.seller.username}</span>
+                          </div>
+                        )}
+
+                        {listing.game && (
+                          <span className="text-[9px] text-white/30 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium mt-1.5 inline-block">
+                            {listing.game.name}
+                          </span>
+                        )}
+
+                        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+                          <div>
+                            {hasRealDiscount && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice.toFixed(2)}</p>}
+                            <p className={`text-base font-black ${isMandatory ? 'text-orange-400' : 'text-blue-400'}`}>
+                              EGP {displayPrice.toFixed(2)}
+                            </p>
+                          </div>
+                          <div className={`text-[8px] font-bold px-2 py-1 rounded-lg border ${isMandatory
+                            ? 'bg-orange-500/10 border-orange-500/15 text-orange-400'
+                            : 'bg-blue-500/10 border-blue-500/15 text-blue-400'
+                            }`}>
+                            {isMandatory ? 'DEAL' : 'SALE'}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </HorizontalScroll>
+            </section>
+          );
+        })}
 
         {/* ═══════════ 🔥 BEST SELLERS (RANKED BY ALGORITHM) ═══════════ */}
         {listings.length > 0 && (
@@ -860,82 +1105,38 @@ export default function UserDashboardPage() {
           </section>
         )}
 
-        {/* ═══════════ DYNAMIC GAME SECTIONS ═══════════ */}
-        {games.map((game) => {
+        {/* ═══════════ DYNAMIC GAME SECTIONS (WITH ADS BETWEEN) ═══════════ */}
+        {games.map((game, index) => {
           const listings = gameListings[game._id] || [];
           const gameColor = getGameColor(game.name);
-        {/* ═══════════ BEST SELLING ACCOUNTS (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={Flame} title="Best Selling Accounts" color="from-orange-500 to-red-500" subtitle="Most popular gaming accounts" isExpanded={expandedSection === 'best-selling'} onToggle={() => toggleSection('best-selling')} />
-          {expandedSection === 'best-selling' ? (
-            <>
-              <InlineFilterBar {...bestSellingFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {bestSellingFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {bestSellingFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_PRODUCTS.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
-        </section>
-
-        {/* ═══════════ BEST SELLING GIFT CARDS (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={CreditCard} title="Best Selling Gift Cards" color="from-emerald-500 to-green-600" subtitle="Top rated digital gift cards" isExpanded={expandedSection === 'gift-cards'} onToggle={() => toggleSection('gift-cards')} />
-          {expandedSection === 'gift-cards' ? (
-            <>
-              <InlineFilterBar {...giftCardsFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {giftCardsFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {giftCardsFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_GIFT_CARDS.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
-        </section>
+          // Show a between_games ad only at one random slot
+          const adForThisGap = betweenGamesAds.length > 0 && index === randomAdSlot
+            ? betweenGamesAds[Math.floor(Math.random() * betweenGamesAds.length)]
+            : null;
 
           return (
-            <section key={game._id}>
-              <SectionHeader
-                icon={Gamepad2}
-                title={`${game.name} Accounts`}
-                color={gameColor}
-                subtitle={`Premium ${game.name} accounts`}
-              />
-              {listings.length > 0 ? (
-                <HorizontalScroll>
-                  {listings.map((listing) => (
-                    <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
-                  ))}
-                </HorizontalScroll>
-              ) : (
-                <EmptyGameSection gameName={game.name} isSeller={user?.role === 'seller'} />
-              )}
-            </section>
+            <div key={game._id} className="space-y-10">
+              <section>
+                <SectionHeader
+                  icon={Gamepad2}
+                  title={`${game.name} Accounts`}
+                  color={gameColor}
+                  subtitle={`Premium ${game.name} accounts`}
+                />
+                {listings.length > 0 ? (
+                  <HorizontalScroll>
+                    {listings.map((listing) => (
+                      <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                    ))}
+                  </HorizontalScroll>
+                ) : (
+                  <EmptyGameSection gameName={game.name} isSeller={user?.role === 'seller'} />
+                )}
+              </section>
+
+              {/* Between-games ad banner */}
+              {adForThisGap && <BetweenGamesAd ad={adForThisGap} />}
+            </div>
           );
         })}
 
@@ -1013,33 +1214,6 @@ export default function UserDashboardPage() {
               <p className="text-white/20 text-[11px] mt-4 font-medium">✓ Cancel anytime • No hidden fees • Instant activation</p>
             </div>
           </div>
-        </section>
-
-        {/* ═══════════ TRENDING GAMES (STATIC) ═══════════ */}
-        <section>
-          <SectionHeader icon={TrendingUp} title="Trending Now" color="from-purple-500 to-violet-600" subtitle="What everyone's buying" isExpanded={expandedSection === 'trending'} onToggle={() => toggleSection('trending')} />
-          {expandedSection === 'trending' ? (
-            <>
-              <InlineFilterBar {...trendingFilter} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {trendingFilter.filtered.map((product) => (
-                  <StaticProductCard key={product.id} product={product} gridMode />
-                ))}
-                {trendingFilter.filtered.length === 0 && (
-                  <div className="col-span-full flex flex-col items-center justify-center py-16 gap-3">
-                    <Search className="w-8 h-8 text-white/10" />
-                    <p className="text-white/30 text-sm">No products match your filters</p>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <HorizontalScroll>
-              {STATIC_TRENDING.map((product) => (
-                <StaticProductCard key={product.id} product={product} />
-              ))}
-            </HorizontalScroll>
-          )}
         </section>
 
         {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}

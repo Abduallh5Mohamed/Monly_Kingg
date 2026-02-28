@@ -187,8 +187,8 @@ export default function BrowseAccountsPage() {
             <button
               onClick={() => { setSelectedGame(''); setPage(1); }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${!selectedGame
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
                 }`}
             >
               <Flame className="w-4 h-4" />
@@ -199,8 +199,8 @@ export default function BrowseAccountsPage() {
                 key={game._id}
                 onClick={() => { setSelectedGame(game._id); setPage(1); }}
                 className={`px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${selectedGame === game._id
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
-                    : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/25'
+                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10'
                   }`}
               >
                 {game.name}
@@ -253,8 +253,8 @@ export default function BrowseAccountsPage() {
               <button
                 onClick={() => setShowFilters((p) => !p)}
                 className={`h-12 px-4 rounded-xl border font-medium text-sm flex items-center gap-2 transition-all ${showFilters
-                    ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300'
-                    : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/[0.08] hover:text-white'
+                  ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300'
+                  : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/[0.08] hover:text-white'
                   }`}
               >
                 <Filter className="h-4 w-4" />
@@ -301,8 +301,8 @@ export default function BrowseAccountsPage() {
                       key={r.label}
                       onClick={() => selectPriceRange(r)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activePriceLabel === r.label
-                          ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
-                          : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg'
+                        : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                         }`}
                     >
                       {r.label}
@@ -447,7 +447,7 @@ export default function BrowseAccountsPage() {
                   {viewMode === 'grid' && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-3 pt-8">
                       <div className="flex items-center justify-between">
-                        <p className="text-xl font-black text-white">${listing.price}</p>
+                        <p className="text-xl font-black text-white">EGP {listing.price}</p>
                         <div className="flex items-center gap-1 text-yellow-400">
                           <Star className="w-3 h-3 fill-current" />
                           <span className="text-xs font-medium">5.0</span>
@@ -481,7 +481,7 @@ export default function BrowseAccountsPage() {
                   {/* Price (List view) */}
                   {viewMode === 'list' && (
                     <div className="flex items-center gap-4 mt-3">
-                      <p className="text-xl font-black text-white">${listing.price}</p>
+                      <p className="text-xl font-black text-white">EGP {listing.price}</p>
                       <div className="flex items-center gap-1 text-yellow-400">
                         <Star className="w-3 h-3 fill-current" />
                         <span className="text-xs font-medium">5.0</span>
@@ -517,8 +517,8 @@ export default function BrowseAccountsPage() {
                     key={n}
                     onClick={() => setPage(n as number)}
                     className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${page === n
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
-                        : 'text-white/50 hover:bg-white/5 hover:text-white'
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
+                      : 'text-white/50 hover:bg-white/5 hover:text-white'
                       }`}
                   >
                     {n}

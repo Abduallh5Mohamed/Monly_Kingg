@@ -1,7 +1,7 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown, Tag } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -25,11 +25,15 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
-  // Redirect to home if user is not logged in
+  // Redirect if not logged in or if admin (admins have no user account)
   useEffect(() => {
-    if (!loading && !user) {
-      console.log('🚪 User not logged in, redirecting to home...');
-      router.replace('/'); // Redirect to home page
+    if (loading) return;
+    if (!user) {
+      router.replace('/');
+      return;
+    }
+    if (user.role === 'admin') {
+      router.replace('/admin/dashboard');
     }
   }, [user, loading, router]);
 
@@ -97,15 +101,16 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
     }
   }, [user?.username]);  // stable primitive — doesn't change on re-renders
 
-  // Check if profile is completed
+  // Check if profile is completed — skip for admins (they manage the system, not their user profile)
   useEffect(() => {
     if (pathname === '/complete-profile') return;
     if (!user) return;
+    if (user.role === 'admin') return; // admins can always access user pages
     if (user.profileCompleted !== true) {
       console.log('➡️ Dashboard redirecting to /complete-profile');
       router.push('/complete-profile');
     }
-  }, [user?.profileCompleted]);
+  }, [user?.profileCompleted, user?.role]);
 
   // Show loading or nothing while redirecting
   if (loading || !user) {
@@ -278,6 +283,19 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           </div>
                           <span className="text-sm font-medium">Settings</span>
                         </Link>
+
+                        {user?.isSeller && (
+                          <Link
+                            href="/user/discounts"
+                            onClick={() => setProfileMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-orange-500/10 transition-colors">
+                              <Tag className="w-4 h-4 text-white/40 group-hover:text-orange-400 transition-colors" />
+                            </div>
+                            <span className="text-sm font-medium">Discounts</span>
+                          </Link>
+                        )}
                       </div>
 
                       {/* Logout button */}

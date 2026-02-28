@@ -16,7 +16,6 @@ import {
     Camera,
     Shield,
     Wallet,
-    Trophy,
     Clock,
     Heart,
     Package,
@@ -310,117 +309,91 @@ export default function ProfilePage() {
         );
     }
 
+    const statusColors: Record<string, string> = {
+        active: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+        available: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+        sold: 'text-gray-400 bg-white/5 border-white/10',
+        pending: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+    };
+
     return (
         <UserDashboardLayout>
-            <div className="min-h-screen bg-gradient-to-br from-[#0a0e14] via-[#1a1f2e] to-[#0f1419] p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold text-[#f5f5dc]">My Profile</h1>
-                        <p className="text-gray-400 mt-1">Manage your account information and settings</p>
-                    </div>
-                    {!isEditing && (
-                        <Button
-                            onClick={handleEditToggle}
-                            className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-lg shadow-cyan-500/30 transition-all"
-                        >
-                            <Edit2 className="w-4 h-4 mr-2" />
-                            Edit Profile
-                        </Button>
-                    )}
-                </div>
+            <div className="min-h-screen bg-[#0d1117] p-4 md:p-6">
+                <div className="max-w-5xl mx-auto space-y-5">
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Left Column - Profile Card */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl">
-                            {/* Avatar */}
-                            <div className="flex flex-col items-center mb-6">
-                                <div className="relative group">
-                                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-cyan-500/50 shadow-lg shadow-cyan-500/30">
-                                        <img
-                                            src={avatarPreview || profile.avatar}
-                                            alt="Avatar"
-                                            className="w-full h-full object-cover"
-                                        />
+                    {/* ── Top Hero Card ─────────────────────────────── */}
+                    <div className="relative rounded-2xl overflow-hidden border border-white/8 shadow-2xl">
+                        {/* Gradient Banner */}
+                        <div className="relative h-28 bg-gradient-to-r from-[#0d2137] via-[#1a1040] to-[#0a1f30]">
+                            <div className="absolute inset-0 opacity-30"
+                                style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #06b6d430 0%, transparent 50%), radial-gradient(circle at 80% 20%, #7c3aed30 0%, transparent 50%)' }}
+                            />
+                        </div>
+
+                        {/* Card Body */}
+                        <div className="bg-[#161b25] px-6 pb-5">
+                            <div className="flex items-end justify-between -mt-10 mb-4">
+                                {/* Avatar */}
+                                <div className="relative">
+                                    <div className="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-[#161b25] shadow-xl">
+                                        <img src={avatarPreview || profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
                                     </div>
                                     {isEditing && (
-                                        <label
-                                            htmlFor="avatar-upload"
-                                            className="absolute bottom-0 right-0 bg-gradient-to-r from-cyan-500 to-cyan-600 p-2 rounded-full cursor-pointer hover:from-cyan-600 hover:to-cyan-700 transition-all shadow-lg"
-                                        >
-                                            <Camera className="w-4 h-4 text-white" />
-                                            <input
-                                                id="avatar-upload"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={handleAvatarChange}
-                                            />
+                                        <label htmlFor="avatar-upload" className="absolute -bottom-1 -right-1 w-6 h-6 bg-cyan-500 hover:bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer transition-colors border-2 border-[#161b25]">
+                                            <Camera className="w-3 h-3 text-white" />
+                                            <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
                                         </label>
                                     )}
                                 </div>
-                                <h2 className="text-2xl font-bold text-[#f5f5dc] mt-4">{profile.username}</h2>
-                                {profile.verified && (
-                                    <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-xs text-cyan-300">
-                                        <Shield className="w-3 h-3" /> Verified
-                                    </span>
-                                )}
-                            </div>
 
-                            {/* Stats */}
-                            <div className="space-y-3 border-t border-white/10 pt-6">
-                                <div className="flex items-center justify-between p-3 bg-purple-500/10 rounded-xl border border-purple-500/30">
-                                    <div className="flex items-center gap-2">
-                                        <Trophy className="w-5 h-5 text-purple-400" />
-                                        <span className="text-sm text-gray-300">Level</span>
-                                    </div>
-                                    <span className="text-lg font-bold text-purple-400">{profile.stats.level}</span>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30">
-                                    <div className="flex items-center gap-2">
-                                        <Wallet className="w-5 h-5 text-emerald-400" />
-                                        <span className="text-sm text-gray-300">Balance</span>
-                                    </div>
-                                    <span className="text-lg font-bold text-emerald-400">
-                                        ${profile.wallet.balance.toLocaleString()}
-                                    </span>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/30">
-                                    <div className="flex items-center gap-2">
-                                        <Shield className="w-5 h-5 text-cyan-400" />
-                                        <span className="text-sm text-gray-300">Rating</span>
-                                    </div>
-                                    <span className="text-lg font-bold text-cyan-400">{profile.stats.rating} ⭐</span>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
-                                    <div className="flex items-center gap-2">
-                                        <Calendar className="w-5 h-5 text-gray-400" />
-                                        <span className="text-sm text-gray-300">Member Since</span>
-                                    </div>
-                                    <span className="text-sm font-medium text-[#f5f5dc]">
-                                        {new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Activity Summary */}
-                            <div className="mt-6 pt-6 border-t border-white/10">
-                                <h3 className="text-sm font-semibold text-[#f5f5dc] mb-3">Activity Summary</h3>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="bg-white/5 rounded-xl p-3 text-center border border-white/10">
-                                        <div className="text-2xl font-bold text-cyan-400">{profile.stats.totalPurchases}</div>
-                                        <div className="text-xs text-gray-400 mt-1">Purchases</div>
-                                    </div>
-                                    {profile.isSeller && (
-                                        <div className="bg-white/5 rounded-xl p-3 text-center border border-white/10">
-                                            <div className="text-2xl font-bold text-purple-400">{profile.stats.totalSales}</div>
-                                            <div className="text-xs text-gray-400 mt-1">Sales</div>
-                                        </div>
+                                {/* Action buttons */}
+                                <div className="flex items-center gap-2 pb-1">
+                                    {profile.verified && (
+                                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-[11px] font-medium text-cyan-400">
+                                            <Shield className="w-3 h-3" /> Verified
+                                        </span>
                                     )}
+                                    {!isEditing ? (
+                                        <button onClick={handleEditToggle} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300 transition-colors">
+                                            <Edit2 className="w-3 h-3" /> Edit
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <Button onClick={handleSaveProfile} disabled={saving} size="sm" className="bg-cyan-500 hover:bg-cyan-400 text-white h-7 px-3 text-xs rounded-lg">
+                                                {saving ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Save
+                                            </Button>
+                                            <button onClick={handleEditToggle} className="flex items-center gap-1 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-400 transition-colors">
+                                                <X className="w-3 h-3" /> Cancel
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Name & Info */}
+                            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                                <div>
+                                    <h2 className="text-xl font-bold text-white">{profile.username}</h2>
+                                    <p className="text-xs text-gray-500 mt-0.5">{profile.email}</p>
+                                    {profile.bio && !isEditing && (
+                                        <p className="text-sm text-gray-400 mt-2 max-w-md">{profile.bio}</p>
+                                    )}
+                                </div>
+
+                                {/* Stats pills */}
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-xl">
+                                        <span className="text-xs text-gray-500">Lv.</span>
+                                        <span className="text-sm font-bold text-purple-400">{profile.stats.level}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                                        <span className="text-sm">⭐</span>
+                                        <span className="text-sm font-bold text-yellow-400">{profile.stats.rating}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                        <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+                                        <span className="text-sm font-bold text-emerald-400">${profile.wallet.balance.toLocaleString()}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -467,163 +440,167 @@ export default function ProfilePage() {
                         )}
                     </div>
 
-                    {/* Right Column */}
-                    <div className="lg:col-span-2 space-y-6">
-                        {/* Personal Information Card */}
-                        <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-[#f5f5dc]">Personal Information</h3>
-                                {isEditing && (
-                                    <div className="flex gap-2">
-                                        <Button
-                                            onClick={handleSaveProfile}
-                                            disabled={saving}
-                                            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/30"
-                                        >
-                                            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                                            Save
-                                        </Button>
-                                        <Button
-                                            onClick={handleEditToggle}
-                                            variant="outline"
-                                            className="border-white/10 text-gray-300 hover:bg-white/5"
-                                        >
-                                            <X className="w-4 h-4 mr-2" />
-                                            Cancel
-                                        </Button>
+                    {/* ── Main Grid ────────────────────────────────── */}
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+
+                        {/* ── Left sidebar ── */}
+                        <div className="lg:col-span-2 space-y-4">
+
+                            {/* Personal Info Card */}
+                            <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
+                                <div className="px-5 py-4 border-b border-white/5">
+                                    <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                                        <User className="w-4 h-4 text-cyan-500" /> Personal Info
+                                    </h3>
+                                </div>
+                                <div className="p-5 space-y-4">
+                                    {/* Username */}
+                                    <div>
+                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">Username</label>
+                                        {isEditing && canChangeUsername() ? (
+                                            <input type="text" value={editedProfile.username || ''} onChange={(e) => setEditedProfile({ ...editedProfile, username: e.target.value })}
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none" />
+                                        ) : (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm text-white">{profile.username}</span>
+                                                {isEditing && !canChangeUsername() && (
+                                                    <span className="text-[10px] text-yellow-500/70 flex items-center gap-0.5">
+                                                        <Clock className="w-2.5 h-2.5" /> {getDaysUntilUsernameChange()}d
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+
+                                    {/* Phone */}
+                                    <div>
+                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
+                                            <Phone className="w-3 h-3" /> Phone
+                                        </label>
+                                        {isEditing && canChangePhone() ? (
+                                            <input type="tel" value={editedProfile.phone || ''} onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
+                                                placeholder="Enter phone number" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                        ) : (
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm text-white">{profile.phone || <span className="text-gray-600">—</span>}</span>
+                                                {isEditing && !canChangePhone() && profile.phone && (
+                                                    <span className="text-[10px] text-yellow-500/70 flex items-center gap-0.5">
+                                                        <Clock className="w-2.5 h-2.5" /> {getDaysUntilPhoneChange()}d
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Address */}
+                                    <div>
+                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
+                                            <MapPin className="w-3 h-3" /> Address
+                                        </label>
+                                        {isEditing ? (
+                                            <input type="text" value={editedProfile.address || ''} onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
+                                                placeholder="Enter address" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                        ) : (
+                                            <span className="text-sm text-white">{profile.address || <span className="text-gray-600">—</span>}</span>
+                                        )}
+                                    </div>
+
+                                    {/* Bio (edit only) */}
+                                    {isEditing && (
+                                        <div>
+                                            <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">Bio</label>
+                                            <textarea value={editedProfile.bio || ''} onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
+                                                placeholder="Tell us about yourself..." maxLength={500} rows={3}
+                                                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20 resize-none" />
+                                            <p className="text-[10px] text-gray-700 text-right mt-1">{(editedProfile.bio || '').length}/500</p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Username */}
-                                <div>
-                                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                                        <User className="w-4 h-4 inline mr-2" />
-                                        Username
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={isEditing ? editedProfile.username : profile.username}
-                                        onChange={(e) => setEditedProfile({ ...editedProfile, username: e.target.value })}
-                                        disabled={!isEditing || !canChangeUsername()}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                                    />
-                                    {isEditing && !canChangeUsername() && (
-                                        <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
-                                            <Clock className="w-3 h-3" />
-                                            Can change in {getDaysUntilUsernameChange()} days
-                                        </p>
+                            {/* Activity Card */}
+                            <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
+                                <div className="px-5 py-4 border-b border-white/5">
+                                    <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-purple-400" /> Activity
+                                    </h3>
+                                </div>
+                                <div className="p-5 space-y-3">
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-500">Purchases</span>
+                                        <span className="font-semibold text-cyan-400">{profile.stats.totalPurchases}</span>
+                                    </div>
+                                    {profile.isSeller && (
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-gray-500">Sales</span>
+                                            <span className="font-semibold text-purple-400">{profile.stats.totalSales}</span>
+                                        </div>
                                     )}
-                                </div>
-
-                                {/* Phone */}
-                                <div>
-                                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                                        <Phone className="w-4 h-4 inline mr-2" />
-                                        Phone Number
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        value={isEditing ? (editedProfile.phone || '') : (profile.phone || '')}
-                                        onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                                        disabled={!isEditing || !canChangePhone()}
-                                        placeholder="Enter phone number"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-white/30"
-                                    />
-                                    {isEditing && !canChangePhone() && profile.phone && (
-                                        <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
-                                            <Clock className="w-3 h-3" />
-                                            Can change in {getDaysUntilPhoneChange()} days
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Address */}
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">
-                                        <MapPin className="w-4 h-4 inline mr-2" />
-                                        Address
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={isEditing ? (editedProfile.address || '') : (profile.address || '')}
-                                        onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
-                                        disabled={!isEditing}
-                                        placeholder="Enter your address"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-white/30"
-                                    />
-                                </div>
-
-                                {/* Bio */}
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-[#f5f5dc] mb-2">Bio</label>
-                                    <textarea
-                                        value={isEditing ? (editedProfile.bio || '') : (profile.bio || '')}
-                                        onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
-                                        disabled={!isEditing}
-                                        placeholder="Tell us about yourself..."
-                                        maxLength={500}
-                                        rows={3}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#f5f5dc] focus:border-cyan-500/50 focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-white/30 resize-none"
-                                    />
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-gray-500">Member Since</span>
+                                        <span className="text-white/70">{new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* My Listings or Favorites */}
-                        <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl">
-                            <h3 className="text-xl font-bold text-[#f5f5dc] mb-4 flex items-center gap-2">
-                                {profile.isSeller ? (
-                                    <>
-                                        <Package className="w-5 h-5 text-cyan-400" />
-                                        My Listings ({myListings.length})
-                                    </>
-                                ) : (
-                                    <>
-                                        <Heart className="w-5 h-5 text-pink-400" />
-                                        My Favorites ({favorites.length})
-                                    </>
-                                )}
-                            </h3>
-
-                            {profile.isSeller && myListings.length === 0 && (
-                                <div className="text-center py-12 text-gray-400">
-                                    <Package className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                                    <p>No listings yet</p>
+                        {/* ── Listings ── */}
+                        <div className="lg:col-span-3">
+                            <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden h-full">
+                                <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+                                    <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+                                        {profile.isSeller ? (
+                                            <><Package className="w-4 h-4 text-cyan-400" /> My Listings</>
+                                        ) : (
+                                            <><Heart className="w-4 h-4 text-pink-400" /> My Favorites</>
+                                        )}
+                                    </h3>
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-gray-500">
+                                        {profile.isSeller ? myListings.length : favorites.length}
+                                    </span>
                                 </div>
-                            )}
 
-                            {!profile.isSeller && favorites.length === 0 && (
-                                <div className="text-center py-12 text-gray-400">
-                                    <Heart className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                                    <p>No favorites yet</p>
-                                </div>
-                            )}
+                                <div className="p-4">
+                                    {profile.isSeller && myListings.length === 0 && (
+                                        <div className="flex flex-col items-center justify-center py-16 text-gray-700">
+                                            <Package className="w-8 h-8 mb-2 opacity-30" />
+                                            <p className="text-sm">No listings yet</p>
+                                        </div>
+                                    )}
+                                    {!profile.isSeller && favorites.length === 0 && (
+                                        <div className="flex flex-col items-center justify-center py-16 text-gray-700">
+                                            <Heart className="w-8 h-8 mb-2 opacity-30" />
+                                            <p className="text-sm">No favorites yet</p>
+                                        </div>
+                                    )}
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {(profile.isSeller ? myListings : favorites).map((listing) => (
-                                    <div
-                                        key={listing._id}
-                                        className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all"
-                                    >
-                                        <div className="flex items-start gap-3">
-                                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
-                                                <span className="text-2xl">{listing.game?.icon || '🎮'}</span>
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-semibold text-white truncate">{listing.title}</h4>
-                                                <p className="text-xs text-gray-400 mt-1">{listing.game?.name}</p>
-                                                <div className="flex items-center justify-between mt-2">
-                                                    <span className="text-sm font-bold text-cyan-400">${listing.price}</span>
-                                                    <span className="text-xs text-gray-500">
-                                                        {new Date(listing.createdAt).toLocaleDateString()}
+                                    <div className="space-y-2">
+                                        {(profile.isSeller ? myListings : favorites).map((listing) => (
+                                            <div key={listing._id} className="flex items-center justify-between px-4 py-3 bg-white/3 hover:bg-white/[0.06] border border-white/5 hover:border-white/10 rounded-xl transition-all group cursor-pointer">
+                                                {/* Left: title + game */}
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-sm font-medium text-white truncate group-hover:text-cyan-300 transition-colors">
+                                                        {listing.title}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 mt-0.5">{listing.game?.name}</p>
+                                                </div>
+
+                                                {/* Right: price + status + date */}
+                                                <div className="flex items-center gap-3 ml-4 flex-shrink-0">
+                                                    <span className="text-sm font-bold text-cyan-400">EGP {listing.price.toLocaleString()}</span>
+                                                    {listing.status && (
+                                                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${statusColors[listing.status] || statusColors.active}`}>
+                                                            {listing.status}
+                                                        </span>
+                                                    )}
+                                                    <span className="text-[11px] text-gray-600 hidden sm:block">
+                                                        {new Date(listing.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         </div>
                     </div>

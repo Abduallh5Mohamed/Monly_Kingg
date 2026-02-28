@@ -30,20 +30,44 @@ class AdminApiService {
         return null;
     }
 
+    // Get CSRF token from cookie (set by /api/v1/auth/csrf-token endpoint)
+    getCsrfToken(): string | null {
+        if (typeof document === 'undefined') return null;
+        const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
     // Common request headers
     getHeaders(): Record<string, string> {
         const token = this.getAuthToken();
+        const csrf = this.getCsrfToken();
         return {
             'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` })
+            ...(token && { Authorization: `Bearer ${token}` }),
+            ...(csrf && { 'X-XSRF-TOKEN': csrf }),
         };
     }
 
-    // Get request options with credentials
+    // Lazily fetch and store the CSRF token if the cookie is missing
+    async ensureCsrfToken(): Promise<string | null> {
+        let token = this.getCsrfToken();
+        if (token) return token;
+        try {
+            const res = await fetch('/api/v1/auth/csrf-token', { credentials: 'include' });
+            const data = await res.json();
+            if (data?.csrfToken) {
+                document.cookie = `XSRF-TOKEN=${data.csrfToken}; path=/; max-age=900; SameSite=Lax`;
+                return data.csrfToken;
+            }
+        } catch { /* silent */ }
+        return null;
+    }
+
+    // Get request options with credentials (ensures CSRF token is present for mutations)
     getRequestOptions(options: RequestInit = {}): RequestInit {
         return {
             ...options,
-            credentials: 'include', // إرسال الكوكيز
+            credentials: 'include',
             headers: {
                 ...this.getHeaders(),
                 ...(options.headers || {})
@@ -76,7 +100,7 @@ class AdminApiService {
             role
         });
 
-        const response = await fetch(`${this.baseUrl}/users?${queryParams}`, 
+        const response = await fetch(`${this.baseUrl}/users?${queryParams}`,
             this.getRequestOptions()
         );
 
@@ -85,8 +109,28 @@ class AdminApiService {
 
     // Get admin dashboard statistics
     async getStats(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/stats`, 
+        const response = await fetch(`${this.baseUrl}/stats`,
             this.getRequestOptions()
+        );
+
+        return this.handleResponse(response);
+    }
+
+    // Delete user
+    async deleteUser(userId: string): Promise<ApiResponse<any>> {
+        await this.ensureCsrfToken();
+        const response = await fetch(`${this.baseUrl}/users/${userId}`,
+            this.getRequestOptions({ method: 'DELETE' })
+        );
+
+        return this.handleResponse(response);
+    }
+
+    // Toggle user active status
+    async toggleUserStatus(userId: string): Promise<ApiResponse<any>> {
+        await this.ensureCsrfToken();
+        const response = await fetch(`${this.baseUrl}/users/${userId}/toggle-status`,
+            this.getRequestOptions({ method: 'PUT' })
         );
 
         return this.handleResponse(response);
@@ -94,7 +138,8 @@ class AdminApiService {
 
     // Update user role
     async updateUserRole(userId: string, role: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}/role`, 
+        await this.ensureCsrfToken();
+        const response = await fetch(`${this.baseUrl}/users/${userId}/role`,
             this.getRequestOptions({
                 method: 'PUT',
                 body: JSON.stringify({ role })
@@ -104,27 +149,9 @@ class AdminApiService {
         return this.handleResponse(response);
     }
 
-    // Delete user
-    async deleteUser(userId: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}`, 
-            this.getRequestOptions({ method: 'DELETE' })
-        );
-
-        return this.handleResponse(response);
-    }
-
-    // Toggle user active status
-    async toggleUserStatus(userId: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/users/${userId}/toggle-status`, 
-            this.getRequestOptions({ method: 'PUT' })
-        );
-
-        return this.handleResponse(response);
-    }
-
     // Get recent activity
     async getRecentActivity(limit: number = 10): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/activity?limit=${limit}`, 
+        const response = await fetch(`${this.baseUrl}/activity?limit=${limit}`,
             this.getRequestOptions()
         );
 

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { ensureCsrfToken } from '@/utils/csrf';
+import { DiscountCampaignsContent } from '@/components/seller/discount-campaigns';
 import {
   Plus,
   Package,
@@ -127,6 +128,9 @@ export default function SellerStorePage() {
   const [promoteSuccess, setPromoteSuccess] = useState(false);
   const PRICE_PER_DAY = 2;
 
+  // Main tab state
+  const [storeTab, setStoreTab] = useState<'listings' | 'discounts'>('listings');
+
   // Discount modal state
   const [showDiscountModal, setShowDiscountModal] = useState(false);
   const [discountListing, setDiscountListing] = useState<Listing | null>(null);
@@ -195,17 +199,17 @@ export default function SellerStorePage() {
         // Listing doesn't exist - refresh UI to remove ghost item
         sessionStorage.removeItem('dashboard_data');
         sessionStorage.removeItem('dashboard_timestamp');
-        alert('هذا الإعلان غير موجود، سيتم تحديث القائمة');
+        alert('This listing no longer exists, the list will be refreshed');
         fetchListings();
         fetchStats();
       } else {
         // Other errors
         const data = await res.json().catch(() => ({}));
-        alert(data.message || 'فشل حذف الإعلان');
+        alert(data.message || 'Failed to delete listing');
       }
     } catch (err) {
       console.error(err);
-      alert('حدث خطأ أثناء حذف الإعلان');
+      alert('An error occurred while deleting the listing');
     } finally {
       setDeleteLoading(null);
     }
@@ -341,235 +345,267 @@ export default function SellerStorePage() {
             </h1>
             <p className="text-white/50 mt-1">Manage your game account listings</p>
           </div>
-          <Button
-            onClick={() => router.push('/user/store/new')}
-            className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-6 py-3 shadow-lg shadow-cyan-500/20"
-          >
-            <Plus className="w-5 h-5 mr-2" /> New Listing
-          </Button>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {statCards.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div key={stat.label} className={`rounded-2xl bg-white/[0.03] border border-white/10 p-6 hover:border-white/20 transition-all ${stat.shadow}`}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg ${stat.shadow}`}>
-                    <Icon className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-                <p className="text-sm text-white/40 mt-1">{stat.label}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Filter Tabs */}
-        <div className="flex gap-2">
-          {['all', 'available', 'sold'].map((f) => (
-            <button
-              key={f}
-              onClick={() => { setFilter(f); setPage(1); }}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f
-                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
-                }`}
+          {storeTab === 'listings' && (
+            <Button
+              onClick={() => router.push('/user/store/new')}
+              className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-6 py-3 shadow-lg shadow-cyan-500/20"
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
+              <Plus className="w-5 h-5 mr-2" /> New Listing
+            </Button>
+          )}
         </div>
 
-        {/* Listings Grid - Product Cards */}
-        {loading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-          </div>
-        ) : listings.length === 0 ? (
-          <div className="text-center py-20">
-            <ShoppingBag className="w-14 h-14 mx-auto mb-4 text-white/10" />
-            <p className="text-white/40 text-lg">No listings yet</p>
-            <p className="text-white/20 text-sm mt-1">Create your first listing to start selling</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {listings.map((listing, index) => {
-              const gameName = getGameName(listing);
-              const coverUrl = getCoverImageUrl(listing);
-              const promoBadge = getPromoBadge(index);
-              const PromoBadgeIcon = promoBadge.icon;
-              const discount = getDiscountForListing(listing._id);
-              const originalPrice = Math.round(listing.price / (1 - discount / 100));
-              const gameBadge = GAME_BADGES[gameName] || { color: 'bg-gray-500', label: gameName?.toUpperCase?.() || 'GAME' };
-              const rating = getRatingForListing(listing._id);
-              const reviewCount = getReviewCountForListing(listing._id);
+        {/* Main Tabs: Listings / Discounts */}
+        <div className="flex gap-2 border-b border-white/10 pb-4">
+          <button
+            onClick={() => setStoreTab('listings')}
+            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${storeTab === 'listings'
+              ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+              : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+              }`}
+          >
+            <Package className="w-4 h-4" />
+            My Listings
+          </button>
+          <button
+            onClick={() => setStoreTab('discounts')}
+            className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${storeTab === 'discounts'
+              ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+              : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+              }`}
+          >
+            <Tag className="w-4 h-4" />
+            Discount Campaigns
+          </button>
+        </div>
 
+        {/* ═══════ DISCOUNTS TAB ═══════ */}
+        {storeTab === 'discounts' && <DiscountCampaignsContent />}
+
+        {/* ═══════ LISTINGS TAB ═══════ */}
+        {storeTab === 'listings' && <>
+          {/* Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {statCards.map((stat) => {
+              const Icon = stat.icon;
               return (
-                <div
-                  key={listing._id}
-                  className="group rounded-2xl overflow-hidden bg-[#1a1d2e]/40 border border-white/[0.08] hover:border-cyan-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 flex flex-col"
-                >
-                  {/* Cover Image */}
-                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[#1a1d2e] to-[#0d1117]">
-                    {coverUrl ? (
-                      <img
-                        src={coverUrl.startsWith('http') ? coverUrl : `http://localhost:5000${coverUrl}`}
-                        alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
-                        }}
-                      />
-                    ) : null}
-
-                    {/* Fallback icon */}
-                    <div className={`fallback-icon w-full h-full flex items-center justify-center ${coverUrl ? 'hidden' : ''}`}>
-                      <Gamepad2 className="w-16 h-16 text-white/10" />
-                    </div>
-
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-60" />
-
-                    {/* Top badges */}
-                    <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <span className={`${promoBadge.color} text-white text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-lg uppercase`}>
-                        <PromoBadgeIcon className="w-3.5 h-3.5" />
-                        {promoBadge.label}
-                      </span>
-                      <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-lg">
-                        -{discount}%
-                      </span>
-                    </div>
-
-                    {/* Game badge - top right */}
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[11px] text-white/90 font-bold px-2.5 py-1 rounded-md uppercase tracking-wide bg-black/50 backdrop-blur-sm border border-white/20">
-                        {gameBadge.label}
-                      </span>
-                    </div>
-
-                    {/* Action buttons - show on hover */}
-                    <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      {listing.status === 'available' && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); openPromoteModal(listing); }}
-                          className="w-9 h-9 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 transition-all"
-                          title="Promote"
-                        >
-                          <Megaphone className="w-4 h-4" />
-                        </button>
-                      )}
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleDelete(listing._id); }}
-                        disabled={deleteLoading === listing._id}
-                        className="w-9 h-9 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all"
-                        title="Delete"
-                      >
-                        {deleteLoading === listing._id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Status badge for sold items */}
-                    {listing.status === 'sold' && (
-                      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center">
-                        <span className="bg-red-500/90 text-white text-sm font-bold px-5 py-2 rounded-xl shadow-xl">
-                          SOLD OUT
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="p-5 flex-1 flex flex-col bg-[#0d1117]">
-                    {/* Title */}
-                    <h3 className="text-base font-bold text-white mb-3 line-clamp-2 group-hover:text-cyan-300 transition-colors leading-tight">
-                      {listing.title}
-                    </h3>
-
-                    {/* Rating */}
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span className="text-sm text-white/90 font-bold">{rating}</span>
-                      </div>
-                      <span className="text-xs text-white/40">({reviewCount} reviews)</span>
-                    </div>
-
-                    {/* Spacer */}
-                    <div className="flex-1" />
-
-                    {/* Price */}
-                    <div className="mb-4">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold text-white">EGP {listing.price}</span>
-                        <span className="text-sm text-white/30 line-through">EGP {originalPrice}</span>
-                      </div>
-                    </div>
-
-                    {/* Seller Action Buttons */}
-                    <div className="grid grid-cols-3 gap-2">
-                      {/* Edit Button */}
-                      <button
-                        onClick={() => router.push(`/user/store/edit/${listing._id}`)}
-                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-200 group"
-                        title="Edit Listing"
-                      >
-                        <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-semibold">Edit</span>
-                      </button>
-
-                      {/* Discount Button */}
-                      <button
-                        onClick={() => openDiscountModal(listing)}
-                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
-                        title="Add Discount"
-                      >
-                        <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-semibold">Discount</span>
-                      </button>
-
-                      {/* Delete Button */}
-                      <button
-                        onClick={() => handleDelete(listing._id)}
-                        disabled={deleteLoading === listing._id}
-                        className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-500/20 border border-red-500/30 text-red-400 hover:from-red-500/30 hover:to-rose-500/30 hover:border-red-500/50 transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Delete Listing"
-                      >
-                        {deleteLoading === listing._id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        )}
-                        <span className="text-[10px] font-semibold">Delete</span>
-                      </button>
+                <div key={stat.label} className={`rounded-2xl bg-white/[0.03] border border-white/10 p-6 hover:border-white/20 transition-all ${stat.shadow}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg ${stat.shadow}`}>
+                      <Icon className="w-5 h-5 text-white" />
                     </div>
                   </div>
+                  <p className="text-3xl font-bold text-white">{stat.value}</p>
+                  <p className="text-sm text-white/40 mt-1">{stat.label}</p>
                 </div>
               );
             })}
           </div>
-        )}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center gap-2">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-30">
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="px-4 py-2 text-sm text-white/60">{page} / {totalPages}</span>
-            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-30">
-              <ChevronRight className="w-4 h-4" />
-            </button>
+          {/* Filter Tabs */}
+          <div className="flex gap-2">
+            {['all', 'available', 'sold'].map((f) => (
+              <button
+                key={f}
+                onClick={() => { setFilter(f); setPage(1); }}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f
+                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                  : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                  }`}
+              >
+                {f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
           </div>
-        )}
+
+          {/* Listings Grid - Product Cards */}
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+            </div>
+          ) : listings.length === 0 ? (
+            <div className="text-center py-20">
+              <ShoppingBag className="w-14 h-14 mx-auto mb-4 text-white/10" />
+              <p className="text-white/40 text-lg">No listings yet</p>
+              <p className="text-white/20 text-sm mt-1">Create your first listing to start selling</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {listings.map((listing, index) => {
+                const gameName = getGameName(listing);
+                const coverUrl = getCoverImageUrl(listing);
+                const promoBadge = getPromoBadge(index);
+                const PromoBadgeIcon = promoBadge.icon;
+                const discount = getDiscountForListing(listing._id);
+                const originalPrice = Math.round(listing.price / (1 - discount / 100));
+                const gameBadge = GAME_BADGES[gameName] || { color: 'bg-gray-500', label: gameName?.toUpperCase?.() || 'GAME' };
+                const rating = getRatingForListing(listing._id);
+                const reviewCount = getReviewCountForListing(listing._id);
+
+                return (
+                  <div
+                    key={listing._id}
+                    className="group rounded-2xl overflow-hidden bg-[#1a1d2e]/40 border border-white/[0.08] hover:border-cyan-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 flex flex-col"
+                  >
+                    {/* Cover Image */}
+                    <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[#1a1d2e] to-[#0d1117]">
+                      {coverUrl ? (
+                        <img
+                          src={coverUrl.startsWith('http') ? coverUrl : `http://localhost:5000${coverUrl}`}
+                          alt={listing.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement?.querySelector('.fallback-icon')?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+
+                      {/* Fallback icon */}
+                      <div className={`fallback-icon w-full h-full flex items-center justify-center ${coverUrl ? 'hidden' : ''}`}>
+                        <Gamepad2 className="w-16 h-16 text-white/10" />
+                      </div>
+
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-60" />
+
+                      {/* Top badges */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        <span className={`${promoBadge.color} text-white text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-lg uppercase`}>
+                          <PromoBadgeIcon className="w-3.5 h-3.5" />
+                          {promoBadge.label}
+                        </span>
+                        <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-lg">
+                          -{discount}%
+                        </span>
+                      </div>
+
+                      {/* Game badge - top right */}
+                      <div className="absolute top-3 right-3">
+                        <span className="text-[11px] text-white/90 font-bold px-2.5 py-1 rounded-md uppercase tracking-wide bg-black/50 backdrop-blur-sm border border-white/20">
+                          {gameBadge.label}
+                        </span>
+                      </div>
+
+                      {/* Action buttons - show on hover */}
+                      <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        {listing.status === 'available' && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openPromoteModal(listing); }}
+                            className="w-9 h-9 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-cyan-400 hover:bg-cyan-500/20 transition-all"
+                            title="Promote"
+                          >
+                            <Megaphone className="w-4 h-4" />
+                          </button>
+                        )}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDelete(listing._id); }}
+                          disabled={deleteLoading === listing._id}
+                          className="w-9 h-9 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all"
+                          title="Delete"
+                        >
+                          {deleteLoading === listing._id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Status badge for sold items */}
+                      {listing.status === 'sold' && (
+                        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center">
+                          <span className="bg-red-500/90 text-white text-sm font-bold px-5 py-2 rounded-xl shadow-xl">
+                            SOLD OUT
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="p-5 flex-1 flex flex-col bg-[#0d1117]">
+                      {/* Title */}
+                      <h3 className="text-base font-bold text-white mb-3 line-clamp-2 group-hover:text-cyan-300 transition-colors leading-tight">
+                        {listing.title}
+                      </h3>
+
+                      {/* Rating */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                          <span className="text-sm text-white/90 font-bold">{rating}</span>
+                        </div>
+                        <span className="text-xs text-white/40">({reviewCount} reviews)</span>
+                      </div>
+
+                      {/* Spacer */}
+                      <div className="flex-1" />
+
+                      {/* Price */}
+                      <div className="mb-4">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-3xl font-bold text-white">EGP {listing.price}</span>
+                          <span className="text-sm text-white/30 line-through">EGP {originalPrice}</span>
+                        </div>
+                      </div>
+
+                      {/* Seller Action Buttons */}
+                      <div className="grid grid-cols-3 gap-2">
+                        {/* Edit Button */}
+                        <button
+                          onClick={() => router.push(`/user/store/edit/${listing._id}`)}
+                          className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-200 group"
+                          title="Edit Listing"
+                        >
+                          <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                          <span className="text-[10px] font-semibold">Edit</span>
+                        </button>
+
+                        {/* Discount Button */}
+                        <button
+                          onClick={() => openDiscountModal(listing)}
+                          className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
+                          title="Add Discount"
+                        >
+                          <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                          <span className="text-[10px] font-semibold">Discount</span>
+                        </button>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDelete(listing._id)}
+                          disabled={deleteLoading === listing._id}
+                          className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-500/20 border border-red-500/30 text-red-400 hover:from-red-500/30 hover:to-rose-500/30 hover:border-red-500/50 transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Delete Listing"
+                        >
+                          {deleteLoading === listing._id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                          )}
+                          <span className="text-[10px] font-semibold">Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center gap-2">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-30">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="px-4 py-2 text-sm text-white/60">{page} / {totalPages}</span>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 disabled:opacity-30">
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>}
       </div>
 
       {/* Promote Listing Modal */}

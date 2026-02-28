@@ -96,6 +96,9 @@ router.get("/public", cacheResponse(120), getAllListings);
 
 // ─── Protected routes (require authentication) ───
 // Must come BEFORE /:id/public to avoid route conflicts
+// Cache key format: api_cache:{userId}:{url}  → wildcard pattern: api_cache:*:/api/v1/listings*
+const LISTING_CACHE_PATTERN = 'api_cache:*:/api/v1/listings*';
+
 router.post(
   "/",
   authMiddleware,
@@ -106,16 +109,16 @@ router.post(
     { name: 'coverImage', maxCount: 1 }
   ]),
   handleMulterError,
-  invalidateCache('api_cache:/api/v1/listings/*'),
+  invalidateCache(LISTING_CACHE_PATTERN),
   createListing
 );
 router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
 router.get("/my-listings/:id", authMiddleware, getMyListingById);
-router.get("/stats", authMiddleware, cacheResponse(120), getSellerStats);
-router.put("/:id", authMiddleware, listingWriteLimiter, invalidateCache('api_cache:/api/v1/listings/*'), updateListing);
-router.delete("/:id", authMiddleware, listingWriteLimiter, invalidateCache('api_cache:/api/v1/listings/*'), deleteListing);
+router.get("/stats", authMiddleware, cacheResponse(60), getSellerStats);
+router.put("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), updateListing);
+router.delete("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), deleteListing);
 
 // Generic routes at the end
-router.get("/:id/public", cacheResponse(300), getListingById);
+router.get("/:id/public", cacheResponse(120), getListingById);
 
 export default router;

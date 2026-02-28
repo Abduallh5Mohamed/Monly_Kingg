@@ -455,7 +455,7 @@ export default function NewListingPage() {
                                 <div>
                                     <label className="flex items-center gap-1.5 text-sm font-medium text-white/70 mb-2.5">
                                         <DollarSign className="w-4 h-4 text-green-400/60" />
-                                        Price (USD) <span className="text-red-400">*</span>
+                                        Price (EGP) <span className="text-red-400">*</span>
                                     </label>
                                     <input
                                         type="number"

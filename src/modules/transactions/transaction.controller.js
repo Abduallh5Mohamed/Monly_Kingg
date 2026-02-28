@@ -1,6 +1,8 @@
 import Transaction from "./transaction.model.js";
 import Listing from "../listings/listing.model.js";
 import User from "../users/user.model.js";
+import Discount from "../discounts/discount.model.js";
+import Campaign from "../campaigns/campaign.model.js";
 import Notification from "../notifications/notification.model.js";
 import cacheService from "../../services/cacheService.js";
 import socketService from "../../services/socketService.js";
@@ -48,23 +50,85 @@ export const createTransaction = async (req, res) => {
       return res.status(400).json({ success: false, message: "You cannot buy your own listing" });
     }
 
+    // ── Determine the final price (check discounts & campaigns) ──
+    let finalPrice = listing.price;
+    let discountApplied = null;
+
+    const now = new Date();
+
+    // 1) Individual listing discount
+    const activeDiscount = await Discount.findOne({
+      listing: listingId,
+      status: "active",
+      $or: [{ endDate: null }, { endDate: { $gte: now } }],
+    }).lean();
+
+    if (activeDiscount) {
+      finalPrice = activeDiscount.discountedPrice;
+      discountApplied = {
+        type: "discount",
+        percent: activeDiscount.discountPercent,
+        originalPrice: activeDiscount.originalPrice,
+        finalPrice: activeDiscount.discountedPrice,
+      };
+    } else {
+      // 2) Voluntary campaign
+      const voluntaryCampaign = await Campaign.findOne({
+        type: "voluntary",
+        status: "active",
+        endDate: { $gte: now },
+        "participatingListings.listing": listing._id,
+      }).lean();
+
+      if (voluntaryCampaign) {
+        finalPrice = +(listing.price * (1 - voluntaryCampaign.discountPercent / 100)).toFixed(2);
+        discountApplied = {
+          type: "campaign_voluntary",
+          campaignId: voluntaryCampaign._id,
+          percent: voluntaryCampaign.discountPercent,
+          originalPrice: listing.price,
+          finalPrice,
+        };
+      } else {
+        // 3) Mandatory campaign
+        const gameId = listing.game?._id || listing.game;
+        const mandatoryCampaign = await Campaign.findOne({
+          type: "mandatory",
+          status: "active",
+          endDate: { $gte: now },
+          games: gameId,
+        }).lean();
+
+        if (mandatoryCampaign) {
+          finalPrice = +(listing.price * (1 - mandatoryCampaign.discountPercent / 100)).toFixed(2);
+          discountApplied = {
+            type: "campaign_mandatory",
+            campaignId: mandatoryCampaign._id,
+            percent: mandatoryCampaign.discountPercent,
+            originalPrice: listing.price,
+            finalPrice,
+          };
+        }
+      }
+    }
+
     // Load buyer and check balance
     const buyer = await User.findById(buyerId);
     if (!buyer) return res.status(404).json({ success: false, message: "User not found" });
 
     const balance = buyer.wallet?.balance || 0;
-    if (balance < listing.price) {
+    if (balance < finalPrice) {
       return res.status(400).json({
         success: false,
         message: "Insufficient balance",
-        required: listing.price,
+        required: finalPrice,
         available: balance,
       });
     }
 
     // Atomic: deduct from balance, add to hold
-    buyer.wallet.balance -= listing.price;
-    buyer.wallet.hold    = (buyer.wallet.hold || 0) + listing.price;
+    buyer.wallet.balance -= finalPrice;
+    buyer.wallet.hold = (buyer.wallet.hold || 0) + finalPrice;
     await buyer.save();
 
     // Mark listing as in_progress
@@ -73,12 +137,14 @@ export const createTransaction = async (req, res) => {
 
     // Create transaction
     const transaction = await Transaction.create({
-      buyer:  buyerId,
+      buyer: buyerId,
       seller: listing.seller._id,
       listing: listingId,
-      amount:  listing.price,
-      status:  "waiting_seller",
-      timeline: [{ event: "purchase_initiated", note: `Buyer ${buyer.username} initiated purchase` }],
+      amount: finalPrice,
+      originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
+      discountPercent: discountApplied ? discountApplied.percent : undefined,
+      status: "waiting_seller",
+      timeline: [{ event: "purchase_initiated", note: `Buyer ${buyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
     });
 
     // Notify seller via DB + socket
@@ -86,16 +152,16 @@ export const createTransaction = async (req, res) => {
     await createNotification({
       userId: sellerId,
       type: "purchase_initiated",
-      title: "🛒 New Purchase!",
-      message: `${buyer.username} purchased "${listing.title}" for ${listing.price} EGP. Please submit the account credentials.`,
+      title: "New Purchase!",
+      message: `${buyer.username} purchased "${listing.title}" for ${finalPrice} EGP${discountApplied ? ` (${discountApplied.percent}% off)` : ''}. Please submit the account credentials.`,
       relatedId: transaction._id,
-      metadata: { transactionId: transaction._id, listingTitle: listing.title, amount: listing.price },
+      metadata: { transactionId: transaction._id, listingTitle: listing.title, amount: finalPrice },
     });
     socketService.notifySellerNewPurchase(sellerId, {
       transactionId: transaction._id,
       listingId: listing._id,
       listingTitle: listing.title,
-      amount: listing.price,
+      amount: finalPrice,
       buyerUsername: buyer.username,
     });
 
@@ -116,7 +182,7 @@ export const submitCredentials = async (req, res) => {
   try {
     const sellerId = req.user._id.toString();
     const transaction = await Transaction.findById(req.params.id)
-      .populate("buyer",   "_id username")
+      .populate("buyer", "_id username")
       .populate("listing", "_id title");
 
     if (!transaction) {
@@ -137,12 +203,12 @@ export const submitCredentials = async (req, res) => {
     const AUTO_CONFIRM_HOURS = 48;
     const autoConfirmAt = new Date(Date.now() + AUTO_CONFIRM_HOURS * 60 * 60 * 1000);
 
-    transaction.credentials  = credentials;
-    transaction.status       = "waiting_buyer";
+    transaction.credentials = credentials;
+    transaction.status = "waiting_buyer";
     transaction.autoConfirmAt = autoConfirmAt;
     transaction.timeline.push({
       event: "credentials_sent",
-      note:  `Seller submitted ${credentials.length} credential field(s)`,
+      note: `Seller submitted ${credentials.length} credential field(s)`,
     });
     await transaction.save();
 
@@ -158,7 +224,7 @@ export const submitCredentials = async (req, res) => {
     });
     socketService.notifyBuyerCredentialsSent(buyerId, {
       transactionId: transaction._id,
-      listingTitle:  transaction.listing.title,
+      listingTitle: transaction.listing.title,
       autoConfirmAt,
     });
 
@@ -222,7 +288,7 @@ export const openDispute = async (req, res) => {
       return res.status(400).json({ success: false, message: "Cannot dispute at this stage" });
     }
 
-    transaction.status        = "disputed";
+    transaction.status = "disputed";
     transaction.disputeReason = reason || "No reason provided";
     transaction.timeline.push({ event: "dispute_opened", note: reason || "Buyer opened dispute" });
     await transaction.save();
@@ -275,7 +341,7 @@ export const adminResolveDispute = async (req, res) => {
       return res.status(400).json({ success: false, message: "Transaction is not disputed" });
     }
 
-    transaction.resolvedBy   = adminId;
+    transaction.resolvedBy = adminId;
     transaction.resolvedNote = note || "";
 
     if (decision === "refund") {
@@ -301,7 +367,7 @@ export const getMyTransactions = async (req, res) => {
     const { role, status, page = 1, limit = 20 } = req.query;
 
     const filter = {};
-    if (role === "buyer")  filter.buyer  = userId;
+    if (role === "buyer") filter.buyer = userId;
     else if (role === "seller") filter.seller = userId;
     else filter.$or = [{ buyer: userId }, { seller: userId }];
 
@@ -314,13 +380,13 @@ export const getMyTransactions = async (req, res) => {
         .skip(skip)
         .limit(parseInt(limit))
         .populate("listing", "title coverImage price game")
-        .populate("buyer",   "username avatar")
-        .populate("seller",  "username avatar"),
+        .populate("buyer", "username avatar")
+        .populate("seller", "username avatar"),
       Transaction.countDocuments(filter),
     ]);
 
     // Count pending actions for the current user
-    const pendingAsBuyer  = await Transaction.countDocuments({ buyer: userId,  status: "waiting_buyer" });
+    const pendingAsBuyer = await Transaction.countDocuments({ buyer: userId, status: "waiting_buyer" });
     const pendingAsSeller = await Transaction.countDocuments({ seller: userId, status: "waiting_seller" });
 
     return res.json({
@@ -340,7 +406,7 @@ export const getPendingCount = async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const [asBuyer, asSeller] = await Promise.all([
-      Transaction.countDocuments({ buyer: userId,  status: "waiting_buyer" }),
+      Transaction.countDocuments({ buyer: userId, status: "waiting_buyer" }),
       Transaction.countDocuments({ seller: userId, status: "waiting_seller" }),
     ]);
     return res.json({ success: true, data: { asBuyer, asSeller, total: asBuyer + asSeller } });
@@ -355,15 +421,15 @@ export const getTransactionById = async (req, res) => {
     const userId = req.user._id.toString();
     const transaction = await Transaction.findById(req.params.id)
       .populate("listing", "title coverImage price details game")
-      .populate("buyer",   "username avatar email")
-      .populate("seller",  "username avatar");
+      .populate("buyer", "username avatar email")
+      .populate("seller", "username avatar");
 
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaction not found" });
     }
 
     const isParty =
-      transaction.buyer._id.toString()  === userId ||
+      transaction.buyer._id.toString() === userId ||
       transaction.seller._id.toString() === userId ||
       req.user.role === "admin";
 
@@ -398,8 +464,8 @@ export const adminGetAll = async (req, res) => {
         .skip(skip)
         .limit(parseInt(limit))
         .populate("listing", "title price")
-        .populate("buyer",   "username email")
-        .populate("seller",  "username email"),
+        .populate("buyer", "username email")
+        .populate("seller", "username email"),
       Transaction.countDocuments(filter),
     ]);
 
@@ -417,7 +483,7 @@ export const adminGetAll = async (req, res) => {
 
 async function _releaseFundsToSeller(transaction, finalStatus, note) {
   const sellerId = transaction.seller.toString();
-  const buyerId  = transaction.buyer.toString();
+  const buyerId = transaction.buyer.toString();
 
   // Release buyer hold
   await User.findByIdAndUpdate(buyerId, {
@@ -467,12 +533,12 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
     });
   }
 
-  socketService.notifyTransactionUpdate(buyerId,  { transactionId: transaction._id, status: finalStatus });
+  socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: finalStatus });
   socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: finalStatus });
 }
 
 async function _refundBuyer(transaction, note) {
-  const buyerId  = transaction.buyer.toString();
+  const buyerId = transaction.buyer.toString();
   const sellerId = transaction.seller.toString();
 
   // Return hold back to buyer balance
@@ -498,9 +564,9 @@ async function _refundBuyer(transaction, note) {
     metadata: { transactionId: transaction._id, amount: transaction.amount },
   });
 
-  socketService.notifyDisputeResolved(buyerId,  { transactionId: transaction._id, decision: "refund" });
+  socketService.notifyDisputeResolved(buyerId, { transactionId: transaction._id, decision: "refund" });
   socketService.notifyDisputeResolved(sellerId, { transactionId: transaction._id, decision: "refund" });
-  socketService.notifyTransactionUpdate(buyerId,  { transactionId: transaction._id, status: "refunded" });
+  socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: "refunded" });
   socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: "refunded" });
 }
 

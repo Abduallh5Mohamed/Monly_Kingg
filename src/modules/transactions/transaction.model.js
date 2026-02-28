@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema({
-  buyer:   { type: mongoose.Schema.Types.ObjectId, ref: "User",    required: true },
-  seller:  { type: mongoose.Schema.Types.ObjectId, ref: "User",    required: true },
+  buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   listing: { type: mongoose.Schema.Types.ObjectId, ref: "Listing", required: true },
-  amount:  { type: Number, required: true },
+  amount: { type: Number, required: true },
+  originalAmount: { type: Number },       // original price before discount (if any)
+  discountPercent: { type: Number },       // discount % applied (if any)
 
   // Escrow flow:
   // waiting_seller  → seller needs to submit credentials
@@ -21,7 +23,7 @@ const transactionSchema = new mongoose.Schema({
 
   // Free-form credentials submitted by seller
   credentials: [{
-    key:   { type: String, required: true },
+    key: { type: String, required: true },
     value: { type: String, required: true }
   }],
 
@@ -30,18 +32,18 @@ const transactionSchema = new mongoose.Schema({
 
   // Audit trail
   timeline: [{
-    event:     { type: String },
+    event: { type: String },
     timestamp: { type: Date, default: Date.now },
-    note:      { type: String }
+    note: { type: String }
   }],
 
-  disputeReason:  { type: String },
-  resolvedBy:     { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  resolvedNote:   { type: String },
+  disputeReason: { type: String },
+  resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  resolvedNote: { type: String },
 
 }, { timestamps: true });
 
-transactionSchema.index({ buyer: 1,  status: 1, createdAt: -1 });
+transactionSchema.index({ buyer: 1, status: 1, createdAt: -1 });
 transactionSchema.index({ seller: 1, status: 1, createdAt: -1 });
 transactionSchema.index({ listing: 1 });
 transactionSchema.index({ autoConfirmAt: 1, status: 1 }); // for auto-confirm job

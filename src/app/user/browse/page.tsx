@@ -117,8 +117,8 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                     {/* Prices */}
                     <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                         <div>
-                            {!isOwner && <p className="text-[10px] text-white/20 line-through">${originalPrice}</p>}
-                            <p className="text-base font-black text-white">${listing.price.toFixed(2)}</p>
+                            {!isOwner && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice}</p>}
+                            <p className="text-base font-black text-white">EGP {listing.price.toFixed(2)}</p>
                         </div>
                         {!isOwner && (
                             <button
