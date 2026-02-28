@@ -28,7 +28,6 @@ const nextConfig = {
   // HTTP Agent Options for better connection handling
   httpAgentOptions: {
     keepAlive: true,
-    keepAliveMsecs: 30000,
   },
 
   // Server runtime config for timeouts

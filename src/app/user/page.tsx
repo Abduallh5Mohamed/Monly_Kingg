@@ -30,6 +30,8 @@ import {
   SlidersHorizontal,
   ChevronDown,
   LayoutGrid,
+  Package,
+  Plus,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
@@ -204,7 +206,7 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
 }
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing, currentUserId, discount }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount }) {
+function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount; gridMode?: boolean }) {
   const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
 
   // Only show discount if it exists from API

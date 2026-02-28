@@ -130,6 +130,56 @@ class AdminApiService {
 
         return this.handleResponse(response);
     }
+
+    // ─── Seller Levels ───────────────────────────────────────────────────────
+
+    async getSellerLevels(params: { page?: number; limit?: number; search?: string; rank?: string } = {}): Promise<ApiResponse<any>> {
+        const { page = 1, limit = 20, search = '', rank = '' } = params;
+        const queryParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), search, rank });
+        const response = await fetch(`${this.baseUrl}/seller-levels?${queryParams}`, this.getRequestOptions());
+        return this.handleResponse(response);
+    }
+
+    async setSellerLevel(userId: string, level: number): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/${userId}`, this.getRequestOptions({
+            method: 'PUT',
+            body: JSON.stringify({ level })
+        }));
+        return this.handleResponse(response);
+    }
+
+    async removeSellerLevelOverride(userId: string): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/${userId}/override`, this.getRequestOptions({ method: 'DELETE' }));
+        return this.handleResponse(response);
+    }
+
+    async getLevelConfig(): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/config`, this.getRequestOptions());
+        return this.handleResponse(response);
+    }
+
+    async updateLevelConfig(config: { multiplier?: number; exponent?: number; maxLevel?: number; ranks?: any[] }): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/config`, this.getRequestOptions({
+            method: 'PUT',
+            body: JSON.stringify(config)
+        }));
+        return this.handleResponse(response);
+    }
+
+    async recalculateAllLevels(): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/recalculate`, this.getRequestOptions({ method: 'POST' }));
+        return this.handleResponse(response);
+    }
+
+    async getLevelStats(): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/stats`, this.getRequestOptions());
+        return this.handleResponse(response);
+    }
+
+    async getLevelsTable(from: number = 1, to: number = 100): Promise<ApiResponse<any>> {
+        const response = await fetch(`${this.baseUrl}/seller-levels/table?from=${from}&to=${to}`, this.getRequestOptions());
+        return this.handleResponse(response);
+    }
 }
 
 // Create and export singleton instance
@@ -142,5 +192,13 @@ export const {
     updateUserRole,
     deleteUser,
     toggleUserStatus,
-    getRecentActivity
+    getRecentActivity,
+    getSellerLevels,
+    setSellerLevel,
+    removeSellerLevelOverride,
+    getLevelConfig,
+    updateLevelConfig,
+    recalculateAllLevels,
+    getLevelStats,
+    getLevelsTable
 } = adminApi;

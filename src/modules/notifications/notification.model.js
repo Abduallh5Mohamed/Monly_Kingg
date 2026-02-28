@@ -16,7 +16,8 @@ const notificationSchema = new mongoose.Schema({
             "purchase_confirmed",   // seller: buyer confirmed
             "purchase_disputed",    // admin:  buyer opened dispute
             "dispute_resolved",     // buyer/seller: admin resolved dispute
-            "auto_confirmed"        // seller: auto-confirmed after 48h
+            "auto_confirmed",       // seller: auto-confirmed after 48h
+            "level_up"              // seller: leveled up
         ],
         required: true
     },

@@ -21,9 +21,12 @@ import {
     Heart,
     Package,
     Loader2,
-    AlertCircle
+    AlertCircle,
+    TrendingUp,
+    Target,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LevelBadge, LevelProgressBar } from '@/components/ui/level-badge';
 
 interface UserProfile {
     id: string;
@@ -70,10 +73,12 @@ export default function ProfilePage() {
     const [editedProfile, setEditedProfile] = useState<Partial<UserProfile>>({});
     const [myListings, setMyListings] = useState<Listing[]>([]);
     const [favorites, setFavorites] = useState<Listing[]>([]);
+    const [levelProgress, setLevelProgress] = useState<any>(null);
 
     useEffect(() => {
         if (user) {
             fetchProfile();
+            fetchLevelProgress();
 
             // Listen for updates from other components (e.g. after deposit, purchase)
             // NO polling here — the layout already handles periodic refresh
@@ -114,6 +119,18 @@ export default function ProfilePage() {
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchLevelProgress = async () => {
+        try {
+            const res = await fetch('/api/v1/seller/level-progress', { credentials: 'include' });
+            const data = await res.json();
+            if (data.success) {
+                setLevelProgress(data.data);
+            }
+        } catch {
+            // silent — not all users are sellers
         }
     };
 
@@ -407,6 +424,47 @@ export default function ProfilePage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Seller Level Progress Card */}
+                        {profile.isSeller && levelProgress && (
+                            <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-xl mt-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-sm font-semibold text-[#f5f5dc] flex items-center gap-2">
+                                        <TrendingUp className="w-4 h-4 text-yellow-500" />
+                                        Seller Level
+                                    </h3>
+                                    <a href="/user/seller-levels" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+                                        Details →
+                                    </a>
+                                </div>
+
+                                <div className="flex items-center gap-3 mb-4">
+                                    <span className="text-3xl font-bold text-white">{levelProgress.currentLevel}</span>
+                                    <LevelBadge
+                                        level={levelProgress.currentLevel}
+                                        rank={levelProgress.rank?.name}
+                                        rankColor={levelProgress.rank?.color}
+                                        rankIcon={levelProgress.rank?.icon}
+                                        size="md"
+                                        showLevel={false}
+                                    />
+                                </div>
+
+                                <LevelProgressBar
+                                    percent={levelProgress.progress?.percent || 0}
+                                    rankColor={levelProgress.rank?.color || '#9CA3AF'}
+                                    height="md"
+                                    showPercent={false}
+                                />
+                                <div className="flex items-center justify-between mt-2">
+                                    <span className="text-[10px] text-gray-400">{levelProgress.progress?.percent || 0}% to Lv {levelProgress.currentLevel + 1}</span>
+                                    <span className="text-[10px] text-gray-400 flex items-center gap-1">
+                                        <Target className="h-3 w-3" />
+                                        {(levelProgress.progress?.remaining || 0).toLocaleString()} EGP
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right Column */}

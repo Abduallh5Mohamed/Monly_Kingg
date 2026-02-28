@@ -5,6 +5,7 @@ import Notification from "../notifications/notification.model.js";
 import cacheService from "../../services/cacheService.js";
 import socketService from "../../services/socketService.js";
 import logger from "../../utils/logger.js";
+import { updateSellerLevel } from "../seller-levels/sellerLevel.service.js";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -425,6 +426,15 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
 
   // Credit seller balance
   await cacheService.updateBalanceWithSync(sellerId, transaction.amount, "sale_completed");
+
+  // Update seller stats (totalVolume, successfulTrades) and recalculate level
+  await User.findByIdAndUpdate(sellerId, {
+    $inc: { "stats.totalVolume": transaction.amount, "stats.successfulTrades": 1 },
+  });
+  // Recalculate seller level (async, non-blocking for the transaction)
+  updateSellerLevel(sellerId).catch(err =>
+    logger.error(`[Transaction] sellerLevel update failed: ${err.message}`)
+  );
 
   // Mark listing sold
   await Listing.findByIdAndUpdate(transaction.listing._id || transaction.listing, {

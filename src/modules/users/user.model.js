@@ -61,6 +61,8 @@ const userSchema = new mongoose.Schema({
   stats: {
     totalVolume: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
+    rank: { type: String, default: "Starter" },
+    levelOverride: { type: Number, default: null },
     successfulTrades: { type: Number, default: 0 },
     failedTrades: { type: Number, default: 0 }
   },

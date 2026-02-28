@@ -19,6 +19,7 @@ import {
   Megaphone,
   Image as ImageIcon,
   Percent,
+  TrendingUp,
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -27,6 +28,7 @@ const sidebarItems = [
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
   { icon: Store, label: 'Sellers', href: '/admin/sellers' },
+  { icon: TrendingUp, label: 'Seller Levels', href: '/admin/seller-levels' },
   { icon: Megaphone, label: 'Promotions', href: '/admin/promotions' },
   { icon: ImageIcon, label: 'Ads', href: '/admin/ads' },
   { icon: Percent, label: 'Discounts', href: '/admin/discounts' },
