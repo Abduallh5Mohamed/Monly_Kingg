@@ -74,7 +74,7 @@ export default function ProductsPage() {
         <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <p className="text-white/40 text-xs font-medium uppercase tracking-wider mb-1">Revenue</p>
-            <div className="text-2xl font-bold text-amber-400">${totalRevenue.toFixed(0)}</div>
+            <div className="text-2xl font-bold text-amber-400">EGP {totalRevenue.toFixed(0)}</div>
           </CardContent>
         </Card>
       </div>
@@ -132,7 +132,7 @@ export default function ProductsPage() {
                       {product.game}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-white/90 font-medium text-sm">${product.price}</TableCell>
+                  <TableCell className="text-white/90 font-medium text-sm">EGP {product.price}</TableCell>
                   <TableCell className="text-white/60 text-sm hidden lg:table-cell">{product.stock}</TableCell>
                   <TableCell className="text-white/60 text-sm hidden lg:table-cell">{product.sales}</TableCell>
                   <TableCell>

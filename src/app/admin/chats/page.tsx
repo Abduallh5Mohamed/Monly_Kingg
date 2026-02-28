@@ -406,12 +406,12 @@ export default function ChatsPage() {
                           #{selectedChat.chatNumber}
                         </Badge>
                       </h3>
-                      <p className="text-white/60 text-xs flex items-center gap-2">
+                      <div className="text-white/60 text-xs flex items-center gap-2">
                         <Badge className="bg-blue-500/20 text-blue-400 text-xs">
                           {chatDetails.chat.type}
                         </Badge>
                         <span>{chatDetails.stats.totalMessages} messages</span>
-                      </p>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

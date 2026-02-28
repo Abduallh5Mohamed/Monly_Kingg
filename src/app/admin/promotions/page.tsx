@@ -185,11 +185,10 @@ export default function AdminPromotionsPage() {
           <button
             key={f}
             onClick={() => { setFilter(f); setPage(1); }}
-            className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
-              filter === f
+            className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${filter === f
                 ? 'bg-white/[0.08] text-white border border-white/[0.12]'
                 : 'bg-white/[0.03] text-white/40 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/60'
-            }`}
+              }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
             {f === 'pending' && stats?.pendingCount ? (
@@ -246,7 +245,7 @@ export default function AdminPromotionsPage() {
                               minute: '2-digit',
                             })}
                           </span>
-                          {promo.listing && <span>Listing: ${promo.listing.price}</span>}
+                          {promo.listing && <span>Listing: EGP {promo.listing.price}</span>}
                         </div>
                       </div>
 
@@ -257,7 +256,7 @@ export default function AdminPromotionsPage() {
                           <p className="text-[10px] text-white/25">days</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-cyan-400 font-bold text-sm">${promo.cost}</p>
+                          <p className="text-cyan-400 font-bold text-sm">EGP {promo.cost}</p>
                           <p className="text-[10px] text-white/25">cost</p>
                         </div>
                         <span className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border ${config.color} ${config.bg} ${config.border}`}>

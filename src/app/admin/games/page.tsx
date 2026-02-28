@@ -116,7 +116,7 @@ export default function GamesPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/40 text-xs font-medium uppercase tracking-wider mb-1">Total Revenue</p>
-                <p className="text-2xl font-bold text-emerald-400">${totalRevenue.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-emerald-400">EGP {totalRevenue.toLocaleString()}</p>
                 <p className="text-xs text-emerald-400 flex items-center gap-1 mt-1">
                   <TrendingUp className="h-3 w-3" />
                   +12% this month

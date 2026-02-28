@@ -298,7 +298,7 @@ export default function SellerDetailPage() {
                                             <tr key={l._id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                                                 <td className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/80 max-w-[150px] sm:max-w-xs truncate">{l.title}</td>
                                                 <td className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-white/60 hidden sm:table-cell">{l.game?.name || '-'}</td>
-                                                <td className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-green-400 font-semibold whitespace-nowrap">${l.price}</td>
+                                                <td className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-green-400 font-semibold whitespace-nowrap">EGP {l.price}</td>
                                                 <td className="px-4 sm:px-6 py-3 sm:py-4">
                                                     <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium whitespace-nowrap ${l.status === 'available'
                                                         ? 'bg-green-500/10 text-green-400 border border-green-500/30'

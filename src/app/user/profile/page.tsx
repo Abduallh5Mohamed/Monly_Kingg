@@ -529,7 +529,7 @@ export default function ProfilePage() {
 
                                                 {/* Right: price + status + date */}
                                                 <div className="flex items-center gap-3 ml-4 flex-shrink-0">
-                                                    <span className="text-sm font-bold text-cyan-400">${listing.price.toLocaleString()}</span>
+                                                    <span className="text-sm font-bold text-cyan-400">EGP {listing.price.toLocaleString()}</span>
                                                     {listing.status && (
                                                         <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${statusColors[listing.status] || statusColors.active}`}>
                                                             {listing.status}

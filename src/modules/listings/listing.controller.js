@@ -2,6 +2,7 @@ import Listing from "./listing.model.js";
 import User from "../users/user.model.js";
 import Game from "../games/game.model.js";
 import Discount from "../discounts/discount.model.js";
+import Campaign from "../campaigns/campaign.model.js";
 import rankingService from "../../services/rankingService.js";
 import path from "path";
 import fs from "fs";
@@ -208,6 +209,87 @@ export const getSellerStats = async (req, res) => {
   }
 };
 
+/**
+ * Helper: Enrich an array of listings (lean docs) with campaign discount info.
+ * Checks individual Discounts first, then voluntary campaigns, then mandatory.
+ */
+async function enrichListingsWithCampaignDiscounts(listings) {
+  if (!listings.length) return;
+
+  const now = new Date();
+  const listingIds = listings.map(l => l._id);
+
+  // 1) Fetch individual active discounts for all listings in one query
+  const discounts = await Discount.find({
+    listing: { $in: listingIds },
+    status: "active",
+    $or: [{ endDate: null }, { endDate: { $gte: now } }],
+  }).lean();
+
+  const discountMap = {};
+  for (const d of discounts) {
+    discountMap[d.listing.toString()] = d;
+  }
+
+  // 2) Fetch active campaigns (both types) in one query
+  const activeCampaigns = await Campaign.find({
+    status: "active",
+    endDate: { $gte: now },
+  }).lean();
+
+  const voluntaryCampaigns = activeCampaigns.filter(c => c.type === "voluntary");
+  const mandatoryCampaigns = activeCampaigns.filter(c => c.type === "mandatory");
+
+  // Build a Set of listing IDs participating in voluntary campaigns, with their discount %
+  const voluntaryMap = {};
+  for (const c of voluntaryCampaigns) {
+    for (const p of (c.participatingListings || [])) {
+      voluntaryMap[p.listing.toString()] = c.discountPercent;
+    }
+  }
+
+  // 3) Enrich each listing
+  for (const listing of listings) {
+    const lid = listing._id.toString();
+
+    // Individual discount takes priority
+    if (discountMap[lid]) {
+      const d = discountMap[lid];
+      listing.discount = {
+        originalPrice: d.originalPrice,
+        discountedPrice: d.discountedPrice,
+        discountPercent: d.discountPercent,
+      };
+      continue;
+    }
+
+    // Voluntary campaign discount
+    if (voluntaryMap[lid]) {
+      const pct = voluntaryMap[lid];
+      listing.discount = {
+        originalPrice: listing.price,
+        discountedPrice: +(listing.price * (1 - pct / 100)).toFixed(2),
+        discountPercent: pct,
+      };
+      continue;
+    }
+
+    // Mandatory campaign discount (match by game)
+    const gameId = (listing.game?._id || listing.game || "").toString();
+    for (const c of mandatoryCampaigns) {
+      if (c.games.some(g => g.toString() === gameId)) {
+        listing.discount = {
+          originalPrice: listing.price,
+          discountedPrice: +(listing.price * (1 - c.discountPercent / 100)).toFixed(2),
+          discountPercent: c.discountPercent,
+          isMandatory: true,
+        };
+        break;
+      }
+    }
+  }
+}
+
 // ─── PUBLIC: Browse all available listings (no auth) ───
 export const browseListings = async (req, res) => {
   try {
@@ -248,9 +330,13 @@ export const browseListings = async (req, res) => {
         .populate("seller", "username avatar")
         .sort(sortOption)
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Number(limit))
+        .lean(),
       Listing.countDocuments(filter),
     ]);
+
+    // Enrich listings with campaign discounts
+    await enrichListingsWithCampaignDiscounts(listings);
 
     return res.status(200).json({
       data: listings,
@@ -305,6 +391,9 @@ export const getAllListings = async (req, res) => {
 
     const total = await Listing.countDocuments(filter);
 
+    // Enrich listings with campaign discounts
+    await enrichListingsWithCampaignDiscounts(listings);
+
     return res.status(200).json({
       success: true,
       data: listings,
@@ -330,7 +419,7 @@ export const getListingById = async (req, res) => {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    // Check for active discount
+    // Check for active discount (individual listing discount)
     const now = new Date();
     const activeDiscount = await Discount.findOne({
       listing: req.params.id,
@@ -348,6 +437,46 @@ export const getListingById = async (req, res) => {
         discountedPrice: activeDiscount.discountedPrice,
         discountPercent: activeDiscount.discountPercent,
       };
+    } else {
+      // Check for active campaign discounts (voluntary or mandatory)
+      const listingGameId = listing.game?._id || listing.game;
+
+      // 1) Voluntary campaign — seller opted this listing in
+      const voluntaryCampaign = await Campaign.findOne({
+        type: "voluntary",
+        status: "active",
+        endDate: { $gte: now },
+        "participatingListings.listing": listing._id,
+      }).lean();
+
+      if (voluntaryCampaign) {
+        const discountPercent = voluntaryCampaign.discountPercent;
+        const discountedPrice = +(listing.price * (1 - discountPercent / 100)).toFixed(2);
+        listing.discount = {
+          originalPrice: listing.price,
+          discountedPrice,
+          discountPercent,
+        };
+      } else {
+        // 2) Mandatory campaign — admin forced discount on this game
+        const mandatoryCampaign = await Campaign.findOne({
+          type: "mandatory",
+          status: "active",
+          endDate: { $gte: now },
+          games: listingGameId,
+        }).lean();
+
+        if (mandatoryCampaign) {
+          const discountPercent = mandatoryCampaign.discountPercent;
+          const discountedPrice = +(listing.price * (1 - discountPercent / 100)).toFixed(2);
+          listing.discount = {
+            originalPrice: listing.price,
+            discountedPrice,
+            discountPercent,
+            isMandatory: true,
+          };
+        }
+      }
     }
 
     // Track view (fire-and-forget, never blocks the response)

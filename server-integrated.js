@@ -201,9 +201,25 @@ nextApp.prepare().then(async () => {
 
   // Performance monitoring — skip for static assets & Next.js internals
   app.use((req, res, next) => {
-    // Fast-track static assets: no need for response time tracking
-    if (req.path.startsWith('/_next/') || req.path.startsWith('/assets/') || req.path.match(/\.(ico|png|jpg|svg|woff2?)$/)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    // /_next/static/ → content-hashed chunks: safe to cache immutably (production only)
+    // In dev mode, use no-cache to avoid browser caching 404s from on-demand compilation
+    if (req.path.startsWith('/_next/static/') || req.path.startsWith('/assets/')) {
+      res.setHeader('Cache-Control', dev ? 'no-cache, must-revalidate' : 'public, max-age=31536000, immutable');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('Keep-Alive', 'timeout=5');
+      return next();
+    }
+    // Static file extensions (fonts, images) also get long-term cache
+    if (req.path.match(/\.(ico|png|jpg|jpeg|gif|svg|woff2?|ttf|eot|webp|avif)$/)) {
+      res.setHeader('Cache-Control', dev ? 'no-cache, must-revalidate' : 'public, max-age=31536000, immutable');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('Keep-Alive', 'timeout=5');
+      return next();
+    }
+    // /_next/webpack-hmr, /_next/data/, /_next/image/ → must NOT be cached
+    // These are dynamic: HMR events, RSC payloads, on-demand images
+    if (req.path.startsWith('/_next/')) {
+      res.setHeader('Cache-Control', 'no-store');
       res.setHeader('Connection', 'keep-alive');
       res.setHeader('Keep-Alive', 'timeout=5');
       return next();
@@ -276,6 +292,8 @@ nextApp.prepare().then(async () => {
     import("./src/modules/ads/ad.routes.js"),
     import("./src/modules/discounts/discount.routes.js"),
     import("./src/modules/promotions/promotion.routes.js"),
+    import("./src/modules/transactions/transaction.routes.js"),
+    import("./src/modules/campaigns/campaign.routes.js"),
   ]);
 
   const routePaths = [
@@ -283,6 +301,7 @@ nextApp.prepare().then(async () => {
     "/api/v1/seller", "/api/v1/listings", "/api/v1/games",
     "/api/v1/withdrawals", "/api/v1/deposits", "/api/v1/notifications",
     "/api/v1/ads", "/api/v1/discounts", "/api/v1/promotions",
+    "/api/v1/transactions", "/api/v1/campaigns",
   ];
 
   routeModules.forEach((result, i) => {

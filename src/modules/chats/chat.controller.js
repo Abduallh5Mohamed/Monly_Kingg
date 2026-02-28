@@ -262,14 +262,14 @@ export const createSupportChat = async (req, res) => {
                 participants: [userId],
                 messages: [{
                     sender: userId,
-                    content: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+                    content: 'Hello! How can I help you today?',
                     type: 'text',
                     timestamp: new Date(),
                     read: false,
                     delivered: true
                 }],
                 lastMessage: {
-                    content: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+                    content: 'Hello! How can I help you today?',
                     sender: userId,
                     timestamp: new Date(),
                     type: 'text'

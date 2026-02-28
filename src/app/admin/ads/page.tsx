@@ -51,8 +51,8 @@ interface Stats {
 }
 
 const positionLabels: Record<string, string> = {
-  hero: 'بانر البطل',
-  between_games: 'بين أقسام الألعاب',
+  hero: 'Hero Banner',
+  between_games: 'Between Game Sections',
   banner: 'Dashboard Banner',
   sidebar: 'Sidebar',
   popup: 'Popup',
@@ -530,8 +530,8 @@ export default function AdminAdsPage() {
                     onChange={e => setForm(p => ({ ...p, position: e.target.value }))}
                     className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30"
                   >
-                    <option value="hero" className="bg-[#131620]">بانر البطل (أعلى الصفحة)</option>
-                    <option value="between_games" className="bg-[#131620]">بين أقسام الألعاب</option>
+                    <option value="hero" className="bg-[#131620]">Hero Banner (Top of Page)</option>
+                    <option value="between_games" className="bg-[#131620]">Between Game Sections</option>
                     <option value="banner" className="bg-[#131620]">Dashboard Banner</option>
                     <option value="sidebar" className="bg-[#131620]">Sidebar</option>
                     <option value="popup" className="bg-[#131620]">Popup</option>

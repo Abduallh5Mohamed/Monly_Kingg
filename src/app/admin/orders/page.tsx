@@ -108,7 +108,7 @@ export default function OrdersPage() {
       });
       toast({
         title: '💰 New Deposit Request',
-        description: `${deposit.user?.username || 'User'} — ${deposit.amount || 0} LE`,
+        description: `${deposit.user?.username || 'User'} — ${deposit.amount || 0} EGP`,
         duration: 6000,
       });
       // Play notification sound
@@ -123,7 +123,7 @@ export default function OrdersPage() {
       });
       toast({
         title: '💸 New Withdrawal Request',
-        description: `${withdrawal.user?.username || 'User'} — ${withdrawal.amount || 0} LE`,
+        description: `${withdrawal.user?.username || 'User'} — ${withdrawal.amount || 0} EGP`,
         duration: 6000,
       });
       try { new Audio('/assets/notification.mp3').play().catch(() => { }); } catch { }

@@ -545,7 +545,7 @@ export default function SupportPage() {
 
     } catch (error) {
       console.error('Failed to delete chat:', error);
-      alert('فشل حذف المحادثة. حاول مرة أخرى.');
+      alert('Failed to delete conversation. Please try again.');
     }
   };
 
@@ -1379,13 +1379,13 @@ export default function SupportPage() {
                 <Trash2 className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white">حذف المحادثة</h3>
-                <p className="text-sm text-white/60">سيتم إخفاء المحادثة من قائمتك فقط</p>
+                <h3 className="text-lg font-semibold text-white">Delete Conversation</h3>
+                <p className="text-sm text-white/60">The conversation will be hidden from your list only</p>
               </div>
             </div>
 
             <p className="mb-6 text-sm text-white/70">
-              المحادثة سيتم إخفاؤها من عندك فقط. الشخص الآخر سيظل يراها، والرسائل ستبقى محفوظة في قاعدة البيانات.
+              The conversation will be hidden from your side only. The other person will still see it, and messages will remain stored in the database.
             </p>
 
             <div className="flex gap-3">
@@ -1394,13 +1394,13 @@ export default function SupportPage() {
                 variant="outline"
                 className="flex-1 border-white/10 bg-white/5 text-white hover:bg-white/10"
               >
-                إلغاء
+                Cancel
               </Button>
               <Button
                 onClick={() => deletingChatId && handleDeleteChat(deletingChatId)}
                 className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
               >
-                حذف المحادثة
+                Delete Conversation
               </Button>
             </div>
           </div>

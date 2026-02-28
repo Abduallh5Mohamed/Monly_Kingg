@@ -105,8 +105,8 @@ export function UserSidebar() {
 
                 <div className="relative">
                     <Icon className={`w-[20px] h-[20px] transition-all duration-300 ${isActive
-                            ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'
-                            : 'text-white/30 group-hover:text-white/55'
+                        ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]'
+                        : 'text-white/30 group-hover:text-white/55'
                         }`} />
 
                     {item.dot && (
@@ -146,8 +146,8 @@ export function UserSidebar() {
 
                         {/* Soft glow behind */}
                         <div className={`absolute w-16 h-16 rounded-full transition-all duration-500 ${isHomeActive
-                                ? 'bg-blue-500/40 blur-2xl scale-150'
-                                : 'bg-blue-500/20 blur-xl scale-125 group-hover:bg-blue-500/35 group-hover:scale-150'
+                            ? 'bg-blue-500/40 blur-2xl scale-150'
+                            : 'bg-blue-500/20 blur-xl scale-125 group-hover:bg-blue-500/35 group-hover:scale-150'
                             }`} />
 
                         {/* Main circle button */}

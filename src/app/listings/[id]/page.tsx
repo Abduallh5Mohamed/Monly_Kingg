@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
   ArrowLeft,
   ShoppingCart,
@@ -114,10 +115,11 @@ export default function ListingDetailsPage() {
     setBuying(true);
     setBuyError('');
     try {
+      const csrfToken = await ensureCsrfToken() || '';
       const res = await fetch('/api/v1/transactions', {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
         body: JSON.stringify({ listingId: listing._id }),
       });
       const data = await res.json();
@@ -258,8 +260,8 @@ export default function ListingDetailsPage() {
                         key={idx}
                         onClick={() => setSelectedImageIndex(idx)}
                         className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${idx === selectedImageIndex
-                            ? 'border-cyan-500 ring-2 ring-cyan-500/20'
-                            : 'border-white/10 hover:border-white/30'
+                          ? 'border-cyan-500 ring-2 ring-cyan-500/20'
+                          : 'border-white/10 hover:border-white/30'
                           }`}
                       >
                         <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
@@ -324,62 +326,69 @@ export default function ListingDetailsPage() {
                     /* With Discount */
                     <div className="mb-6">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-4xl font-bold text-white">${listing.discount.discountedPrice}</span>
-                        <span className="text-white/50 text-sm">USD</span>
+                        <span className="text-4xl font-bold text-white">EGP {listing.discount.discountedPrice}</span>
+                        <span className="text-white/50 text-sm">EGP</span>
                         <span className="px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
                           -{listing.discount.discountPercent}%
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg text-white/40 line-through">${listing.discount.originalPrice}</span>
+                        <span className="text-lg text-white/40 line-through">EGP {listing.discount.originalPrice}</span>
                         <span className="text-xs text-green-400 font-medium">
-                          Save ${(listing.discount.originalPrice - listing.discount.discountedPrice).toFixed(2)}
+                          Save EGP {(listing.discount.originalPrice - listing.discount.discountedPrice).toFixed(2)}
                         </span>
                       </div>
                     </div>
                   ) : (
                     /* No Discount */
                     <div className="flex items-baseline gap-2 mb-6">
-                      <span className="text-4xl font-bold text-white">${listing.price}</span>
-                      <span className="text-white/50 text-sm">USD</span>
+                      <span className="text-4xl font-bold text-white">EGP {listing.price}</span>
+                      <span className="text-white/50 text-sm">EGP</span>
                     </div>
                   )}
 
                   {/* Action Buttons */}
                   {listing.status === 'available' && (
-                    <div className="space-y-3">
-                      <Button
-                        onClick={handleBuy}
-                        className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-base rounded-xl shadow-lg shadow-cyan-500/20"
-                      >
-                        <ShoppingCart className="w-5 h-5 mr-2" />
-                        Buy Now
-                      </Button>
-
-                      <div className="grid grid-cols-3 gap-2">
-                        <Button
-                          onClick={handleChat}
-                          variant="outline"
-                          className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-cyan-500/30 text-white rounded-xl"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          onClick={handleRate}
-                          variant="outline"
-                          className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-yellow-500/30 text-white rounded-xl"
-                        >
-                          <Star className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          onClick={handleReport}
-                          variant="outline"
-                          className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-red-500/30 text-white rounded-xl"
-                        >
-                          <Flag className="w-4 h-4" />
-                        </Button>
+                    user && user.id === listing.seller._id ? (
+                      /* Owner viewing their own listing */
+                      <div className="text-center py-4 rounded-xl bg-white/[0.03] border border-white/10">
+                        <p className="text-white/50 text-sm">This is your listing</p>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <Button
+                          onClick={handleBuy}
+                          className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-base rounded-xl shadow-lg shadow-cyan-500/20"
+                        >
+                          <ShoppingCart className="w-5 h-5 mr-2" />
+                          Buy Now
+                        </Button>
+
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button
+                            onClick={handleChat}
+                            variant="outline"
+                            className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-cyan-500/30 text-white rounded-xl"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            onClick={handleRate}
+                            variant="outline"
+                            className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-yellow-500/30 text-white rounded-xl"
+                          >
+                            <Star className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            onClick={handleReport}
+                            variant="outline"
+                            className="h-11 bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-red-500/30 text-white rounded-xl"
+                          >
+                            <Flag className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    )
                   )}
 
                   {listing.status === 'in_progress' && (
@@ -471,15 +480,41 @@ export default function ListingDetailsPage() {
           <div className="bg-[#0a0d16] rounded-2xl border border-white/10 p-6 max-w-md w-full">
             <h3 className="text-xl font-bold text-white mb-2">Confirm Purchase</h3>
             <p className="text-white/50 text-sm mb-6">Funds will be held in escrow until you confirm receipt of account credentials.</p>
-            <div className="bg-white/[0.03] rounded-xl border border-white/10 p-4 mb-4">
-              <div className="flex justify-between items-center mb-2">
+            <div className="bg-white/[0.03] rounded-xl border border-white/10 p-4 mb-4 space-y-3">
+              {/* Listing name */}
+              <div className="flex justify-between items-center">
                 <span className="text-white/70 text-sm">Listing</span>
                 <span className="text-white text-sm font-medium truncate max-w-[180px]">{listing.title}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-sm">Price</span>
-                <span className="text-cyan-400 font-bold text-lg">{listing.price} EGP</span>
-              </div>
+
+              {listing.discount ? (
+                <>
+                  {/* Original price */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/70 text-sm">Price</span>
+                    <span className="text-white/40 line-through text-sm">{listing.discount.originalPrice.toFixed(2)} EGP</span>
+                  </div>
+                  {/* Discount row */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/70 text-sm">Discount ({listing.discount.discountPercent}%)</span>
+                    <span className="text-green-400 text-sm font-medium">
+                      - {(listing.discount.originalPrice - listing.discount.discountedPrice).toFixed(2)} EGP
+                    </span>
+                  </div>
+                  {/* Divider */}
+                  <div className="border-t border-white/10" />
+                  {/* Total */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-semibold">Total</span>
+                    <span className="text-cyan-400 font-bold text-xl">{listing.discount.discountedPrice.toFixed(2)} EGP</span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-between items-center">
+                  <span className="text-white/70 text-sm">Price</span>
+                  <span className="text-cyan-400 font-bold text-lg">{listing.price} EGP</span>
+                </div>
+              )}
             </div>
             {buyError && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">

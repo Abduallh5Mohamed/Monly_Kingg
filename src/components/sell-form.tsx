@@ -135,7 +135,7 @@ export function SellForm() {
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-primary">Price (USD)</FormLabel>
+                  <FormLabel className="text-primary">Price (EGP)</FormLabel>
                   <FormControl>
                     <Input type="number" step="0.01" placeholder="e.g., 499.99" {...field} className="bg-input/50" />
                   </FormControl>

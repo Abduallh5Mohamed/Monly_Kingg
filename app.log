@@ -12520,3 +12520,16 @@
 >>>>>>> 095bc5c14c1d932e3bd39f2c6d908ddd8a286022
 [2026-02-27T22:10:54.157Z] [WARN]: Slow Request: GET /unread-count - 2888ms
 [2026-02-27T22:10:54.677Z] [WARN]: Slow Request: GET /profile - 3353ms
+[2026-02-28T14:24:29.953Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T14:24:30.052Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T14:24:30.053Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T14:24:30.428Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T14:24:30.482Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T14:24:30.482Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T14:24:30.511Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T14:24:30.540Z] [INFO]: ✅ Cleanup complete in 58ms
+[2026-02-28T14:24:30.540Z] [INFO]:    Users removed: 0
+[2026-02-28T14:24:30.541Z] [INFO]:    Cached users before: undefined
+[2026-02-28T14:24:30.541Z] [INFO]:    Cached users after: undefined
+[2026-02-28T14:24:30.542Z] [INFO]:    Memory before: 3.91M
+[2026-02-28T14:24:30.542Z] [INFO]:    Memory after: 3.91M

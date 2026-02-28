@@ -70,12 +70,14 @@ export const optimizationHeaders = (req, res, next) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Keep-Alive', 'timeout=5');
 
-    // Static asset caching
-    if (STATIC_ASSET_RE.test(req.path)) {
+    // Cache-Control per resource type (system design):
+    // /_next/static/ + static files  → immutable (content-hashed, never change)
+    // /_next/data/, /_next/webpack-hmr, etc. → no-store (dynamic Next.js internals)
+    // /api/                           → no-store (always fresh)
+    // pages (HTML)                    → handled by middleware.ts (no-cache + revalidate)
+    if (STATIC_ASSET_RE.test(req.path) || req.path.startsWith('/_next/static/') || req.path.startsWith('/assets/')) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    } else if (req.path.startsWith('/_next/static/')) {
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    } else if (req.path.startsWith('/api/')) {
+    } else if (req.path.startsWith('/_next/') || req.path.startsWith('/api/')) {
         res.setHeader('Cache-Control', 'no-store');
     }
 

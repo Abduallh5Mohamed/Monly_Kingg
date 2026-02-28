@@ -100,6 +100,29 @@ interface ActiveDiscount {
   discountPercent: number;
 }
 
+interface CampaignListing extends Listing {
+  campaignDiscount?: {
+    type: 'mandatory' | 'voluntary';
+    discountPercent: number;
+    originalPrice?: number;
+    discountedPrice?: number;
+    label: string;
+  };
+}
+
+interface ActiveCampaign {
+  _id: string;
+  title: string;
+  description: string;
+  type: 'mandatory' | 'voluntary';
+  image: string;
+  discountPercent: number;
+  games: { _id: string; name: string; slug: string; icon?: string }[];
+  endDate: string;
+  listings: CampaignListing[];
+  listingCount: number;
+}
+
 /* ═══════════ STATIC DEMO DATA ═══════════ */
 /* ── Category Icons ── */
 const CATEGORIES = [
@@ -132,18 +155,18 @@ function EmptyGameSection({ gameName, isSeller }: { gameName: string; isSeller?:
         <Package className="w-8 h-8 text-white/20" />
       </div>
       <h3 className="text-base font-semibold text-white/60 mb-2">
-        لا توجد حسابات متاحة حالياً
+        No accounts available currently
       </h3>
       <p className="text-sm text-white/30 text-center mb-5">
         {isSeller
-          ? `ابدأ بإضافة حسابات ${gameName} من لوحة البائع`
-          : `لم يتم عرض أي حسابات ${gameName} بعد`}
+          ? `Start adding ${gameName} accounts from the seller dashboard`
+          : `No ${gameName} accounts listed yet`}
       </p>
       {isSeller && (
         <Link href="/user/store/new">
           <Button className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20">
             <Plus className="w-4 h-4 mr-2" />
-            أضف حساب جديد
+            Add New Account
           </Button>
         </Link>
       )}
@@ -291,8 +314,8 @@ function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: 
           </div>
           <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
-              {hasDiscount && <p className="text-[10px] text-white/20 line-through">${originalPrice.toFixed(2)}</p>}
-              <p className="text-base font-black text-white">${displayPrice.toFixed(2)}</p>
+              {hasDiscount && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice.toFixed(2)}</p>}
+              <p className="text-base font-black text-white">EGP {displayPrice.toFixed(2)}</p>
             </div>
           </div>
           {!isOwner && (
@@ -393,7 +416,7 @@ function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
 
             {ad.link && (
               <div className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] sm:text-xs font-semibold px-4 py-2 rounded-xl group-hover:bg-white/20 transition-all duration-300">
-                اعرف أكتر
+                Learn More
                 <ChevronRight className="w-3 h-3 inline-block mr-1 group-hover:translate-x-0.5 transition-transform" />
               </div>
             )}
@@ -401,7 +424,7 @@ function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
 
           {/* Ad badge */}
           <span className="absolute top-3 left-3 bg-black/30 backdrop-blur-sm text-white/50 text-[8px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-white/10">
-            إعلان
+            AD
           </span>
         </div>
       </Wrapper>
@@ -579,6 +602,7 @@ export default function UserDashboardPage() {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [dashboardAds, setDashboardAds] = useState<DashboardAd[]>([]);
   const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
+  const [activeCampaigns, setActiveCampaigns] = useState<ActiveCampaign[]>([]);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   // Filter hooks removed - static data removed, using dynamic data from API
@@ -608,6 +632,7 @@ export default function UserDashboardPage() {
           setGameListings(data.gameListings || {});
           setDashboardAds(data.ads || []);
           setActiveDiscounts(data.discounts || []);
+          setActiveCampaigns(data.campaigns || []);
           setListings(data.listings || []);
           setTrendingListings(data.trending || []);
           setPopularListings(data.popular || []);
@@ -615,17 +640,19 @@ export default function UserDashboardPage() {
           return;
         }
 
-        // Fetch games, ads, and discounts first (critical)
-        const [gamesRes, adsRes, discountsRes] = await Promise.all([
+        // Fetch games, ads, discounts, and campaigns first (critical)
+        const [gamesRes, adsRes, discountsRes, campaignsRes] = await Promise.all([
           fetch('/api/v1/games'),
           fetch('/api/v1/ads/active'),
           fetch('/api/v1/discounts/active'),
+          fetch('/api/v1/campaigns/active'),
         ]);
 
-        const [gamesData, adsData, discountsData] = await Promise.all([
+        const [gamesData, adsData, discountsData, campaignsData] = await Promise.all([
           gamesRes.json(),
           adsRes.json(),
           discountsRes.json(),
+          campaignsRes.json(),
         ]);
 
         let gameListingsData: Record<string, Listing[]> = {};
@@ -655,6 +682,9 @@ export default function UserDashboardPage() {
 
         // Set discounts
         if (discountsData.data) setActiveDiscounts(discountsData.data);
+
+        // Set campaigns
+        if (campaignsData.data) setActiveCampaigns(campaignsData.data);
 
         // Fetch rankings separately with shorter timeout (non-blocking)
         fetch('/api/v1/rankings/homepage?limit=10', {
@@ -687,6 +717,7 @@ export default function UserDashboardPage() {
           gameListings: gameListingsData,
           ads: adsData.data || [],
           discounts: discountsData.data || [],
+          campaigns: campaignsData.data || [],
           listings: rankingsListings.listings,
           trending: rankingsListings.trending,
           popular: rankingsListings.popular,
@@ -890,8 +921,8 @@ export default function UserDashboardPage() {
                       )}
                       <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                         <div>
-                          <p className="text-[10px] text-white/20 line-through">${disc.originalPrice.toFixed(2)}</p>
-                          <p className="text-base font-black text-red-400">${disc.discountedPrice.toFixed(2)}</p>
+                          <p className="text-[10px] text-white/20 line-through">EGP {disc.originalPrice.toFixed(2)}</p>
+                          <p className="text-base font-black text-red-400">EGP {disc.discountedPrice.toFixed(2)}</p>
                         </div>
                         <div className="bg-red-500/10 border border-red-500/15 text-red-400 text-[9px] font-black px-2 py-1 rounded-lg">
                           DEAL
@@ -904,6 +935,154 @@ export default function UserDashboardPage() {
             </HorizontalScroll>
           </section>
         )}
+
+        {/* ═══════════ CAMPAIGN DISCOUNT SECTIONS ═══════════ */}
+        {activeCampaigns.map((campaign) => {
+          const isMandatory = campaign.type === 'mandatory';
+          const gradientColor = isMandatory ? 'from-orange-500 to-amber-600' : 'from-blue-500 to-cyan-600';
+          const badgeColor = isMandatory ? 'bg-orange-500/15 text-orange-400 border-orange-500/15' : 'bg-blue-500/15 text-blue-400 border-blue-500/15';
+          const endDate = new Date(campaign.endDate);
+          const timeLeft = endDate.getTime() - Date.now();
+          const daysLeft = Math.max(0, Math.ceil(timeLeft / (1000 * 60 * 60 * 24)));
+
+          return (
+            <section key={campaign._id}>
+              {/* Campaign Banner */}
+              {campaign.image && (
+                <div className="relative w-full aspect-[5/1] sm:aspect-[6/1] rounded-2xl overflow-hidden mb-4 border border-white/[0.06]">
+                  <img src={campaign.image} alt={campaign.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/60" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex items-end justify-between">
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-white drop-shadow-lg">{campaign.title}</h2>
+                      {campaign.description && <p className="text-white/50 text-xs mt-1 line-clamp-1">{campaign.description}</p>}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-black px-3 py-1.5 rounded-xl shadow-lg">
+                        -{campaign.discountPercent}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Section header when no image */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className={`relative w-9 h-9 rounded-xl bg-gradient-to-br ${gradientColor} flex items-center justify-center shadow-lg`}>
+                    <Percent className="w-4 h-4 text-white" />
+                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${gradientColor} blur-lg opacity-30`} />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-white leading-tight flex items-center gap-2">
+                      {!campaign.image && campaign.title}
+                      {campaign.image && `${campaign.title} — Accounts`}
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}>
+                        {isMandatory ? 'Commission Discount' : 'Price Discount'}
+                      </span>
+                      {daysLeft <= 3 && (
+                        <span className="bg-red-500/15 text-red-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-500/15 animate-pulse">
+                          {daysLeft === 0 ? 'Last Day!' : `${daysLeft} days left`}
+                        </span>
+                      )}
+                    </h2>
+                    <p className="text-[10px] text-white/20 mt-0.5 flex items-center gap-2">
+                      {campaign.games.map(g => g.name).join(' • ')}
+                      <span className="text-white/10">|</span>
+                      <span>{campaign.listingCount} accounts</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Campaign Listings */}
+              <HorizontalScroll>
+                {campaign.listings.map((listing) => {
+                  const cd = listing.campaignDiscount;
+                  const coverImg = listing.coverImage || (listing.images?.length > 0 ? listing.images[0] : null);
+                  const isVoluntary = cd?.type === 'voluntary';
+                  const displayPrice = isVoluntary && cd?.discountedPrice ? cd.discountedPrice : listing.price;
+                  const originalPrice = isVoluntary && cd?.originalPrice ? cd.originalPrice : listing.price;
+                  const hasRealDiscount = isVoluntary && cd?.discountedPrice;
+
+                  return (
+                    <Link
+                      key={listing._id}
+                      href={`/listings/${listing._id}`}
+                      className={`group flex-shrink-0 w-[220px] bg-[#0c0f18] rounded-2xl border overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 relative ${isMandatory
+                        ? 'border-orange-500/[0.06] hover:border-orange-500/20 hover:shadow-orange-500/[0.07]'
+                        : 'border-blue-500/[0.06] hover:border-blue-500/20 hover:shadow-blue-500/[0.07]'
+                        }`}
+                    >
+                      {/* Top accent line */}
+                      <div className={`absolute top-0 left-0 right-0 h-[2px] z-10 ${isMandatory ? 'bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500' : 'bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500'}`} />
+
+                      <div className="relative aspect-[5/4] overflow-hidden">
+                        {coverImg ? (
+                          <img src={coverImg} alt={listing.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-white/[0.03] to-transparent flex items-center justify-center">
+                            <Gamepad2 className="w-10 h-10 text-white/[0.06]" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f18] via-transparent to-transparent opacity-60" />
+
+                        {/* Discount badge */}
+                        <span className={`absolute top-2 left-2 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg ${isMandatory ? 'bg-orange-500' : 'bg-blue-500'}`}>
+                          -{cd?.discountPercent || campaign.discountPercent}%
+                        </span>
+
+                        {/* Shield */}
+                        <span className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center">
+                          <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                        </span>
+
+                        {/* Type label */}
+                        <span className={`absolute bottom-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm ${isMandatory ? 'bg-orange-500/20 text-orange-300 border border-orange-500/20' : 'bg-blue-500/20 text-blue-300 border border-blue-500/20'}`}>
+                          {isMandatory ? 'Reduced Commission' : 'Discounted Price'}
+                        </span>
+                      </div>
+
+                      <div className="p-3">
+                        <h3 className="text-[12px] font-semibold text-white/85 line-clamp-2 min-h-[32px] group-hover:text-white transition-colors leading-tight">
+                          {listing.title}
+                        </h3>
+
+                        {listing.seller && (
+                          <div className="flex items-center gap-1 mt-1.5">
+                            <span className="text-[9px] text-white/40">@{listing.seller.username}</span>
+                          </div>
+                        )}
+
+                        {listing.game && (
+                          <span className="text-[9px] text-white/30 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium mt-1.5 inline-block">
+                            {listing.game.name}
+                          </span>
+                        )}
+
+                        <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
+                          <div>
+                            {hasRealDiscount && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice.toFixed(2)}</p>}
+                            <p className={`text-base font-black ${isMandatory ? 'text-orange-400' : 'text-blue-400'}`}>
+                              EGP {displayPrice.toFixed(2)}
+                            </p>
+                          </div>
+                          <div className={`text-[8px] font-bold px-2 py-1 rounded-lg border ${isMandatory
+                            ? 'bg-orange-500/10 border-orange-500/15 text-orange-400'
+                            : 'bg-blue-500/10 border-blue-500/15 text-blue-400'
+                            }`}>
+                            {isMandatory ? 'DEAL' : 'SALE'}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </HorizontalScroll>
+            </section>
+          );
+        })}
 
         {/* ═══════════ 🔥 BEST SELLERS (RANKED BY ALGORITHM) ═══════════ */}
         {listings.length > 0 && (

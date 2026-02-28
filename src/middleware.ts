@@ -10,6 +10,30 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
+  // ✅ SECURITY: Protect /user routes — authenticated regular users only (NOT admins)
+  if (pathname.startsWith('/user') || pathname.startsWith('/complete-profile')) {
+    const accessToken = request.cookies.get('access_token')?.value;
+    if (!accessToken) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    // Decode JWT to check role — admins must NOT access user pages
+    try {
+      const payloadBase64 = accessToken.split('.')[1];
+      const payload = JSON.parse(atob(payloadBase64));
+      if (payload.role === 'admin') {
+        // Admin has no user account — redirect to admin dashboard
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+      }
+    } catch {
+      // Malformed token — redirect to login
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+    return response;
+  }
+
   // ✅ SECURITY: Protect /admin routes at the server level
   if (pathname.startsWith('/admin')) {
     const accessToken = request.cookies.get('access_token')?.value;

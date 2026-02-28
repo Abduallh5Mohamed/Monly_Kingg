@@ -78,7 +78,15 @@ export default function CompleteProfilePage() {
 
         if (user.profileCompleted === true) {
             console.log('✅ Profile already completed, redirecting to dashboard');
-            router.replace('/user/dashboard');
+            // Admins go to admin dashboard, regular users go to user dashboard
+            router.replace(user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
+            return;
+        }
+
+        // Admins don't need to complete a user profile — redirect them to their dashboard
+        if (user.role === 'admin') {
+            console.log('✅ Admin user, redirecting to admin dashboard');
+            router.replace('/admin/dashboard');
             return;
         }
 

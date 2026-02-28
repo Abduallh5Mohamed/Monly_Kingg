@@ -6,6 +6,19 @@ import { useAuth } from '@/lib/auth-context';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 
+/** Fetch and store the CSRF token in a cookie so admin mutations work */
+async function fetchCsrfToken() {
+  try {
+    const res = await fetch('/api/v1/auth/csrf-token', { credentials: 'include' });
+    const data = await res.json();
+    if (data?.csrfToken) {
+      document.cookie = `XSRF-TOKEN=${data.csrfToken}; path=/; max-age=900; SameSite=Lax`;
+    }
+  } catch {
+    // non-fatal — admin will see 403 on mutations if this fails
+  }
+}
+
 export default function AdminLayout({
   children,
 }: {
@@ -22,6 +35,10 @@ export default function AdminLayout({
   useEffect(() => {
     if (mounted && !loading && (!user || user.role !== 'admin')) {
       router.replace('/login');
+    }
+    // Fetch CSRF token as soon as admin is confirmed
+    if (mounted && !loading && user?.role === 'admin') {
+      fetchCsrfToken();
     }
   }, [user, loading, router, mounted]);
 

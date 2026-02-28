@@ -77,16 +77,25 @@ export const clearCache = async (pattern = 'api_cache:*') => {
 
 /**
  * Middleware to clear cache after data modifications
- * @param {string} pattern - Redis key pattern to clear
+ * @param {string|string[]} patterns - Redis key pattern(s) to clear
+ *
+ * NOTE: Cache keys are stored as  api_cache:{userId}:{url}
+ *       So patterns MUST use a wildcard before the URL segment:
+ *         ✅  'api_cache:*:/api/v1/listings*'
+ *         ❌  'api_cache:/api/v1/listings/*'   ← userId is missing
+ *
+ * Fire-and-forget: never blocks or delays the HTTP response.
  */
-export const invalidateCache = (pattern) => {
-    return async (req, res, next) => {
+export const invalidateCache = (...patterns) => {
+    return (req, res, next) => {
         const originalJson = res.json.bind(res);
 
-        res.json = async function (data) {
-            // Only clear cache on successful modifications
+        res.json = function (data) {
+            // Fire async invalidation without blocking the response
             if (res.statusCode >= 200 && res.statusCode < 300) {
-                await clearCache(pattern);
+                const allPatterns = patterns.flat();
+                Promise.allSettled(allPatterns.map(p => clearCache(p)))
+                    .catch(err => logger.error('[Cache] invalidateCache error:', err.message));
             }
 
             return originalJson(data);
