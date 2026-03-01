@@ -20,6 +20,8 @@ import rankingRoutes from "./routes/ranking.routes.js";
 import transactionRoutes from "./modules/transactions/transaction.routes.js";
 import sellerLevelRoutes from "./modules/seller-levels/sellerLevel.routes.js";
 import { startAutoConfirmJob } from "./jobs/autoConfirmTransactions.js";
+import { startTransactionWorkers } from "./workers/transactionWorker.js";
+import { runStartupRecovery } from "./jobs/startupRecovery.js";
 import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -41,6 +43,9 @@ dotenv.config();
 connectDB().then(() => {
   createIndexes();
   startAutoConfirmJob();
+  startTransactionWorkers();
+  // Delay recovery scan slightly to allow models/connections to fully initialize
+  setTimeout(runStartupRecovery, 5000);
 });
 
 const app = express();
@@ -91,7 +96,7 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-XSRF-TOKEN', 'X-Idempotency-Key']
 };
 app.use(cors(corsOptions));
 

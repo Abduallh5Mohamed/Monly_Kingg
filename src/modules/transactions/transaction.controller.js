@@ -45,12 +45,55 @@ async function createNotification({ userId, type, title, message, relatedId, met
   }
 }
 
+/**
+ * Enqueue a notification via BullMQ so it survives a server crash.
+ * The worker (transactionWorker.js) handles the actual DB insert + socket emit.
+ */
+async function queueNotification({ userId, type, title, message, relatedId, metadata = {}, socketEvent, socketPayload }) {
+  try {
+    await notificationQueue.add("notify", {
+      userId,
+      type,
+      title,
+      message,
+      relatedId: relatedId?.toString(),
+      metadata,
+      socketEvent,
+      socketPayload,
+    });
+  } catch (err) {
+    // Fallback: send directly if queue is unavailable
+    logger.warn(`[Transaction] notificationQueue unavailable, sending directly: ${err.message}`);
+    await createNotification({ userId, type, title, message, relatedId, metadata });
+    try {
+      if (socketEvent && socketService[socketEvent]) {
+        socketService[socketEvent](metadata?.socketTargetId || userId, socketPayload || {});
+      }
+    } catch (_) { /* non-fatal */ }
+  }
+}
+
 // ─── POST /api/v1/transactions ───────────────────────────────────────────────
 // Buyer starts the purchase — deducts balance to hold
 export const createTransaction = async (req, res) => {
   try {
     const buyerId = req.user._id.toString();
     const { listingId } = req.body;
+
+    // ── Idempotency ── ──────────────────────────────────────────────────────
+    // Client must send a UUID in X-Idempotency-Key to prevent double-charge
+    // on network retries. Same key → same response, no second deduction.
+    const idempotencyKey = req.headers["x-idempotency-key"] || null;
+    if (idempotencyKey) {
+      const existing = await Transaction.findOne({ idempotencyKey }).lean();
+      if (existing) {
+        return res.status(200).json({
+          success: true,
+          message: "Purchase already initiated (idempotent response).",
+          data: { transactionId: existing._id },
+        });
+      }
+    }
 
     if (!listingId) {
       return res.status(400).json({ success: false, message: "listingId is required" });
@@ -60,9 +103,6 @@ export const createTransaction = async (req, res) => {
     const listing = await Listing.findById(listingId).populate("seller", "_id username");
     if (!listing) {
       return res.status(404).json({ success: false, message: "Listing not found" });
-    }
-    if (listing.status !== "available") {
-      return res.status(400).json({ success: false, message: "Listing is not available" });
     }
     if (listing.seller._id.toString() === buyerId) {
       return res.status(400).json({ success: false, message: "You cannot buy your own listing" });
@@ -130,57 +170,107 @@ export const createTransaction = async (req, res) => {
       }
     }
 
-    // Load buyer and check balance
-    const buyer = await User.findById(buyerId);
-    if (!buyer) return res.status(404).json({ success: false, message: "User not found" });
+    // ── ATOMIC Step 1: Deduct buyer balance + add to hold ───────────────────
+    // Uses findOneAndUpdate with a balance guard so it's a single atomic
+    // MongoDB operation — no read-modify-write race condition.
+    const updatedBuyer = await User.findOneAndUpdate(
+      {
+        _id: buyerId,
+        "wallet.balance": { $gte: finalPrice }, // guard: enough funds?
+      },
+      {
+        $inc: {
+          "wallet.balance": -finalPrice,
+          "wallet.hold": finalPrice,
+        },
+      },
+      { new: true }
+    );
 
-    const balance = buyer.wallet?.balance || 0;
-    if (balance < finalPrice) {
+    if (!updatedBuyer) {
+      // Either user doesn't exist or balance is insufficient
+      const buyer = await User.findById(buyerId).select("wallet").lean();
+      if (!buyer) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
       return res.status(400).json({
         success: false,
         message: "Insufficient balance",
         required: finalPrice,
-        available: balance,
+        available: buyer.wallet?.balance || 0,
       });
     }
 
-    // Atomic: deduct from balance, add to hold
-    buyer.wallet.balance -= finalPrice;
-    buyer.wallet.hold = (buyer.wallet.hold || 0) + finalPrice;
-    await buyer.save();
+    // ── ATOMIC Step 2: Lock listing (prevents two buyers buying the same item) ─
+    // findOneAndUpdate only succeeds if listing is still "available" — atomic lock.
+    const lockedListing = await Listing.findOneAndUpdate(
+      { _id: listingId, status: "available" },
+      { $set: { status: "in_progress" } },
+      { new: true }
+    );
 
-    // Mark listing as in_progress
-    listing.status = "in_progress";
-    await listing.save();
+    if (!lockedListing) {
+      // Listing was snapped up by another buyer — rollback balance deduction
+      await User.findByIdAndUpdate(buyerId, {
+        $inc: {
+          "wallet.balance": finalPrice,
+          "wallet.hold": -finalPrice,
+        },
+      });
+      return res.status(400).json({ success: false, message: "Listing is no longer available" });
+    }
 
-    // Create transaction
-    const transaction = await Transaction.create({
-      buyer: buyerId,
-      seller: listing.seller._id,
-      listing: listingId,
-      amount: finalPrice,
-      originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
-      discountPercent: discountApplied ? discountApplied.percent : undefined,
-      status: "waiting_seller",
-      timeline: [{ event: "purchase_initiated", note: `Buyer ${buyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
-    });
+    // ── Step 3: Create transaction record ───────────────────────────────────
+    // If this crashes, the recovery scanner on startup will detect an
+    // orphaned hold (hold set but no waiting_seller tx) and alert admins.
+    let transaction;
+    try {
+      transaction = await Transaction.create({
+        buyer: buyerId,
+        seller: listing.seller._id,
+        listing: listingId,
+        amount: finalPrice,
+        originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
+        discountPercent: discountApplied ? discountApplied.percent : undefined,
+        status: "waiting_seller",
+        idempotencyKey: idempotencyKey || undefined,
+        timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
+      });
+    } catch (createErr) {
+      // Rollback: restore buyer balance & listing status
+      await Promise.allSettled([
+        User.findByIdAndUpdate(buyerId, {
+          $inc: { "wallet.balance": finalPrice, "wallet.hold": -finalPrice },
+        }),
+        Listing.findByIdAndUpdate(listingId, { $set: { status: "available" } }),
+      ]);
+      throw createErr;
+    }
 
-    // Notify seller via DB + socket
+    // ── Step 4: Queue seller notification (durable) ─────────────────────────
+    // Survives a server crash — BullMQ retries until the worker processes it.
     const sellerId = listing.seller._id.toString();
-    await createNotification({
+    await queueNotification({
       userId: sellerId,
       type: "purchase_initiated",
       title: "New Purchase!",
-      message: `${buyer.username} purchased "${listing.title}" for ${finalPrice} EGP${discountApplied ? ` (${discountApplied.percent}% off)` : ''}. Please submit the account credentials.`,
+      message: `${updatedBuyer.username} purchased "${listing.title}" for ${finalPrice} EGP${discountApplied ? ` (${discountApplied.percent}% off)` : ''}. Please submit the account credentials.`,
       relatedId: transaction._id,
-      metadata: { transactionId: transaction._id, listingTitle: listing.title, amount: finalPrice },
-    });
-    socketService.notifySellerNewPurchase(sellerId, {
-      transactionId: transaction._id,
-      listingId: listing._id,
-      listingTitle: listing.title,
-      amount: finalPrice,
-      buyerUsername: buyer.username,
+      metadata: {
+        transactionId: transaction._id.toString(),
+        listingTitle: listing.title,
+        amount: finalPrice,
+        notificationField: "sellerNotifiedAt",
+        socketTargetId: sellerId,
+      },
+      socketEvent: "notifySellerNewPurchase",
+      socketPayload: {
+        transactionId: transaction._id,
+        listingId: listing._id,
+        listingTitle: listing.title,
+        amount: finalPrice,
+        buyerUsername: updatedBuyer.username,
+      },
     });
 
     return res.status(201).json({
@@ -233,18 +323,24 @@ export const submitCredentials = async (req, res) => {
 
     // Notify buyer
     const buyerId = transaction.buyer._id.toString();
-    await createNotification({
+    await queueNotification({
       userId: buyerId,
       type: "credentials_sent",
       title: "🔑 Account Credentials Ready!",
       message: `The seller sent the credentials for "${transaction.listing.title}". Please verify and confirm within 48 hours.`,
       relatedId: transaction._id,
-      metadata: { transactionId: transaction._id, listingTitle: transaction.listing.title },
-    });
-    socketService.notifyBuyerCredentialsSent(buyerId, {
-      transactionId: transaction._id,
-      listingTitle: transaction.listing.title,
-      autoConfirmAt,
+      metadata: {
+        transactionId: transaction._id.toString(),
+        listingTitle: transaction.listing.title,
+        notificationField: "buyerNotifiedAt",
+        socketTargetId: buyerId,
+      },
+      socketEvent: "notifyBuyerCredentialsSent",
+      socketPayload: {
+        transactionId: transaction._id,
+        listingTitle: transaction.listing.title,
+        autoConfirmAt,
+      },
     });
 
     return res.json({
@@ -566,19 +662,32 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
   const sellerId = transaction.seller.toString();
   const buyerId = transaction.buyer.toString();
 
-  // Release buyer hold
+  // ── Atomic: release buyer hold ──────────────────────────────────────────
   await User.findByIdAndUpdate(buyerId, {
     $inc: { "wallet.hold": -transaction.amount },
   });
 
-  // Credit seller balance
-  await cacheService.updateBalanceWithSync(sellerId, transaction.amount, "sale_completed");
+  // ── Atomic: credit seller balance ───────────────────────────────────────
+  // Use findOneAndUpdate with $inc — fully atomic, no read-modify-write race.
+  // Also invalidates the cache so the next read is fresh from DB.
+  const updatedSeller = await User.findByIdAndUpdate(
+    sellerId,
+    {
+      $inc: {
+        "wallet.balance": transaction.amount,
+        "stats.totalVolume": transaction.amount,
+        "stats.successfulTrades": 1,
+      },
+    },
+    { new: true }
+  );
 
-  // Update seller stats (totalVolume, successfulTrades) and recalculate level
-  await User.findByIdAndUpdate(sellerId, {
-    $inc: { "stats.totalVolume": transaction.amount, "stats.successfulTrades": 1 },
-  });
-  // Recalculate seller level (async, non-blocking for the transaction)
+  // Sync updated seller to cache (best-effort)
+  if (updatedSeller) {
+    cacheService.cacheUser?.(updatedSeller)?.catch(() => {});
+  }
+
+  // Recalculate seller level (async, non-blocking)
   updateSellerLevel(sellerId).catch(err =>
     logger.error(`[Transaction] sellerLevel update failed: ${err.message}`)
   );
@@ -588,41 +697,39 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
     status: "sold",
   });
 
+  // Update transaction status
   transaction.status = finalStatus;
   transaction.timeline.push({ event: finalStatus, note });
   await transaction.save();
 
-  // Notify seller
-  await createNotification({
+  // ── Durable notifications (survive server crash) ─────────────────────────
+  await queueNotification({
     userId: sellerId,
     type: finalStatus === "auto_confirmed" ? "auto_confirmed" : "purchase_confirmed",
     title: "💰 Payment Received!",
     message: `${transaction.amount} EGP has been credited to your wallet for the sale.`,
     relatedId: transaction._id,
-    metadata: { transactionId: transaction._id, amount: transaction.amount },
+    metadata: {
+      transactionId: transaction._id.toString(),
+      amount: transaction.amount,
+      socketTargetId: sellerId,
+    },
+    socketEvent: finalStatus === "auto_confirmed" ? "notifySellerAutoConfirmed" : "notifySellerPurchaseConfirmed",
+    socketPayload: { transactionId: transaction._id, amount: transaction.amount },
   });
 
-  if (finalStatus === "auto_confirmed") {
-    socketService.notifySellerAutoConfirmed(sellerId, {
-      transactionId: transaction._id,
-      amount: transaction.amount,
-    });
-  } else {
-    socketService.notifySellerPurchaseConfirmed(sellerId, {
-      transactionId: transaction._id,
-      amount: transaction.amount,
-    });
-  }
-
-  socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: finalStatus });
-  socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: finalStatus });
+  // Notify buyer of status update (best-effort — not critical)
+  try {
+    socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: finalStatus });
+    socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: finalStatus });
+  } catch (_) { /* non-fatal */ }
 }
 
 async function _refundBuyer(transaction, note) {
   const buyerId = transaction.buyer.toString();
   const sellerId = transaction.seller.toString();
 
-  // Return hold back to buyer balance
+  // Atomic: return hold back to buyer balance
   await User.findByIdAndUpdate(buyerId, {
     $inc: { "wallet.hold": -transaction.amount, "wallet.balance": transaction.amount },
   });
@@ -636,19 +743,27 @@ async function _refundBuyer(transaction, note) {
   transaction.timeline.push({ event: "refunded", note: note || "Admin refunded buyer" });
   await transaction.save();
 
-  await createNotification({
+  // Durable notification to buyer
+  await queueNotification({
     userId: buyerId,
     type: "dispute_resolved",
     title: "✅ Refund Processed",
     message: `Your ${transaction.amount} EGP has been refunded after admin review.`,
     relatedId: transaction._id,
-    metadata: { transactionId: transaction._id, amount: transaction.amount },
+    metadata: {
+      transactionId: transaction._id.toString(),
+      amount: transaction.amount,
+      socketTargetId: buyerId,
+    },
+    socketEvent: "notifyDisputeResolved",
+    socketPayload: { transactionId: transaction._id, decision: "refund" },
   });
 
-  socketService.notifyDisputeResolved(buyerId, { transactionId: transaction._id, decision: "refund" });
-  socketService.notifyDisputeResolved(sellerId, { transactionId: transaction._id, decision: "refund" });
-  socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: "refunded" });
-  socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: "refunded" });
+  try {
+    socketService.notifyDisputeResolved(sellerId, { transactionId: transaction._id, decision: "refund" });
+    socketService.notifyTransactionUpdate(buyerId, { transactionId: transaction._id, status: "refunded" });
+    socketService.notifyTransactionUpdate(sellerId, { transactionId: transaction._id, status: "refunded" });
+  } catch (_) { /* non-fatal */ }
 }
 
 export { _releaseFundsToSeller }; // exported for cron job
