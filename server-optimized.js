@@ -69,7 +69,7 @@ async function startServer() {
                 defaultSrc: ["'self'"],
                 styleSrc: ["'self'", "'unsafe-inline'"],
                 scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
-                imgSrc: ["'self'", "data:", "https:"],
+                imgSrc: ["'self'", "data:", "blob:", "https:", "https://*.googleusercontent.com"],
                 connectSrc: ["'self'", "ws:", "wss:"],
                 fontSrc: ["'self'"],
                 objectSrc: ["'none'"],

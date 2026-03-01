@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
   CheckCircle2,
   XCircle,
@@ -186,8 +187,14 @@ function ApplicationsSection() {
   const handleApprove = async (requestId: string) => {
     setActionLoading(true);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/seller/requests/${requestId}/approve`, {
-        method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
       });
       if (res.ok) { fetchRequests(); setSelectedRequest(null); }
     } catch (err) { console.error(err); }
@@ -197,9 +204,14 @@ function ApplicationsSection() {
   const handleReject = async (requestId: string) => {
     setActionLoading(true);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/seller/requests/${requestId}/reject`, {
-        method: 'PUT', credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ reason: rejectReason }),
       });
       if (res.ok) { fetchRequests(); setSelectedRequest(null); setShowRejectInput(false); setRejectReason(''); }

@@ -40,6 +40,9 @@ const nextConfig = {
   // The old rewrite (source: '/api/:path*' → 'http://localhost:5000/api/:path*')
   // caused infinite loops when unmatched API paths fell through to Next.js.
 
+  // Allow cross-origin requests from local network in dev
+  allowedDevOrigins: ['192.168.1.4'],
+
   async redirects() {
     return [
       {
@@ -96,6 +99,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   // Headers for caching static assets only (dynamic routes handled by performanceMiddleware)
@@ -111,6 +126,12 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'Origin-Agent-Cluster', value: '?1' },
         ],
       },
     ];

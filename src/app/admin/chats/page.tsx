@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -109,7 +109,7 @@ export default function ChatsPage() {
 
   const fetchStatistics = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/v1/admin/chats/statistics', {
+      const response = await fetch('/api/v1/admin/chats/statistics', {
         credentials: 'include',
       });
 
@@ -137,7 +137,7 @@ export default function ChatsPage() {
         params.append('search', searchQuery);
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/admin/chats?${params}`, {
+      const response = await fetch(`/api/v1/admin/chats?${params}`, {
         credentials: 'include',
       });
 
@@ -161,7 +161,7 @@ export default function ChatsPage() {
   const fetchChatDetails = async (chatId: string) => {
     try {
       setLoadingMessages(true);
-      const response = await fetch(`http://localhost:5000/api/v1/admin/chats/${chatId}`, {
+      const response = await fetch(`/api/v1/admin/chats/${chatId}`, {
         credentials: 'include',
       });
 

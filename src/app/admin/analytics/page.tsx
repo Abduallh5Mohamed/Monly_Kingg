@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/v1/admin/stats', {
+      const response = await fetch('/api/v1/admin/stats', {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',

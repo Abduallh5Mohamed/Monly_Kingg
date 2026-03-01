@@ -32,6 +32,9 @@ router.get("/mine", txController.getMyTransactions);
 // Admin: all transactions
 router.get("/admin/all", requireAdmin, txController.adminGetAll);
 
+// Admin: single transaction detail (with seller ID info)
+router.get("/admin/:id", requireAdmin, txController.adminGetTransactionDetail);
+
 // Single transaction (buyer, seller, or admin)
 router.get("/:id", txController.getTransactionById);
 

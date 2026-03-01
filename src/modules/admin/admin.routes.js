@@ -1,6 +1,7 @@
 import express from "express";
 import {
     getAllUsers,
+    getUserDetail,
     getAdminStats,
     updateUserRole,
     deleteUser,
@@ -24,6 +25,7 @@ router.use(adminLimiter);
 
 // User management routes
 router.get("/users", getAllUsers);
+router.get("/users/:userId/detail", getUserDetail);
 router.put("/users/:userId/role", updateUserRole);
 router.delete("/users/:userId", deleteUser);
 router.put("/users/:userId/toggle-status", toggleUserStatus);

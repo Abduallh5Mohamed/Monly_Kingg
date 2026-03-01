@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Plus, Trash2, CheckCircle2, AlertTriangle, Clock, Shield, Send } from 'lucide-react';
+import { ensureCsrfToken } from '@/utils/csrf';
 
 type TxStatus = 'waiting_seller' | 'waiting_buyer' | 'completed' | 'disputed' | 'refunded' | 'auto_confirmed';
 
@@ -20,7 +21,7 @@ interface Transaction {
   resolvedNote?: string;
   timeline: { event: string; note: string; timestamp: string }[];
   listing: { _id: string; title: string; coverImage: string; price: number };
-  buyer:  { _id: string; username: string; avatar?: string };
+  buyer: { _id: string; username: string; avatar?: string };
   seller: { _id: string; username: string; avatar?: string };
 }
 
@@ -55,7 +56,7 @@ export default function TransactionDetailPage() {
   useEffect(() => { fetchTx(); }, [fetchTx]);
 
   const isSeller = user && tx && user.id === tx.seller._id;
-  const isBuyer  = user && tx && user.id === tx.buyer._id;
+  const isBuyer = user && tx && user.id === tx.buyer._id;
 
   // ── Seller: submit credentials ───────────────────────────────────────────
   const handleSubmitCredentials = async () => {
@@ -64,10 +65,14 @@ export default function TransactionDetailPage() {
     }
     setSubmitting(true); setError('');
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/transactions/${id}/credentials`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ credentials: fields }),
       });
       const data = await res.json();
@@ -82,8 +87,13 @@ export default function TransactionDetailPage() {
     if (!confirm('Are you sure you want to confirm? Funds will be released to the seller.')) return;
     setSubmitting(true); setError('');
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/transactions/${id}/confirm`, {
-        method: 'POST', credentials: 'include',
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-XSRF-TOKEN': csrfToken,
+        },
       });
       const data = await res.json();
       if (data.success) { setSuccess('Confirmed! Funds released.'); fetchTx(); }
@@ -97,10 +107,14 @@ export default function TransactionDetailPage() {
     if (!disputeReason.trim()) { setError('Please describe the issue.'); return; }
     setSubmitting(true); setError('');
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/transactions/${id}/dispute`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ reason: disputeReason }),
       });
       const data = await res.json();
@@ -111,7 +125,7 @@ export default function TransactionDetailPage() {
   };
 
   // ── Field helpers ────────────────────────────────────────────────────────
-  const addField    = () => setFields(f => [...f, { key: '', value: '' }]);
+  const addField = () => setFields(f => [...f, { key: '', value: '' }]);
   const removeField = (i: number) => setFields(f => f.filter((_, idx) => idx !== i));
   const updateField = (i: number, k: keyof Credential, v: string) =>
     setFields(f => f.map((fld, idx) => idx === i ? { ...fld, [k]: v } : fld));
@@ -132,11 +146,11 @@ export default function TransactionDetailPage() {
 
   const statusConfig: Record<TxStatus, { label: string; color: string; icon: React.ReactNode }> = {
     waiting_seller: { label: 'Waiting for Credentials', color: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10', icon: <Clock className="w-4 h-4" /> },
-    waiting_buyer:  { label: 'Review Credentials',      color: 'text-cyan-400   border-cyan-500/30   bg-cyan-500/10',   icon: <Shield className="w-4 h-4" /> },
-    completed:      { label: 'Completed',                color: 'text-green-400  border-green-500/30  bg-green-500/10',  icon: <CheckCircle2 className="w-4 h-4" /> },
-    auto_confirmed: { label: 'Auto-Confirmed',           color: 'text-green-400  border-green-500/30  bg-green-500/10',  icon: <CheckCircle2 className="w-4 h-4" /> },
-    disputed:       { label: 'Disputed – Under Review',  color: 'text-red-400    border-red-500/30    bg-red-500/10',    icon: <AlertTriangle className="w-4 h-4" /> },
-    refunded:       { label: 'Refunded',                 color: 'text-purple-400 border-purple-500/30 bg-purple-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    waiting_buyer: { label: 'Review Credentials', color: 'text-cyan-400   border-cyan-500/30   bg-cyan-500/10', icon: <Shield className="w-4 h-4" /> },
+    completed: { label: 'Completed', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    auto_confirmed: { label: 'Auto-Confirmed', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    disputed: { label: 'Disputed – Under Review', color: 'text-red-400    border-red-500/30    bg-red-500/10', icon: <AlertTriangle className="w-4 h-4" /> },
+    refunded: { label: 'Refunded', color: 'text-purple-400 border-purple-500/30 bg-purple-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
   };
   const sc = statusConfig[tx.status];
 
@@ -159,7 +173,7 @@ export default function TransactionDetailPage() {
         </div>
 
         {/* Alerts */}
-        {error   && <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm">{error}</div>}
+        {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-sm">{error}</div>}
         {success && <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-green-400 text-sm">{success}</div>}
 
         {/* Summary card */}
@@ -300,10 +314,13 @@ export default function TransactionDetailPage() {
           </div>
         )}
 
-        {/* ── Credentials view (completed/disputed/refunded) ─────────────────── */}
-        {['completed', 'auto_confirmed', 'disputed', 'refunded'].includes(tx.status) && tx.credentials.length > 0 && (
+        {/* ── Credentials view (disputed only — credentials are encrypted & hidden after completion) ── */}
+        {['disputed'].includes(tx.status) && tx.credentials.length > 0 && isBuyer && (
           <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
-            <h2 className="text-white font-bold text-lg mb-4">Account Credentials</h2>
+            <h2 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
+              <Shield className="w-5 h-5 text-red-400" />
+              Account Credentials (Disputed)
+            </h2>
             <div className="space-y-2">
               {tx.credentials.map((c, i) => (
                 <div key={i} className="flex items-center justify-between bg-white/[0.04] border border-white/10 rounded-xl p-3">
@@ -312,8 +329,14 @@ export default function TransactionDetailPage() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* ── Dispute/Resolution info (visible without credentials) ── */}
+        {['completed', 'auto_confirmed', 'disputed', 'refunded'].includes(tx.status) && (tx.disputeReason || tx.resolvedNote) && (
+          <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
             {tx.disputeReason && (
-              <div className="mt-4 p-3 bg-red-500/5 border border-red-500/15 rounded-xl">
+              <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl">
                 <p className="text-red-400 text-xs font-medium mb-1">Dispute reason</p>
                 <p className="text-white/70 text-sm">{tx.disputeReason}</p>
               </div>

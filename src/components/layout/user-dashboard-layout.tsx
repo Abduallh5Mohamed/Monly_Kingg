@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { BecomeSellerModal } from '@/components/become-seller-modal';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
+import { ensureCsrfToken } from '@/utils/csrf';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -419,13 +420,23 @@ function NotificationBell() {
   };
 
   const markAsRead = async (id: string) => {
-    await fetch(`/api/v1/notifications/${id}/read`, { method: 'PUT', credentials: 'include' });
+    const csrfToken = await ensureCsrfToken();
+    await fetch(`/api/v1/notifications/${id}/read`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'X-XSRF-TOKEN': csrfToken },
+    });
     setNotifications(prev => prev.map(n => n._id === id ? { ...n, read: true } : n));
     setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
   const markAllRead = async () => {
-    await fetch('/api/v1/notifications/read-all', { method: 'PUT', credentials: 'include' });
+    const csrfToken = await ensureCsrfToken();
+    await fetch('/api/v1/notifications/read-all', {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'X-XSRF-TOKEN': csrfToken },
+    });
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     setUnreadCount(0);
   };

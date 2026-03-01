@@ -9,6 +9,7 @@ import {
   Users,
   Package,
   ShoppingCart,
+  ArrowRightLeft,
   MessageSquare,
   Settings,
   BarChart3,
@@ -26,6 +27,7 @@ const sidebarItems = [
   { icon: Users, label: 'Users', href: '/admin/users' },
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: ShoppingCart, label: 'Orders', href: '/admin/orders' },
+  { icon: ArrowRightLeft, label: 'Transactions', href: '/admin/transactions' },
   { icon: Store, label: 'Sellers', href: '/admin/sellers' },
   { icon: Megaphone, label: 'Promotions', href: '/admin/promotions' },
   { icon: ImageIcon, label: 'Ads', href: '/admin/ads' },
@@ -48,7 +50,7 @@ export function AdminSidebar() {
         {sidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
-          
+
           return (
             <Link
               key={item.href}
@@ -64,7 +66,7 @@ export function AdminSidebar() {
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-white rounded-r-full" />
               )}
               <Icon className="h-[18px] w-[18px]" />
-              
+
               {/* Tooltip */}
               <div className="absolute left-full ml-4 px-2.5 py-1.5 bg-[#131620] text-white text-xs rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-white/[0.06] shadow-xl">
                 {item.label}

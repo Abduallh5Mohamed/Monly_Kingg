@@ -77,9 +77,10 @@ async function initializeServices() {
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 5000;
+const hostname = '0.0.0.0';
 
 // Initialize Next.js app
-const nextApp = next({ dev });
+const nextApp = next({ dev, hostname, port: Number(port) });
 const handle = nextApp.getRequestHandler();
 
 nextApp.prepare().then(async () => {
@@ -142,6 +143,12 @@ nextApp.prepare().then(async () => {
   };
   app.use(cors(corsOptions));
 
+  // Set Origin-Agent-Cluster FIRST before any other middleware
+  app.use((req, res, next) => {
+    res.setHeader('Origin-Agent-Cluster', '?1');
+    next();
+  });
+
   // ✅ SECURITY: Configure helmet for comprehensive security headers
   app.use(
     helmet({
@@ -166,29 +173,33 @@ nextApp.prepare().then(async () => {
             "https://picsum.photos",
             "https://upload.wikimedia.org",
             "https://www.clipartmax.com",
-            "https://api.dicebear.com"
+            "https://api.dicebear.com",
+            "https://*.googleusercontent.com",
+            "https://*.googleapis.com",
+            "https://*.gstatic.com"
           ],
           fontSrc: [
             "'self'",
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
-          connectSrc: ["'self'", "ws:", "wss:"],
+          connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "ws:", "wss:"],
           frameSrc: ["'none'"],
           objectSrc: ["'none'"],
           baseUri: ["'self'"],                   // Prevent base tag hijacking
           formAction: ["'self'"],                // Restrict form submissions
-          upgradeInsecureRequests: [],
+          upgradeInsecureRequests: dev ? null : [],
         },
       },
       frameguard: { action: 'deny' },
       noSniff: true,
       referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-      hsts: {
+      hsts: dev ? false : {
         maxAge: 31536000,
         includeSubDomains: true,
         preload: true
       },
+      crossOriginOpenerPolicy: dev ? false : { policy: 'same-origin' },
       hidePoweredBy: true,
     })
   );
@@ -246,13 +257,13 @@ nextApp.prepare().then(async () => {
   app.use('/uploads', (req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Content-Disposition', 'inline');
-    res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day for uploaded files
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     next();
   }, express.static(uploadsPath), async (req, res, next) => {
     // Fallback: if file not found in root, search subdirectories
     const fileName = path.basename(req.path);
     const fs = await import('fs');
-    const subdirs = ['ads', 'other', 'avatars', 'listings', 'receipts'];
+    const subdirs = ['ads', 'other', 'avatars', 'listings', 'receipts', 'chat_media', 'profile_picture', 'payment_proof', 'account_image', 'ticket_attachment'];
     for (const dir of subdirs) {
       const filePath = path.join(uploadsPath, dir, fileName);
       if (fs.existsSync(filePath)) {
@@ -389,7 +400,7 @@ nextApp.prepare().then(async () => {
     }
   });
 
-  server.listen(port, async (err) => {
+  server.listen(port, hostname, async (err) => {
     if (err) throw err;
 
     // Initialize Socket.IO
@@ -421,6 +432,17 @@ nextApp.prepare().then(async () => {
     console.log(`🌐 Frontend: http://localhost:${port}`);
     console.log(`🔗 API: http://localhost:${port}/api/v1`);
     console.log(`💬 Socket.IO: ws://localhost:${port}`);
+    // Show LAN access info
+    try {
+      const nets = (await import('os')).default.networkInterfaces();
+      for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+          if (net.family === 'IPv4' && !net.internal) {
+            console.log(`📱 LAN: http://${net.address}:${port}`);
+          }
+        }
+      }
+    } catch (_) { }
     console.log(`\n✨ Press CTRL+C to stop\n`);
   });
 

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/lib/auth-context';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
   X,
   Upload,
@@ -181,10 +182,14 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
     setLoading(true);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch('/api/v1/seller/request', {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({
           fullName: formData.fullName,
           idType: formData.idType,
@@ -350,8 +355,8 @@ export function BecomeSellerModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       key={opt.value}
                       onClick={() => setFormData(p => ({ ...p, idType: opt.value as any }))}
                       className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-all ${formData.idType === opt.value
-                          ? 'border-primary bg-primary/10 text-primary'
-                          : 'border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20'
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20'
                         }`}
                     >
                       {opt.icon}

@@ -451,7 +451,7 @@ export default function SellerStorePage() {
                     <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-[#1a1d2e] to-[#0d1117]">
                       {coverUrl ? (
                         <img
-                          src={coverUrl.startsWith('http') ? coverUrl : `http://localhost:5000${coverUrl}`}
+                          src={coverUrl}
                           alt={listing.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           onError={(e) => {

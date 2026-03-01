@@ -1,5 +1,9 @@
 import User from "../users/user.model.js";
 import Chat from "../chats/chat.model.js";
+import Transaction from "../transactions/transaction.model.js";
+import Deposit from "../deposits/deposit.model.js";
+import Listing from "../listings/listing.model.js";
+import SellerRequest from "../sellers/sellerRequest.model.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
@@ -548,5 +552,182 @@ export const getChatStatistics = async (req, res) => {
             success: false,
             message: "Failed to fetch chat statistics"
         });
+    }
+};
+
+/* ---------------- Get Full User Detail (Admin) ---------------- */
+export const getUserDetail = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "Invalid user ID" });
+        }
+
+        // Get user with sensitive fields for admin
+        const user = await User.findById(userId)
+            .select("+authLogs +failedLoginAttempts +lockUntil")
+            .lean();
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Remove password hash for safety
+        delete user.passwordHash;
+        delete user.verificationCode;
+        delete user.forgotPasswordCode;
+        delete user.passwordResetToken;
+
+        // Seller request (ID verification)
+        const sellerRequest = await SellerRequest.findOne({ user: userId })
+            .select("fullName idType idImage faceImageFront faceImageLeft faceImageRight status rejectionReason applicationCount rejectionHistory reviewedAt createdAt")
+            .populate("reviewedBy", "username")
+            .lean();
+
+        // Transaction stats
+        const [txAsBuyer, txAsSeller, txDisputed] = await Promise.all([
+            Transaction.countDocuments({ buyer: userId }),
+            Transaction.countDocuments({ seller: userId }),
+            Transaction.countDocuments({ $or: [{ buyer: userId }, { seller: userId }], status: "disputed" }),
+        ]);
+
+        // Recent transactions (last 10)
+        const recentTransactions = await Transaction.find({
+            $or: [{ buyer: userId }, { seller: userId }]
+        })
+            .select("amount status createdAt buyer seller")
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .populate("buyer", "username")
+            .populate("seller", "username")
+            .lean();
+
+        // Deposit history
+        const [depositStats, recentDeposits] = await Promise.all([
+            Deposit.aggregate([
+                { $match: { user: new mongoose.Types.ObjectId(userId) } },
+                { $group: { _id: "$status", count: { $sum: 1 }, total: { $sum: "$amount" } } }
+            ]),
+            Deposit.find({ user: userId })
+                .select("amount status paymentMethod senderFullName senderPhoneOrEmail depositDate receiptImage createdAt adminNote")
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .lean(),
+        ]);
+
+        // Active listings count
+        const [listingsActive, listingsSold, listingsTotal] = await Promise.all([
+            Listing.countDocuments({ seller: userId, status: "available" }),
+            Listing.countDocuments({ seller: userId, status: "sold" }),
+            Listing.countDocuments({ seller: userId }),
+        ]);
+
+        // Extract unique IPs from auth logs and refresh tokens
+        const ipSet = new Set();
+        if (user.authLogs) {
+            user.authLogs.forEach(log => {
+                if (log.ip) ipSet.add(log.ip);
+            });
+        }
+        if (user.refreshTokens) {
+            user.refreshTokens.forEach(rt => {
+                if (rt.ip) ipSet.add(rt.ip);
+            });
+        }
+
+        // Get last login info
+        const lastLogin = user.authLogs
+            ?.filter(l => l.action === 'login' && l.success)
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0] || null;
+
+        // Build response
+        const result = {
+            // Core Profile
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            fullName: user.fullName || null,
+            phone: user.phone || null,
+            address: user.address || null,
+            avatar: user.avatar,
+            bio: user.bio || null,
+            role: user.role,
+            verified: user.verified,
+            profileCompleted: user.profileCompleted,
+            googleId: user.googleId || null,
+            isSeller: user.isSeller,
+            sellerApprovedAt: user.sellerApprovedAt || null,
+            isOnline: user.isOnline,
+            lastSeenAt: user.lastSeenAt,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+
+            // Wallet
+            wallet: user.wallet || { balance: 0, hold: 0 },
+
+            // Stats
+            stats: user.stats || { totalVolume: 0, level: 1, successfulTrades: 0, failedTrades: 0 },
+
+            // 2FA
+            twoFA: { enabled: user.twoFA?.enabled || false },
+
+            // Security
+            security: {
+                failedLoginAttempts: user.failedLoginAttempts || 0,
+                lockUntil: user.lockUntil || null,
+                lastUsernameChange: user.lastUsernameChange,
+                lastPhoneChange: user.lastPhoneChange,
+                lastLogin: lastLogin ? {
+                    ip: lastLogin.ip,
+                    userAgent: lastLogin.userAgent,
+                    at: lastLogin.createdAt,
+                } : null,
+                knownIPs: [...ipSet],
+                authLogs: (user.authLogs || []).slice(-30).reverse(), // last 30 logs, newest first
+            },
+
+            // Active sessions (non-revoked tokens)
+            activeSessions: (user.refreshTokens || [])
+                .filter(rt => !rt.revoked && new Date(rt.expiresAt) > new Date())
+                .map(rt => ({
+                    ip: rt.ip,
+                    userAgent: rt.userAgent,
+                    createdAt: rt.createdAt,
+                    expiresAt: rt.expiresAt,
+                })),
+
+            // Seller verification
+            sellerRequest: sellerRequest || null,
+
+            // Transactions
+            transactions: {
+                asBuyer: txAsBuyer,
+                asSeller: txAsSeller,
+                disputed: txDisputed,
+                recent: recentTransactions,
+            },
+
+            // Deposits
+            deposits: {
+                stats: depositStats,
+                recent: recentDeposits,
+            },
+
+            // Listings
+            listings: {
+                total: listingsTotal,
+                active: listingsActive,
+                sold: listingsSold,
+            },
+
+            // Badges
+            badges: user.badges || [],
+        };
+
+        res.json({ success: true, data: result });
+    } catch (error) {
+        logger.error(`Admin get user detail error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch user detail" });
     }
 };

@@ -243,7 +243,7 @@ export default function CompleteProfilePage() {
             if (avatarFile) data.append('avatar', avatarFile);
 
             console.log('📤 [Form Submit] Sending request:', {
-                url: 'http://localhost:5000/api/v1/users/complete-profile',
+                url: '/api/v1/users/complete-profile',
                 hasCSRF: !!csrfToken,
                 csrfTokenPreview: csrfToken.substring(0, 10) + '...',
                 formFields: Object.keys(formData)

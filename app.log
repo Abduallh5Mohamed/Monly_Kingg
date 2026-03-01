@@ -12533,3 +12533,337 @@
 [2026-02-28T14:24:30.541Z] [INFO]:    Cached users after: undefined
 [2026-02-28T14:24:30.542Z] [INFO]:    Memory before: 3.91M
 [2026-02-28T14:24:30.542Z] [INFO]:    Memory after: 3.91M
+[2026-02-28T15:15:56.413Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-28T15:16:07.556Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (581ms)
+[2026-02-28T15:16:12.739Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-28T15:16:17.329Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (387ms)
+[2026-02-28T15:18:19.768Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-28T15:18:44.111Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (952ms)
+[2026-02-28T15:18:44.168Z] [WARN]: Slow Request: POST /login - 1122ms
+[2026-02-28T15:18:56.431Z] [INFO]: Admin fetched stats: 5 total users
+[2026-02-28T15:18:56.841Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T15:19:17.137Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T15:22:35.114Z] [INFO]: Admin baraawael7901@gmail.com fetched 7 chats for monitoring
+[2026-02-28T15:22:35.181Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-28T15:22:35.457Z] [INFO]: Admin baraawael7901@gmail.com viewed chat 698dee4845e40bd6e1b6e7f9 with 10 messages
+[2026-02-28T15:23:06.216Z] [WARN]: High Memory Usage:
+[2026-02-28T15:23:17.009Z] [INFO]: Admin baraawael7901@gmail.com fetched 0 chats for monitoring
+[2026-02-28T15:23:17.265Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-28T15:23:20.440Z] [INFO]: Admin baraawael7901@gmail.com fetched 6 chats for monitoring
+[2026-02-28T15:23:20.487Z] [INFO]: Admin baraawael7901@gmail.com fetched chat statistics
+[2026-02-28T15:24:37.440Z] [INFO]: Admin fetched stats: 5 total users
+[2026-02-28T15:24:37.659Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T15:26:45.928Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-28T15:27:06.244Z] [WARN]: High Memory Usage:
+[2026-02-28T15:27:32.044Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-02-28T15:28:08.172Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T15:28:08.242Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T15:28:08.242Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T15:28:08.526Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T15:28:08.580Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T15:28:08.580Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T15:28:08.599Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T15:28:08.609Z] [INFO]: ✅ Cleanup complete in 29ms
+[2026-02-28T15:28:08.609Z] [INFO]:    Users removed: 0
+[2026-02-28T15:28:08.609Z] [INFO]:    Cached users before: undefined
+[2026-02-28T15:28:08.609Z] [INFO]:    Cached users after: undefined
+[2026-02-28T15:28:08.609Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T15:28:08.609Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T15:30:06.935Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (644ms)
+[2026-02-28T15:30:28.641Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (1415ms)
+[2026-02-28T15:30:28.733Z] [WARN]: Slow Request: POST /login - 1961ms
+[2026-02-28T15:30:53.682Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-28T15:30:53.939Z] [INFO]: Admin fetched stats: 5 total users
+[2026-02-28T15:30:54.119Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T15:31:26.355Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-28T15:31:26.657Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T15:33:07.768Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-28T15:33:22.343Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (516ms)
+[2026-02-28T15:33:28.767Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-28T15:33:32.793Z] [WARN]: Slow Request: GET /api/v1/rankings/homepage - 1017ms
+[2026-02-28T15:34:00.887Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-28T15:34:01.084Z] [WARN]: Slow Request: POST /logout - 2881ms
+[2026-02-28T15:34:08.344Z] [WARN]: High Memory Usage:
+[2026-02-28T15:34:15.752Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (410ms)
+[2026-02-28T16:13:21.776Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T16:13:21.846Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T16:13:21.847Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T16:13:22.142Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T16:13:22.178Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T16:13:22.179Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T16:13:22.197Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T16:13:22.203Z] [INFO]: ✅ Cleanup complete in 24ms
+[2026-02-28T16:13:22.203Z] [INFO]:    Users removed: 0
+[2026-02-28T16:13:22.203Z] [INFO]:    Cached users before: undefined
+[2026-02-28T16:13:22.203Z] [INFO]:    Cached users after: undefined
+[2026-02-28T16:13:22.203Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T16:13:22.204Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T16:34:20.978Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (560ms)
+[2026-02-28T17:04:04.300Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T17:04:25.579Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (317ms)
+[2026-02-28T17:07:34.793Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-28T17:07:50.073Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (491ms)
+[2026-02-28T17:07:52.889Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-02-28T17:07:56.890Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (402ms)
+[2026-02-28T17:08:06.386Z] [INFO]: Admin fetched stats: 5 total users
+[2026-02-28T17:08:06.528Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T17:18:35.357Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-28T17:19:40.893Z] [WARN]: Slow Request: GET /pending-count - 2372ms
+[2026-02-28T17:19:41.428Z] [WARN]: Slow Request: GET /admin/69a2ff62c1f6d3b8feb0a6e4 - 2928ms
+[2026-02-28T17:20:39.624Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T17:20:39.741Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T17:20:39.742Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T17:20:40.378Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T17:20:40.523Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T17:20:40.523Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T17:20:40.596Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T17:20:40.667Z] [INFO]: ✅ Cleanup complete in 144ms
+[2026-02-28T17:20:40.668Z] [INFO]:    Users removed: 0
+[2026-02-28T17:20:40.669Z] [INFO]:    Cached users before: undefined
+[2026-02-28T17:20:40.669Z] [INFO]:    Cached users after: undefined
+[2026-02-28T17:20:40.669Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T17:20:40.669Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T17:21:50.093Z] [INFO]: Refresh token rotated for user: baraawael7901@gmail.com
+[2026-02-28T17:45:50.431Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (788ms)
+[2026-02-28T17:45:59.053Z] [INFO]: Admin fetched stats: 5 total users
+[2026-02-28T17:45:59.291Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-02-28T17:50:54.867Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T17:50:55.039Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T17:50:55.040Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T17:50:56.567Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T17:50:56.657Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T17:50:56.657Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T17:50:56.704Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T17:50:56.718Z] [INFO]: ✅ Cleanup complete in 61ms
+[2026-02-28T17:50:56.718Z] [INFO]:    Users removed: 0
+[2026-02-28T17:50:56.719Z] [INFO]:    Cached users before: undefined
+[2026-02-28T17:50:56.719Z] [INFO]:    Cached users after: undefined
+[2026-02-28T17:50:56.719Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T17:50:56.719Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T18:57:53.430Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T18:57:53.511Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T18:57:53.511Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T18:57:53.970Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T18:57:54.054Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T18:57:54.054Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T18:57:54.098Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T18:57:54.109Z] [INFO]: ✅ Cleanup complete in 55ms
+[2026-02-28T18:57:54.110Z] [INFO]:    Users removed: 0
+[2026-02-28T18:57:54.110Z] [INFO]:    Cached users before: undefined
+[2026-02-28T18:57:54.110Z] [INFO]:    Cached users after: undefined
+[2026-02-28T18:57:54.110Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T18:57:54.110Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T19:01:00.751Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:01:00.839Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:01:00.839Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:01:01.328Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T19:01:01.407Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T19:01:01.408Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T19:01:01.469Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T19:01:01.492Z] [INFO]: ✅ Cleanup complete in 84ms
+[2026-02-28T19:01:01.492Z] [INFO]:    Users removed: 0
+[2026-02-28T19:01:01.493Z] [INFO]:    Cached users before: undefined
+[2026-02-28T19:01:01.493Z] [INFO]:    Cached users after: undefined
+[2026-02-28T19:01:01.494Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T19:01:01.494Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T19:03:43.294Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (456ms)
+[2026-02-28T19:04:44.263Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (442ms)
+[2026-02-28T19:04:59.991Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:09:00.146Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:09:00.222Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:09:00.223Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:09:00.544Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T19:09:00.619Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T19:09:00.620Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T19:09:00.651Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T19:09:00.663Z] [INFO]: ✅ Cleanup complete in 43ms
+[2026-02-28T19:09:00.663Z] [INFO]:    Users removed: 0
+[2026-02-28T19:09:00.664Z] [INFO]:    Cached users before: undefined
+[2026-02-28T19:09:00.664Z] [INFO]:    Cached users after: undefined
+[2026-02-28T19:09:00.664Z] [INFO]:    Memory before: 1.29M
+[2026-02-28T19:09:00.664Z] [INFO]:    Memory after: 1.29M
+[2026-02-28T19:09:18.360Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:09:18.580Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-28T19:10:54.396Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:11:08.017Z] [INFO]: User logged out, refresh token revoked: abduallhshadow@gmail.com
+[2026-02-28T19:11:26.603Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (432ms)
+[2026-02-28T19:14:27.436Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:19:38.585Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (542ms)
+[2026-02-28T19:21:49.270Z] [WARN]: Slow Request: GET /unread-count - 1103ms
+[2026-02-28T19:21:54.624Z] [WARN]: Slow Request: GET /profile - 6389ms
+[2026-02-28T19:21:56.461Z] [WARN]: Slow Request: GET /me - 1612ms
+[2026-02-28T19:22:06.035Z] [INFO]: User logged out, refresh token revoked: baraawael7901@gmail.com
+[2026-02-28T19:22:17.652Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (725ms)
+[2026-02-28T19:22:40.999Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 7365ms
+[2026-02-28T19:22:55.251Z] [WARN]: Slow Request: GET /me - 1438ms
+[2026-02-28T19:22:55.284Z] [WARN]: Slow Request: GET / - 1465ms
+[2026-02-28T19:22:55.334Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1509ms
+[2026-02-28T19:24:33.959Z] [WARN]: Slow Request: GET /unread-count - 4072ms
+[2026-02-28T19:24:36.134Z] [WARN]: Slow Request: GET /profile - 6222ms
+[2026-02-28T19:25:25.138Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:25:25.244Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:25:25.244Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:25:25.897Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T19:25:25.995Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T19:25:25.995Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T19:25:26.078Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T19:25:26.113Z] [INFO]: ✅ Cleanup complete in 118ms
+[2026-02-28T19:25:26.114Z] [INFO]:    Users removed: 0
+[2026-02-28T19:25:26.114Z] [INFO]:    Cached users before: undefined
+[2026-02-28T19:25:26.114Z] [INFO]:    Cached users after: undefined
+[2026-02-28T19:25:26.114Z] [INFO]:    Memory before: 2.17M
+[2026-02-28T19:25:26.114Z] [INFO]:    Memory after: 2.17M
+[2026-02-28T19:29:39.116Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:29:39.184Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:29:39.184Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:30:16.307Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:30:16.377Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:30:16.377Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:30:16.706Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T19:30:16.748Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T19:30:16.749Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T19:30:16.779Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T19:30:16.789Z] [INFO]: ✅ Cleanup complete in 40ms
+[2026-02-28T19:30:16.789Z] [INFO]:    Users removed: 0
+[2026-02-28T19:30:16.789Z] [INFO]:    Cached users before: undefined
+[2026-02-28T19:30:16.789Z] [INFO]:    Cached users after: undefined
+[2026-02-28T19:30:16.789Z] [INFO]:    Memory before: 3.05M
+[2026-02-28T19:30:16.789Z] [INFO]:    Memory after: 3.05M
+[2026-02-28T19:31:16.529Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:31:16.607Z] [WARN]: Slow Request: POST /refresh - 1024ms
+[2026-02-28T19:32:09.193Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:32:12.533Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-02-28T19:32:39.240Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-02-28T19:36:07.405Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-02-28T19:36:07.509Z] [INFO]: ✅ Redis Connected and Ready
+[2026-02-28T19:36:07.510Z] [INFO]: 🏓 Redis Ping Successful
+[2026-02-28T19:36:07.936Z] [INFO]: ✅ Socket.IO initialized
+[2026-02-28T19:36:07.999Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-02-28T19:36:08.000Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-02-28T19:36:08.054Z] [INFO]: [Cache] Cleanup complete: 0 orphaned keys removed
+[2026-02-28T19:36:08.066Z] [INFO]: ✅ Cleanup complete in 66ms
+[2026-02-28T19:36:08.066Z] [INFO]:    Users removed: 0
+[2026-02-28T19:36:08.066Z] [INFO]:    Cached users before: undefined
+[2026-02-28T19:36:08.066Z] [INFO]:    Cached users after: undefined
+[2026-02-28T19:36:08.066Z] [INFO]:    Memory before: 3.93M
+[2026-02-28T19:36:08.066Z] [INFO]:    Memory after: 3.93M
+[2026-02-28T19:37:45.563Z] [WARN]: Slow Request: GET /unread-count - 5685ms
+[2026-03-01T12:15:24.739Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-03-01T12:15:24.773Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:15:24.778Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:15:25.289Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:15:26.298Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:15:27.808Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:15:27.809Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-03-01T12:15:27.809Z] [INFO]: 📝 Server will continue without caching
+[2026-03-01T12:15:28.032Z] [INFO]: ✅ Socket.IO initialized
+[2026-03-01T12:15:28.068Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-03-01T12:15:28.069Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-03-01T12:15:28.070Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-03-01T12:15:53.819Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:15:53.963Z] [WARN]: Slow Request: POST /refresh - 1102ms
+[2026-03-01T12:15:54.037Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-03-01T12:16:09.629Z] [WARN]: Slow Request: GET /profile - 1273ms
+[2026-03-01T12:16:10.884Z] [WARN]: Slow Request: GET /api/v1/rankings/homepage - 2414ms
+[2026-03-01T12:22:57.437Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:25:35.564Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-03-01T12:25:35.609Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:25:35.614Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:25:36.121Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:25:37.125Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:25:38.636Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:25:38.637Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-03-01T12:25:38.637Z] [INFO]: 📝 Server will continue without caching
+[2026-03-01T12:25:38.948Z] [INFO]: ✅ Socket.IO initialized
+[2026-03-01T12:25:38.989Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-03-01T12:25:38.989Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-03-01T12:25:38.990Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-03-01T12:28:50.597Z] [WARN]: Slow Request: GET /profile - 3387ms
+[2026-03-01T12:28:56.657Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:31:21.088Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-03-01T12:31:21.135Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:31:21.139Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:31:21.640Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:31:22.653Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:31:24.165Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T12:31:24.166Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-03-01T12:31:24.166Z] [INFO]: 📝 Server will continue without caching
+[2026-03-01T12:31:24.475Z] [INFO]: ✅ Socket.IO initialized
+[2026-03-01T12:31:24.513Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-03-01T12:31:24.515Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-03-01T12:31:24.518Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-03-01T12:34:58.202Z] [WARN]: Slow Request: GET /profile - 1099ms
+[2026-03-01T12:42:39.504Z] [WARN]: Slow Request: GET /unread-count - 1288ms
+[2026-03-01T12:43:19.346Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1778ms
+[2026-03-01T12:44:59.383Z] [INFO]: ✅ [LOGIN] baraawael7901@gmail.com (652ms)
+[2026-03-01T12:45:07.150Z] [INFO]: Admin fetched stats: 5 total users
+[2026-03-01T12:45:07.733Z] [INFO]: Admin fetched users: page 1, 5 users
+[2026-03-01T12:46:11.346Z] [WARN]: Slow Request: GET /activity - 2447ms
+[2026-03-01T12:49:53.862Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:50:05.012Z] [WARN]: Slow Request: GET /me - 1385ms
+[2026-03-01T12:50:05.186Z] [WARN]: Slow Request: GET / - 1124ms
+[2026-03-01T12:50:05.414Z] [WARN]: Slow Request: GET /profile - 1796ms
+[2026-03-01T12:50:17.867Z] [INFO]: New chat created: 69a43608a7bb49e51ee865d9
+[2026-03-01T12:50:18.262Z] [WARN]: Slow Request: POST / - 2288ms
+[2026-03-01T12:55:37.032Z] [WARN]: Slow Request: GET /unread-count - 3371ms
+[2026-03-01T12:55:40.340Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:55:41.758Z] [WARN]: Slow Request: GET /me - 1875ms
+[2026-03-01T12:55:41.824Z] [WARN]: Slow Request: GET / - 1889ms
+[2026-03-01T12:55:42.440Z] [WARN]: Slow Request: GET /pending-count - 1835ms
+[2026-03-01T12:55:45.739Z] [WARN]: Slow Request: GET /profile - 5150ms
+[2026-03-01T12:55:47.333Z] [WARN]: Slow Request: GET /69a43608a7bb49e51ee865d9 - 2125ms
+[2026-03-01T12:57:10.157Z] [WARN]: Slow Request: GET / - 1349ms
+[2026-03-01T12:57:14.034Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:57:34.689Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T12:57:36.401Z] [WARN]: Slow Request: GET /unread-count - 1514ms
+[2026-03-01T12:57:36.688Z] [WARN]: Slow Request: GET /pending-count - 1754ms
+[2026-03-01T12:57:36.951Z] [WARN]: Slow Request: GET /me - 2589ms
+[2026-03-01T12:57:37.087Z] [WARN]: Slow Request: GET / - 2715ms
+[2026-03-01T12:57:37.420Z] [WARN]: Slow Request: GET /profile - 2513ms
+[2026-03-01T12:58:12.791Z] [WARN]: Slow Request: GET /unread-count - 7403ms
+[2026-03-01T13:09:03.752Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T13:09:04.399Z] [WARN]: Slow Request: GET /me - 1078ms
+[2026-03-01T13:09:04.894Z] [WARN]: Slow Request: GET / - 1542ms
+[2026-03-01T13:09:05.508Z] [WARN]: Slow Request: GET /unread-count - 1508ms
+[2026-03-01T13:09:06.086Z] [WARN]: Slow Request: GET /pending-count - 1986ms
+[2026-03-01T13:09:08.696Z] [WARN]: Slow Request: GET /profile - 4643ms
+[2026-03-01T13:09:28.494Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T13:09:43.216Z] [WARN]: Slow Request: GET /me - 1662ms
+[2026-03-01T13:09:43.305Z] [WARN]: Slow Request: GET / - 1673ms
+[2026-03-01T13:09:43.625Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1990ms
+[2026-03-01T13:14:32.681Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1026ms
+[2026-03-01T13:17:16.012Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1084ms
+[2026-03-01T13:24:27.949Z] [WARN]: Slow Request: GET /me - 1041ms
+[2026-03-01T13:24:27.991Z] [WARN]: Slow Request: GET / - 1048ms
+[2026-03-01T13:24:28.271Z] [WARN]: Slow Request: GET /698dee4845e40bd6e1b6e7f9 - 1323ms
+[2026-03-01T13:26:21.020Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T13:26:32.737Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T13:26:39.295Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (878ms)
+[2026-03-01T13:32:52.746Z] [INFO]: 🛑 Cache cleanup job stopped
+[2026-03-01T13:33:17.643Z] [INFO]: Redis: Connecting to 127.0.0.1:6379 (DB: 0)
+[2026-03-01T13:33:17.689Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T13:33:17.695Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T13:33:18.211Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T13:33:19.228Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T13:33:20.740Z] [WARN]: Redis error: connect ECONNREFUSED 127.0.0.1:6379
+[2026-03-01T13:33:20.740Z] [ERROR]: ❌ Redis Connection Failed:
+[2026-03-01T13:33:20.740Z] [INFO]: 📝 Server will continue without caching
+[2026-03-01T13:33:20.977Z] [INFO]: ✅ Socket.IO initialized
+[2026-03-01T13:33:21.066Z] [INFO]: 🧹 Cache cleanup job started (runs every 6 hours)
+[2026-03-01T13:33:21.066Z] [INFO]: 🧹 Starting cache cleanup...
+[2026-03-01T13:33:21.068Z] [INFO]: ⏭️ Cleanup skipped (Redis not ready)
+[2026-03-01T13:34:00.777Z] [INFO]: Refresh token rotated for user: baraaweal24@gmail.com
+[2026-03-01T13:34:01.494Z] [WARN]: Slow Request: GET / - 1086ms
+[2026-03-01T13:34:02.191Z] [WARN]: Slow Request: GET /profile - 1325ms
+[2026-03-01T13:38:01.583Z] [WARN]: Slow Request: GET /api/v1/rankings/homepage - 2253ms
+[2026-03-01T13:38:39.585Z] [INFO]: User logged out, refresh token revoked: baraaweal24@gmail.com
+[2026-03-01T13:38:56.724Z] [INFO]: ✅ [LOGIN] abduallhshadow@gmail.com (719ms)
+[2026-03-01T13:39:11.790Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-03-01T13:40:07.038Z] [INFO]: ✅ [LOGIN] baraaweal24@gmail.com (600ms)
+[2026-03-01T13:40:55.428Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-03-01T13:41:33.667Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-03-01T13:41:46.581Z] [WARN]: Slow Request: GET / - 2950ms
+[2026-03-01T13:41:46.606Z] [WARN]: Slow Request: GET /profile - 2964ms
+[2026-03-01T13:49:32.092Z] [INFO]: Refresh token rotated for user: abduallhshadow@gmail.com
+[2026-03-01T13:49:33.596Z] [WARN]: Slow Request: GET /profile - 1351ms
+[2026-03-01T13:49:34.055Z] [WARN]: Slow Request: GET / - 2175ms

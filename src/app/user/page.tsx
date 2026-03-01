@@ -242,7 +242,7 @@ function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: 
   const getAvatarUrl = (avatar?: string) => {
     if (!avatar) return null;
     if (avatar.startsWith('http')) return avatar;
-    if (avatar.startsWith('/uploads/')) return `http://localhost:5000${avatar}`;
+    if (avatar.startsWith('/uploads/')) return avatar;
     return avatar;
   };
 

@@ -46,7 +46,7 @@ class SocketService {
             cors: {
                 origin: process.env.NODE_ENV === 'production'
                     ? process.env.ALLOWED_ORIGINS?.split(',')
-                    : ['http://localhost:3000', 'http://localhost:5000'],
+                    : true,
                 credentials: true
             },
             pingTimeout: 60000,

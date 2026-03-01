@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Store, MessageCircle, CreditCard, User } from 'lucide-react';
+import { Home, Store, MessageCircle, CreditCard, User, ArrowRightLeft } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useSocket } from '@/lib/socket-context';
 import { useEffect, useRef, useState } from 'react';
@@ -74,6 +74,7 @@ export function UserSidebar() {
     ];
 
     const rightItems: NavItem[] = [
+        { icon: ArrowRightLeft, label: 'Orders', path: '/user/transactions', activeColor: 'from-cyan-500 to-blue-500', glowColor: 'rgba(6,182,212,0.35)' },
         { icon: CreditCard, label: 'Pay', path: '/user/payments', activeColor: 'from-emerald-500 to-green-500', glowColor: 'rgba(16,185,129,0.35)' },
         { icon: User, label: 'Profile', path: '/user/profile', activeColor: 'from-violet-500 to-purple-500', glowColor: 'rgba(139,92,246,0.35)' },
     ];
@@ -196,12 +197,13 @@ export function UserSidebar() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @keyframes orbit {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
-            `}</style>
+            ` }} />
         </div>
     );
 }

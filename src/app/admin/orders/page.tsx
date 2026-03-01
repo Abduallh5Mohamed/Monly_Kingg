@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ensureCsrfToken } from '@/utils/csrf';
 import {
   Table,
   TableBody,
@@ -168,10 +169,14 @@ export default function OrdersPage() {
       const deposit = deposits.find(d => d._id === id);
       const amount = editingAmounts[id] ?? (deposit?.amount || deposit?.paidAmount || 0);
 
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/deposits/${id}/approve`, {
         method: 'PUT',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ amount }),
       });
       const data = await res.json();
@@ -194,10 +199,14 @@ export default function OrdersPage() {
   const handleRejectDeposit = async (id: string) => {
     setActionLoading(id);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/deposits/${id}/reject`, {
         method: 'PUT',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ reason: 'Rejected by admin' }),
       });
       const data = await res.json();
@@ -214,9 +223,13 @@ export default function OrdersPage() {
   const handleApproveWithdrawal = async (id: string) => {
     setActionLoading(id);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/withdrawals/${id}/approve`, {
         method: 'PUT',
         credentials: 'include',
+        headers: {
+          'X-XSRF-TOKEN': csrfToken,
+        },
       });
       const data = await res.json();
       if (res.ok && data.data) {
@@ -235,10 +248,14 @@ export default function OrdersPage() {
 
     setActionLoading(id);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch(`/api/v1/withdrawals/${id}/reject`, {
         method: 'PUT',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({ reason }),
       });
       const data = await res.json();

@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useSocket } from '@/lib/socket-context';
 import { useToast } from '@/hooks/use-toast';
+import { ensureCsrfToken } from '@/utils/csrf';
 
 interface Deposit {
   _id: string;
@@ -234,9 +235,13 @@ export default function PaymentsPage() {
       }
       formData.append('receipt', depositReceiptImage);
 
+      const csrfToken = await ensureCsrfToken();
       const response = await fetch('/api/v1/deposits/request', {
         method: 'POST',
         credentials: 'include',
+        headers: {
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: formData,
       });
 
@@ -290,10 +295,14 @@ export default function PaymentsPage() {
 
     setWithdrawSubmitting(true);
     try {
+      const csrfToken = await ensureCsrfToken();
       const res = await fetch('/api/v1/withdrawals/request', {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-XSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify({
           amount: Number(withdrawAmount),
           method: withdrawMethod,

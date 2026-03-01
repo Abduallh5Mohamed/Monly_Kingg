@@ -1,12 +1,31 @@
+import mongoose from "mongoose";
 import Transaction from "./transaction.model.js";
 import Listing from "../listings/listing.model.js";
 import User from "../users/user.model.js";
 import Discount from "../discounts/discount.model.js";
 import Campaign from "../campaigns/campaign.model.js";
 import Notification from "../notifications/notification.model.js";
+import SellerRequest from "../sellers/sellerRequest.model.js";
 import cacheService from "../../services/cacheService.js";
 import socketService from "../../services/socketService.js";
 import logger from "../../utils/logger.js";
+import { encrypt, decrypt } from "../../utils/encryption.js";
+
+// ─── Credential encryption helpers ───────────────────────────────────────────
+function encryptCredentials(credentials) {
+  return credentials.map(c => ({
+    key: c.key,
+    value: encrypt(c.value),
+  }));
+}
+
+function decryptCredentials(credentials) {
+  if (!credentials || !Array.isArray(credentials)) return [];
+  return credentials.map(c => ({
+    key: c.key,
+    value: decrypt(c.value),
+  }));
+}
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -202,7 +221,8 @@ export const submitCredentials = async (req, res) => {
     const AUTO_CONFIRM_HOURS = 48;
     const autoConfirmAt = new Date(Date.now() + AUTO_CONFIRM_HOURS * 60 * 60 * 1000);
 
-    transaction.credentials = credentials;
+    // ✅ SECURITY: Encrypt credential values before storing in database
+    transaction.credentials = encryptCredentials(credentials);
     transaction.status = "waiting_buyer";
     transaction.autoConfirmAt = autoConfirmAt;
     transaction.timeline.push({
@@ -375,6 +395,7 @@ export const getMyTransactions = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
+        .select("-credentials") // ✅ SECURITY: Never include credentials in list views
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit))
@@ -436,12 +457,25 @@ export const getTransactionById = async (req, res) => {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    // Hide credentials from buyer until seller submits
     const data = transaction.toObject();
     const isBuyer = transaction.buyer._id.toString() === userId;
+    const isAdmin = req.user.role === "admin";
 
-    // If status is still waiting_seller, buyer shouldn't see credentials (none yet anyway)
-    // If status is disputed/refunded, still show credentials to both parties
+    // ✅ SECURITY: Credentials are encrypted at rest.
+    // Only decrypt for: admin (always) or buyer (during active purchase phases)
+    const buyerCanSee = isBuyer && ["waiting_buyer", "disputed"].includes(data.status);
+
+    if (isAdmin) {
+      // Admin always gets decrypted credentials
+      data.credentials = decryptCredentials(data.credentials);
+    } else if (buyerCanSee) {
+      // Buyer sees decrypted credentials only during verification/dispute
+      data.credentials = decryptCredentials(data.credentials);
+    } else {
+      // Seller and buyer (after completion) never see credentials
+      data.credentials = [];
+    }
+
     return res.json({ success: true, data });
   } catch (err) {
     logger.error(`[Transaction] getTransactionById error: ${err.message}`);
@@ -452,13 +486,28 @@ export const getTransactionById = async (req, res) => {
 // ─── Admin: GET /api/v1/transactions/admin/all ──────────────────────────────
 export const adminGetAll = async (req, res) => {
   try {
-    const { status, page = 1, limit = 30 } = req.query;
+    const { status, page = 1, limit = 30, search } = req.query;
     const filter = {};
     if (status) filter.status = status;
+
+    // Search by transaction ID
+    if (search) {
+      const trimmed = search.trim();
+      if (mongoose.Types.ObjectId.isValid(trimmed)) {
+        filter._id = trimmed;
+      } else {
+        // Try partial match on the hex string
+        filter.$or = [
+          ...(trimmed.length >= 3 ? [{ _id: { $regex: trimmed, $options: "i" } }] : []),
+        ];
+        if (!filter.$or.length) delete filter.$or;
+      }
+    }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
+        .select("-credentials") // ✅ SECURITY: Never include credentials in admin list view
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit))
@@ -474,6 +523,39 @@ export const adminGetAll = async (req, res) => {
       pagination: { total, page: parseInt(page), limit: parseInt(limit) },
     });
   } catch (err) {
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// ─── Admin: GET /api/v1/transactions/admin/:id ──────────────────────────────
+export const adminGetTransactionDetail = async (req, res) => {
+  try {
+    const transaction = await Transaction.findById(req.params.id)
+      .populate("listing", "title coverImage price details images game")
+      .populate("buyer", "username avatar email")
+      .populate("seller", "username avatar email");
+
+    if (!transaction) {
+      return res.status(404).json({ success: false, message: "Transaction not found" });
+    }
+
+    const data = transaction.toObject();
+
+    // ✅ SECURITY: Decrypt credentials for admin view
+    data.credentials = decryptCredentials(data.credentials);
+
+    // Fetch seller's verification request (ID photos)
+    const sellerRequest = await SellerRequest.findOne({ user: transaction.seller._id })
+      .select("fullName idType idImage faceImageFront faceImageLeft faceImageRight status")
+      .lean();
+
+    if (sellerRequest) {
+      data.sellerRequest = sellerRequest;
+    }
+
+    return res.json({ success: true, data });
+  } catch (err) {
+    logger.error(`[Transaction] adminGetTransactionDetail error: ${err.message}`);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };

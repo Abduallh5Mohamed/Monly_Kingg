@@ -1,6 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,7 +72,7 @@ export default function UsersPage() {
         params.append('role', roleFilter);
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/admin/users?${params}`, {
+      const response = await fetch(`/api/v1/admin/users?${params}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ export default function UsersPage() {
 
   const handleUpdateRole = async (userId: string, newRole: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/role`, {
+      const response = await fetch(`/api/v1/admin/users/${userId}/role`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -131,7 +132,7 @@ export default function UsersPage() {
 
   const handleToggleStatus = async (userId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}/toggle-status`, {
+      const response = await fetch(`/api/v1/admin/users/${userId}/toggle-status`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -159,7 +160,7 @@ export default function UsersPage() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/admin/users/${userId}`, {
+      const response = await fetch(`/api/v1/admin/users/${userId}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -296,12 +297,12 @@ export default function UsersPage() {
               {users.map((user) => (
                 <TableRow key={user._id} className="border-white/[0.06] hover:bg-white/5">
                   <TableCell>
-                    <div className="flex items-center gap-3">
+                    <Link href={`/admin/users/${user._id}`} className="flex items-center gap-3 hover:bg-white/[0.03] rounded-lg p-1 -m-1 transition-colors group">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold flex-shrink-0">
                         {(user.username || user.email).charAt(0).toUpperCase()}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-white font-medium">{user.username || user.email}</span>
+                        <span className="text-white font-medium group-hover:text-cyan-400 transition-colors">{user.username || user.email}</span>
                         {user.verified && (
                           <div className="flex items-center gap-1 text-xs text-green-400">
                             <CheckCircle className="h-3 w-3" />
@@ -309,7 +310,7 @@ export default function UsersPage() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-white/70 hidden md:table-cell">{user.email}</TableCell>
                   <TableCell>
