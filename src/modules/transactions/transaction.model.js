@@ -41,11 +41,22 @@ const transactionSchema = new mongoose.Schema({
   resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   resolvedNote: { type: String },
 
+  // ── Idempotency ────────────────────────────────────────────────────────────
+  // Unique key supplied by the client (UUID) to prevent double-charge on retry
+  idempotencyKey: { type: String },
+
+  // ── Notification tracking ─────────────────────────────────────────────────
+  // Set after the seller notification job succeeds — used by recovery scanner
+  sellerNotifiedAt: { type: Date },
+  // Set after the buyer notification job succeeds (credentials sent)
+  buyerNotifiedAt: { type: Date },
+
 }, { timestamps: true });
 
 transactionSchema.index({ buyer: 1, status: 1, createdAt: -1 });
 transactionSchema.index({ seller: 1, status: 1, createdAt: -1 });
 transactionSchema.index({ listing: 1 });
 transactionSchema.index({ autoConfirmAt: 1, status: 1 }); // for auto-confirm job
+transactionSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
 
 export default mongoose.model("Transaction", transactionSchema);
