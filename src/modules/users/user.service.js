@@ -41,17 +41,10 @@ export const updateBalance = async (id, amount) => {
 };
 
 export const addXp = async (id, amount) => {
-  const user = await User.findById(id);
-  user.xp += amount;
-
-  // حساب الليفل الجديد
-  let nextLevelRequirement = user.level * 500;
-  if (user.xp >= nextLevelRequirement) {
-    user.level += 1;
-    user.xp = 0;
-  }
-
-  return await user.save();
+  // Legacy function — seller level is now auto-calculated from stats.totalVolume
+  // in sellerLevel.service.js. This is kept for backward compatibility.
+  const { updateSellerLevel } = await import("../seller-levels/sellerLevel.service.js");
+  return await updateSellerLevel(id);
 };
 
 export const searchUsers = async (query, excludeUserId) => {

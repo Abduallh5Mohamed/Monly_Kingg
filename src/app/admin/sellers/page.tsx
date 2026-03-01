@@ -32,6 +32,7 @@ import {
   UserCheck,
   AlertTriangle
 } from 'lucide-react';
+import { LevelBadge } from '@/components/ui/level-badge';
 
 /* ─── types ─── */
 interface UserProfile {
@@ -43,7 +44,7 @@ interface UserProfile {
   address?: string;
   bio?: string;
   fullName?: string;
-  stats?: { totalVolume: number; level: number; successfulTrades: number; failedTrades: number };
+  stats?: { totalVolume: number; level: number; rank?: string; successfulTrades: number; failedTrades: number };
   isSeller?: boolean;
   sellerApprovedAt?: string;
   createdAt?: string;
@@ -555,6 +556,14 @@ function ActiveSellersSection() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-bold text-white">{s.user?.username}</h3>
+                  {(s.user?.stats?.level ?? 0) > 1 && (
+                    <LevelBadge
+                      level={s.user?.stats?.level ?? 1}
+                      rank={s.user?.stats?.rank || 'Starter'}
+                      size="sm"
+                      showRank={false}
+                    />
+                  )}
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-500/10 text-green-400 border border-green-500/30">
                     <CheckCircle2 className="w-3 h-3" /> Verified
                   </span>

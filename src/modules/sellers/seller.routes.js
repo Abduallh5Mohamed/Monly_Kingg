@@ -11,12 +11,20 @@ import {
   approveSellerRequest,
   rejectSellerRequest,
 } from "./seller.controller.js";
+import {
+  getMyLevelProgress,
+  getPublicLevelsTable,
+} from "../seller-levels/sellerLevel.controller.js";
 
 const router = express.Router();
 
 // User routes
 router.post("/request", authMiddleware, sellerRequestLimiter, submitSellerRequest);
 router.get("/my-request", authMiddleware, getMySellerRequest);
+
+// Seller level routes (authenticated)
+router.get("/level-progress", authMiddleware, getMyLevelProgress);
+router.get("/levels-table", authMiddleware, getPublicLevelsTable);
 
 // Admin routes
 router.get("/requests", authMiddleware, requireAdmin, adminLimiter, getAllSellerRequests);
