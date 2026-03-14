@@ -5,6 +5,7 @@ import logger from "../../utils/logger.js";
 import socketService from "../../services/socketService.js";
 
 const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
+const ALLOWED_MESSAGE_TYPES = new Set(['text', 'image', 'video', 'audio', 'file']);
 
 const isValidUploadUrl = (value) => typeof value === "string" && UPLOAD_URL_PATTERN.test(value.trim());
 
@@ -13,7 +14,9 @@ export const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
         const userId = req.user._id;
-        const { content, type = 'text', fileUrl } = req.body;
+        const { content, fileUrl } = req.body;
+        // SECURITY FIX: [LOW-03] Strict whitelist for message type values.
+        const type = ALLOWED_MESSAGE_TYPES.has(req.body.type) ? req.body.type : 'text';
         const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
         if (!content) {

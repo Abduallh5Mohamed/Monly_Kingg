@@ -17,17 +17,25 @@ export const getUserById = async (id) => {
 };
 
 export const updateUser = async (id, updates) => {
-  // إزالة خاصية الدور من التحديثات
-  if (updates.role) {
-    delete updates.role;
+  // SECURITY FIX: [CRIT-06] Never allow sensitive/privileged field updates through service layer.
+  const BLOCKED_FIELDS = [
+    'role', 'wallet', 'isSeller', 'commissionExempt', 'verified',
+    'moderatorPermissions', 'stats', 'passwordHash', 'refreshTokens',
+    'verificationCode', 'passwordResetToken', 'failedLoginAttempts',
+    'lockUntil', 'twoFA', 'authLogs', 'googleId', 'sellerApprovedAt'
+  ];
+
+  for (const field of BLOCKED_FIELDS) {
+    if (Object.prototype.hasOwnProperty.call(updates, field)) {
+      delete updates[field];
+    }
   }
 
-  // تحديث كلمة المرور إذا وجدت
   if (updates.password) {
-    updates.password = await bcrypt.hash(updates.password, 10);
+    updates.passwordHash = await bcrypt.hash(updates.password, 10);
+    delete updates.password;
   }
 
-  // تنفيذ التحديث بعد إزالة الخصائص المحظورة
   return await User.findByIdAndUpdate(id, updates, { new: true });
 };
 
@@ -52,15 +60,12 @@ export const searchUsers = async (query, excludeUserId) => {
   try {
     const safeQuery = escapeRegex(String(query || '').trim().slice(0, 100));
 
-    // Search by username or email (case-insensitive)
+    // SECURITY FIX: [MED-07] Restrict search to username only to reduce email enumeration risk.
     const users = await User.find({
       _id: { $ne: excludeUserId }, // Exclude current user
-      $or: [
-        { username: { $regex: safeQuery, $options: 'i' } },
-        { email: { $regex: safeQuery, $options: 'i' } }
-      ]
+      username: { $regex: safeQuery, $options: 'i' }
     })
-      .select('username avatar role')
+      .select('username avatar')
       .limit(10);
 
     return users;

@@ -8,6 +8,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { depositLimiter, uploadLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
+import { verifyImageFileType } from "../../middlewares/verifyFileType.js";
 import {
     submitDeposit,
     getMyDeposits,
@@ -52,7 +53,8 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-router.post("/request", depositLimiter, uploadLimiter, authMiddleware, upload.single("receipt"), submitDeposit);
+// SECURITY FIX: [CRIT-03] Verify real image signature for uploaded deposit receipts.
+router.post("/request", depositLimiter, uploadLimiter, authMiddleware, upload.single("receipt"), verifyImageFileType, submitDeposit);
 router.get("/my-requests", authMiddleware, getMyDeposits);
 
 router.get("/all", adminLimiter, authMiddleware, requireAdminOrMod, requirePermission("orders"), getAllDeposits);

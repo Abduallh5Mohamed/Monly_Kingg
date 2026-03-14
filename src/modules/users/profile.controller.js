@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { fileTypeFromBuffer } from 'file-type';
 import logger from "../../utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +14,8 @@ const __dirname = path.dirname(__filename);
 
 // Max avatar size: 2MB (base64 encoded ~2.7MB string)
 const MAX_AVATAR_BASE64_LENGTH = 2_700_000;
+const ALLOWED_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const SAFE_FILENAME_RE = /^[a-zA-Z0-9._-]+$/;
 
 // Helper function to save base64 image
 const saveBase64Image = async (base64String, userId) => {
@@ -36,6 +39,13 @@ const saveBase64Image = async (base64String, userId) => {
         const ext = matches[1];
         const data = matches[2];
         const buffer = Buffer.from(data, 'base64');
+
+        // SECURITY FIX: [HIGH-08] Verify actual file signature (magic bytes) of decoded avatar data.
+        const detected = await fileTypeFromBuffer(buffer);
+        if (!detected || !ALLOWED_IMAGE_MIMES.includes(detected.mime)) {
+            logger.warn(`[saveBase64Image] Magic bytes mismatch for user ${userId}: declared ${ext}, actual ${detected?.mime}`);
+            return null;
+        }
 
         // Create unique filename with crypto-safe random
         const { randomUUID } = await import('crypto');
@@ -408,9 +418,12 @@ export const completeProfile = async (req, res) => {
 
         // Handle avatar upload if file is present
         if (req.file) {
-            // Save the file path as avatar URL
-            const avatarUrl = `/uploads/${req.file.filename}`;
-            updates.avatar = avatarUrl;
+            // SECURITY FIX: [MED-06] Enforce safe avatar filename and correct avatars path.
+            const filename = path.basename(req.file.filename);
+            if (!SAFE_FILENAME_RE.test(filename) || filename.includes('..')) {
+                return res.status(400).json({ message: "Invalid file name" });
+            }
+            updates.avatar = `/uploads/avatars/${filename}`;
         }
 
         const updatedUser = await cacheService.updateUserWithSync(

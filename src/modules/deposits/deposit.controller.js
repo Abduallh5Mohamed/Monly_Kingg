@@ -24,7 +24,7 @@ const validateContactInfo = (contact) => {
 export const submitDeposit = async (req, res) => {
     try {
         const userId = req.user._id;
-        // SECURITY FIX: Idempotency key prevents race-condition double submission.
+        // SECURITY FIX: [CRIT-04] Idempotency key prevents race-condition double submission.
         const rawIdempotencyHeader = req.headers["x-idempotency-key"];
         const idempotencyKey = typeof rawIdempotencyHeader === "string" && rawIdempotencyHeader.trim()
             ? rawIdempotencyHeader.trim()
@@ -80,6 +80,7 @@ export const submitDeposit = async (req, res) => {
         }
 
         if (idempotencyKey) {
+            // SECURITY FIX: [CRIT-04] Return existing response for repeated idempotent request.
             const existing = await Deposit.findOne({ idempotencyKey }).lean();
             if (existing) {
                 return res.status(200).json({
@@ -273,14 +274,7 @@ export const approveDeposit = async (req, res) => {
             `deposit approval #${id}`
         );
 
-        // Deduct from admin balance
-        if (req.user.role === 'admin') {
-            await cacheService.updateBalanceWithSync(
-                req.user._id,
-                -amountToCredit,
-                `deposit approval #${id} (admin deduction)`
-            );
-        }
+        // SECURITY FIX: [HIGH-07] Do not mutate admin wallet during deposit approvals.
 
         try {
             await AuditLog.create({

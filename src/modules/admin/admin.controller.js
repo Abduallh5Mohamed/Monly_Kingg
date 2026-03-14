@@ -801,7 +801,7 @@ export const changePassword = async (req, res) => {
         // Invalidate cached user so tokens re-validated
         await cacheService.invalidateUser(user._id);
 
-        // Blacklist the current access token for its remaining lifetime.
+        // SECURITY FIX: [MED-04] Blacklist current access token on password change.
         const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
         if (accessToken && redis.isReady()) {
             try {

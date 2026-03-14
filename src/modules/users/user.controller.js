@@ -45,11 +45,14 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // SECURITY FIX: Strict allowlist prevents privilege/financial field tampering.
-    const ALLOWED_USER_FIELDS = ["fullName", "phone", "address", "avatar", "bio"];
-    const ALLOWED_ADMIN_FIELDS = [...ALLOWED_USER_FIELDS, "username", "email"];
+    // SECURITY FIX: [CRIT-06] Strict allowlist prevents mass assignment to privileged fields.
+    const ALLOWED_FIELDS_USER = ["fullName", "bio", "address"];
+    const ALLOWED_FIELDS_ADMIN = [
+      ...ALLOWED_FIELDS_USER,
+      "username", "email", "phone", "avatar", "isOnline", "lastSeenAt"
+    ];
     const isAdmin = req.user.role === "admin";
-    const allowedFields = isAdmin ? ALLOWED_ADMIN_FIELDS : ALLOWED_USER_FIELDS;
+    const allowedFields = isAdmin ? ALLOWED_FIELDS_ADMIN : ALLOWED_FIELDS_USER;
 
     if (!isAdmin && req.user._id.toString() !== req.params.id) {
       return res.status(403).json({
@@ -65,7 +68,7 @@ export const updateUser = async (req, res, next) => {
     }
 
     if (Object.keys(filteredBody).length === 0) {
-      return res.status(400).json({ message: "No valid fields to update" });
+      return res.status(400).json({ message: "No valid fields provided for update" });
     }
 
     // Use Write-Through: updates DB first, then cache

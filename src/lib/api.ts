@@ -126,9 +126,10 @@ class ApiClient {
 
   async getCsrfTokenFromServer(): Promise<string | null> {
     try {
-      const response = await this.request<{ csrfToken: string }>('/auth/csrf-token');
-      if (response.success && response.data) {
-        return response.data.csrfToken;
+      const response = await this.request('/auth/csrf-token');
+      if (response.success) {
+        // SECURITY FIX: [CRIT-01] CSRF token is cookie-only; read it from document.cookie.
+        return this.getCsrfToken();
       }
     } catch (error) {
       console.error('Failed to get CSRF token:', error);

@@ -78,6 +78,30 @@ export const verifyImageFileType = async (req, res, next) => {
   }
 };
 
+export const verifyImageFilesFromFields = async (req, res, next) => {
+  // SECURITY FIX: [CRIT-02] Verify magic-bytes for multer fields uploads (req.files object).
+  const files = getUploadedFiles(req);
+  if (!files.length) return next();
+
+  try {
+    for (const file of files) {
+      const buffer = await fsp.readFile(file.path);
+      const detected = await fileTypeFromBuffer(buffer);
+      if (!detected || !IMAGE_MIME_TYPES.includes(detected.mime)) {
+        await removeFiles(files);
+        return res.status(400).json({
+          success: false,
+          message: "Invalid file type. Only images are allowed (JPEG, PNG, GIF, WEBP).",
+        });
+      }
+    }
+    return next();
+  } catch (_error) {
+    await removeFiles(files);
+    return res.status(400).json({ success: false, message: "File validation failed" });
+  }
+};
+
 export const verifyImageOrPdfFileType = verifyByMagicBytes(
   IMAGE_AND_PDF_MIME_TYPES,
   "Invalid file type. File content does not match allowed image/PDF types."

@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import crypto from "crypto";
+
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../modules/users/user.model.js";
@@ -69,7 +71,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.create({
             email,
             username: username.length >= 5 ? username : username + "user1",
-            passwordHash: "google-oauth-" + profile.id, // Placeholder, user can't login with password
+            // SECURITY FIX: [MED-01] Use cryptographically random placeholder for OAuth-only users.
+            passwordHash: "google-oauth-" + crypto.randomBytes(32).toString('hex'),
             googleId: profile.id,
             fullName: profile.displayName || "",
             avatar: null,

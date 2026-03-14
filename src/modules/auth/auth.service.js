@@ -19,18 +19,19 @@ const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
 
+// SECURITY FIX: [MED-02] Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
 
 async function appendAuthLog(userId, { action, success = true, ip = null, userAgent = null }) {
   try {
-    // SECURITY FIX: Keep authLogs bounded to avoid unbounded document growth.
+    // SECURITY FIX: [MED-03] Keep authLogs bounded to avoid unbounded growth.
     await User.updateOne(
       { _id: userId },
       {
         $push: {
           authLogs: {
             $each: [{ action, success, ip, userAgent, timestamp: new Date() }],
-            $slice: -100,
+            $slice: -50,
           },
         },
       }
@@ -257,8 +258,8 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       const newFailedAttempts = (user.failedLoginAttempts || 0) + 1;
       const updateData = {
         $inc: { failedLoginAttempts: 1 },
-        // SECURITY FIX: Keep auth logs bounded during failed login tracking.
-        $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -100 } }
+        // SECURITY FIX: [MED-03] Keep auth logs bounded during failed login tracking.
+        $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
       };
 
       // Lock account if max attempts reached
@@ -284,7 +285,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
         $set: { failedLoginAttempts: 0, lockUntil: null },
         $push: {
           refreshTokens: { token: refreshTokenString, expiresAt, ip, userAgent },
-          authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -100 }
+          authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -50 }
         }
       }
     );
@@ -484,7 +485,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     user.lastPasswordResetSentAt = new Date();
 
-    // SECURITY FIX: Cache hash only, never raw reset token.
+    // SECURITY FIX: [HIGH-02] Cache hash only, never raw reset token.
     await cacheService.cachePasswordResetToken(user._id, resetTokenHash);
 
     await user.save();

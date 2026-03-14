@@ -26,11 +26,7 @@ export default function csrfProtection(req, res, next) {
     '/auth/reset-password',
     '/auth/csrf-token',
     '/auth/google',
-    '/auth/google/callback',
-
-    // SECURITY FIX: Keep explicitly public operational endpoints whitelisted.
-    '/v1/admin/my-permissions',
-    '/admin/my-permissions'
+    '/auth/google/callback'
   ];
 
   const normalizedOriginalPath = (req.originalUrl || "").replace(/^\/api/, "");
@@ -52,7 +48,7 @@ export default function csrfProtection(req, res, next) {
   const csrfCookie = req.cookies?.[process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN"];
   const csrfHeader = req.get("X-XSRF-TOKEN");
 
-  // SECURITY FIX: Use constant-time token comparison to reduce timing attack surface.
+  // SECURITY FIX: [HIGH-01] Use constant-time token comparison to reduce timing attack surface.
   const isTokenMismatch =
     !csrfCookie ||
     !csrfHeader ||

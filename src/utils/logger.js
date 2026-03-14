@@ -4,6 +4,7 @@ import path from "path";
 class Logger {
   constructor() {
     this.logFile = path.join(process.cwd(), "app.log");
+    this.maxLogSize = 50 * 1024 * 1024; // 50MB
     this.buffer = [];
     this.bufferSize = 20; // Flush every 20 messages
     this.flushInterval = 5000; // Or every 5 seconds
@@ -21,7 +22,17 @@ class Logger {
     try {
       const data = this.buffer.join('');
       this.buffer = [];
-      fs.appendFile(this.logFile, data, () => { }); // Async, non-blocking
+      // SECURITY FIX: [LOW-01] Rotate log file when it exceeds max size.
+      fs.stat(this.logFile, (err, stats) => {
+        if (!err && stats.size > this.maxLogSize) {
+          const rotated = this.logFile.replace('.log', `.${Date.now()}.log`);
+          fs.rename(this.logFile, rotated, () => {
+            fs.appendFile(this.logFile, data, () => { });
+          });
+        } else {
+          fs.appendFile(this.logFile, data, () => { });
+        }
+      });
     } catch (_) {
       this.buffer = [];
     }

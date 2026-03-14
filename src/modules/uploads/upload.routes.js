@@ -16,6 +16,21 @@ const __dirname = dirname(__filename);
 
 const router = express.Router();
 
+const ALLOWED_UPLOAD_TYPES = [
+  "profile_picture",
+  "payment_proof",
+  "account_image",
+  "chat_media",
+  "ticket_attachment",
+  "ads",
+  "other"
+];
+
+const getSafeUploadType = (value) => {
+  // SECURITY FIX: [MED-08] Strict upload type allowlist to prevent path traversal.
+  return ALLOWED_UPLOAD_TYPES.includes(value) ? value : "other";
+};
+
 // إنشاء مجلد uploads إن لم يكن موجود
 const uploadsDir = path.join(__dirname, "../../../uploads");
 if (!fs.existsSync(uploadsDir)) {
@@ -26,7 +41,8 @@ if (!fs.existsSync(uploadsDir)) {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // إنشاء مجلدات فرعية حسب النوع
-    const type = req.body.type || "other";
+    const type = getSafeUploadType(req.body.type);
+    req.body.type = type;
     const typeDir = path.join(uploadsDir, type);
 
     if (!fs.existsSync(typeDir)) {

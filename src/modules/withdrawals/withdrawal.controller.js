@@ -21,6 +21,26 @@ export const submitWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal amount must be between 500 and 50000 LE" });
     }
 
+    // SECURITY FIX: [HIGH-09] Block creating multiple pending withdrawal requests.
+    const existingPending = await Withdrawal.findOne({ user: userId, status: "pending" }).lean();
+    if (existingPending) {
+      return res.status(400).json({
+        message: "You already have a pending withdrawal request. Please wait for it to be processed."
+      });
+    }
+
+    // SECURITY FIX: [CRIT-05] Prevent rapid duplicate submission race window.
+    const recentWithdrawal = await Withdrawal.findOne({
+      user: userId,
+      status: "pending",
+      createdAt: { $gte: new Date(Date.now() - 60 * 1000) }
+    }).lean();
+    if (recentWithdrawal) {
+      return res.status(429).json({
+        message: "You already have a pending withdrawal request. Please wait before submitting another."
+      });
+    }
+
     if (!/^\d{11}$/.test(phoneNumber)) {
       return res.status(400).json({ message: "Phone number must be exactly 11 digits" });
     }
@@ -138,31 +158,24 @@ export const approveWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal already processed" });
     }
 
-    const user = await User.findById(withdrawal.user._id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // SECURITY FIX: [HIGH-06] Atomic check-and-deduct prevents TOCTOU race on wallet balance.
+    const updatedUser = await User.findOneAndUpdate(
+      {
+        _id: withdrawal.user._id,
+        "wallet.balance": { $gte: withdrawal.amount }
+      },
+      { $inc: { "wallet.balance": -withdrawal.amount } },
+      { new: true }
+    ).lean();
 
-    const userBalance = user.wallet?.balance || 0;
-    if (withdrawal.amount > userBalance) {
+    if (!updatedUser) {
       return res.status(400).json({
-        message: `Insufficient balance. User has ${userBalance} LE but requested ${withdrawal.amount} LE`
+        message: "Insufficient balance. User's balance may have changed."
       });
     }
 
-    await cacheService.updateBalanceWithSync(
-      withdrawal.user._id,
-      -withdrawal.amount,
-      `withdrawal approval #${id}`
-    );
-
-    if (req.user.role === 'admin') {
-      await cacheService.updateBalanceWithSync(
-        req.user._id,
-        withdrawal.amount,
-        `withdrawal approval #${id} (admin credit)`
-      );
-    }
+    // Keep cache synchronized with atomic DB balance update.
+    await cacheService.cacheUser(updatedUser);
 
     withdrawal.status = "approved";
     withdrawal.reviewedBy = req.user._id;
