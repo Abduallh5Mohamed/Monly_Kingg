@@ -12,6 +12,7 @@ import {
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import redis from "../../config/redis.js";
+import socketService from "../../services/socketService.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
@@ -370,9 +371,12 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
 /* ---------------- revokeRefreshToken / logout ---------------- */
 export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessToken = null) => {
   let user = null;
+  let disconnectUserId = null;
+
   if (refreshToken) {
     user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
     if (user) {
+      disconnectUserId = user._id?.toString() || null;
       const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
       if (rtObj) {
         rtObj.revoked = true;
@@ -386,6 +390,9 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
   if (accessToken && redis.isReady()) {
     try {
       const decoded = jwt.decode(accessToken);
+      if (decoded?.id && !disconnectUserId) {
+        disconnectUserId = decoded.id.toString();
+      }
       const remainingTTL = decoded?.exp ? Math.max(0, decoded.exp - Math.floor(Date.now() / 1000)) : 900;
       if (remainingTTL > 0) {
         const tokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
@@ -400,6 +407,10 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
     user.authLogs.push({ action: "logout", success: true, ip, userAgent: null });
     await user.save();
     logger.info(`User logged out, refresh token revoked: ${user.email}`);
+  }
+
+  if (disconnectUserId) {
+    socketService.disconnectUser(disconnectUserId);
   }
 
 };

@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import DOMPurify from 'isomorphic-dompurify';
 import Chat from '../modules/chats/chat.model.js';
 import User from '../modules/users/user.model.js';
@@ -116,6 +117,19 @@ class SocketService {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 if (!decoded?.id) return next(new Error('Invalid token'));
 
+                // Enforce token revocation parity with HTTP middleware.
+                if (redis.isReady()) {
+                    try {
+                        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+                        const isBlacklisted = await redis.get(`bl:token:${tokenHash}`);
+                        if (isBlacklisted) {
+                            return next(new Error('Token revoked. Please login again.'));
+                        }
+                    } catch (_) {
+                        // Redis unavailable — continue with normal auth flow.
+                    }
+                }
+
                 // Use Redis cache (same as HTTP authMiddleware) to avoid DB hit on every connect
                 const cacheKey = `auth:user:${decoded.id}`;
                 let user = null;
@@ -187,6 +201,21 @@ class SocketService {
                 return socket.emit('error', { message: 'Invalid chat ID' });
             }
 
+            // Rate limit join_chat requests.
+            if (!checkSocketRateLimit(socket.userId, 'join_chat', 10)) {
+                return socket.emit('error', { message: 'Too many join requests. Slow down.' });
+            }
+
+            // Ensure the connecting user is actually part of the chat.
+            const chat = await Chat.findOne({
+                _id: chatId,
+                participants: socket.userId
+            }).select('_id').lean();
+
+            if (!chat) {
+                return socket.emit('error', { message: 'Access denied to this chat' });
+            }
+
             socket.join(`chat:${chatId}`);
 
             socket.to(`chat:${chatId}`).emit('user_joined', {
@@ -194,6 +223,7 @@ class SocketService {
                 username: socket.user.username
             });
         } catch (error) {
+            logger.error(`handleJoinChat error: ${error.message}`);
             socket.emit('error', { message: 'Failed to join chat' });
         }
     }
@@ -454,6 +484,26 @@ class SocketService {
 
     sendToChat(chatId, event, data) {
         this.io.to(`chat:${chatId}`).emit(event, data);
+    }
+
+    disconnectUser(userId) {
+        try {
+            if (!this.io || !userId) return;
+
+            const userRoom = `user:${userId}`;
+            const sockets = this.io.sockets.adapter.rooms.get(userRoom);
+            if (sockets) {
+                sockets.forEach((socketId) => {
+                    const s = this.io.sockets.sockets.get(socketId);
+                    if (s) {
+                        s.emit('force_logout', { message: 'Session ended. Please login again.' });
+                        s.disconnect(true);
+                    }
+                });
+            }
+        } catch (err) {
+            logger.error(`disconnectUser error: ${err.message}`);
+        }
     }
 
     // Admin notifications for deposits/withdrawals

@@ -49,7 +49,13 @@ export const submitSellerRequest = async (req, res) => {
         relatedId: existing._id,
       });
 
-      return res.status(200).json({ message: "Seller request resubmitted successfully", data: existing });
+      const safeRequest = existing.toObject ? existing.toObject() : { ...existing };
+      delete safeRequest.idImage;
+      delete safeRequest.faceImageFront;
+      delete safeRequest.faceImageLeft;
+      delete safeRequest.faceImageRight;
+
+      return res.status(200).json({ message: "Seller request resubmitted successfully", data: safeRequest });
     }
 
     const sellerRequest = new SellerRequest({
@@ -74,7 +80,13 @@ export const submitSellerRequest = async (req, res) => {
       relatedId: sellerRequest._id,
     });
 
-    return res.status(201).json({ message: "Seller request submitted successfully", data: sellerRequest });
+    const safeRequest = sellerRequest.toObject ? sellerRequest.toObject() : { ...sellerRequest };
+    delete safeRequest.idImage;
+    delete safeRequest.faceImageFront;
+    delete safeRequest.faceImageLeft;
+    delete safeRequest.faceImageRight;
+
+    return res.status(201).json({ message: "Seller request submitted successfully", data: safeRequest });
   } catch (error) {
     console.error("Submit seller request error:", error);
     return res.status(500).json({ message: "Server error" });
@@ -88,7 +100,14 @@ export const getMySellerRequest = async (req, res) => {
     if (!request) {
       return res.status(200).json({ data: null });
     }
-    return res.status(200).json({ data: request });
+
+    const safeRequest = request.toObject ? request.toObject() : { ...request };
+    delete safeRequest.idImage;
+    delete safeRequest.faceImageFront;
+    delete safeRequest.faceImageLeft;
+    delete safeRequest.faceImageRight;
+
+    return res.status(200).json({ data: safeRequest });
   } catch (error) {
     console.error("Get seller request error:", error);
     return res.status(500).json({ message: "Server error" });

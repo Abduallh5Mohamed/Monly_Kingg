@@ -7,6 +7,7 @@ import Listing from "../listings/listing.model.js";
 import Game from "../games/game.model.js";
 import SellerRequest from "../sellers/sellerRequest.model.js";
 import SiteSettings from "./siteSettings.model.js";
+import AuditLog from "./auditLog.model.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
@@ -596,7 +597,7 @@ export const getUserDetail = async (req, res) => {
 
         // Seller request (ID verification)
         const sellerRequest = await SellerRequest.findOne({ user: userId })
-            .select("fullName idType idImage faceImageFront faceImageLeft faceImageRight status rejectionReason applicationCount rejectionHistory reviewedAt createdAt")
+            .select("fullName idType +idImage +faceImageFront +faceImageLeft +faceImageRight status rejectionReason applicationCount rejectionHistory reviewedAt createdAt")
             .populate("reviewedBy", "username")
             .lean();
 
@@ -1569,6 +1570,35 @@ export const adminInstantRelease = async (req, res) => {
             note: `Admin force-released ${sellerNetAmount} EGP to seller wallet immediately (skipped hold period).`,
         });
         await tx.save();
+
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_instant_release",
+                targetModel: "Transaction",
+                targetId: tx._id,
+                targetUser: sellerId,
+                details: {
+                    transactionId: tx._id.toString(),
+                    sellerId,
+                    amountReleased: sellerNetAmount,
+                    previousPayoutStatus: "pending_payout",
+                    newPayoutStatus: "paid_out",
+                },
+                metadata: {
+                    transactionId: tx._id.toString(),
+                    sellerId,
+                    amountReleased: sellerNetAmount,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for instant_release tx ${tx._id}: ${auditErr.message}`);
+        }
 
         logger.info(`Admin instant-released tx ${tx._id} — ${sellerNetAmount} EGP to seller ${sellerId}`);
 
