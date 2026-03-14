@@ -11,6 +11,7 @@ import {
 } from "../../utils/emailTemplates.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
+import redis from "../../config/redis.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
@@ -99,13 +100,7 @@ export const register = async ({ email, username, password }) => {
       await sendEmail(user.email, "Verify your MonlyKing account", verificationEmail);
       logger.info(`📧 Verification email sent to ${email}`);
     } catch (emailError) {
-      logger.warn(`⚠️ Email sending failed for ${email}: ${emailError.message}`);
-      logger.info(`\n${'='.repeat(60)}`);
-      logger.info(`📋 VERIFICATION CODE (Email failed - showing in console):`);
-      logger.info(`   Email: ${email}`);
-      logger.info(`   Code: ${rawCode}`);
-      logger.info(`   Expires: ${new Date(Date.now() + 10 * 60 * 1000).toLocaleString()}`);
-      logger.info(`${'='.repeat(60)}\n`);
+      logger.warn(`⚠️ Email sending failed for ${email}. User must request resend.`);
       // Continue registration even if email fails
     }
 
@@ -373,17 +368,39 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
 };
 
 /* ---------------- revokeRefreshToken / logout ---------------- */
-export const revokeRefreshTokenForUser = async (refreshToken, ip = null) => {
-  const user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
-  if (!user) return;
-  const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
-  if (!rtObj) return;
-  rtObj.revoked = true;
-  rtObj.revokedAt = new Date();
-  rtObj.revokedByIp = ip;
-  user.authLogs.push({ action: "logout", success: true, ip, userAgent: null });
-  await user.save();
-  logger.info(`User logged out, refresh token revoked: ${user.email}`);
+export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessToken = null) => {
+  let user = null;
+  if (refreshToken) {
+    user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
+    if (user) {
+      const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
+      if (rtObj) {
+        rtObj.revoked = true;
+        rtObj.revokedAt = new Date();
+        rtObj.revokedByIp = ip;
+      }
+    }
+  }
+
+  // Blacklist current access token for its remaining lifetime.
+  if (accessToken && redis.isReady()) {
+    try {
+      const decoded = jwt.decode(accessToken);
+      const remainingTTL = decoded?.exp ? Math.max(0, decoded.exp - Math.floor(Date.now() / 1000)) : 900;
+      if (remainingTTL > 0) {
+        const tokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
+        await redis.set(`bl:token:${tokenHash}`, 1, remainingTTL);
+      }
+    } catch (_) {
+      // Ignore blacklist failures when Redis/JWT decode is unavailable.
+    }
+  }
+
+  if (user) {
+    user.authLogs.push({ action: "logout", success: true, ip, userAgent: null });
+    await user.save();
+    logger.info(`User logged out, refresh token revoked: ${user.email}`);
+  }
 
 };
 

@@ -32,6 +32,8 @@ import { globalLimiter } from "./middlewares/rateLimiter.js";
 import csrfProtection from "./middlewares/csrf.js";
 import compression from "compression";
 import passport from "./config/passport.js";
+import crypto from "crypto";
+import { authMiddleware } from "./middlewares/authMiddleware.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -44,6 +46,7 @@ import "./modules/admin/auditLog.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const uploadsDir = path.join(__dirname, "../uploads");
 
 dotenv.config();
 
@@ -72,8 +75,8 @@ app.use(compression({
 }));
 
 // Payload limit
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // NoSQL injection protection
 function sanitizeObject(obj) {
@@ -98,10 +101,25 @@ app.use((req, res, next) => {
   next();
 });
 
+const getAllowedOrigins = () => {
+  if (process.env.NODE_ENV === "production") {
+    if (!process.env.ALLOWED_ORIGINS) {
+      throw new Error("FATAL: ALLOWED_ORIGINS must be set in production");
+    }
+    return process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim()).filter(Boolean);
+  }
+  return ["http://localhost:3000", "http://localhost:5000"];
+};
+
+const allowedOrigins = getAllowedOrigins();
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-    : ['http://localhost:3000', 'http://localhost:5000'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -109,15 +127,91 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(helmet());
-if (process.env.NODE_ENV === "production") {
-  app.use(helmet.hsts({ maxAge: 31536000 }));
-}
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'", process.env.FRONTEND_URL || "http://localhost:3000"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null,
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  permittedCrossDomainPolicies: false,
+}));
+
+app.use((req, res, next) => {
+  const requestId = crypto.randomUUID();
+  req.requestId = requestId;
+  res.setHeader("X-Request-ID", requestId);
+  next();
+});
+
 app.use(cookieParser());
 app.use(passport.initialize());
 
 // Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads/listings', express.static(path.join(uploadsDir, 'listings')));
+app.use('/uploads/other', express.static(path.join(uploadsDir, 'other')));
+
+app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
+  try {
+    const filename = path.basename(req.params.filename);
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
+
+    if (!isAdmin) {
+      const escaped = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const Deposit = (await import('./modules/deposits/deposit.model.js')).default;
+      const deposit = await Deposit.findOne({
+        user: req.user._id,
+        receiptImage: { $regex: escaped }
+      }).lean();
+
+      if (!deposit) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+    }
+
+    const filePath = path.join(uploadsDir, 'receipts', filename);
+    return res.sendFile(filePath);
+  } catch (_err) {
+    return res.status(404).json({ message: 'File not found' });
+  }
+});
+
+app.get('/uploads/tickets/:filename', authMiddleware, async (req, res) => {
+  try {
+    const filename = path.basename(req.params.filename);
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
+
+    if (!isAdmin) {
+      const Ticket = (await import('./modules/tickets/ticket.model.js')).default;
+      const ticket = await Ticket.findOne({
+        user: req.user._id,
+        'messages.attachments.fileName': filename
+      }).lean();
+
+      if (!ticket) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+    }
+
+    const filePath = path.join(uploadsDir, 'tickets', filename);
+    return res.sendFile(filePath);
+  } catch (_err) {
+    return res.status(404).json({ message: 'File not found' });
+  }
+});
 
 // Health checks (before rate limiting)
 app.use("/", healthRoutes);
@@ -142,6 +236,14 @@ app.use("/api/v1/cache", cacheRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/tickets", ticketRoutes);
 app.use("/api/v1/ratings", sellerRatingRoutes);
+
+// Convert invalid ObjectId cast failures into clean 400 responses.
+app.use((err, req, res, next) => {
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    return res.status(400).json({ success: false, message: "Invalid ID format" });
+  }
+  next(err);
+});
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

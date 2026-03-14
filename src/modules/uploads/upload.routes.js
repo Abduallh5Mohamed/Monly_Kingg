@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
+import fsp from "fs/promises";
+import { fileTypeFromBuffer } from "file-type";
 import * as uploadController from "./upload.controller.js";
 import { protect } from "../../middlewares/authMiddleware.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
@@ -41,26 +43,43 @@ const storage = multer.diskStorage({
   }
 });
 
-// فلترة أنواع الملفات المسموحة
-const fileFilter = (req, file, cb) => {
-  // أنواع الملفات المسموحة
-  const allowedMimes = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/gif",
-    "image/webp",
-    "application/pdf",
-    "video/mp4",
-    "video/webm",
-    "audio/mpeg",
-    "audio/wav"
-  ];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "application/pdf"
+];
 
-  if (allowedMimes.includes(file.mimetype)) {
+// فلترة أولية مبنية على MIME ثم تأكيد المحتوى عبر magic bytes بعد الرفع
+const fileFilter = (req, file, cb) => {
+  if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Invalid file type. Only images, videos, audio, and PDFs are allowed."), false);
+    cb(new Error("Invalid file type. Only images and PDFs are allowed."), false);
+  }
+};
+
+const verifyFileType = async (req, res, next) => {
+  if (!req.file) return next();
+
+  try {
+    const buffer = await fsp.readFile(req.file.path);
+    const detected = await fileTypeFromBuffer(buffer);
+
+    if (!detected || !ALLOWED_MIME_TYPES.includes(detected.mime)) {
+      await fsp.unlink(req.file.path).catch(() => { });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid file type. File content does not match allowed types."
+      });
+    }
+
+    next();
+  } catch (_err) {
+    await fsp.unlink(req.file.path).catch(() => { });
+    return res.status(400).json({ success: false, message: "File validation failed" });
   }
 };
 
@@ -80,7 +99,7 @@ const upload = multer({
  * رفع ملف جديد
  * يتطلب: authentication
  */
-router.post("/", protect, uploadLimiter, upload.single("file"), uploadController.uploadFile);
+router.post("/", protect, uploadLimiter, upload.single("file"), verifyFileType, uploadController.uploadFile);
 
 /**
  * GET /api/v1/uploads

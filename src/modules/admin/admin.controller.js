@@ -11,21 +11,28 @@ import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import redis from "../../config/redis.js";
 import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 
+// Escape special regex characters to prevent ReDoS/injection via user input.
+const escapeRegex = (str) => String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
     try {
-        const { page = 1, limit = 10, search = "", role = "all" } = req.query;
+        const { page = 1, limit = 10, role = "all" } = req.query;
+        const search = (req.query.search || "").trim().slice(0, 100);
 
         // Build filter
         const filter = {};
         if (search) {
             filter.$or = [
-                { email: { $regex: search, $options: 'i' } },
-                { username: { $regex: search, $options: 'i' } }
+                { email: { $regex: escapeRegex(search), $options: 'i' } },
+                { username: { $regex: escapeRegex(search), $options: 'i' } }
             ];
         }
         if (role !== "all") {
@@ -368,10 +375,11 @@ export const getAllChats = async (req, res) => {
                 filter.chatNumber = search;
             } else {
                 // Search by participant email/username
+                const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
                 const users = await User.find({
                     $or: [
-                        { email: { $regex: search, $options: 'i' } },
-                        { username: { $regex: search, $options: 'i' } }
+                        { email: { $regex: safeSearch, $options: 'i' } },
+                        { username: { $regex: safeSearch, $options: 'i' } }
                     ]
                 }).select('_id');
 
@@ -772,17 +780,42 @@ export const changePassword = async (req, res) => {
             return res.status(400).json({ success: false, message: "New password must be at least 8 characters" });
         }
 
-        const user = await User.findById(req.user._id).select("+passwordHash");
+        const user = await User.findById(req.user._id).select("+passwordHash +refreshTokens");
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
         const match = await bcrypt.compare(currentPassword, user.passwordHash);
         if (!match) return res.status(400).json({ success: false, message: "Current password is incorrect" });
 
         user.passwordHash = await bcrypt.hash(newPassword, 12);
+
+        // Revoke all refresh tokens on password change.
+        if (Array.isArray(user.refreshTokens)) {
+            user.refreshTokens.forEach((rt) => {
+                rt.revoked = true;
+                rt.revokedAt = new Date();
+                rt.replacedByToken = null;
+            });
+        }
+
         await user.save();
 
         // Invalidate cached user so tokens re-validated
         await cacheService.invalidateUser(user._id);
+
+        // Blacklist the current access token for its remaining lifetime.
+        const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
+        if (accessToken && redis.isReady()) {
+            try {
+                const decoded = jwt.decode(accessToken);
+                const remainingTTL = decoded?.exp ? Math.max(0, decoded.exp - Math.floor(Date.now() / 1000)) : 900;
+                if (remainingTTL > 0) {
+                    const tokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
+                    await redis.set(`bl:token:${tokenHash}`, 1, remainingTTL);
+                }
+            } catch (_) {
+                // non-fatal
+            }
+        }
 
         logger.info(`Admin/Mod ${user._id} changed their password`);
         res.json({ success: true, message: "Password updated successfully" });
@@ -1042,8 +1075,8 @@ export const getAdminListings = async (req, res) => {
         // Search filter
         if (search) {
             filter.$or = [
-                { title: { $regex: search, $options: "i" } },
-                { description: { $regex: search, $options: "i" } },
+                { title: { $regex: escapeRegex(search), $options: "i" } },
+                { description: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
 
@@ -1246,8 +1279,8 @@ export const getAdminGames = async (req, res) => {
         const filter = {};
         if (search) {
             filter.$or = [
-                { name: { $regex: search, $options: "i" } },
-                { category: { $regex: search, $options: "i" } },
+                { name: { $regex: escapeRegex(search), $options: "i" } },
+                { category: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
         if (status !== "all") {
@@ -1350,7 +1383,7 @@ export const createAdminGame = async (req, res) => {
         }
 
         // Check duplicate
-        const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" } });
+        const existing = await Game.findOne({ name: { $regex: `^${escapeRegex(name.trim())}$`, $options: "i" } });
         if (existing) {
             return res.status(409).json({ success: false, message: "A game with this name already exists" });
         }
@@ -1406,7 +1439,7 @@ export const updateAdminGame = async (req, res) => {
         }
 
         if (name && name.trim() !== game.name) {
-            const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" }, _id: { $ne: id } });
+            const existing = await Game.findOne({ name: { $regex: `^${escapeRegex(name.trim())}$`, $options: "i" }, _id: { $ne: id } });
             if (existing) {
                 return res.status(409).json({ success: false, message: "A game with this name already exists" });
             }
@@ -1608,8 +1641,8 @@ export const getExemptSellers = async (req, res) => {
         const filter = { isSeller: true };
         if (search) {
             filter.$or = [
-                { username: { $regex: search, $options: "i" } },
-                { email: { $regex: search, $options: "i" } },
+                { username: { $regex: escapeRegex(search), $options: "i" } },
+                { email: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
 
@@ -1749,8 +1782,13 @@ export const createModerator = async (req, res) => {
             return res.status(400).json({ success: false, message: "Username, email, and password are required" });
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+        if (password.length < 8) {
+            return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ success: false, message: "Invalid email format" });
         }
 
         // Check for existing user with same email or username

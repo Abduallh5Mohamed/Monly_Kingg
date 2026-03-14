@@ -3,6 +3,7 @@ import * as userController from "./user.controller.js";
 import * as profileController from "./profile.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../../middlewares/roleMiddleware.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheUser, invalidateUserCache, trackActivity } from "../../middlewares/cacheMiddleware.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { userWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
@@ -50,28 +51,28 @@ const upload = multer({
 });
 
 // Public seller profile (authenticated users can view any seller)
-router.get("/seller/:sellerId", authMiddleware, cacheResponse(120), profileController.getPublicSellerProfile);
+router.get("/seller/:sellerId", authMiddleware, validateObjectId("sellerId"), cacheResponse(120), profileController.getPublicSellerProfile);
 
 // Profile routes
 router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), profileController.completeProfile);
 router.get("/profile", authMiddleware, cacheResponse(60), profileController.getProfile);
-router.get("/profile/:userId", authMiddleware, cacheResponse(60), profileController.getProfile);
+router.get("/profile/:userId", authMiddleware, validateObjectId("userId"), cacheResponse(60), profileController.getProfile);
 router.put("/profile", authMiddleware, userWriteLimiter, invalidateCache('api_cache:*:/api/v1/users/profile*'), profileController.updateProfile);
 
 // Favorites routes
 router.post("/favorites", authMiddleware, userWriteLimiter, profileController.addToFavorites);
-router.delete("/favorites/:listingId", authMiddleware, userWriteLimiter, profileController.removeFromFavorites);
+router.delete("/favorites/:listingId", authMiddleware, validateObjectId("listingId"), userWriteLimiter, profileController.removeFromFavorites);
 
 // Search users (must be authenticated)
 router.get("/search", authMiddleware, trackActivity, userController.searchUsers);
 
 // Get user - use cache first (Read-Through)
-router.get("/:id", authMiddleware, trackActivity, cacheUser, userController.getUser);
+router.get("/:id", authMiddleware, validateObjectId(), trackActivity, cacheUser, userController.getUser);
 
 // Update user - invalidate cache after (Write-Through)
-router.put("/:id", authMiddleware, userWriteLimiter, trackActivity, invalidateUserCache, userController.updateUser);
+router.put("/:id", authMiddleware, validateObjectId(), userWriteLimiter, trackActivity, invalidateUserCache, userController.updateUser);
 
 // Delete user - invalidate cache after
-router.delete("/:id", authMiddleware, roleMiddleware("admin"), userWriteLimiter, invalidateUserCache, userController.deleteUser);
+router.delete("/:id", authMiddleware, validateObjectId(), roleMiddleware("admin"), userWriteLimiter, invalidateUserCache, userController.deleteUser);
 
 export default router;

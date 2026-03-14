@@ -76,6 +76,7 @@
     "express": "^5.1.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.1.0",
+    "file-type": "^21.3.2",
     "helmet": "^8.1.0",
     "ioredis": "^5.8.0",
     "isomorphic-dompurify": "^3.0.0-rc.2",

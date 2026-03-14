@@ -3,6 +3,7 @@ import User from "../users/user.model.js";
 import Joi from "joi";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import logger from "../../utils/logger.js";
 
 const registerSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -97,7 +98,7 @@ export const verifyEmail = async (req, res) => {
       path: "/"
     });
 
-    // Get user data (lean for performance)
+      // Get user data (lean for performance)
     const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
     const responseData = {
@@ -136,8 +137,9 @@ export const resendCode = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  const email = req.body.email?.toLowerCase().trim();
+
   try {
-    const email = req.body.email?.toLowerCase().trim();
     const password = req.body.password;
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
@@ -186,7 +188,7 @@ export const login = async (req, res) => {
       expiresIn: 15 * 60
     });
   } catch (err) {
-    console.error("Login error:", err.message);
+    logger.warn(`Login failed for ${email || "unknown"}: ${err.message}`);
 
     // Check if email not verified
     if (err.message === "Invalid credentials") {
@@ -259,8 +261,10 @@ export const refresh = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refresh_token || req.body.refreshToken;
-    if (refreshToken) {
-      await authService.revokeRefreshTokenForUser(refreshToken, req.ip);
+    const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
+
+    if (refreshToken || accessToken) {
+      await authService.revokeRefreshTokenForUser(refreshToken, req.ip, accessToken);
     }
 
     // clear cookies
@@ -270,6 +274,7 @@ export const logout = async (req, res) => {
 
     res.status(200).json({ message: "Logged out" });
   } catch (err) {
+    logger.error(`Logout failed: ${err.message}`);
     res.status(500).json({ message: "Failed to logout" });
   }
 };
@@ -449,7 +454,7 @@ export const googleCallback = async (req, res) => {
       return res.redirect(frontendUrl + "/user");
     }
   } catch (err) {
-    console.error("Google callback error:", err);
+    logger.error(`Google callback error: ${err.message}`);
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
     return res.redirect(frontendUrl + "/login?error=google_failed");
   }

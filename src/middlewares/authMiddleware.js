@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import User from "../modules/users/user.model.js";
 import redis from "../config/redis.js";
 
@@ -21,6 +22,19 @@ export const authMiddleware = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Deny explicitly blacklisted tokens (logout/password change hardening).
+    if (redis.isReady()) {
+      try {
+        const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+        const isBlacklisted = await redis.get(`bl:token:${tokenHash}`);
+        if (isBlacklisted) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+      } catch (_) {
+        // Redis unavailable: continue with JWT verification.
+      }
     }
 
     let decoded;

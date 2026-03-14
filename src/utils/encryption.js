@@ -11,15 +11,20 @@ const getEncryptionKey = () => {
     const envKey = process.env.ENCRYPTION_KEY;
 
     if (!envKey) {
-        console.warn('⚠️ WARNING: ENCRYPTION_KEY not set in .env - using fallback (NOT secure for production)');
-        console.warn('⚠️ Please set ENCRYPTION_KEY in your .env file with a 32-byte hex string');
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('FATAL: ENCRYPTION_KEY is required in production. Generate with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+        }
 
-        // Fallback key (NOT secure, only for development)
-        return Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex');
+        const tempKey = crypto.randomBytes(32);
+        console.warn('⚠️ DEV ONLY: Using temporary encryption key. Data will not persist between restarts. Set ENCRYPTION_KEY in .env');
+        return tempKey;
     }
 
-    // Convert hex string to buffer
-    return Buffer.from(envKey, 'hex');
+    const keyBuffer = Buffer.from(envKey, 'hex');
+    if (keyBuffer.length !== 32) {
+        throw new Error('FATAL: ENCRYPTION_KEY must be exactly 64 hex characters (32 bytes)');
+    }
+    return keyBuffer;
 };
 
 const ENCRYPTION_KEY = getEncryptionKey(); // Must be 32 bytes (256 bits)

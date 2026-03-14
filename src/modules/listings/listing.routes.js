@@ -5,6 +5,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { listingWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
 import {
@@ -61,7 +62,6 @@ const fileFilter = (req, file, cb) => {
   if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    console.error(`❌ Invalid file: ${file.originalname} (type: ${file.mimetype})`);
     cb(new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP images are allowed."));
   }
 };
@@ -113,12 +113,12 @@ router.post(
   createListing
 );
 router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
-router.get("/my-listings/:id", authMiddleware, getMyListingById);
+router.get("/my-listings/:id", authMiddleware, validateObjectId(), getMyListingById);
 router.get("/stats", authMiddleware, cacheResponse(60), getSellerStats);
-router.put("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), updateListing);
-router.delete("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), deleteListing);
+router.put("/:id", authMiddleware, validateObjectId(), listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), updateListing);
+router.delete("/:id", authMiddleware, validateObjectId(), listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), deleteListing);
 
 // Generic routes at the end
-router.get("/:id/public", cacheResponse(120), getListingById);
+router.get("/:id/public", validateObjectId(), cacheResponse(120), getListingById);
 
 export default router;
