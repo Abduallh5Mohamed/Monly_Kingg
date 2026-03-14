@@ -7,6 +7,7 @@ import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheUser, invalidateUserCache, trackActivity } from "../../middlewares/cacheMiddleware.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { userWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
+import { verifyImageFileType } from "../../middlewares/verifyFileType.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -54,7 +55,7 @@ const upload = multer({
 router.get("/seller/:sellerId", authMiddleware, validateObjectId("sellerId"), cacheResponse(120), profileController.getPublicSellerProfile);
 
 // Profile routes
-router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), profileController.completeProfile);
+router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), verifyImageFileType, profileController.completeProfile);
 router.get("/profile", authMiddleware, cacheResponse(60), profileController.getProfile);
 router.get("/profile/:userId", authMiddleware, validateObjectId("userId"), cacheResponse(60), profileController.getProfile);
 router.put("/profile", authMiddleware, userWriteLimiter, invalidateCache('api_cache:*:/api/v1/users/profile*'), profileController.updateProfile);

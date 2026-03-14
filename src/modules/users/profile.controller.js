@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import logger from "../../utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,7 +50,7 @@ const saveBase64Image = async (base64String, userId) => {
 
         return `/uploads/avatars/${filename}`;
     } catch (error) {
-        console.error('[saveBase64Image] Error:', error.message);
+        logger.error('[saveBase64Image] Error:', error.message);
         return null;
     }
 };
@@ -107,7 +108,7 @@ export const getPublicSellerProfile = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Get public seller profile error:", error);
+        logger.error("Get public seller profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -192,7 +193,7 @@ export const getProfile = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Get profile error:", error);
+        logger.error("Get profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -200,8 +201,8 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
     try {
-        console.log('🔧 [updateProfile] Called - User:', req.user?._id);
-        console.log('🔧 [updateProfile] Body keys:', Object.keys(req.body));
+        logger.info('🔧 [updateProfile] Called - User:', req.user?._id);
+        logger.info('🔧 [updateProfile] Body keys:', Object.keys(req.body));
 
         const userId = req.user._id;
         const { fullName, username, phone, address, avatar, bio } = req.body;
@@ -296,7 +297,7 @@ export const updateProfile = async (req, res) => {
             data: updatedUser
         });
     } catch (error) {
-        console.error("Update profile error:", error);
+        logger.error("Update profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -326,7 +327,7 @@ export const addToFavorites = async (req, res) => {
             data: favorite
         });
     } catch (error) {
-        console.error("Add to favorites error:", error);
+        logger.error("Add to favorites error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -348,7 +349,7 @@ export const removeFromFavorites = async (req, res) => {
             message: "Removed from favorites"
         });
     } catch (error) {
-        console.error("Remove from favorites error:", error);
+        logger.error("Remove from favorites error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -423,7 +424,7 @@ export const completeProfile = async (req, res) => {
             data: updatedUser
         });
     } catch (error) {
-        console.error("Complete profile error:", error);
+        logger.error("Complete profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

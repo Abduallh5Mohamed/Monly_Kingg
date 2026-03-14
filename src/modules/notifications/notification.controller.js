@@ -3,6 +3,7 @@ import Deposit from "../deposits/deposit.model.js";
 import Withdrawal from "../withdrawals/withdrawal.model.js";
 import SellerRequest from "../sellers/sellerRequest.model.js";
 import Transaction from "../transactions/transaction.model.js";
+import logger from "../../utils/logger.js";
 
 // ── Actionable notification types (need admin approval / rejection) ──
 const ACTIONABLE_TYPES = [
@@ -34,7 +35,7 @@ export const getPendingCounts = async (req, res) => {
             total,
         });
     } catch (error) {
-        console.error("Get pending counts error:", error);
+        logger.error("Get pending counts error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -63,7 +64,7 @@ export const getMyNotifications = async (req, res) => {
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get notifications error:", error);
+        logger.error("Get notifications error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -74,7 +75,7 @@ export const getUnreadCount = async (req, res) => {
         const count = await Notification.countDocuments({ user: req.user._id, read: false });
         return res.status(200).json({ unreadCount: count });
     } catch (error) {
-        console.error("Get unread count error:", error);
+        logger.error("Get unread count error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -89,7 +90,7 @@ export const markAsRead = async (req, res) => {
         );
         return res.status(200).json({ message: "Marked as read" });
     } catch (error) {
-        console.error("Mark as read error:", error);
+        logger.error("Mark as read error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -103,7 +104,7 @@ export const markAllAsRead = async (req, res) => {
         );
         return res.status(200).json({ message: "All marked as read" });
     } catch (error) {
-        console.error("Mark all as read error:", error);
+        logger.error("Mark all as read error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

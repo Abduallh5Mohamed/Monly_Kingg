@@ -12,6 +12,8 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,7 +38,7 @@ async function getActiveCampaignsCached() {
 // Create a new listing (seller only)
 export const createListing = async (req, res) => {
   try {
-    console.log('📝 Creating listing with data:', {
+    logger.info('📝 Creating listing with data:', {
       title: req.body.title,
       game: req.body.game,
       price: req.body.price,
@@ -154,12 +156,12 @@ export const createListing = async (req, res) => {
         });
       }
     } catch (campaignErr) {
-      console.error("Campaign notification error (non-blocking):", campaignErr.message);
+      logger.error("Campaign notification error (non-blocking):", campaignErr.message);
     }
-    console.log('✅ Listing created successfully:', listing._id);
+    logger.info('✅ Listing created successfully:', listing._id);
     return res.status(201).json({ message: "Listing created successfully", data: listing });
   } catch (error) {
-    console.error("❌ Create listing error:", error);
+    logger.error("❌ Create listing error:", error);
 
     // Handle validation errors
     if (error.name === 'ValidationError') {
@@ -197,7 +199,7 @@ export const getMyListings = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get my listings error:", error);
+    logger.error("Get my listings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -218,7 +220,7 @@ export const getMyListingById = async (req, res) => {
 
     return res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    console.error("Get my listing by ID error:", error);
+    logger.error("Get my listing by ID error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -248,7 +250,7 @@ export const updateListing = async (req, res) => {
 
     return res.status(200).json({ message: "Listing updated", data: listing });
   } catch (error) {
-    console.error("Update listing error:", error);
+    logger.error("Update listing error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -262,7 +264,7 @@ export const deleteListing = async (req, res) => {
     }
     return res.status(200).json({ message: "Listing deleted" });
   } catch (error) {
-    console.error("Delete listing error:", error);
+    logger.error("Delete listing error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -283,7 +285,7 @@ export const getSellerStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get seller stats error:", error);
+    logger.error("Get seller stats error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -388,9 +390,10 @@ export const browseListings = async (req, res) => {
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
     if (search) {
+      const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
       filter.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
+        { title: { $regex: safeSearch, $options: "i" } },
+        { description: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
@@ -424,7 +427,7 @@ export const browseListings = async (req, res) => {
       totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
-    console.error("Browse listings error:", error);
+    logger.error(`Browse listings error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -445,7 +448,7 @@ export const getGamesForFilter = async (req, res) => {
 
     return res.status(200).json({ data: games });
   } catch (error) {
-    console.error("Get games error:", error);
+    logger.error("Get games error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -495,7 +498,7 @@ export const getAllListings = async (req, res) => {
       totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
-    console.error("Get all listings error:", error);
+    logger.error("Get all listings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -566,7 +569,7 @@ export const getListingById = async (req, res) => {
 
     return res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    console.error("Get listing by ID error:", error);
+    logger.error("Get listing by ID error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

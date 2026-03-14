@@ -4,19 +4,37 @@ import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
 import socketService from "../../services/socketService.js";
 
+const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
+
+const isValidUploadUrl = (value) => typeof value === "string" && UPLOAD_URL_PATTERN.test(value.trim());
+
 /* ---------------- Send Message (HTTP fallback — socket is preferred) ---------------- */
 export const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
         const userId = req.user._id;
         const { content, type = 'text', fileUrl } = req.body;
+        const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
         if (!content) {
             return res.status(400).json({ success: false, message: "Message content is required" });
         }
 
+        let normalizedContent = content;
+        let normalizedFileUrl = fileUrl;
+
+        if (attachmentTypes.has(type)) {
+            const attachmentUrl = typeof fileUrl === 'string' && fileUrl.trim() ? fileUrl.trim() : String(content).trim();
+            if (!isValidUploadUrl(attachmentUrl)) {
+                return res.status(400).json({ success: false, message: "Invalid file URL" });
+            }
+
+            normalizedContent = attachmentUrl;
+            normalizedFileUrl = attachmentUrl;
+        }
+
         // Limit message length to prevent abuse
-        if (content.length > 5000) {
+        if (String(normalizedContent).length > 5000) {
             return res.status(400).json({ success: false, message: "Message too long (max 5000 characters)" });
         }
 
@@ -28,10 +46,10 @@ export const sendMessage = async (req, res) => {
             { _id: chatId, participants: userId },
             {
                 $push: {
-                    messages: { _id: msgId, sender: userId, content, type, fileUrl, timestamp: now, read: false, delivered: true }
+                    messages: { _id: msgId, sender: userId, content: normalizedContent, type, fileUrl: normalizedFileUrl, timestamp: now, read: false, delivered: true }
                 },
                 $set: {
-                    lastMessage: { content, sender: userId, timestamp: now, messageType: type }
+                    lastMessage: { content: normalizedContent, sender: userId, timestamp: now, messageType: type }
                 }
             },
             { new: false, projection: { participants: 1 } }
@@ -58,7 +76,12 @@ export const sendMessage = async (req, res) => {
                 email: req.user.email,
                 avatar: req.user.avatar
             },
-            content, type, fileUrl, timestamp: now, read: false, delivered: true
+            content: normalizedContent,
+            type,
+            fileUrl: normalizedFileUrl,
+            timestamp: now,
+            read: false,
+            delivered: true
         };
 
         // Broadcast via Socket.IO

@@ -4,12 +4,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
-import fsp from "fs/promises";
-import { fileTypeFromBuffer } from "file-type";
 import * as uploadController from "./upload.controller.js";
 import { protect } from "../../middlewares/authMiddleware.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
 import { uploadLimiter, userWriteLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
+import { verifyImageOrPdfFileType } from "../../middlewares/verifyFileType.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -61,28 +60,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const verifyFileType = async (req, res, next) => {
-  if (!req.file) return next();
-
-  try {
-    const buffer = await fsp.readFile(req.file.path);
-    const detected = await fileTypeFromBuffer(buffer);
-
-    if (!detected || !ALLOWED_MIME_TYPES.includes(detected.mime)) {
-      await fsp.unlink(req.file.path).catch(() => { });
-      return res.status(400).json({
-        success: false,
-        message: "Invalid file type. File content does not match allowed types."
-      });
-    }
-
-    next();
-  } catch (_err) {
-    await fsp.unlink(req.file.path).catch(() => { });
-    return res.status(400).json({ success: false, message: "File validation failed" });
-  }
-};
-
 // إعداد multer
 const upload = multer({
   storage: storage,
@@ -99,7 +76,7 @@ const upload = multer({
  * رفع ملف جديد
  * يتطلب: authentication
  */
-router.post("/", protect, uploadLimiter, upload.single("file"), verifyFileType, uploadController.uploadFile);
+router.post("/", protect, uploadLimiter, upload.single("file"), verifyImageOrPdfFileType, uploadController.uploadFile);
 
 /**
  * GET /api/v1/uploads

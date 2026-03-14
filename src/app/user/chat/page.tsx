@@ -238,7 +238,7 @@ export default function SupportPage() {
         return [...prev, message];
       });
       scrollToBottom();
-      if (message.sender._id !== currentUserIdRef.current) {
+      if (message.sender?._id !== currentUserIdRef.current) {
         socket.emit('message_delivered', { chatId, messageId: message._id });
         setTimeout(() => socket.emit('mark_read', { chatId }), 500);
       }
@@ -518,6 +518,19 @@ export default function SupportPage() {
     const parts = value.split(' ').filter(Boolean);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
+  };
+
+  const getSafeMessageUrl = (value?: string): string | null => {
+    if (!value || typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (trimmed.startsWith('/uploads/')) return trimmed;
+
+    try {
+      const parsed = new URL(trimmed, window.location.origin);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null;
+    } catch {
+      return null;
+    }
   };
 
   const isPartnerOnline = (chat: Chat) => {
@@ -802,22 +815,32 @@ export default function SupportPage() {
   };
 
   const renderMessageContent = (message: Message) => {
+    const safeUrl = getSafeMessageUrl(message.content);
+
     if (message.type === 'image') {
+      if (!safeUrl) {
+        return <p className="text-sm leading-relaxed text-white/70">Invalid image URL</p>;
+      }
+
       return (
         <img
-          src={message.content}
+          src={safeUrl}
           alt="Shared image"
           className="mt-2 max-w-xs rounded-xl border border-white/10 cursor-pointer"
-          onClick={() => window.open(message.content, '_blank')}
+          onClick={() => window.open(safeUrl, '_blank', 'noopener,noreferrer')}
         />
       );
     }
 
     if (message.type === 'file') {
-      const displayName = message.content.split('/').pop() || 'Attachment';
+      if (!safeUrl) {
+        return <p className="text-sm leading-relaxed text-white/70">Invalid attachment URL</p>;
+      }
+
+      const displayName = safeUrl.split('/').pop() || 'Attachment';
       return (
         <a
-          href={message.content}
+          href={safeUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-2 inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 hover:text-cyan-100"

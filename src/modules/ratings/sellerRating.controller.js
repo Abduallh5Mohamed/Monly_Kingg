@@ -3,6 +3,7 @@ import CommentPenalty from "./commentPenalty.model.js";
 import User from "../users/user.model.js";
 import { createNotification } from "../notifications/notificationHelper.js";
 import mongoose from "mongoose";
+import logger from "../../utils/logger.js";
 
 // ─── Profanity word list (Arabic + English) ───────────────────────────────────
 const PROFANITY_LIST = [
@@ -148,7 +149,7 @@ export const addRating = async (req, res) => {
     if (error.code === 11000) {
       return res.status(409).json({ message: "You have already rated this seller. Your rating was updated." });
     }
-    console.error("addRating error:", error);
+    logger.error("addRating error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -213,7 +214,7 @@ export const getSellerRatings = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("getSellerRatings error:", error);
+    logger.error("getSellerRatings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -236,7 +237,7 @@ export const deleteRating = async (req, res) => {
     await SellerRating.findByIdAndDelete(ratingId);
     return res.status(200).json({ message: "Rating deleted successfully" });
   } catch (error) {
-    console.error("deleteRating error:", error);
+    logger.error("deleteRating error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -265,7 +266,7 @@ export const getMyRatings = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("getMyRatings error:", error);
+    logger.error("getMyRatings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

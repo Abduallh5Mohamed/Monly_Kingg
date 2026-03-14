@@ -3,6 +3,8 @@ import User from "../users/user.model.js";
 import cacheService from '../../services/cacheService.js';
 import socketService from '../../services/socketService.js';
 import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
+import AuditLog from '../admin/auditLog.model.js';
+import logger from '../../utils/logger.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -51,9 +53,10 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Payment method must be either 'instapay' or 'vodafone_cash'" });
         }
 
-        const parsedAmount = parseFloat(amount);
-        if (isNaN(parsedAmount) || parsedAmount < 500) {
-            return res.status(400).json({ message: "Amount must be at least 500 LE" });
+        const parsedAmount = Number(amount);
+        const normalizedAmount = Math.round(parsedAmount * 100) / 100;
+        if (!Number.isFinite(parsedAmount) || normalizedAmount < 500 || normalizedAmount > 50000) {
+            return res.status(400).json({ message: "Amount must be between 500 and 50000 LE" });
         }
 
         const depositDateTime = new Date(depositDate);
@@ -94,14 +97,14 @@ export const submitDeposit = async (req, res) => {
         const deposit = new Deposit({
             user: userId,
             paymentMethod,
-            amount: parsedAmount,
+            amount: normalizedAmount,
             senderFullName: sanitizedFullName,
             senderPhoneOrEmail: sanitizedPhoneOrEmail,
             depositDate: depositDateTime,
             receiptImage: receiptImagePath,
             gameTitle: sanitizedGameTitle,
-            paidAmount: parsedAmount,
-            creditedAmount: parsedAmount
+            paidAmount: normalizedAmount,
+            creditedAmount: normalizedAmount
         });
 
         await deposit.save();
@@ -133,7 +136,7 @@ export const submitDeposit = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Submit deposit error:", error);
+        logger.error(`Submit deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -157,7 +160,7 @@ export const getMyDeposits = async (req, res) => {
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get my deposits error:", error);
+        logger.error(`Get my deposits error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -184,7 +187,7 @@ export const getAllDeposits = async (req, res) => {
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get all deposits error:", error);
+        logger.error(`Get all deposits error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -206,14 +209,15 @@ export const approveDeposit = async (req, res) => {
         let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
 
         if (editedAmount !== undefined && editedAmount !== null) {
-            const parsedAmount = parseFloat(editedAmount);
-            if (isNaN(parsedAmount) || parsedAmount < 500) {
+            const parsedAmount = Number(editedAmount);
+            const normalizedAmount = Math.round(parsedAmount * 100) / 100;
+            if (!Number.isFinite(parsedAmount) || normalizedAmount < 500 || normalizedAmount > 50000) {
                 return res.status(400).json({
-                    message: "Invalid amount. Must be at least 500 LE"
+                    message: "Invalid amount. Must be between 500 and 50000 LE"
                 });
             }
-            amountToCredit = parsedAmount;
-            deposit.amount = parsedAmount;
+            amountToCredit = normalizedAmount;
+            deposit.amount = normalizedAmount;
         }
 
         deposit.status = "approved";
@@ -237,6 +241,32 @@ export const approveDeposit = async (req, res) => {
             );
         }
 
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_deposit_approved",
+                targetModel: "Deposit",
+                targetId: deposit._id,
+                targetUser: deposit.user._id,
+                details: {
+                    depositId: deposit._id.toString(),
+                    amountCredited: amountToCredit,
+                    paymentMethod: deposit.paymentMethod,
+                },
+                metadata: {
+                    depositId: deposit._id.toString(),
+                    amountCredited: amountToCredit,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for deposit approval ${deposit._id}: ${auditErr.message}`);
+        }
+
         // Real-time: notify admins of deposit update
         socketService.notifyAdminsDepositUpdate(deposit);
         // Real-time: notify user of approval
@@ -257,7 +287,7 @@ export const approveDeposit = async (req, res) => {
             data: deposit
         });
     } catch (error) {
-        console.error("Approve deposit error:", error);
+        logger.error(`Approve deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -296,7 +326,7 @@ export const rejectDeposit = async (req, res) => {
 
         return res.status(200).json({ message: "Deposit rejected", data: deposit });
     } catch (error) {
-        console.error("Reject deposit error:", error);
+        logger.error(`Reject deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };

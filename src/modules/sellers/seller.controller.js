@@ -4,6 +4,7 @@ import Listing from "../listings/listing.model.js";
 import Chat from "../chats/chat.model.js";
 import Notification from "../notifications/notification.model.js";
 import { notifyAllAdmins } from "../notifications/notificationHelper.js";
+import logger from "../../utils/logger.js";
 
 // Submit seller request
 export const submitSellerRequest = async (req, res) => {
@@ -88,7 +89,7 @@ export const submitSellerRequest = async (req, res) => {
 
     return res.status(201).json({ message: "Seller request submitted successfully", data: safeRequest });
   } catch (error) {
-    console.error("Submit seller request error:", error);
+    logger.error("Submit seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -109,7 +110,7 @@ export const getMySellerRequest = async (req, res) => {
 
     return res.status(200).json({ data: safeRequest });
   } catch (error) {
-    console.error("Get seller request error:", error);
+    logger.error("Get seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -140,7 +141,7 @@ export const getAllSellerRequests = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get all seller requests error:", error);
+    logger.error("Get all seller requests error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -211,7 +212,7 @@ export const getActiveSellers = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get active sellers error:", error);
+    logger.error("Get active sellers error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -267,7 +268,7 @@ export const getSellerDetail = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Get seller detail error:", error);
+    logger.error("Get seller detail error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -306,7 +307,7 @@ export const approveSellerRequest = async (req, res) => {
 
     return res.status(200).json({ message: "Seller request approved", data: request });
   } catch (error) {
-    console.error("Approve seller request error:", error);
+    logger.error("Approve seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -344,7 +345,7 @@ export const rejectSellerRequest = async (req, res) => {
 
     return res.status(200).json({ message: "Seller request rejected", data: request });
   } catch (error) {
-    console.error("Reject seller request error:", error);
+    logger.error("Reject seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

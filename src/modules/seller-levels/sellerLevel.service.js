@@ -2,6 +2,7 @@ import LevelConfig from "./levelConfig.model.js";
 import User from "../users/user.model.js";
 import Notification from "../notifications/notification.model.js";
 import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 // ─── Level Calculation Functions ──────────────────────────────────────────────
 
@@ -320,9 +321,10 @@ export async function getAllSellersWithLevels({ page = 1, limit = 20, search = "
   const filter = { isSeller: true };
 
   if (search) {
+    const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
     filter.$or = [
-      { username: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
+      { username: { $regex: safeSearch, $options: "i" } },
+      { email: { $regex: safeSearch, $options: "i" } },
     ];
   }
 

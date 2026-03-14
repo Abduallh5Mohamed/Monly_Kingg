@@ -11,6 +11,7 @@ const withdrawalSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 500,
+      max: 50000,
     },
     method: {
       type: String,

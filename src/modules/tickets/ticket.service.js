@@ -1,5 +1,6 @@
 import Ticket from "./ticket.model.js";
 import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 /**
  * Create a new support ticket
@@ -52,9 +53,10 @@ export async function getAllTickets({ status, userRole, priority, page = 1, limi
   if (priority && priority !== "all") filter.priority = priority;
 
   if (search) {
+    const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
     filter.$or = [
-      { ticketNumber: { $regex: search, $options: "i" } },
-      { subject: { $regex: search, $options: "i" } },
+      { ticketNumber: { $regex: safeSearch, $options: "i" } },
+      { subject: { $regex: safeSearch, $options: "i" } },
     ];
   }
 

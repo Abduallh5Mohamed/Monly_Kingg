@@ -11,6 +11,7 @@ import redis from '../config/redis.js';
 
 // Message length limits
 const MAX_MESSAGE_LENGTH = 5000;
+const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
 
 // Simple rate limiter for socket events
 const socketRateLimits = new Map(); // key: `${userId}:${event}` -> { count, resetAt }
@@ -26,6 +27,10 @@ function checkSocketRateLimit(userId, event, maxPerMinute = 30) {
     }
     entry.count++;
     return entry.count <= maxPerMinute;
+}
+
+function isValidUploadUrl(value) {
+    return typeof value === 'string' && UPLOAD_URL_PATTERN.test(value.trim());
 }
 // Cleanup stale entries every 5 minutes (clearable on shutdown)
 rateLimitCleanupTimer = setInterval(() => {
@@ -236,6 +241,7 @@ class SocketService {
     async handleSendMessage(socket, data) {
         try {
             const { chatId, content, type = 'text', fileUrl, tempId } = data;
+            const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
             if (!chatId || !content) {
                 return socket.emit('error', { message: 'Invalid message data' });
@@ -251,15 +257,35 @@ class SocketService {
                 return socket.emit('error', { message: 'You are sending messages too fast. Please slow down.' });
             }
 
-            // Enforce message length limit
-            if (typeof content !== 'string' || content.length > MAX_MESSAGE_LENGTH) {
-                return socket.emit('error', { message: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` });
-            }
+            let sanitizedContent;
+            let sanitizedFileUrl;
 
-            // Sanitize message content
-            const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
-            if (!sanitizedContent) {
-                return socket.emit('error', { message: 'Message content is empty after sanitization' });
+            if (attachmentTypes.has(type)) {
+                const attachmentUrl = typeof fileUrl === 'string' && fileUrl.trim()
+                    ? fileUrl.trim()
+                    : String(content).trim();
+
+                if (!isValidUploadUrl(attachmentUrl)) {
+                    return socket.emit('error', { message: 'Invalid file URL' });
+                }
+
+                sanitizedContent = attachmentUrl;
+                sanitizedFileUrl = attachmentUrl;
+            } else {
+                // Enforce message length limit for text-like messages
+                if (typeof content !== 'string' || content.length > MAX_MESSAGE_LENGTH) {
+                    return socket.emit('error', { message: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` });
+                }
+
+                // Sanitize message content
+                sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
+                if (!sanitizedContent) {
+                    return socket.emit('error', { message: 'Message content is empty after sanitization' });
+                }
+
+                sanitizedFileUrl = fileUrl
+                    ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim()
+                    : undefined;
             }
 
             const now = new Date();
@@ -274,7 +300,7 @@ class SocketService {
                         sender: socket.userId,
                         content: sanitizedContent,
                         type,
-                        fileUrl: fileUrl ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) : undefined,
+                        fileUrl: sanitizedFileUrl,
                         timestamp: now,
                         read: false,
                         delivered: true
@@ -324,7 +350,7 @@ class SocketService {
                 },
                 content: sanitizedContent,
                 type,
-                fileUrl: fileUrl || undefined,
+                fileUrl: sanitizedFileUrl,
                 timestamp: now,
                 read: false,
                 delivered: true

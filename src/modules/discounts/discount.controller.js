@@ -1,5 +1,7 @@
 import Discount from "./discount.model.js";
 import Listing from "../listings/listing.model.js";
+import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 /**
  * Create a discount on a listing (admin only)
@@ -38,7 +40,7 @@ export const createDiscount = async (req, res) => {
 
     res.status(201).json({ success: true, data: discount });
   } catch (error) {
-    console.error("Create discount error:", error);
+    logger.error("Create discount error:", error);
     res.status(500).json({ success: false, message: "Failed to create discount" });
   }
 };
@@ -76,7 +78,7 @@ export const getAllDiscounts = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("Get discounts error:", error);
+    logger.error("Get discounts error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discounts" });
   }
 };
@@ -106,7 +108,7 @@ export const updateDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Update discount error:", error);
+    logger.error("Update discount error:", error);
     res.status(500).json({ success: false, message: "Failed to update discount" });
   }
 };
@@ -125,7 +127,7 @@ export const cancelDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Cancel discount error:", error);
+    logger.error("Cancel discount error:", error);
     res.status(500).json({ success: false, message: "Failed to cancel discount" });
   }
 };
@@ -139,8 +141,9 @@ export const searchListings = async (req, res) => {
 
     const query = { status: "available" };
     if (q) {
+      const safeSearch = escapeRegex(String(q).trim().slice(0, 100));
       query.$or = [
-        { title: { $regex: q, $options: "i" } },
+        { title: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
@@ -154,7 +157,7 @@ export const searchListings = async (req, res) => {
 
     res.json({ success: true, data: listings });
   } catch (error) {
-    console.error("Search listings error:", error);
+    logger.error(`Search listings error: ${error.message}`);
     res.status(500).json({ success: false, message: "Failed to search listings" });
   }
 };
@@ -186,7 +189,7 @@ export const getDiscountStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get discount stats error:", error);
+    logger.error("Get discount stats error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch stats" });
   }
 };
@@ -220,7 +223,7 @@ export const getActiveDiscounts = async (req, res) => {
 
     res.json({ success: true, data: validDiscounts });
   } catch (error) {
-    console.error("Get active discounts error:", error);
+    logger.error("Get active discounts error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discounts" });
   }
 };
@@ -279,7 +282,7 @@ export const createSellerDiscount = async (req, res) => {
 
     res.status(201).json({ success: true, data: discount });
   } catch (error) {
-    console.error("Create seller discount error:", error);
+    logger.error("Create seller discount error:", error);
     res.status(500).json({ success: false, message: "Failed to create discount" });
   }
 };
@@ -305,7 +308,7 @@ export const getMyListingDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Get listing discount error:", error);
+    logger.error("Get listing discount error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discount" });
   }
 };
@@ -336,7 +339,7 @@ export const cancelMyListingDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Cancel listing discount error:", error);
+    logger.error("Cancel listing discount error:", error);
     res.status(500).json({ success: false, message: "Failed to cancel discount" });
   }
 };

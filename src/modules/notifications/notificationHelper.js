@@ -5,6 +5,7 @@
  */
 import Notification from "./notification.model.js";
 import User from "../users/user.model.js";
+import logger from "../../utils/logger.js";
 
 /**
  * Create a single notification for one user.
@@ -21,7 +22,7 @@ export async function createNotification({
     try {
         await Notification.create({ user: userId, type, title, message, relatedModel, relatedId, metadata });
     } catch (err) {
-        console.error("[notificationHelper] createNotification error:", err.message);
+        logger.error("[notificationHelper] createNotification error:", err.message);
     }
 }
 
@@ -44,6 +45,6 @@ export async function notifyAllAdmins({
             { ordered: false }
         );
     } catch (err) {
-        console.error("[notificationHelper] notifyAllAdmins error:", err.message);
+        logger.error("[notificationHelper] notifyAllAdmins error:", err.message);
     }
 }

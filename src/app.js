@@ -34,6 +34,7 @@ import compression from "compression";
 import passport from "./config/passport.js";
 import crypto from "crypto";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
+import logger from "./utils/logger.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -61,6 +62,14 @@ connectDB().then(() => {
 });
 
 const app = express();
+
+const parsedProxyHops = Number.parseInt(process.env.PROXY_HOPS || "0", 10);
+if (Number.isInteger(parsedProxyHops) && parsedProxyHops > 0) {
+  app.set("trust proxy", parsedProxyHops);
+  logger.info(`Express trust proxy enabled with ${parsedProxyHops} hop(s)`);
+} else {
+  app.set("trust proxy", false);
+}
 
 // Compression middleware for better performance
 app.use(compression({

@@ -1,4 +1,5 @@
 import Ad from "./ad.model.js";
+import logger from "../../utils/logger.js";
 
 /**
  * Create a new ad (admin only)
@@ -26,7 +27,7 @@ export const createAd = async (req, res) => {
 
     res.status(201).json({ success: true, data: ad });
   } catch (error) {
-    console.error("Create ad error:", error);
+    logger.error("Create ad error:", error);
     res.status(500).json({ success: false, message: "Failed to create ad" });
   }
 };
@@ -60,7 +61,7 @@ export const getAllAds = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("Get ads error:", error);
+    logger.error("Get ads error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch ads" });
   }
 };
@@ -80,7 +81,7 @@ export const updateAd = async (req, res) => {
 
     res.json({ success: true, data: ad });
   } catch (error) {
-    console.error("Update ad error:", error);
+    logger.error("Update ad error:", error);
     res.status(500).json({ success: false, message: "Failed to update ad" });
   }
 };
@@ -99,7 +100,7 @@ export const deleteAd = async (req, res) => {
 
     res.json({ success: true, message: "Ad deleted" });
   } catch (error) {
-    console.error("Delete ad error:", error);
+    logger.error("Delete ad error:", error);
     res.status(500).json({ success: false, message: "Failed to delete ad" });
   }
 };
@@ -131,7 +132,7 @@ export const getActiveAds = async (req, res) => {
 
     res.json({ success: true, data: ads });
   } catch (error) {
-    console.error("Get active ads error:", error);
+    logger.error("Get active ads error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch ads" });
   }
 };
@@ -175,7 +176,7 @@ export const getAdStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get ad stats error:", error);
+    logger.error("Get ad stats error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch stats" });
   }
 };

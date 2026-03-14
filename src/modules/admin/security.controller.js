@@ -5,6 +5,7 @@ import AuditLog from "./auditLog.model.js";
 import SiteSettings from "./siteSettings.model.js";
 import logger from "../../utils/logger.js";
 import mongoose from "mongoose";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 /* ============================================================================
  * HELPER: Create Audit Log
@@ -559,9 +560,10 @@ export const getAuditLogs = async (req, res) => {
 
     if (category !== "all") filter.category = category;
     if (search) {
+      const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
       filter.$or = [
-        { action: { $regex: search, $options: "i" } },
-        { details: { $regex: search, $options: "i" } }
+        { action: { $regex: safeSearch, $options: "i" } },
+        { details: { $regex: safeSearch, $options: "i" } }
       ];
     }
 

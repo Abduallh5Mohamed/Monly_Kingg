@@ -16,11 +16,9 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import redis from "../../config/redis.js";
 import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
-
-// Escape special regex characters to prevent ReDoS/injection via user input.
-const escapeRegex = (str) => String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {

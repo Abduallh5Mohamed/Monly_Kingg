@@ -1,5 +1,6 @@
 import User from "./user.model.js";
 import bcrypt from "bcrypt";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 export const createUser = async (data) => {
   // منع تحديد الدور عند إنشاء مستخدم
@@ -49,12 +50,14 @@ export const addXp = async (id, amount) => {
 
 export const searchUsers = async (query, excludeUserId) => {
   try {
+    const safeQuery = escapeRegex(String(query || '').trim().slice(0, 100));
+
     // Search by username or email (case-insensitive)
     const users = await User.find({
       _id: { $ne: excludeUserId }, // Exclude current user
       $or: [
-        { username: { $regex: query, $options: 'i' } },
-        { email: { $regex: query, $options: 'i' } }
+        { username: { $regex: safeQuery, $options: 'i' } },
+        { email: { $regex: safeQuery, $options: 'i' } }
       ]
     })
       .select('username email avatar role')

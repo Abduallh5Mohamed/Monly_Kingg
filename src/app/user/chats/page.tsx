@@ -558,6 +558,19 @@ export default function SupportPage() {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
+  const getSafeMessageUrl = (value?: string): string | null => {
+    if (!value || typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (trimmed.startsWith('/uploads/')) return trimmed;
+
+    try {
+      const parsed = new URL(trimmed, window.location.origin);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null;
+    } catch {
+      return null;
+    }
+  };
+
   const isPartnerOnline = (chat: Chat) => {
     const partner = getChatPartner(chat);
     if (!partner) return false;
@@ -895,10 +908,16 @@ export default function SupportPage() {
   };
 
   const renderMessageContent = (message: Message) => {
+    const safeUrl = getSafeMessageUrl(message.content);
+
     if (message.type === 'image') {
+      if (!safeUrl) {
+        return <p className="text-sm leading-relaxed text-white/70">Invalid image URL</p>;
+      }
+
       return (
         <img
-          src={message.content}
+          src={safeUrl}
           alt="Shared image"
           className="mt-2 max-w-xs rounded-xl border border-white/10"
         />
@@ -906,34 +925,41 @@ export default function SupportPage() {
     }
 
     if (message.type === 'video') {
+      if (!safeUrl) {
+        return <p className="text-sm leading-relaxed text-white/70">Invalid video URL</p>;
+      }
+
       return (
         <video
           controls
           className="mt-2 max-w-xs rounded-xl border border-white/10"
         >
-          <source src={message.content} />
+          <source src={safeUrl} />
         </video>
       );
     }
 
     if (message.type === 'audio') {
+      if (!safeUrl) {
+        return <p className="text-sm leading-relaxed text-white/70">Invalid audio URL</p>;
+      }
+
       return (
         <audio controls className="mt-2 w-full">
-          <source src={message.content} />
+          <source src={safeUrl} />
         </audio>
       );
     }
 
     if (message.type === 'file') {
-      const isLink = /^https?:\/\//i.test(message.content);
-      const displayName = message.content.split('/').pop() || 'Attachment';
+      const displayName = (safeUrl || message.content).split('/').pop() || 'Attachment';
 
       return (
         <a
-          href={isLink ? message.content : undefined}
-          target={isLink ? '_blank' : undefined}
-          rel={isLink ? 'noopener noreferrer' : undefined}
-          className={`mt-2 inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 ${isLink ? 'hover:text-cyan-100' : ''
+          href={safeUrl || '#'}
+          target={safeUrl ? '_blank' : undefined}
+          rel={safeUrl ? 'noopener noreferrer' : undefined}
+          className={`mt-2 inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 ${safeUrl ? 'hover:text-cyan-100' : ''
             }`}
         >
           <Paperclip className="h-4 w-4" />

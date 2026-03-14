@@ -1,6 +1,7 @@
 import Upload from "./upload.model.js";
 import path from "path";
 import fs from "fs/promises";
+import logger from "../../utils/logger.js";
 
 /**
  * رفع ملف جديد
@@ -49,7 +50,7 @@ export const uploadFile = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    logger.error("Upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to upload file"
@@ -98,7 +99,7 @@ export const getUserUploads = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Get uploads error:", error);
+    logger.error("Get uploads error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch uploads"
@@ -133,7 +134,7 @@ export const getUploadById = async (req, res) => {
       data: upload
     });
   } catch (error) {
-    console.error("Get upload error:", error);
+    logger.error("Get upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch upload"
@@ -169,7 +170,7 @@ export const deleteUpload = async (req, res) => {
     try {
       await fs.unlink(upload.filePath);
     } catch (err) {
-      console.error("File deletion error:", err);
+      logger.error("File deletion error:", err);
     }
 
     res.json({
@@ -177,7 +178,7 @@ export const deleteUpload = async (req, res) => {
       message: "Upload deleted successfully"
     });
   } catch (error) {
-    console.error("Delete upload error:", error);
+    logger.error("Delete upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to delete upload"
@@ -215,7 +216,7 @@ export const updateUploadStatus = async (req, res) => {
       data: upload
     });
   } catch (error) {
-    console.error("Update status error:", error);
+    logger.error("Update status error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to update upload status"
@@ -243,7 +244,7 @@ export const getRelatedUploads = async (req, res) => {
       data: uploads
     });
   } catch (error) {
-    console.error("Get related uploads error:", error);
+    logger.error("Get related uploads error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch related uploads"

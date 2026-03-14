@@ -3,18 +3,22 @@ import User from "../users/user.model.js";
 import cacheService from '../../services/cacheService.js';
 import socketService from '../../services/socketService.js';
 import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
+import AuditLog from '../admin/auditLog.model.js';
+import logger from '../../utils/logger.js';
 
 export const submitWithdrawal = async (req, res) => {
   try {
     const userId = req.user._id;
     const { amount, method, countryCode, phoneNumber } = req.body;
+    const parsedAmount = Number(amount);
+    const normalizedAmount = Math.round(parsedAmount * 100) / 100;
 
     if (!amount || !method || !countryCode || !phoneNumber) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (amount < 500) {
-      return res.status(400).json({ message: "Minimum withdrawal amount is 500 LE" });
+    if (!Number.isFinite(parsedAmount) || normalizedAmount < 500 || normalizedAmount > 50000) {
+      return res.status(400).json({ message: "Withdrawal amount must be between 500 and 50000 LE" });
     }
 
     if (!/^\d{11}$/.test(phoneNumber)) {
@@ -32,15 +36,15 @@ export const submitWithdrawal = async (req, res) => {
 
     const userBalance = user.wallet?.balance || 0;
 
-    if (amount > userBalance) {
+    if (normalizedAmount > userBalance) {
       return res.status(400).json({
-        message: `Insufficient balance. Your balance is ${userBalance} LE, but you requested ${amount} LE`
+        message: `Insufficient balance. Your balance is ${userBalance} LE, but you requested ${normalizedAmount} LE`
       });
     }
 
     const withdrawal = new Withdrawal({
       user: userId,
-      amount,
+      amount: normalizedAmount,
       method,
       countryCode,
       phoneNumber,
@@ -66,7 +70,7 @@ export const submitWithdrawal = async (req, res) => {
 
     return res.status(201).json({ message: "Withdrawal request submitted successfully", data: withdrawal });
   } catch (error) {
-    console.error("Submit withdrawal error:", error);
+    logger.error(`Submit withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -90,7 +94,7 @@ export const getMyWithdrawals = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get my withdrawals error:", error);
+    logger.error(`Get my withdrawals error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -118,7 +122,7 @@ export const getAllWithdrawals = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get all withdrawals error:", error);
+    logger.error(`Get all withdrawals error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -165,6 +169,32 @@ export const approveWithdrawal = async (req, res) => {
     withdrawal.reviewedAt = new Date();
     await withdrawal.save();
 
+    try {
+      await AuditLog.create({
+        admin: req.user._id,
+        performedBy: req.user._id,
+        category: "user_management",
+        action: "wallet_withdrawal_approved",
+        targetModel: "Withdrawal",
+        targetId: withdrawal._id,
+        targetUser: withdrawal.user._id,
+        details: {
+          withdrawalId: withdrawal._id.toString(),
+          amount: withdrawal.amount,
+          method: withdrawal.method,
+        },
+        metadata: {
+          withdrawalId: withdrawal._id.toString(),
+          amount: withdrawal.amount,
+        },
+        ip: req.ip,
+        userAgent: req.get("User-Agent"),
+        timestamp: new Date(),
+      });
+    } catch (auditErr) {
+      logger.error(`AuditLog failed for withdrawal approval ${withdrawal._id}: ${auditErr.message}`);
+    }
+
     // Notify admins of withdrawal update in real-time
     socketService.notifyAdminsWithdrawalUpdate(withdrawal);
 
@@ -183,7 +213,7 @@ export const approveWithdrawal = async (req, res) => {
 
     return res.status(200).json({ message: "Withdrawal approved", data: withdrawal });
   } catch (error) {
-    console.error("Approve withdrawal error:", error);
+    logger.error(`Approve withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -224,7 +254,7 @@ export const rejectWithdrawal = async (req, res) => {
 
     return res.status(200).json({ message: "Withdrawal rejected", data: withdrawal });
   } catch (error) {
-    console.error("Reject withdrawal error:", error);
+    logger.error(`Reject withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };

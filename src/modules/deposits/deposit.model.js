@@ -8,7 +8,7 @@ const depositSchema = new mongoose.Schema({
     enum: ["instapay", "vodafone_cash"],
     required: true
   },
-  amount: { type: Number, required: true }, // المبلغ المدفوع
+  amount: { type: Number, required: true, min: 500, max: 50000 }, // المبلغ المدفوع
 
   // Sender information
   senderFullName: { type: String, required: true }, // اسم صاحب المحفظة
