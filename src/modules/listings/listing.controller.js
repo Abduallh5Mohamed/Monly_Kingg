@@ -236,9 +236,41 @@ export const updateListing = async (req, res) => {
     if (req.body.title) listing.title = req.body.title;
     if (req.body.game) listing.game = req.body.game;
     if (req.body.description !== undefined) listing.description = req.body.description;
-    if (req.body.price) listing.price = req.body.price;
-    if (req.body.images) listing.images = req.body.images;
-    if (req.body.coverImage !== undefined) listing.coverImage = req.body.coverImage;
+    if (req.body.price !== undefined) {
+      const newPrice = Number(req.body.price);
+      if (!Number.isFinite(newPrice) || newPrice <= 0 || newPrice > 1000000) {
+        return res.status(400).json({ message: "Price must be between 1 and 1,000,000 LE" });
+      }
+      listing.price = newPrice;
+    }
+
+    if (req.body.images !== undefined) {
+      if (!Array.isArray(req.body.images)) {
+        return res.status(400).json({ message: "images must be an array" });
+      }
+
+      const validImages = req.body.images.filter(
+        (url) => typeof url === 'string' && url.startsWith('/uploads/') && !url.includes('..')
+      );
+
+      if (validImages.length !== req.body.images.length) {
+        return res.status(400).json({ message: "Invalid image URLs — only internal uploads allowed" });
+      }
+
+      listing.images = validImages.slice(0, 10);
+    }
+
+    if (req.body.coverImage !== undefined) {
+      if (
+        req.body.coverImage !== null &&
+        !(typeof req.body.coverImage === 'string' && req.body.coverImage.startsWith('/uploads/') && !req.body.coverImage.includes('..'))
+      ) {
+        return res.status(400).json({ message: "Invalid coverImage URL" });
+      }
+
+      listing.coverImage = req.body.coverImage;
+    }
+
     if (req.body.details) listing.details = req.body.details;
     // Only allow seller to set status to "available" (other transitions are system-controlled)
     if (req.body.status && req.body.status === 'available') listing.status = req.body.status;

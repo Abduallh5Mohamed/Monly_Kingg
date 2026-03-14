@@ -19,7 +19,7 @@ const discountSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1,
-      max: 99,
+      max: 90,
     },
     reason: {
       type: String,

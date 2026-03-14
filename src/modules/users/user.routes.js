@@ -65,7 +65,7 @@ router.post("/favorites", authMiddleware, userWriteLimiter, profileController.ad
 router.delete("/favorites/:listingId", authMiddleware, validateObjectId("listingId"), userWriteLimiter, profileController.removeFromFavorites);
 
 // Search users (must be authenticated)
-router.get("/search", authMiddleware, trackActivity, userController.searchUsers);
+router.get("/search", authMiddleware, userWriteLimiter, trackActivity, userController.searchUsers);
 
 // Get user - use cache first (Read-Through)
 router.get("/:id", authMiddleware, validateObjectId(), trackActivity, cacheUser, userController.getUser);

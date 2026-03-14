@@ -7,6 +7,7 @@ import { dirname } from "path";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { requireAdminOrMod } from "../../middlewares/roleMiddleware.js";
 import { validateObjectId } from "../../middlewares/validateObjectId.js";
+import { verifyAnyFileType } from "../../middlewares/verifyFileType.js";
 import * as ticketController from "./ticket.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -63,7 +64,7 @@ router.get("/admin/all", requireAdminOrMod, ticketController.adminGetAll);
 router.get("/:id", validateObjectId(), ticketController.getTicketById);
 
 // Add message to ticket (owner or admin) — supports up to 5 file attachments
-router.post("/:id/messages", validateObjectId(), upload.array("attachments", 5), ticketController.addMessage);
+router.post("/:id/messages", validateObjectId(), upload.array("attachments", 5), verifyAnyFileType, ticketController.addMessage);
 
 // Close ticket (owner or admin)
 router.post("/:id/close", validateObjectId(), ticketController.closeTicket);

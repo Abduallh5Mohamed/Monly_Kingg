@@ -9,9 +9,17 @@ import escapeRegex from "../../utils/escapeRegex.js";
 export const createDiscount = async (req, res) => {
   try {
     const { listingId, discountPercent, reason, endDate } = req.body;
+    const pct = parseFloat(discountPercent);
 
     if (!listingId || !discountPercent) {
       return res.status(400).json({ success: false, message: "Listing ID and discount percent are required" });
+    }
+
+    if (!Number.isFinite(pct) || pct < 1 || pct > 90) {
+      return res.status(400).json({
+        success: false,
+        message: "Discount percent must be between 1 and 90"
+      });
     }
 
     const listing = await Listing.findById(listingId);
@@ -26,13 +34,16 @@ export const createDiscount = async (req, res) => {
     );
 
     const originalPrice = listing.price;
-    const discountedPrice = parseFloat((originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    const discountedPrice = parseFloat((originalPrice * (1 - pct / 100)).toFixed(2));
+    if (discountedPrice <= 0) {
+      return res.status(400).json({ success: false, message: "Discount too large — price cannot be zero or negative" });
+    }
 
     const discount = await Discount.create({
       listing: listingId,
       originalPrice,
       discountedPrice,
-      discountPercent,
+      discountPercent: pct,
       reason: reason || "",
       endDate: endDate || null,
       createdBy: req.user._id,
@@ -96,9 +107,17 @@ export const updateDiscount = async (req, res) => {
       return res.status(404).json({ success: false, message: "Discount not found" });
     }
 
-    if (discountPercent) {
-      discount.discountPercent = discountPercent;
-      discount.discountedPrice = parseFloat((discount.originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    if (discountPercent !== undefined) {
+      const pct = parseFloat(discountPercent);
+      if (!Number.isFinite(pct) || pct < 1 || pct > 90) {
+        return res.status(400).json({ success: false, message: "Invalid discount percent" });
+      }
+
+      discount.discountPercent = pct;
+      discount.discountedPrice = parseFloat((discount.originalPrice * (1 - pct / 100)).toFixed(2));
+      if (discount.discountedPrice <= 0) {
+        return res.status(400).json({ message: "Discount too large — price cannot be zero or negative" });
+      }
     }
     if (reason !== undefined) discount.reason = reason;
     if (status) discount.status = status;
@@ -240,8 +259,8 @@ export const createSellerDiscount = async (req, res) => {
       return res.status(400).json({ success: false, message: "Listing ID and discount percent are required" });
     }
 
-    if (discountPercent < 1 || discountPercent > 99) {
-      return res.status(400).json({ success: false, message: "Discount percent must be between 1 and 99" });
+    if (discountPercent < 1 || discountPercent > 90) {
+      return res.status(400).json({ success: false, message: "Discount percent must be between 1 and 90" });
     }
 
     // Verify listing belongs to seller
@@ -262,6 +281,9 @@ export const createSellerDiscount = async (req, res) => {
 
     const originalPrice = listing.price;
     const discountedPrice = parseFloat((originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    if (discountedPrice <= 0) {
+      return res.status(400).json({ success: false, message: "Discount too large — price cannot be zero or negative" });
+    }
 
     // Calculate end date if duration is specified
     let endDate = null;

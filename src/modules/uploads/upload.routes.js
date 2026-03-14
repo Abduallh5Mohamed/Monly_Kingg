@@ -9,6 +9,7 @@ import { protect } from "../../middlewares/authMiddleware.js";
 import { requireAdmin } from "../../middlewares/roleMiddleware.js";
 import { uploadLimiter, userWriteLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
 import { verifyImageOrPdfFileType } from "../../middlewares/verifyFileType.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -85,34 +86,34 @@ router.post("/", protect, uploadLimiter, upload.single("file"), verifyImageOrPdf
  * يتطلب: authentication
  */
 router.get("/", protect, uploadController.getUserUploads);
-router.get("/user/:userId", protect, uploadController.getUserUploads);
+router.get("/user/:userId", protect, validateObjectId("userId"), uploadController.getUserUploads);
 
 /**
  * GET /api/v1/uploads/:id
  * جلب ملف واحد
  * يتطلب: authentication
  */
-router.get("/:id", protect, uploadController.getUploadById);
+router.get("/:id", protect, validateObjectId(), uploadController.getUploadById);
 
 /**
  * DELETE /api/v1/uploads/:id
  * حذف ملف
  * يتطلب: authentication
  */
-router.delete("/:id", protect, userWriteLimiter, uploadController.deleteUpload);
+router.delete("/:id", protect, validateObjectId(), userWriteLimiter, uploadController.deleteUpload);
 
 /**
  * PATCH /api/v1/uploads/:id/status
  * تحديث حالة الملف (للأدمن فقط)
  * يتطلب: authentication + admin role
  */
-router.patch("/:id/status", protect, requireAdmin, adminLimiter, uploadController.updateUploadStatus);
+router.patch("/:id/status", protect, validateObjectId(), requireAdmin, adminLimiter, uploadController.updateUploadStatus);
 
 /**
  * GET /api/v1/uploads/related/:model/:id
  * جلب الملفات المرتبطة بموديل معين
  * يتطلب: authentication
  */
-router.get("/related/:model/:id", protect, uploadController.getRelatedUploads);
+router.get("/related/:model/:id", protect, validateObjectId("id"), uploadController.getRelatedUploads);
 
 export default router;

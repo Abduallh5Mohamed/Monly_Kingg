@@ -60,7 +60,7 @@ export const searchUsers = async (query, excludeUserId) => {
         { email: { $regex: safeQuery, $options: 'i' } }
       ]
     })
-      .select('username email avatar role')
+      .select('username avatar role')
       .limit(10);
 
     return users;

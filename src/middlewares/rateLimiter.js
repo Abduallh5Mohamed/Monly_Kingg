@@ -432,7 +432,6 @@ export function createRateLimiter(policyName, overrides = {}, options = {}) {
         // Only rate-limit /api routes; skip Next.js pages, assets, etc.
         if (!req.path.startsWith('/api')) return next();
         if (req.path.includes('/socket.io/')) return next();
-        if (req.path === '/health') return next();
         // Additional whitelisted paths for development
         if (req.path.startsWith('/_next/')) return next();
         if (req.path.startsWith('/uploads/')) return next();
@@ -525,7 +524,6 @@ export function createRateLimiter(policyName, overrides = {}, options = {}) {
 // Global (applied in server.js — the ONLY limiter for read endpoints)
 // Whitelist: paths that should NOT be rate limited
 const WHITELIST_PATHS = [
-  '/api/health',
   '/api/ping',
   '/.well-known',
   '/uploads',

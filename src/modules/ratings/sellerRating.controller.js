@@ -1,6 +1,7 @@
 import SellerRating from "./sellerRating.model.js";
 import CommentPenalty from "./commentPenalty.model.js";
 import User from "../users/user.model.js";
+import Transaction from "../transactions/transaction.model.js";
 import { createNotification } from "../notifications/notificationHelper.js";
 import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
@@ -86,6 +87,20 @@ export const addRating = async (req, res) => {
       return res.status(400).json({ message: "This user is not a seller" });
     }
 
+    // Only verified buyers can rate a seller.
+    const completedTx = await Transaction.findOne({
+      buyer: raterId,
+      seller: sellerId,
+      status: "completed"
+    }).select("_id").lean();
+
+    if (!completedTx) {
+      return res.status(403).json({
+        message: "You can only rate sellers after completing a transaction with them",
+        code: "NO_COMPLETED_TRANSACTION"
+      });
+    }
+
     // ── Profanity check on comment ──
     if (comment) {
       // Check if user is currently banned from commenting
@@ -143,6 +158,7 @@ export const addRating = async (req, res) => {
         ? "Rating added successfully"
         : "Rating updated successfully",
       data: result,
+      transactionId: completedTx._id
     });
   } catch (error) {
     // Duplicate key race condition
