@@ -24,6 +24,11 @@ const validateContactInfo = (contact) => {
 export const submitDeposit = async (req, res) => {
     try {
         const userId = req.user._id;
+        // SECURITY FIX: Idempotency key prevents race-condition double submission.
+        const rawIdempotencyHeader = req.headers["x-idempotency-key"];
+        const idempotencyKey = typeof rawIdempotencyHeader === "string" && rawIdempotencyHeader.trim()
+            ? rawIdempotencyHeader.trim()
+            : null;
         const {
             paymentMethod,
             amount,
@@ -74,6 +79,22 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Receipt image is required" });
         }
 
+        if (idempotencyKey) {
+            const existing = await Deposit.findOne({ idempotencyKey }).lean();
+            if (existing) {
+                return res.status(200).json({
+                    message: "Already submitted",
+                    data: {
+                        _id: existing._id,
+                        amount: existing.amount,
+                        paymentMethod: existing.paymentMethod,
+                        status: existing.status,
+                        createdAt: existing.createdAt,
+                    }
+                });
+            }
+        }
+
         const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         if (!allowedMimeTypes.includes(req.file.mimetype)) {
             return res.status(400).json({ message: "Only JPEG, PNG, and WEBP images are allowed" });
@@ -104,10 +125,30 @@ export const submitDeposit = async (req, res) => {
             receiptImage: receiptImagePath,
             gameTitle: sanitizedGameTitle,
             paidAmount: normalizedAmount,
-            creditedAmount: normalizedAmount
+            creditedAmount: normalizedAmount,
+            idempotencyKey: idempotencyKey || undefined,
         });
 
-        await deposit.save();
+        try {
+            await deposit.save();
+        } catch (saveErr) {
+            if (saveErr?.code === 11000 && idempotencyKey) {
+                const existing = await Deposit.findOne({ idempotencyKey }).lean();
+                if (existing) {
+                    return res.status(200).json({
+                        message: "Already submitted",
+                        data: {
+                            _id: existing._id,
+                            amount: existing.amount,
+                            paymentMethod: existing.paymentMethod,
+                            status: existing.status,
+                            createdAt: existing.createdAt,
+                        }
+                    });
+                }
+            }
+            throw saveErr;
+        }
 
         // Populate user details for socket notification
         await deposit.populate('user', 'username email phone profile.province profile.phone');

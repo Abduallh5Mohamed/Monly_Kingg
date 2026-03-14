@@ -50,10 +50,33 @@ const verifyByMagicBytes = (allowedTypes, invalidMessage) => async (req, res, ne
   }
 };
 
-export const verifyImageFileType = verifyByMagicBytes(
-  IMAGE_MIME_TYPES,
-  "Invalid file type. Only images are allowed."
-);
+export const verifyImageFileType = async (req, res, next) => {
+  // SECURITY FIX: Validate all uploaded files (single, array, and fields-object uploads).
+  const files = getUploadedFiles(req);
+  if (!files.length) return next();
+
+  try {
+    for (const file of files) {
+      const buffer = await fsp.readFile(file.path);
+      const detected = await fileTypeFromBuffer(buffer);
+      if (!detected || !IMAGE_MIME_TYPES.includes(detected.mime)) {
+        await removeFiles(files);
+        return res.status(400).json({
+          success: false,
+          message: "Invalid file type. Only images are allowed.",
+        });
+      }
+    }
+
+    return next();
+  } catch (_error) {
+    await removeFiles(files);
+    return res.status(400).json({
+      success: false,
+      message: "File validation failed",
+    });
+  }
+};
 
 export const verifyImageOrPdfFileType = verifyByMagicBytes(
   IMAGE_AND_PDF_MIME_TYPES,

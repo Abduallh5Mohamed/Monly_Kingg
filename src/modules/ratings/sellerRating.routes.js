@@ -6,6 +6,7 @@ import {
   deleteRating,
   getMyRatings,
 } from "./sellerRating.controller.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 
 const router = express.Router();
 
@@ -13,12 +14,12 @@ const router = express.Router();
 router.get("/my/given", authMiddleware, getMyRatings);
 
 // Add or update a rating for a seller
-router.post("/:sellerId", authMiddleware, addRating);
+router.post("/:sellerId", authMiddleware, validateObjectId("sellerId"), addRating);
 
 // Get all ratings for a seller (public)
-router.get("/:sellerId", getSellerRatings);
+router.get("/:sellerId", validateObjectId("sellerId"), getSellerRatings);
 
 // Delete own rating
-router.delete("/:ratingId", authMiddleware, deleteRating);
+router.delete("/:ratingId", authMiddleware, validateObjectId("ratingId"), deleteRating);
 
 export default router;

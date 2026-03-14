@@ -63,6 +63,17 @@ connectDB().then(() => {
 
 const app = express();
 
+const SAFE_UPLOAD_FILENAME_REGEX = /^[a-zA-Z0-9._-]+$/;
+
+function getSafeUploadFilename(rawFilename) {
+  const filename = path.basename(rawFilename || "");
+  // SECURITY FIX: Reject suspicious filenames even after basename normalization.
+  if (!SAFE_UPLOAD_FILENAME_REGEX.test(filename)) {
+    return null;
+  }
+  return filename;
+}
+
 const parsedProxyHops = Number.parseInt(process.env.PROXY_HOPS || "0", 10);
 if (Number.isInteger(parsedProxyHops) && parsedProxyHops > 0) {
   app.set("trust proxy", parsedProxyHops);
@@ -86,6 +97,22 @@ app.use(compression({
 // Payload limit
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// SECURITY FIX: Enforce accepted content types for state-changing requests.
+app.use((req, res, next) => {
+  if (["POST", "PUT", "PATCH"].includes(req.method) && req.headers["content-type"]) {
+    const contentType = req.headers["content-type"];
+    const isAllowed =
+      contentType.includes("application/json") ||
+      contentType.includes("multipart/form-data") ||
+      contentType.includes("application/x-www-form-urlencoded");
+
+    if (!isAllowed) {
+      return res.status(415).json({ message: "Unsupported Media Type" });
+    }
+  }
+  return next();
+});
 
 // NoSQL injection protection
 function sanitizeObject(obj) {
@@ -169,13 +196,44 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// Serve static files from uploads directory
-app.use('/uploads/listings', express.static(path.join(uploadsDir, 'listings')));
-app.use('/uploads/other', express.static(path.join(uploadsDir, 'other')));
+// SECURITY FIX: Serve uploads via explicit handlers with strict filename validation.
+app.get('/uploads/listings/:filename', (req, res) => {
+  const filename = getSafeUploadFilename(req.params.filename);
+  if (!filename) {
+    return res.status(400).json({ message: 'Invalid filename' });
+  }
+
+  const filePath = path.join(uploadsDir, 'listings', filename);
+  return res.sendFile(filePath, (err) => {
+    if (err) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+    return undefined;
+  });
+});
+
+// SECURITY FIX: Keep access controlled through filename validation path for "other" uploads.
+app.get('/uploads/other/:filename', (req, res) => {
+  const filename = getSafeUploadFilename(req.params.filename);
+  if (!filename) {
+    return res.status(400).json({ message: 'Invalid filename' });
+  }
+
+  const filePath = path.join(uploadsDir, 'other', filename);
+  return res.sendFile(filePath, (err) => {
+    if (err) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+    return undefined;
+  });
+});
 
 app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
   try {
-    const filename = path.basename(req.params.filename);
+    const filename = getSafeUploadFilename(req.params.filename);
+    if (!filename) {
+      return res.status(400).json({ message: 'Invalid filename' });
+    }
     const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
 
     if (!isAdmin) {
@@ -200,7 +258,10 @@ app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
 
 app.get('/uploads/tickets/:filename', authMiddleware, async (req, res) => {
   try {
-    const filename = path.basename(req.params.filename);
+    const filename = getSafeUploadFilename(req.params.filename);
+    if (!filename) {
+      return res.status(400).json({ message: 'Invalid filename' });
+    }
     const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
 
     if (!isAdmin) {
@@ -231,20 +292,27 @@ app.use(globalLimiter);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
-app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/admin/seller-levels", sellerLevelRoutes);
-app.use("/api/v1/seller", sellerRoutes);
+// SECURITY FIX: Enforce CSRF validation on sensitive admin mutations.
+app.use("/api/v1/admin", csrfProtection, adminRoutes);
+// SECURITY FIX: Keep direct admin seller-level mount protected as well.
+app.use("/api/v1/admin/seller-levels", csrfProtection, sellerLevelRoutes);
+// SECURITY FIX: Enforce CSRF validation on seller request mutations.
+app.use("/api/v1/seller", csrfProtection, sellerRoutes);
 app.use("/api/v1/listings", csrfProtection, listingRoutes);
 app.use("/api/v1/promotions", csrfProtection, promotionRoutes);
-app.use("/api/v1/notifications", notificationRoutes);
+// SECURITY FIX: Enforce CSRF validation on notification write routes.
+app.use("/api/v1/notifications", csrfProtection, notificationRoutes);
 app.use("/api/v1/games", gamesRoutes);
 app.use("/api/v1/ads", adsRoutes);
 app.use("/api/v1/discounts", csrfProtection, discountRoutes);
 app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
-app.use("/api/v1/transactions", transactionRoutes);
-app.use("/api/v1/tickets", ticketRoutes);
-app.use("/api/v1/ratings", sellerRatingRoutes);
+// SECURITY FIX: Enforce CSRF validation on transaction mutations.
+app.use("/api/v1/transactions", csrfProtection, transactionRoutes);
+// SECURITY FIX: Enforce CSRF validation on ticket mutations.
+app.use("/api/v1/tickets", csrfProtection, ticketRoutes);
+// SECURITY FIX: Enforce CSRF validation on rating mutations.
+app.use("/api/v1/ratings", csrfProtection, sellerRatingRoutes);
 
 // Convert invalid ObjectId cast failures into clean 400 responses.
 app.use((err, req, res, next) => {

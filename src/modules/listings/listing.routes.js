@@ -8,6 +8,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { listingWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
+import { verifyImageFileType } from "../../middlewares/verifyFileType.js";
 import {
   createListing,
   getMyListings,
@@ -109,6 +110,8 @@ router.post(
     { name: 'coverImage', maxCount: 1 }
   ]),
   handleMulterError,
+  // SECURITY FIX: Verify real file signature (magic bytes), not just declared MIME.
+  verifyImageFileType,
   invalidateCache(LISTING_CACHE_PATTERN),
   createListing
 );

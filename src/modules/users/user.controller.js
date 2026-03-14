@@ -45,20 +45,31 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    if (req.body.role !== undefined) {
-      return res.status(403).json({
-        message: "Forbidden: Role can only be changed by system administrators directly in the database"
-      });
-    }
+    // SECURITY FIX: Strict allowlist prevents privilege/financial field tampering.
+    const ALLOWED_USER_FIELDS = ["fullName", "phone", "address", "avatar", "bio"];
+    const ALLOWED_ADMIN_FIELDS = [...ALLOWED_USER_FIELDS, "username", "email"];
+    const isAdmin = req.user.role === "admin";
+    const allowedFields = isAdmin ? ALLOWED_ADMIN_FIELDS : ALLOWED_USER_FIELDS;
 
-    if (req.user.role !== "admin" && req.user._id.toString() !== req.params.id) {
+    if (!isAdmin && req.user._id.toString() !== req.params.id) {
       return res.status(403).json({
         message: "Forbidden: You can only update your own data"
       });
     }
 
+    const filteredBody = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        filteredBody[field] = req.body[field];
+      }
+    }
+
+    if (Object.keys(filteredBody).length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
+    }
+
     // Use Write-Through: updates DB first, then cache
-    const user = await cacheService.updateUserWithSync(req.params.id, req.body);
+    const user = await cacheService.updateUserWithSync(req.params.id, filteredBody);
 
     res.json({
       success: true,

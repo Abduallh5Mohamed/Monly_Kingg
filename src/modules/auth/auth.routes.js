@@ -16,7 +16,8 @@ router.get("/csrf-token", (req, res) => {
         maxAge: 15 * 60 * 1000,
         path: "/"
     });
-    res.json({ csrfToken });
+      // SECURITY FIX: Do not expose CSRF token in response body; cookie-only delivery.
+      res.json({ success: true, message: "CSRF token generated" });
 });
 
 router.post("/register", registerLimiter, authController.register);

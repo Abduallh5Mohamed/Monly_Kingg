@@ -19,6 +19,9 @@ const depositSchema = new mongoose.Schema({
   receiptImage: { type: String, required: true }, // صورة الوصل
   gameTitle: { type: String }, // اسم اللعبة (اختياري)
 
+  // SECURITY FIX: Optional idempotency key to prevent duplicate submission races.
+  idempotencyKey: { type: String, sparse: true, unique: true },
+
   // Legacy fields (for backward compatibility)
   accountName: String,
   walletNumber: String,
@@ -36,5 +39,7 @@ const depositSchema = new mongoose.Schema({
 
 depositSchema.index({ user: 1, status: 1 });
 depositSchema.index({ status: 1, createdAt: -1 });
+// SECURITY FIX: Keep a time-based index for duplicate-window checks and analytics.
+depositSchema.index({ user: 1, createdAt: -1 });
 
 export default mongoose.model("Deposit", depositSchema);

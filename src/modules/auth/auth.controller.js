@@ -339,13 +339,16 @@ export const resetPassword = async (req, res) => {
 
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
+    // SECURITY FIX: Forward current access token (if any) for post-reset blacklist.
+    const currentAccessToken = req.headers.authorization?.split(" ")[1] || req.cookies?.access_token || null;
 
     const result = await authService.resetPassword(
       value.email,
       value.token,
       value.newPassword,
       ip,
-      userAgent
+      userAgent,
+      currentAccessToken
     );
 
     res.status(200).json(result);

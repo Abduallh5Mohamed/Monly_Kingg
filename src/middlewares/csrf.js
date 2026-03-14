@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export default function csrfProtection(req, res, next) {
   const method = req.method;
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
@@ -24,11 +26,17 @@ export default function csrfProtection(req, res, next) {
     '/auth/reset-password',
     '/auth/csrf-token',
     '/auth/google',
-    '/auth/google/callback'
+    '/auth/google/callback',
+
+    // SECURITY FIX: Keep explicitly public operational endpoints whitelisted.
+    '/v1/admin/my-permissions',
+    '/admin/my-permissions'
   ];
 
+  const normalizedOriginalPath = (req.originalUrl || "").replace(/^\/api/, "");
+
   // Exact path match
-  if (publicPaths.includes(req.path)) {
+  if (publicPaths.includes(req.path) || publicPaths.includes(normalizedOriginalPath)) {
     return next();
   }
 
@@ -44,7 +52,14 @@ export default function csrfProtection(req, res, next) {
   const csrfCookie = req.cookies?.[process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN"];
   const csrfHeader = req.get("X-XSRF-TOKEN");
 
-  if (!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader) {
+  // SECURITY FIX: Use constant-time token comparison to reduce timing attack surface.
+  const isTokenMismatch =
+    !csrfCookie ||
+    !csrfHeader ||
+    csrfCookie.length !== csrfHeader.length ||
+    !crypto.timingSafeEqual(Buffer.from(csrfCookie), Buffer.from(csrfHeader));
+
+  if (isTokenMismatch) {
     return res.status(403).json({ message: "Invalid CSRF token" });
   }
 
