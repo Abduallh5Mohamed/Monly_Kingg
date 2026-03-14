@@ -1,7 +1,7 @@
 import express from "express";
 import { createAd, getAllAds, updateAd, deleteAd, getActiveAds, trackAdClick, getAdStats } from "./ad.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import { adClickLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 
@@ -15,9 +15,10 @@ const ADS_CACHE_PATTERN = 'api_cache:*:/api/v1/ads*';
 router.get("/active", cacheResponse(60), getActiveAds);
 router.post("/:id/click", adClickLimiter, trackAdClick);
 
-// Admin routes
+// Admin / Moderator routes (requires "ads" permission)
 router.use(authMiddleware);
-router.use(requireAdmin);
+router.use(requireAdminOrMod);
+router.use(requirePermission("ads"));
 router.use(adminLimiter);
 
 router.post("/", invalidateCache(ADS_CACHE_PATTERN), createAd);

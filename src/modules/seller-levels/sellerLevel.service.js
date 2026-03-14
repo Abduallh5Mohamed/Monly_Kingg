@@ -52,15 +52,15 @@ export function getRankForLevel(level, config) {
   const ranks = config.ranks || [];
   for (const rank of ranks) {
     if (level >= rank.minLevel && level <= rank.maxLevel) {
-      return { name: rank.name, color: rank.color, icon: rank.icon };
+      return { name: rank.name, color: rank.color, icon: rank.icon, commissionPercent: rank.commissionPercent ?? null };
     }
   }
   // Fallback — above max rank
   if (ranks.length > 0) {
     const lastRank = ranks[ranks.length - 1];
-    return { name: lastRank.name, color: lastRank.color, icon: lastRank.icon };
+    return { name: lastRank.name, color: lastRank.color, icon: lastRank.icon, commissionPercent: lastRank.commissionPercent ?? null };
   }
-  return { name: "Starter", color: "#9CA3AF", icon: "🌱" };
+  return { name: "Starter", color: "#9CA3AF", icon: "🌱", commissionPercent: null };
 }
 
 // ─── Service Functions ────────────────────────────────────────────────────────
@@ -142,8 +142,8 @@ export async function updateSellerLevel(userId) {
           await Notification.create({
             user: userId,
             type: "level_up",
-            title: `🎉 ارتقيت لليفل ${newLevel}!`,
-            message: `مبروك! وصلت ليفل ${newLevel} (${rank.icon} ${rank.name}). كمّل بيعك عشان توصل لليفل اللي بعده!`,
+            title: `🎉 You reached Level ${newLevel}!`,
+            message: `Congratulations! You reached Level ${newLevel} (${rank.icon} ${rank.name}). Keep selling to reach the next level!`,
             relatedModel: "User",
             relatedId: userId,
             metadata: { newLevel, rank: rank.name, totalVolume },

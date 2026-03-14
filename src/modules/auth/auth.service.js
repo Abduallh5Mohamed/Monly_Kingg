@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 import User from "../users/user.model.js";
 import { sendEmail } from "../../utils/email.js";
+import {
+  buildEmailLayout,
+  buildLoginAlertEmail,
+  buildVerificationEmail,
+} from "../../utils/emailTemplates.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 
@@ -86,7 +91,12 @@ export const register = async ({ email, username, password }) => {
 
     // Try to send email (but don't fail registration if email fails)
     try {
-      await sendEmail(user.email, "Email Verification", `Your code: ${rawCode}`);
+      const verificationEmail = buildVerificationEmail({
+        username: user.username,
+        code: rawCode,
+        expiresInMinutes: 10,
+      });
+      await sendEmail(user.email, "Verify your MonlyKing account", verificationEmail);
       logger.info(`📧 Verification email sent to ${email}`);
     } catch (emailError) {
       logger.warn(`⚠️ Email sending failed for ${email}: ${emailError.message}`);
@@ -186,7 +196,12 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
     user.authLogs.push({ action: "resend_code", success: true, ip, userAgent });
     await user.save();
 
-    await sendEmail(user.email, "Email Verification", `Your new verification code is: ${rawCode}`);
+    const verificationEmail = buildVerificationEmail({
+      username: user.username,
+      code: rawCode,
+      expiresInMinutes: 10,
+    });
+    await sendEmail(user.email, "Your new MonlyKing verification code", verificationEmail);
     logger.info(`Verification code resent to: ${email}`);
     return { message: "Verification code resent successfully" };
   } catch (err) {
@@ -269,6 +284,21 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 
     const totalTime = Date.now() - startTime;
     logger.info(`✅ [LOGIN] ${email} (${totalTime}ms)`);
+
+    Promise.resolve(
+      sendEmail(
+        user.email,
+        "MonlyKing login alert",
+        buildLoginAlertEmail({
+          username: user.username,
+          loginAt: new Date(),
+          ip,
+          userAgent,
+        })
+      )
+    ).catch((emailErr) => {
+      logger.warn(`⚠️ Login alert email failed for ${user.email}: ${emailErr.message}`);
+    });
 
     return { accessToken, refreshToken: refreshTokenString };
   } catch (err) {
@@ -418,14 +448,19 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 
     // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(normalizedEmail)}`;
-    const emailContent = `
-      <h2>Password Reset Request</h2>
-      <p>You requested a password reset for your account.</p>
-      <p>Click the link below to reset your password:</p>
-      <a href="${resetLink}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
-      <p>This link will expire in 15 minutes.</p>
-      <p>If you didn't request this, please ignore this email.</p>
-    `;
+    const emailContent = buildEmailLayout({
+      title: "Password Reset Request",
+      subtitle: "Reset your MonlyKing password",
+      contentHtml: `
+        <p style="margin:0 0 12px;font-size:15px;color:#d1d5db;">You requested a password reset for your account.</p>
+        <p style="margin:0 0 16px;font-size:15px;color:#d1d5db;">Use the secure button below to set a new password:</p>
+        <p style="margin:0 0 16px;">
+          <a href="${resetLink}" style="display:inline-block;background:#2563eb;color:#ffffff;padding:10px 18px;text-decoration:none;border-radius:8px;font-weight:700;">Reset Password</a>
+        </p>
+        <p style="margin:0 0 10px;font-size:13px;color:#9ca3af;">This link expires in 15 minutes.</p>
+        <p style="margin:0;font-size:13px;color:#94a3b8;">If you did not request this, please ignore this email.</p>
+      `,
+    });
 
     await sendEmail(user.email, "Password Reset Request", emailContent);
 
@@ -534,12 +569,15 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
     await user.save();
 
     // Send confirmation email
-    const confirmationContent = `
-      <h2>Password Reset Successful</h2>
-      <p>Your password has been successfully reset.</p>
-      <p>If you didn't make this change, please contact support immediately.</p>
-      <p>For security, all your active sessions have been logged out.</p>
-    `;
+    const confirmationContent = buildEmailLayout({
+      title: "Password Reset Successful",
+      subtitle: "Your account credentials were updated",
+      contentHtml: `
+        <p style="margin:0 0 12px;font-size:15px;color:#d1d5db;">Your password has been successfully reset.</p>
+        <p style="margin:0 0 12px;font-size:14px;color:#9ca3af;">For your security, all active sessions were logged out.</p>
+        <p style="margin:0;font-size:14px;color:#cbd5e1;">If you did not make this change, contact support immediately.</p>
+      `,
+    });
 
     await sendEmail(user.email, "Password Reset Successful", confirmationContent);
 

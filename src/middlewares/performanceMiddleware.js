@@ -16,13 +16,19 @@ const SLOW_LOG_INTERVAL = 10_000;
 export const responseTimeTracker = (req, res, next) => {
     const startTime = Date.now();
     const originalEnd = res.end;
+    let ended = false;
 
     res.end = function (...args) {
+        if (ended) return originalEnd.apply(res, args);
+        ended = true;
+
         const duration = Date.now() - startTime;
 
-        if (!res.headersSent) {
-            res.setHeader('X-Response-Time', `${duration}ms`);
-        }
+        try {
+            if (!res.headersSent) {
+                res.setHeader('X-Response-Time', `${duration}ms`);
+            }
+        } catch (_) { /* headers already sent */ }
 
         // Log slow requests (> 1000ms), deduplicated per path
         if (duration > 1000) {

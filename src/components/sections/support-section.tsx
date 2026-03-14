@@ -31,6 +31,7 @@ const supportFormSchema = z.object({
 
 export function SupportSection() {
   const { toast } = useToast();
+  const supportEmail = 'monlykingstore@gmail.com';
   const form = useForm<z.infer<typeof supportFormSchema>>({
     resolver: zodResolver(supportFormSchema),
     defaultValues: {
@@ -41,10 +42,15 @@ export function SupportSection() {
   });
 
   function onSubmit(values: z.infer<typeof supportFormSchema>) {
-    console.log(values);
+    const subject = encodeURIComponent(`MonlyKing Support Request - ${values.name}`);
+    const body = encodeURIComponent(
+      `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`
+    );
+    window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
+
     toast({
       title: 'Message Sent!',
-      description: 'Our support team will get back to you shortly.',
+      description: `Your email app was opened to send this message to ${supportEmail}.`,
       variant: 'default',
     });
     form.reset();
@@ -64,6 +70,7 @@ export function SupportSection() {
             <p className="text-muted-foreground mt-2 max-w-md mx-auto">
               Our support team is always on standby, ready to assist you 24/7. Let us know how we can help.
             </p>
+            <p className="text-sm text-blue-300 mt-2">Support Email: {supportEmail}</p>
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

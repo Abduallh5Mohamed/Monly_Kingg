@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import { depositLimiter, uploadLimiter, adminLimiter } from "../../middlewares/rateLimiter.js";
 import {
     submitDeposit,
@@ -54,8 +54,8 @@ const upload = multer({
 router.post("/request", depositLimiter, uploadLimiter, authMiddleware, upload.single("receipt"), submitDeposit);
 router.get("/my-requests", authMiddleware, getMyDeposits);
 
-router.get("/all", adminLimiter, authMiddleware, requireAdmin, getAllDeposits);
-router.put("/:id/approve", adminLimiter, authMiddleware, requireAdmin, approveDeposit);
-router.put("/:id/reject", adminLimiter, authMiddleware, requireAdmin, rejectDeposit);
+router.get("/all", adminLimiter, authMiddleware, requireAdminOrMod, requirePermission("orders"), getAllDeposits);
+router.put("/:id/approve", adminLimiter, authMiddleware, requireAdminOrMod, requirePermission("orders"), approveDeposit);
+router.put("/:id/reject", adminLimiter, authMiddleware, requireAdminOrMod, requirePermission("orders"), rejectDeposit);
 
 export default router;

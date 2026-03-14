@@ -8,7 +8,7 @@ import {
     Wallet, TrendingUp, Clock, Calendar, Globe, Monitor, Activity,
     CreditCard, Package, AlertTriangle, CheckCircle2, XCircle, Eye,
     Star, Hash, Loader2, Image as ImageIcon, Fingerprint, Ban, ArrowRightLeft,
-    LogIn, LogOut, Key, RefreshCw
+    LogIn, LogOut, Key, RefreshCw, ArrowUpCircle, ArrowDownCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -30,6 +30,11 @@ interface DepositRecord {
     _id: string; amount: number; status: string; paymentMethod: string;
     senderFullName: string; senderPhoneOrEmail: string; depositDate: string;
     receiptImage: string; createdAt: string; adminNote?: string;
+}
+interface WithdrawRecord {
+    _id: string; amount: number; method: string; countryCode: string;
+    phoneNumber: string; status: string; rejectionReason?: string;
+    reviewedBy?: { username: string }; reviewedAt?: string; createdAt: string;
 }
 interface TxRecord {
     _id: string; amount: number; status: string; createdAt: string;
@@ -57,6 +62,7 @@ interface UserDetail {
     sellerRequest?: SellerRequest;
     transactions: { asBuyer: number; asSeller: number; disputed: number; recent: TxRecord[] };
     deposits: { stats: { _id: string; count: number; total: number }[]; recent: DepositRecord[] };
+    withdrawals: { stats: { _id: string; count: number; total: number }[]; recent: WithdrawRecord[] };
     listings: { total: number; active: number; sold: number };
     badges: { badgeId: string; earnedAt: string }[];
 }
@@ -86,7 +92,7 @@ export default function AdminUserDetailPage() {
     const [error, setError] = useState('');
     const [imageModal, setImageModal] = useState<string | null>(null);
     const [showAllLogs, setShowAllLogs] = useState(false);
-    const [activeTab, setActiveTab] = useState<'overview' | 'security' | 'transactions' | 'deposits'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'security' | 'transactions' | 'deposits' | 'withdrawals'>('overview');
 
     const fetchUser = useCallback(async () => {
         try {
@@ -140,6 +146,7 @@ export default function AdminUserDetailPage() {
         { key: 'security' as const, label: 'Security & IPs' },
         { key: 'transactions' as const, label: 'Transactions' },
         { key: 'deposits' as const, label: 'Deposits' },
+        { key: 'withdrawals' as const, label: 'Withdrawals' },
     ];
 
     return (
@@ -588,6 +595,91 @@ export default function AdminUserDetailPage() {
                             </div>
                         ) : (
                             <p className="text-white/30 text-sm">No deposits yet</p>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'withdrawals' && (
+                <div className="space-y-6">
+                    {/* Withdrawal Summary */}
+                    {(() => {
+                        const wApproved = user.withdrawals.stats.find(s => s._id === 'approved');
+                        const wPending = user.withdrawals.stats.find(s => s._id === 'pending');
+                        const wRejected = user.withdrawals.stats.find(s => s._id === 'rejected');
+                        return (
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-bold text-green-400">{wApproved?.total || 0} <span className="text-sm font-normal">EGP</span></p>
+                                    <p className="text-xs text-white/40 mt-1">{wApproved?.count || 0} Approved</p>
+                                </div>
+                                <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-bold text-yellow-400">{wPending?.total || 0} <span className="text-sm font-normal">EGP</span></p>
+                                    <p className="text-xs text-white/40 mt-1">{wPending?.count || 0} Pending</p>
+                                </div>
+                                <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-bold text-red-400">{wRejected?.total || 0} <span className="text-sm font-normal">EGP</span></p>
+                                    <p className="text-xs text-white/40 mt-1">{wRejected?.count || 0} Rejected</p>
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Withdrawal List */}
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
+                        <h3 className="text-sm font-medium text-white/40 flex items-center gap-2 mb-4">
+                            <ArrowUpCircle className="w-4 h-4" /> Withdrawal Requests ({user.withdrawals.recent.length})
+                        </h3>
+                        {user.withdrawals.recent.length > 0 ? (
+                            <div className="space-y-3">
+                                {user.withdrawals.recent.map(w => (
+                                    <div key={w._id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center">
+                                                    <ArrowUpCircle className="w-5 h-5 text-orange-400" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-lg font-bold text-white">{w.amount} EGP</p>
+                                                    <p className="text-[10px] text-white/30 font-mono">{w._id.slice(-10)}</p>
+                                                </div>
+                                            </div>
+                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border ${w.status === 'approved' ? 'text-green-400 bg-green-400/10 border-green-400/30'
+                                                    : w.status === 'rejected' ? 'text-red-400 bg-red-400/10 border-red-400/30'
+                                                        : 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30'
+                                                }`}>{w.status.toUpperCase()}</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 text-xs">
+                                            <div>
+                                                <span className="text-white/30">Method</span>
+                                                <p className="text-white/70 capitalize">{w.method?.replace('_', ' ')}</p>
+                                            </div>
+                                            <div>
+                                                <span className="text-white/30">Phone</span>
+                                                <p className="text-white/70 font-mono">{w.countryCode} {w.phoneNumber}</p>
+                                            </div>
+                                            <div>
+                                                <span className="text-white/30">Requested</span>
+                                                <p className="text-white/70">{fmtDate(w.createdAt)}</p>
+                                            </div>
+                                            {w.reviewedAt && (
+                                                <div>
+                                                    <span className="text-white/30">Reviewed by</span>
+                                                    <p className="text-white/70">{w.reviewedBy?.username || '—'} · {fmtDate(w.reviewedAt)}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {w.rejectionReason && (
+                                            <div className="mt-3 p-2.5 bg-red-500/5 border border-red-500/15 rounded-lg">
+                                                <p className="text-red-400 text-xs font-medium mb-0.5">Rejection Reason</p>
+                                                <p className="text-white/60 text-xs">{w.rejectionReason}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-white/30 text-sm">No withdrawal requests yet</p>
                         )}
                     </div>
                 </div>

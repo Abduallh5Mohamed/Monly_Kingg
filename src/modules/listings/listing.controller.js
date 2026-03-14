@@ -3,7 +3,11 @@ import User from "../users/user.model.js";
 import Game from "../games/game.model.js";
 import Discount from "../discounts/discount.model.js";
 import Campaign from "../campaigns/campaign.model.js";
+import Notification from "../notifications/notification.model.js";
+import socketService from "../../services/socketService.js";
 import rankingService from "../../services/rankingService.js";
+import cacheService from "../../services/cacheService.js";
+import redis from "../../config/redis.js";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -11,6 +15,23 @@ import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// ─── In-process campaign cache (avoids DB hit on every browse) ───
+let _campaignCache = { data: null, expiresAt: 0 };
+const CAMPAIGN_CACHE_TTL = 120_000; // 2 minutes
+
+async function getActiveCampaignsCached() {
+  const now = Date.now();
+  if (_campaignCache.data && now < _campaignCache.expiresAt) {
+    return _campaignCache.data;
+  }
+  const campaigns = await Campaign.find({
+    status: "active",
+    endDate: { $gte: new Date() },
+  }).lean();
+  _campaignCache = { data: campaigns, expiresAt: now + CAMPAIGN_CACHE_TTL };
+  return campaigns;
+}
 
 // Create a new listing (seller only)
 export const createListing = async (req, res) => {
@@ -32,6 +53,11 @@ export const createListing = async (req, res) => {
     // Validation
     if (!req.body.title || !req.body.game || !req.body.price) {
       return res.status(400).json({ message: "Title, game, and price are required" });
+    }
+
+    const price = Number(req.body.price);
+    if (!Number.isFinite(price) || price <= 0 || price > 1000000) {
+      return res.status(400).json({ message: "Price must be between 1 and 1,000,000" });
     }
 
     // Handle file uploads
@@ -82,6 +108,54 @@ export const createListing = async (req, res) => {
     });
 
     await listing.save();
+    // Check for active voluntary campaigns that cover this game and notify the seller
+    try {
+      const activeCampaigns = await Campaign.find({
+        status: "active",
+        type: "voluntary",
+        games: listing.game,
+        endDate: { $gt: new Date() },
+      }).lean();
+
+      for (const campaign of activeCampaigns) {
+        // Skip if seller was already notified for this campaign
+        const alreadyNotified = (campaign.notifiedSellers || []).some(
+          (id) => id.toString() === req.user._id.toString()
+        );
+        if (alreadyNotified) continue;
+
+        // Create notification
+        await Notification.create({
+          user: req.user._id,
+          type: "system",
+          title: "\uD83C\uDFF7\uFE0F Discount Campaign Available!",
+          message: `Your new listing "${listing.title}" qualifies for the "${campaign.title}" campaign — ${campaign.discountPercent}% off! Join from your account settings.`,
+          relatedModel: "Campaign",
+          relatedId: campaign._id,
+          metadata: {
+            campaignId: campaign._id,
+            campaignTitle: campaign.title,
+            discountPercent: campaign.discountPercent,
+            type: "discount_campaign_invite",
+          },
+        });
+
+        // Add seller to notifiedSellers
+        await Campaign.updateOne(
+          { _id: campaign._id },
+          { $addToSet: { notifiedSellers: req.user._id } }
+        );
+
+        // Real-time socket notification
+        socketService.sendToUser(req.user._id.toString(), "discount_campaign_invite", {
+          campaignId: campaign._id,
+          title: campaign.title,
+          discountPercent: campaign.discountPercent,
+        });
+      }
+    } catch (campaignErr) {
+      console.error("Campaign notification error (non-blocking):", campaignErr.message);
+    }
     console.log('✅ Listing created successfully:', listing._id);
     return res.status(201).json({ message: "Listing created successfully", data: listing });
   } catch (error) {
@@ -108,9 +182,13 @@ export const getMyListings = async (req, res) => {
       .populate("game", "name")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .limit(Number(limit))
+      .lean();
 
     const total = await Listing.countDocuments(filter);
+
+    // Enrich listings with campaign discounts
+    await enrichListingsWithCampaignDiscounts(listings);
 
     return res.status(200).json({
       data: listings,
@@ -160,7 +238,8 @@ export const updateListing = async (req, res) => {
     if (req.body.images) listing.images = req.body.images;
     if (req.body.coverImage !== undefined) listing.coverImage = req.body.coverImage;
     if (req.body.details) listing.details = req.body.details;
-    if (req.body.status) listing.status = req.body.status;
+    // Only allow seller to set status to "available" (other transitions are system-controlled)
+    if (req.body.status && req.body.status === 'available') listing.status = req.body.status;
 
     await listing.save();
 
@@ -219,23 +298,20 @@ async function enrichListingsWithCampaignDiscounts(listings) {
   const now = new Date();
   const listingIds = listings.map(l => l._id);
 
-  // 1) Fetch individual active discounts for all listings in one query
-  const discounts = await Discount.find({
-    listing: { $in: listingIds },
-    status: "active",
-    $or: [{ endDate: null }, { endDate: { $gte: now } }],
-  }).lean();
+  // Run DB queries in parallel: discounts + campaigns (campaigns are cached in-process)
+  const [discounts, activeCampaigns] = await Promise.all([
+    Discount.find({
+      listing: { $in: listingIds },
+      status: "active",
+      $or: [{ endDate: null }, { endDate: { $gte: now } }],
+    }).select('listing originalPrice discountedPrice discountPercent').lean(),
+    getActiveCampaignsCached(),
+  ]);
 
   const discountMap = {};
   for (const d of discounts) {
     discountMap[d.listing.toString()] = d;
   }
-
-  // 2) Fetch active campaigns (both types) in one query
-  const activeCampaigns = await Campaign.find({
-    status: "active",
-    endDate: { $gte: now },
-  }).lean();
 
   const voluntaryCampaigns = activeCampaigns.filter(c => c.type === "voluntary");
   const mandatoryCampaigns = activeCampaigns.filter(c => c.type === "mandatory");
@@ -323,14 +399,17 @@ export const browseListings = async (req, res) => {
     else if (sort === "price_desc") sortOption = { price: -1 };
 
     const skip = (Number(page) - 1) * Number(limit);
+    const pageLimit = Math.min(Number(limit), 50); // Cap max per page
 
+    // Run listing query + count in parallel
     const [listings, total] = await Promise.all([
       Listing.find(filter)
+        .select('title game seller price coverImage images details status createdAt')
         .populate("game", "name")
         .populate("seller", "username avatar")
         .sort(sortOption)
         .skip(skip)
-        .limit(Number(limit))
+        .limit(pageLimit)
         .lean(),
       Listing.countDocuments(filter),
     ]);
@@ -342,7 +421,7 @@ export const browseListings = async (req, res) => {
       data: listings,
       total,
       page: Number(page),
-      totalPages: Math.ceil(total / Number(limit)),
+      totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
     console.error("Browse listings error:", error);
@@ -350,10 +429,20 @@ export const browseListings = async (req, res) => {
   }
 };
 
-// ─── PUBLIC: Get all games for filter dropdown ───
+// ─── PUBLIC: Get all games for filter dropdown (cached) ───
 export const getGamesForFilter = async (req, res) => {
   try {
-    const games = await Game.find({}, "name").sort({ name: 1 });
+    // Try cache first
+    const cached = await cacheService.getCachedGames();
+    if (cached) {
+      return res.status(200).json({ data: cached });
+    }
+
+    const games = await Game.find({}, "name").sort({ name: 1 }).lean();
+
+    // Cache for 6 hours
+    cacheService.cacheGames(games).catch(() => { });
+
     return res.status(200).json({ data: games });
   } catch (error) {
     console.error("Get games error:", error);
@@ -380,16 +469,20 @@ export const getAllListings = async (req, res) => {
 
     const sortOrder = order === "asc" ? 1 : -1;
     const sortOptions = { [sort]: sortOrder };
+    const pageLimit = Math.min(Number(limit), 100); // Cap max per page
 
-    const listings = await Listing.find(filter)
-      .populate("game", "name slug icon")
-      .populate("seller", "username")
-      .sort(sortOptions)
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .lean();
-
-    const total = await Listing.countDocuments(filter);
+    // Run listing query + count in parallel
+    const [listings, total] = await Promise.all([
+      Listing.find(filter)
+        .select('title game seller price coverImage images details status createdAt')
+        .populate("game", "name slug icon")
+        .populate("seller", "username")
+        .sort(sortOptions)
+        .skip((page - 1) * pageLimit)
+        .limit(pageLimit)
+        .lean(),
+      Listing.countDocuments(filter),
+    ]);
 
     // Enrich listings with campaign discounts
     await enrichListingsWithCampaignDiscounts(listings);
@@ -399,7 +492,7 @@ export const getAllListings = async (req, res) => {
       data: listings,
       total,
       page: Number(page),
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
     console.error("Get all listings error:", error);
@@ -419,64 +512,52 @@ export const getListingById = async (req, res) => {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    // Check for active discount (individual listing discount)
+    // Fetch all discount sources in parallel instead of sequentially
     const now = new Date();
-    const activeDiscount = await Discount.findOne({
-      listing: req.params.id,
-      status: "active",
-      $or: [
-        { endDate: null },
-        { endDate: { $gte: now } },
-      ],
-    }).lean();
+    const listingGameId = listing.game?._id || listing.game;
 
-    // Add discount info to response if exists
+    const [activeDiscount, voluntaryCampaign, mandatoryCampaign] = await Promise.all([
+      Discount.findOne({
+        listing: req.params.id,
+        status: "active",
+        $or: [{ endDate: null }, { endDate: { $gte: now } }],
+      }).lean(),
+      Campaign.findOne({
+        type: "voluntary",
+        status: "active",
+        endDate: { $gte: now },
+        "participatingListings.listing": listing._id,
+      }).lean(),
+      Campaign.findOne({
+        type: "mandatory",
+        status: "active",
+        endDate: { $gte: now },
+        games: listingGameId,
+      }).lean(),
+    ]);
+
+    // Priority: individual discount > voluntary campaign > mandatory campaign
     if (activeDiscount) {
       listing.discount = {
         originalPrice: activeDiscount.originalPrice,
         discountedPrice: activeDiscount.discountedPrice,
         discountPercent: activeDiscount.discountPercent,
       };
-    } else {
-      // Check for active campaign discounts (voluntary or mandatory)
-      const listingGameId = listing.game?._id || listing.game;
-
-      // 1) Voluntary campaign — seller opted this listing in
-      const voluntaryCampaign = await Campaign.findOne({
-        type: "voluntary",
-        status: "active",
-        endDate: { $gte: now },
-        "participatingListings.listing": listing._id,
-      }).lean();
-
-      if (voluntaryCampaign) {
-        const discountPercent = voluntaryCampaign.discountPercent;
-        const discountedPrice = +(listing.price * (1 - discountPercent / 100)).toFixed(2);
-        listing.discount = {
-          originalPrice: listing.price,
-          discountedPrice,
-          discountPercent,
-        };
-      } else {
-        // 2) Mandatory campaign — admin forced discount on this game
-        const mandatoryCampaign = await Campaign.findOne({
-          type: "mandatory",
-          status: "active",
-          endDate: { $gte: now },
-          games: listingGameId,
-        }).lean();
-
-        if (mandatoryCampaign) {
-          const discountPercent = mandatoryCampaign.discountPercent;
-          const discountedPrice = +(listing.price * (1 - discountPercent / 100)).toFixed(2);
-          listing.discount = {
-            originalPrice: listing.price,
-            discountedPrice,
-            discountPercent,
-            isMandatory: true,
-          };
-        }
-      }
+    } else if (voluntaryCampaign) {
+      const discountPercent = voluntaryCampaign.discountPercent;
+      listing.discount = {
+        originalPrice: listing.price,
+        discountedPrice: +(listing.price * (1 - discountPercent / 100)).toFixed(2),
+        discountPercent,
+      };
+    } else if (mandatoryCampaign) {
+      const discountPercent = mandatoryCampaign.discountPercent;
+      listing.discount = {
+        originalPrice: listing.price,
+        discountedPrice: +(listing.price * (1 - discountPercent / 100)).toFixed(2),
+        discountPercent,
+        isMandatory: true,
+      };
     }
 
     // Track view (fire-and-forget, never blocks the response)

@@ -22,8 +22,8 @@ export function middleware(request: NextRequest) {
     try {
       const payloadBase64 = accessToken.split('.')[1];
       const payload = JSON.parse(atob(payloadBase64));
-      if (payload.role === 'admin') {
-        // Admin has no user account — redirect to admin dashboard
+      if (payload.role === 'admin' || payload.role === 'moderator') {
+        // Admin/Moderator has no user account — redirect to admin dashboard
         return NextResponse.redirect(new URL('/admin/dashboard', request.url));
       }
     } catch {
@@ -47,7 +47,7 @@ export function middleware(request: NextRequest) {
     try {
       const payloadBase64 = accessToken.split('.')[1];
       const payload = JSON.parse(atob(payloadBase64));
-      if (payload.role !== 'admin') {
+      if (payload.role !== 'admin' && payload.role !== 'moderator') {
         // Regular user — show 404 (hide admin existence)
         const notFoundUrl = new URL('/not-found', request.url);
         return NextResponse.rewrite(notFoundUrl);

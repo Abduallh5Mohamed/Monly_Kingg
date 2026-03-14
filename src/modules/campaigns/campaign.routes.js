@@ -13,7 +13,7 @@ import {
     getListingActiveCampaign,
 } from "./campaign.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import { adminLimiter, userWriteLimiter } from "../../middlewares/rateLimiter.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 
@@ -33,9 +33,10 @@ router.get("/my-invites", authMiddleware, getMyInvites);
 router.post("/:id/join", authMiddleware, userWriteLimiter, invalidateCache(...CAMPAIGN_PATTERNS), joinCampaign);
 router.delete("/:id/leave", authMiddleware, userWriteLimiter, invalidateCache(...CAMPAIGN_PATTERNS), leaveCampaign);
 
-// ── Admin routes ──
+// ── Admin / Moderator routes (requires "promotions" permission) ──
 router.use(authMiddleware);
-router.use(requireAdmin);
+router.use(requireAdminOrMod);
+router.use(requirePermission("promotions"));
 router.use(adminLimiter);
 
 router.post("/", invalidateCache(...CAMPAIGN_PATTERNS), createCampaign);

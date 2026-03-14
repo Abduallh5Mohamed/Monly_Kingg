@@ -6,6 +6,7 @@ const rankSchema = new mongoose.Schema({
   maxLevel: { type: Number, required: true },
   color: { type: String, required: true },
   icon: { type: String, default: "⭐" },
+  commissionPercent: { type: Number, default: null },  // null = use global rate
 }, { _id: true });
 
 const levelConfigSchema = new mongoose.Schema({

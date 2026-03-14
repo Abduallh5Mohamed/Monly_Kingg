@@ -36,13 +36,27 @@ export default function ForgotPasswordForm() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const endpoints = ['/api/v1/auth/forgot-password', '/api/auth/forgot-password'];
+      let response: Response | null = null;
+
+      for (const endpoint of endpoints) {
+        const current = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        response = current;
+        if (current.ok || current.status !== 404) {
+          break;
+        }
+      }
+
+      if (!response) {
+        throw new Error('No response from server');
+      }
 
       const data = await response.json();
 
@@ -50,6 +64,10 @@ export default function ForgotPasswordForm() {
         setEmailSent(true);
         setMessage(data.message || 'Password reset instructions have been sent to your email');
       } else {
+        if (response.status === 403) {
+          setError('Too many attempts detected. Please wait a few minutes and try again.');
+          return;
+        }
         setError(data.message || 'Failed to send reset instructions');
       }
     } catch (error: any) {

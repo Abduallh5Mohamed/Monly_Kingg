@@ -80,7 +80,7 @@ const POLICIES = {
   },
   passwordReset: {
     windowMs: 15 * 60 * 1000,
-    max: isDevelopment ? 30 : 8,
+    max: isDevelopment ? 120 : 20,
     message: 'Too many password reset attempts. Please try again later.'
   },
 
@@ -157,6 +157,7 @@ class MemoryStore {
   constructor() {
     this.hits = new Map();         // key → { count, resetAt }
     this.blocked = new Map();      // key → unblockAt
+    this.maxSize = 100000;         // Cap to prevent OOM under distributed attacks
     // Cleanup expired entries every 60 seconds
     this._cleanupInterval = setInterval(() => this._cleanup(), 60_000);
     if (this._cleanupInterval.unref) this._cleanupInterval.unref();
@@ -181,6 +182,11 @@ class MemoryStore {
     const entry = this.hits.get(key);
 
     if (!entry || entry.resetAt <= now) {
+      // Evict oldest entries if at capacity
+      if (this.hits.size >= this.maxSize) {
+        const firstKey = this.hits.keys().next().value;
+        this.hits.delete(firstKey);
+      }
       const newEntry = { count: 1, resetAt: now + windowMs };
       this.hits.set(key, newEntry);
       return newEntry;
@@ -218,7 +224,7 @@ const memoryStore = new MemoryStore();
 // ─── REDIS SLIDING WINDOW ──────────────────────────────────────────────────
 
 /**
- * Sliding-window counter using Redis INCR + EXPIRE.
+ * Sliding-window counter using Redis INCR + EXPIRE (pipelined).
  * Falls back to in-memory store when Redis is unavailable.
  *
  * @returns {{ count: number, resetAt: number, remaining: number }}
@@ -230,15 +236,15 @@ async function slidingWindowCheck(key, windowMs, max) {
   if (redisService.isReady()) {
     try {
       const client = redisService.getClient();
-      const count = await client.incr(key);
+      // Pipeline: 1 round-trip instead of 3 sequential calls
+      const results = await client.multi()
+        .incr(key)
+        .expire(key, windowSec)  // reset TTL on each hit
+        .ttl(key)
+        .exec();
 
-      if (count === 1) {
-        // First request in window – set expiry
-        await client.expire(key, windowSec);
-      }
-
-      // Get TTL for reset header
-      const ttl = await client.ttl(key);
+      const count = results[0]; // INCR result
+      const ttl = results[2];   // TTL result
       const resetAt = Date.now() + (ttl > 0 ? ttl * 1000 : windowMs);
 
       return {
@@ -567,8 +573,8 @@ export const resendLimiter = createRateLimiter('resendCode', {}, {
 
 export const passwordResetLimiter = createRateLimiter('passwordReset', {}, {
   useUserKey: false,
-  progressive: true,
-  botPenalty: true
+  progressive: false,
+  botPenalty: false
 });
 
 // ── Write operations ──

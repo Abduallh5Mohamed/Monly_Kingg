@@ -3,6 +3,7 @@ import User from "../users/user.model.js";
 import Listing from "../listings/listing.model.js";
 import Chat from "../chats/chat.model.js";
 import Notification from "../notifications/notification.model.js";
+import { notifyAllAdmins } from "../notifications/notificationHelper.js";
 
 // Submit seller request
 export const submitSellerRequest = async (req, res) => {
@@ -38,6 +39,16 @@ export const submitSellerRequest = async (req, res) => {
       existing.reviewedAt = null;
       existing.applicationCount = (existing.applicationCount || 1) + 1;
       await existing.save();
+
+      // Notify admins about resubmitted seller request
+      notifyAllAdmins({
+        type: 'new_seller_request',
+        title: 'Seller Request Resubmitted',
+        message: `${req.user.username} resubmitted their seller application`,
+        relatedModel: 'SellerRequest',
+        relatedId: existing._id,
+      });
+
       return res.status(200).json({ message: "Seller request resubmitted successfully", data: existing });
     }
 
@@ -53,6 +64,16 @@ export const submitSellerRequest = async (req, res) => {
     });
 
     await sellerRequest.save();
+
+    // Notify all admins about the new seller request
+    notifyAllAdmins({
+      type: 'new_seller_request',
+      title: 'New Seller Request',
+      message: `${req.user.username} submitted a seller application`,
+      relatedModel: 'SellerRequest',
+      relatedId: sellerRequest._id,
+    });
+
     return res.status(201).json({ message: "Seller request submitted successfully", data: sellerRequest });
   } catch (error) {
     console.error("Submit seller request error:", error);

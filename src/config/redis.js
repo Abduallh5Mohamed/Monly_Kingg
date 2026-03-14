@@ -35,9 +35,11 @@ class RedisService {
           host: redisHost,
           port: parseInt(redisPort),
           connectTimeout: 5000,
+          keepAlive: 5000,
+          noDelay: true,
           reconnectStrategy: (retries) => {
-            if (retries > 3) return new Error('Redis max retries reached');
-            return Math.min(retries * 500, 3000);
+            if (retries > 10) return new Error('Redis max retries reached');
+            return Math.min(retries * 500, 5000);
           }
         },
         database: redisDb
@@ -119,6 +121,22 @@ class RedisService {
     } catch (error) {
       logger.error(`Redis GET error for key ${key}: ${error.message}`);
       return null;
+    }
+  }
+
+  // Batch GET — fetch multiple keys in a single round-trip (MGET)
+  async getMulti(keys) {
+    try {
+      if (!this.isReady() || !keys.length) return {};
+      const values = await this.client.mGet(keys);
+      const result = {};
+      keys.forEach((key, i) => {
+        result[key] = values[i] ? JSON.parse(values[i]) : null;
+      });
+      return result;
+    } catch (error) {
+      logger.error(`Redis MGET error: ${error.message}`);
+      return {};
     }
   }
 

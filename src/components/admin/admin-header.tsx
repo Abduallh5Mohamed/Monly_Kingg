@@ -1,10 +1,11 @@
 ﻿'use client';
 
-import { Bell, Search, LogOut, DollarSign } from 'lucide-react';
+import { Search, LogOut, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect } from 'react';
+import { AdminNotificationBell } from './notification-bell';
 
 export function AdminHeader() {
   const { user, logout } = useAuth();
@@ -63,10 +64,7 @@ export function AdminHeader() {
           )}
         </div>
 
-        <button className="relative w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center transition-colors border border-white/[0.06]">
-          <Bell className="h-4 w-4 text-white/50" />
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-[#0f1117]"></span>
-        </button>
+        <AdminNotificationBell />
 
         <div className="flex items-center gap-2.5 bg-white/[0.04] rounded-lg pr-3.5 pl-1.5 py-1.5 hover:bg-white/[0.08] transition-colors cursor-pointer border border-white/[0.06]">
           <div className="w-7 h-7 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-semibold">

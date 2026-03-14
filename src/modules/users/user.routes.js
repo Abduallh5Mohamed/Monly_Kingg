@@ -4,12 +4,14 @@ import * as profileController from "./profile.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../../middlewares/roleMiddleware.js";
 import { cacheUser, invalidateUserCache, trackActivity } from "../../middlewares/cacheMiddleware.js";
+import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { userWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
+import crypto from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,9 +29,8 @@ const storage = multer.diskStorage({
         cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
         const ext = path.extname(file.originalname);
-        cb(null, "avatar-" + uniqueSuffix + ext);
+        cb(null, "avatar-" + crypto.randomUUID() + ext);
     }
 });
 
@@ -48,11 +49,14 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
 });
 
+// Public seller profile (authenticated users can view any seller)
+router.get("/seller/:sellerId", authMiddleware, cacheResponse(120), profileController.getPublicSellerProfile);
+
 // Profile routes
 router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), profileController.completeProfile);
-router.get("/profile", authMiddleware, profileController.getProfile);
-router.get("/profile/:userId", authMiddleware, profileController.getProfile);
-router.put("/profile", authMiddleware, userWriteLimiter, profileController.updateProfile);
+router.get("/profile", authMiddleware, cacheResponse(60), profileController.getProfile);
+router.get("/profile/:userId", authMiddleware, cacheResponse(60), profileController.getProfile);
+router.put("/profile", authMiddleware, userWriteLimiter, invalidateCache('api_cache:*:/api/v1/users/profile*'), profileController.updateProfile);
 
 // Favorites routes
 router.post("/favorites", authMiddleware, userWriteLimiter, profileController.addToFavorites);

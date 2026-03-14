@@ -98,7 +98,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     // Get user data (lean for performance)
-    const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
+    const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
     const responseData = {
       message: "Email verified and logged in",
@@ -108,7 +108,8 @@ export const verifyEmail = async (req, res) => {
         email: userData.email,
         role: userData.role,
         isSeller: userData.isSeller || false,
-        profileCompleted: userData.profileCompleted === true
+        profileCompleted: userData.profileCompleted === true,
+        moderatorPermissions: userData.moderatorPermissions || []
       },
       expiresIn: 15 * 60
     };
@@ -169,7 +170,7 @@ export const login = async (req, res) => {
     });
 
     // Get user data - use lean() for speed, single query
-    const user = await User.findOne({ email }).select('_id username email role isSeller profileCompleted').lean();
+    const user = await User.findOne({ email }).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
     res.status(200).json({
       message: "Login successful",
@@ -179,7 +180,8 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
         isSeller: user.isSeller || false,
-        profileCompleted: user.profileCompleted === true
+        profileCompleted: user.profileCompleted === true,
+        moderatorPermissions: user.moderatorPermissions || []
       },
       expiresIn: 15 * 60
     });
@@ -234,7 +236,7 @@ export const refresh = async (req, res) => {
     // Decode JWT to get user ID
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     // Get user data (lean for performance)
-    const userData = await User.findById(decoded.id).select('_id username email role isSeller profileCompleted').lean();
+    const userData = await User.findById(decoded.id).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
     res.status(200).json({
       message: "Tokens refreshed",
@@ -244,7 +246,8 @@ export const refresh = async (req, res) => {
         email: userData.email,
         role: userData.role,
         isSeller: userData.isSeller || false,
-        profileCompleted: userData.profileCompleted === true // Ensure boolean
+        profileCompleted: userData.profileCompleted === true,
+        moderatorPermissions: userData.moderatorPermissions || []
       },
       expiresIn: 15 * 60
     });
@@ -443,7 +446,7 @@ export const googleCallback = async (req, res) => {
     } else if (user.role === "admin") {
       return res.redirect(frontendUrl + "/admin/dashboard");
     } else {
-      return res.redirect(frontendUrl + "/user/dashboard");
+      return res.redirect(frontendUrl + "/user");
     }
   } catch (err) {
     console.error("Google callback error:", err);

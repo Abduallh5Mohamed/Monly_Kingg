@@ -34,4 +34,7 @@ const depositSchema = new mongoose.Schema({
   processedAt: Date
 }, { timestamps: true });
 
+depositSchema.index({ user: 1, status: 1 });
+depositSchema.index({ status: 1, createdAt: -1 });
+
 export default mongoose.model("Deposit", depositSchema);

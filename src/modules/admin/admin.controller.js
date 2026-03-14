@@ -2,11 +2,18 @@ import User from "../users/user.model.js";
 import Chat from "../chats/chat.model.js";
 import Transaction from "../transactions/transaction.model.js";
 import Deposit from "../deposits/deposit.model.js";
+import Withdrawal from "../withdrawals/withdrawal.model.js";
 import Listing from "../listings/listing.model.js";
+import Game from "../games/game.model.js";
 import SellerRequest from "../sellers/sellerRequest.model.js";
+import SiteSettings from "./siteSettings.model.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
+
+const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
@@ -143,10 +150,10 @@ export const updateUserRole = async (req, res) => {
         const { userId } = req.params;
         const { role } = req.body;
 
-        if (!["user", "admin", "moderator"].includes(role)) {
+        if (!["user", "admin"].includes(role)) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid role"
+                message: "Invalid role. Moderators must be created via the Moderators page."
             });
         }
 
@@ -612,7 +619,21 @@ export const getUserDetail = async (req, res) => {
             Deposit.find({ user: userId })
                 .select("amount status paymentMethod senderFullName senderPhoneOrEmail depositDate receiptImage createdAt adminNote")
                 .sort({ createdAt: -1 })
-                .limit(10)
+                .limit(20)
+                .lean(),
+        ]);
+
+        // Withdrawal history
+        const [withdrawalStats, recentWithdrawals] = await Promise.all([
+            Withdrawal.aggregate([
+                { $match: { user: new mongoose.Types.ObjectId(userId) } },
+                { $group: { _id: "$status", count: { $sum: 1 }, total: { $sum: "$amount" } } }
+            ]),
+            Withdrawal.find({ user: userId })
+                .select("amount method countryCode phoneNumber status rejectionReason reviewedBy reviewedAt createdAt")
+                .sort({ createdAt: -1 })
+                .limit(20)
+                .populate("reviewedBy", "username")
                 .lean(),
         ]);
 
@@ -714,6 +735,12 @@ export const getUserDetail = async (req, res) => {
                 recent: recentDeposits,
             },
 
+            // Withdrawals
+            withdrawals: {
+                stats: withdrawalStats,
+                recent: recentWithdrawals,
+            },
+
             // Listings
             listings: {
                 total: listingsTotal,
@@ -729,5 +756,1082 @@ export const getUserDetail = async (req, res) => {
     } catch (error) {
         logger.error(`Admin get user detail error: ${error.message}`);
         res.status(500).json({ success: false, message: "Failed to fetch user detail" });
+    }
+};
+
+/* ============================================================================
+ * CHANGE PASSWORD (for the logged-in admin / mod)
+ * ========================================================================= */
+export const changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ success: false, message: "Current and new password are required" });
+        }
+        if (newPassword.length < 8) {
+            return res.status(400).json({ success: false, message: "New password must be at least 8 characters" });
+        }
+
+        const user = await User.findById(req.user._id).select("+passwordHash");
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        const match = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!match) return res.status(400).json({ success: false, message: "Current password is incorrect" });
+
+        user.passwordHash = await bcrypt.hash(newPassword, 12);
+        await user.save();
+
+        // Invalidate cached user so tokens re-validated
+        await cacheService.invalidateUser(user._id);
+
+        logger.info(`Admin/Mod ${user._id} changed their password`);
+        res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+        logger.error(`Change password error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to change password" });
+    }
+};
+
+/* ============================================================================
+ * SITE SETTINGS — Full Platform Configuration
+ * ========================================================================= */
+
+/* ---------------- Get Site Settings ---------------- */
+export const getSiteSettings = async (req, res) => {
+    try {
+        const settings = await SiteSettings.getSingleton();
+        res.json({
+            success: true,
+            data: {
+                // Platform info
+                siteName: settings.siteName,
+                siteUrl: settings.siteUrl,
+                siteDescription: settings.siteDescription,
+                supportEmail: settings.supportEmail,
+                supportPhone: settings.supportPhone,
+                // System
+                maintenanceMode: settings.maintenanceMode,
+                autoBackup: settings.autoBackup,
+                userRegistration: settings.userRegistration,
+                // Notifications
+                orderNotifications: settings.orderNotifications,
+                userRegNotifications: settings.userRegNotifications,
+                marketingEmails: settings.marketingEmails,
+                browserNotifications: settings.browserNotifications,
+                chatNotifications: settings.chatNotifications,
+                // Security
+                twoFactorAuth: settings.twoFactorAuth,
+                sessionTimeout: settings.sessionTimeout,
+                // Commission (kept for backward compat)
+                commissionPercent: settings.commissionPercent,
+                sellerPayoutDelayDays: settings.sellerPayoutDelayDays,
+                adminCommissionBalance: settings.adminCommissionBalance,
+                updatedAt: settings.updatedAt,
+            },
+        });
+    } catch (error) {
+        logger.error(`Admin get site settings error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch settings" });
+    }
+};
+
+/* ---------------- Update Site Settings ---------------- */
+export const updateSiteSettings = async (req, res) => {
+    try {
+        const settings = await SiteSettings.getSingleton();
+
+        // ── String fields ────────────────────────────────────────────────
+        const stringFields = ["siteName", "siteUrl", "siteDescription", "supportEmail", "supportPhone"];
+        for (const key of stringFields) {
+            if (req.body[key] !== undefined) {
+                settings[key] = String(req.body[key]).trim();
+            }
+        }
+
+        // ── Boolean fields ───────────────────────────────────────────────
+        const boolFields = [
+            "maintenanceMode", "autoBackup", "userRegistration",
+            "orderNotifications", "userRegNotifications", "marketingEmails",
+            "browserNotifications", "chatNotifications",
+            "twoFactorAuth", "sessionTimeout",
+        ];
+        for (const key of boolFields) {
+            if (req.body[key] !== undefined) {
+                settings[key] = Boolean(req.body[key]);
+            }
+        }
+
+        // ── Commission (number) ──────────────────────────────────────────
+        if (req.body.commissionPercent !== undefined) {
+            const val = parseFloat(req.body.commissionPercent);
+            if (isNaN(val) || val < 0 || val > 100) {
+                return res.status(400).json({ success: false, message: "Commission must be between 0 and 100" });
+            }
+            settings.commissionPercent = val;
+        }
+
+        if (req.body.sellerPayoutDelayDays !== undefined) {
+            const val = parseInt(req.body.sellerPayoutDelayDays);
+            if (isNaN(val) || val < 0 || val > 90) {
+                return res.status(400).json({ success: false, message: "Payout delay must be between 0 and 90 days" });
+            }
+            settings.sellerPayoutDelayDays = val;
+        }
+
+        settings.lastUpdatedBy = req.user._id;
+        await settings.save();
+
+        logger.info(`Admin updated site settings by user ${req.user._id}`);
+
+        res.json({
+            success: true,
+            message: "Settings updated successfully",
+            data: {
+                siteName: settings.siteName,
+                siteUrl: settings.siteUrl,
+                siteDescription: settings.siteDescription,
+                supportEmail: settings.supportEmail,
+                supportPhone: settings.supportPhone,
+                maintenanceMode: settings.maintenanceMode,
+                autoBackup: settings.autoBackup,
+                userRegistration: settings.userRegistration,
+                orderNotifications: settings.orderNotifications,
+                userRegNotifications: settings.userRegNotifications,
+                marketingEmails: settings.marketingEmails,
+                browserNotifications: settings.browserNotifications,
+                chatNotifications: settings.chatNotifications,
+                twoFactorAuth: settings.twoFactorAuth,
+                sessionTimeout: settings.sessionTimeout,
+                commissionPercent: settings.commissionPercent,
+                sellerPayoutDelayDays: settings.sellerPayoutDelayDays,
+                adminCommissionBalance: settings.adminCommissionBalance,
+            },
+        });
+    } catch (error) {
+        logger.error(`Admin update site settings error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to update settings" });
+    }
+};
+
+/* ---------------- Get Earned Commission Stats ---------------- */
+export const getEarnedCommission = async (req, res) => {
+    try {
+        const { page = 1, limit = 30 } = req.query;
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const settings = await SiteSettings.getSingleton();
+
+        // Get all transactions with commission > 0
+        const filter = { commissionAmount: { $gt: 0 } };
+
+        const [transactions, total] = await Promise.all([
+            Transaction.find(filter)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(parseInt(limit))
+                .select("buyer seller listing amount commissionPercent commissionAmount sellerNetAmount payoutStatus paidOutAt status createdAt")
+                .populate("listing", "title price")
+                .populate("buyer", "username")
+                .populate("seller", "username"),
+            Transaction.countDocuments(filter),
+        ]);
+
+        // Aggregate total commission earned
+        const [stats] = await Transaction.aggregate([
+            { $match: { commissionAmount: { $gt: 0 } } },
+            {
+                $group: {
+                    _id: null,
+                    totalCommission: { $sum: "$commissionAmount" },
+                    totalTransactions: { $sum: 1 },
+                    avgCommission: { $avg: "$commissionAmount" },
+                },
+            },
+        ]);
+
+        // Commission over last 7 days
+        const last7Days = [];
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            date.setHours(0, 0, 0, 0);
+            const nextDate = new Date(date);
+            nextDate.setDate(nextDate.getDate() + 1);
+
+            const [dayStats] = await Transaction.aggregate([
+                {
+                    $match: {
+                        commissionAmount: { $gt: 0 },
+                        createdAt: { $gte: date, $lt: nextDate },
+                    },
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$commissionAmount" },
+                        count: { $sum: 1 },
+                    },
+                },
+            ]);
+
+            last7Days.push({
+                date: date.toISOString().split("T")[0],
+                total: dayStats?.total || 0,
+                count: dayStats?.count || 0,
+            });
+        }
+
+        // Pending payouts
+        const pendingPayouts = await Transaction.countDocuments({ payoutStatus: "pending_payout" });
+        const pendingPayoutsAmount = await Transaction.aggregate([
+            { $match: { payoutStatus: "pending_payout" } },
+            { $group: { _id: null, total: { $sum: "$sellerNetAmount" } } },
+        ]);
+
+        res.json({
+            success: true,
+            data: {
+                adminCommissionBalance: settings.adminCommissionBalance,
+                totalCommission: stats?.totalCommission || 0,
+                totalTransactionsWithCommission: stats?.totalTransactions || 0,
+                avgCommission: +(stats?.avgCommission || 0).toFixed(2),
+                commissionTrend: last7Days,
+                pendingPayouts,
+                pendingPayoutsAmount: pendingPayoutsAmount[0]?.total || 0,
+                currentCommissionPercent: settings.commissionPercent,
+                currentPayoutDelay: settings.sellerPayoutDelayDays,
+                transactions,
+                pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+            },
+        });
+    } catch (error) {
+        logger.error(`Admin get earned commission error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch commission data" });
+    }
+};
+
+/* ─────────── Admin Listings Management ─────────── */
+
+/**
+ * GET /api/v1/admin/listings
+ * Get all listings with pagination, search, and filters
+ */
+export const getAdminListings = async (req, res) => {
+    try {
+        const {
+            page = 1,
+            limit = 20,
+            search = "",
+            status = "all",
+            game = "all",
+            sort = "newest"
+        } = req.query;
+
+        const filter = {};
+
+        // Status filter
+        if (status !== "all") {
+            filter.status = status;
+        }
+
+        // Game filter
+        if (game !== "all") {
+            filter.game = game;
+        }
+
+        // Search filter
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { description: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        // Sort options
+        let sortOption = { createdAt: -1 };
+        if (sort === "oldest") sortOption = { createdAt: 1 };
+        else if (sort === "price_asc") sortOption = { price: 1 };
+        else if (sort === "price_desc") sortOption = { price: -1 };
+        else if (sort === "title") sortOption = { title: 1 };
+
+        const skip = (parseInt(page) - 1) * parseInt(limit);
+
+        const [listings, total] = await Promise.all([
+            Listing.find(filter)
+                .populate("game", "name")
+                .populate("seller", "username email avatar")
+                .sort(sortOption)
+                .skip(skip)
+                .limit(parseInt(limit))
+                .lean(),
+            Listing.countDocuments(filter),
+        ]);
+
+        // Get sales count for each listing from transactions
+        const listingIds = listings.map(l => l._id);
+        const salesAgg = await Transaction.aggregate([
+            {
+                $match: {
+                    listing: { $in: listingIds },
+                    status: { $in: ["completed", "auto_confirmed"] }
+                }
+            },
+            {
+                $group: {
+                    _id: "$listing",
+                    salesCount: { $sum: 1 },
+                    totalRevenue: { $sum: "$amount" }
+                }
+            }
+        ]);
+
+        const salesMap = {};
+        for (const s of salesAgg) {
+            salesMap[s._id.toString()] = { salesCount: s.salesCount, totalRevenue: s.totalRevenue };
+        }
+
+        // Enrich listings with sales data
+        const enrichedListings = listings.map(listing => ({
+            ...listing,
+            sales: salesMap[listing._id.toString()]?.salesCount || 0,
+            revenue: salesMap[listing._id.toString()]?.totalRevenue || 0,
+        }));
+
+        logger.info(`Admin fetched listings: page ${page}, ${listings.length} listings`);
+
+        res.json({
+            success: true,
+            data: {
+                listings: enrichedListings,
+                pagination: {
+                    currentPage: parseInt(page),
+                    totalPages: Math.ceil(total / parseInt(limit)),
+                    total,
+                    hasNext: page * limit < total,
+                    hasPrev: page > 1
+                }
+            }
+        });
+    } catch (error) {
+        logger.error(`Admin get listings error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch listings" });
+    }
+};
+
+/**
+ * GET /api/v1/admin/listings/stats
+ * Get listing statistics for the admin dashboard
+ */
+export const getAdminListingStats = async (req, res) => {
+    try {
+        const [totalListings, availableListings, soldListings, inProgressListings] = await Promise.all([
+            Listing.countDocuments({}),
+            Listing.countDocuments({ status: "available" }),
+            Listing.countDocuments({ status: "sold" }),
+            Listing.countDocuments({ status: "in_progress" }),
+        ]);
+
+        // Total sales and revenue from completed transactions
+        const revenueAgg = await Transaction.aggregate([
+            { $match: { status: { $in: ["completed", "auto_confirmed"] } } },
+            {
+                $group: {
+                    _id: null,
+                    totalSales: { $sum: 1 },
+                    totalRevenue: { $sum: "$amount" },
+                    totalCommission: { $sum: "$commissionAmount" }
+                }
+            }
+        ]);
+
+        const stats = revenueAgg[0] || { totalSales: 0, totalRevenue: 0, totalCommission: 0 };
+
+        res.json({
+            success: true,
+            data: {
+                totalListings,
+                availableListings,
+                soldListings,
+                inProgressListings,
+                totalSales: stats.totalSales,
+                totalRevenue: stats.totalRevenue,
+                totalCommission: stats.totalCommission,
+            }
+        });
+    } catch (error) {
+        logger.error(`Admin listing stats error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch listing stats" });
+    }
+};
+
+/**
+ * DELETE /api/v1/admin/listings/:id
+ * Admin force-delete a listing
+ */
+export const deleteAdminListing = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const listing = await Listing.findById(id);
+        if (!listing) {
+            return res.status(404).json({ success: false, message: "Listing not found" });
+        }
+
+        // Check if there are active transactions for this listing
+        const activeTransaction = await Transaction.findOne({
+            listing: id,
+            status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] }
+        });
+
+        if (activeTransaction) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot delete listing with active transactions"
+            });
+        }
+
+        await Listing.findByIdAndDelete(id);
+
+        logger.info(`Admin deleted listing ${id}`);
+
+        res.json({ success: true, message: "Listing deleted successfully" });
+    } catch (error) {
+        logger.error(`Admin delete listing error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to delete listing" });
+    }
+};
+
+/**
+ * PUT /api/v1/admin/listings/:id/status
+ * Admin update listing status
+ */
+export const updateAdminListingStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!["available", "sold", "in_progress"].includes(status)) {
+            return res.status(400).json({ success: false, message: "Invalid status" });
+        }
+
+        const listing = await Listing.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        ).populate("game", "name").populate("seller", "username email");
+
+        if (!listing) {
+            return res.status(404).json({ success: false, message: "Listing not found" });
+        }
+
+        logger.info(`Admin updated listing ${id} status to ${status}`);
+
+        res.json({ success: true, data: listing, message: "Status updated" });
+    } catch (error) {
+        logger.error(`Admin update listing status error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to update listing status" });
+    }
+};
+
+/* ========== GAMES MANAGEMENT ========== */
+
+/**
+ * GET /api/v1/admin/games
+ * Get all games with listing counts and revenue
+ */
+export const getAdminGames = async (req, res) => {
+    try {
+        const { search = "", status = "all" } = req.query;
+
+        const filter = {};
+        if (search) {
+            filter.$or = [
+                { name: { $regex: search, $options: "i" } },
+                { category: { $regex: search, $options: "i" } },
+            ];
+        }
+        if (status !== "all") {
+            filter.status = status;
+        }
+
+        const games = await Game.find(filter).sort({ createdAt: -1 }).lean();
+
+        // Get listing counts and revenue per game
+        const gameIds = games.map((g) => g._id);
+
+        const [listingCounts, revenuePipeline] = await Promise.all([
+            Listing.aggregate([
+                { $match: { game: { $in: gameIds } } },
+                { $group: { _id: "$game", count: { $sum: 1 } } },
+            ]),
+            Transaction.aggregate([
+                { $match: { status: { $in: ["completed", "auto_confirmed"] } } },
+                {
+                    $lookup: {
+                        from: "listings",
+                        localField: "listing",
+                        foreignField: "_id",
+                        as: "listingData",
+                    },
+                },
+                { $unwind: "$listingData" },
+                { $match: { "listingData.game": { $in: gameIds } } },
+                {
+                    $group: {
+                        _id: "$listingData.game",
+                        revenue: { $sum: "$amount" },
+                        sales: { $sum: 1 },
+                    },
+                },
+            ]),
+        ]);
+
+        const countMap = {};
+        listingCounts.forEach((c) => (countMap[c._id.toString()] = c.count));
+
+        const revenueMap = {};
+        revenuePipeline.forEach((r) => {
+            revenueMap[r._id.toString()] = { revenue: r.revenue, sales: r.sales };
+        });
+
+        const enriched = games.map((g) => ({
+            ...g,
+            listingsCount: countMap[g._id.toString()] || 0,
+            revenue: revenueMap[g._id.toString()]?.revenue || 0,
+            sales: revenueMap[g._id.toString()]?.sales || 0,
+        }));
+
+        res.json({ success: true, data: enriched });
+    } catch (error) {
+        logger.error(`Admin get games error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch games" });
+    }
+};
+
+/**
+ * GET /api/v1/admin/games/stats
+ */
+export const getAdminGameStats = async (req, res) => {
+    try {
+        const [totalGames, activeGames, inactiveGames, totalListings] = await Promise.all([
+            Game.countDocuments({}),
+            Game.countDocuments({ status: "active" }),
+            Game.countDocuments({ status: "inactive" }),
+            Listing.countDocuments({}),
+        ]);
+
+        const revenueAgg = await Transaction.aggregate([
+            { $match: { status: { $in: ["completed", "auto_confirmed"] } } },
+            { $group: { _id: null, totalRevenue: { $sum: "$amount" }, totalCommission: { $sum: "$commissionAmount" } } },
+        ]);
+
+        const stats = revenueAgg[0] || { totalRevenue: 0, totalCommission: 0 };
+
+        res.json({
+            success: true,
+            data: { totalGames, activeGames, inactiveGames, totalListings, totalRevenue: stats.totalRevenue, totalCommission: stats.totalCommission },
+        });
+    } catch (error) {
+        logger.error(`Admin game stats error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch game stats" });
+    }
+};
+
+/**
+ * POST /api/v1/admin/games
+ * Create a new game
+ */
+export const createAdminGame = async (req, res) => {
+    try {
+        const { name, category, icon, status: gameStatus, fields } = req.body;
+
+        if (!name || !name.trim()) {
+            return res.status(400).json({ success: false, message: "Game name is required" });
+        }
+
+        // Check duplicate
+        const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" } });
+        if (existing) {
+            return res.status(409).json({ success: false, message: "A game with this name already exists" });
+        }
+
+        // Generate slug
+        const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+        // Validate fields if provided
+        const validTypes = ["email", "password", "phone", "number", "text"];
+        const gameFields = Array.isArray(fields) && fields.length > 0
+            ? fields.filter(f => f.name && f.name.trim()).map(f => ({
+                name: f.name.trim(),
+                type: validTypes.includes(f.type) ? f.type : "text",
+                required: f.required !== false,
+                placeholder: f.placeholder?.trim() || "",
+            }))
+            : undefined; // let Mongoose default kick in (Email + Password)
+
+        const gameData = {
+            name: name.trim(),
+            slug,
+            category: category?.trim() || "",
+            icon: icon?.trim() || "",
+            status: gameStatus || "active",
+        };
+        if (gameFields) gameData.fields = gameFields;
+
+        const game = await Game.create(gameData);
+
+        // Invalidate games cache
+        try { await cacheService.invalidateGamesCache(); } catch (_) { }
+
+        logger.info(`Admin created game: ${game.name} (${game._id})`);
+        res.status(201).json({ success: true, data: game, message: "Game created successfully" });
+    } catch (error) {
+        logger.error(`Admin create game error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to create game" });
+    }
+};
+
+/**
+ * PUT /api/v1/admin/games/:id
+ * Update game details
+ */
+export const updateAdminGame = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, category, icon, status: gameStatus, fields } = req.body;
+
+        const game = await Game.findById(id);
+        if (!game) {
+            return res.status(404).json({ success: false, message: "Game not found" });
+        }
+
+        if (name && name.trim() !== game.name) {
+            const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" }, _id: { $ne: id } });
+            if (existing) {
+                return res.status(409).json({ success: false, message: "A game with this name already exists" });
+            }
+            game.name = name.trim();
+            game.slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        }
+        if (category !== undefined) game.category = category.trim();
+        if (icon !== undefined) game.icon = icon.trim();
+        if (gameStatus && ["active", "inactive"].includes(gameStatus)) game.status = gameStatus;
+
+        // Handle fields update
+        if (Array.isArray(fields)) {
+            const validTypes = ["email", "password", "phone", "number", "text"];
+            game.fields = fields.filter(f => f.name && f.name.trim()).map(f => ({
+                name: f.name.trim(),
+                type: validTypes.includes(f.type) ? f.type : "text",
+                required: f.required !== false,
+                placeholder: f.placeholder?.trim() || "",
+            }));
+        }
+
+        await game.save();
+
+        try { await cacheService.invalidateGamesCache(); } catch (_) { }
+
+        logger.info(`Admin updated game: ${game.name} (${game._id})`);
+        res.json({ success: true, data: game, message: "Game updated successfully" });
+    } catch (error) {
+        logger.error(`Admin update game error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to update game" });
+    }
+};
+
+/**
+ * DELETE /api/v1/admin/games/:id
+ */
+export const deleteAdminGame = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const game = await Game.findById(id);
+        if (!game) {
+            return res.status(404).json({ success: false, message: "Game not found" });
+        }
+
+        // Check if there are listings using this game
+        const listingCount = await Listing.countDocuments({ game: id });
+        if (listingCount > 0) {
+            return res.status(400).json({ success: false, message: `Cannot delete: ${listingCount} listings are using this game. Deactivate it instead.` });
+        }
+
+        await Game.findByIdAndDelete(id);
+
+        try { await cacheService.invalidateGamesCache(); } catch (_) { }
+
+        logger.info(`Admin deleted game: ${game.name} (${game._id})`);
+        res.json({ success: true, message: "Game deleted successfully" });
+    } catch (error) {
+        logger.error(`Admin delete game error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to delete game" });
+    }
+};
+
+/**
+ * PUT /api/v1/admin/games/:id/toggle-status
+ */
+export const toggleAdminGameStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const game = await Game.findById(id);
+        if (!game) {
+            return res.status(404).json({ success: false, message: "Game not found" });
+        }
+
+        game.status = game.status === "active" ? "inactive" : "active";
+        await game.save();
+
+        try { await cacheService.invalidateGamesCache(); } catch (_) { }
+
+        logger.info(`Admin toggled game ${game.name} to ${game.status}`);
+        res.json({ success: true, data: game, message: `Game ${game.status === "active" ? "activated" : "deactivated"} successfully` });
+    } catch (error) {
+        logger.error(`Admin toggle game status error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to toggle game status" });
+    }
+};
+
+/* ============================================================================
+ * INSTANT PAYOUT RELEASE — Admin Force-Release Pending Payouts
+ * ========================================================================= */
+
+/**
+ * POST /api/v1/admin/transactions/:id/instant-release
+ * Force-release a pending_payout transaction immediately, crediting the seller.
+ */
+export const adminInstantRelease = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tx = await Transaction.findById(id);
+
+        if (!tx) {
+            return res.status(404).json({ success: false, message: "Transaction not found" });
+        }
+        if (tx.payoutStatus !== "pending_payout") {
+            return res.status(400).json({ success: false, message: `Cannot release — current payout status is "${tx.payoutStatus}"` });
+        }
+
+        const sellerId = tx.seller.toString();
+        const sellerNetAmount = tx.sellerNetAmount || tx.amount;
+
+        // Credit seller wallet
+        const updatedSeller = await User.findByIdAndUpdate(
+            sellerId,
+            { $inc: { "wallet.balance": sellerNetAmount } },
+            { new: true }
+        );
+
+        if (updatedSeller) {
+            cacheService.cacheUser?.(updatedSeller)?.catch(() => { });
+        }
+
+        // Update transaction
+        tx.payoutStatus = "paid_out";
+        tx.paidOutAt = new Date();
+        tx.timeline.push({
+            event: "instant_release",
+            note: `Admin force-released ${sellerNetAmount} EGP to seller wallet immediately (skipped hold period).`,
+        });
+        await tx.save();
+
+        logger.info(`Admin instant-released tx ${tx._id} — ${sellerNetAmount} EGP to seller ${sellerId}`);
+
+        // Best-effort notification
+        try {
+            const Notification = (await import("../notifications/notification.model.js")).default;
+            await Notification.create({
+                user: sellerId,
+                type: "payout_released",
+                title: "💰 Instant Payment Released!",
+                message: `${sellerNetAmount} EGP has been credited to your wallet (admin instant release).`,
+                relatedModel: "Transaction",
+                relatedId: tx._id,
+                metadata: { transactionId: tx._id.toString(), amount: sellerNetAmount },
+            });
+        } catch (_) { /* non-fatal */ }
+
+        res.json({
+            success: true,
+            message: `${sellerNetAmount} EGP released to seller immediately.`,
+            data: tx,
+        });
+    } catch (error) {
+        logger.error(`Admin instant release error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to release payout" });
+    }
+};
+
+/* ============================================================================
+ * COMMISSION EXEMPTION — Toggle & List Exempt Sellers
+ * ========================================================================= */
+
+/**
+ * PUT /api/v1/admin/users/:userId/commission-exempt
+ * Toggle the commissionExempt flag on a user.
+ */
+export const toggleCommissionExempt = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        user.commissionExempt = !user.commissionExempt;
+        await user.save();
+
+        // Sync cache
+        cacheService.cacheUser?.(user)?.catch(() => { });
+
+        logger.info(`Admin toggled commission exemption for ${user.username}: ${user.commissionExempt ? "EXEMPT" : "NORMAL"}`);
+        res.json({
+            success: true,
+            message: `${user.username} is now ${user.commissionExempt ? "exempt from" : "subject to"} commission.`,
+            data: { _id: user._id, username: user.username, commissionExempt: user.commissionExempt },
+        });
+    } catch (error) {
+        logger.error(`Admin toggle commission exempt error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to toggle commission exemption" });
+    }
+};
+
+/**
+ * GET /api/v1/admin/exempt-sellers
+ * List all sellers with commission exemption (also supports search).
+ */
+export const getExemptSellers = async (req, res) => {
+    try {
+        const { search = "" } = req.query;
+        const filter = { isSeller: true };
+        if (search) {
+            filter.$or = [
+                { username: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        const sellers = await User.find(filter)
+            .select("_id username email avatar isSeller commissionExempt stats.totalVolume stats.successfulTrades")
+            .sort({ commissionExempt: -1, username: 1 })
+            .limit(100)
+            .lean();
+
+        res.json({ success: true, data: sellers });
+    } catch (error) {
+        logger.error(`Admin get exempt sellers error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch sellers" });
+    }
+};
+
+/* ================================================================
+   MODERATOR MANAGEMENT
+   ================================================================ */
+
+/** Get all moderators with their permissions */
+export const getModerators = async (req, res) => {
+    try {
+        const moderators = await User.find({ role: "moderator" })
+            .select("_id username email avatar moderatorPermissions createdAt")
+            .sort({ createdAt: -1 })
+            .lean();
+
+        // Strip any legacy admin-only keys ("users", "moderators") from returned data
+        const ADMIN_ONLY = ["users", "moderators"];
+        const cleanedModerators = moderators.map(m => ({
+            ...m,
+            moderatorPermissions: (m.moderatorPermissions || []).filter(p => !ADMIN_ONLY.includes(p))
+        }));
+
+        res.json({
+            success: true,
+            data: {
+                moderators: cleanedModerators,
+                availablePermissions: PERMISSION_KEYS
+            }
+        });
+    } catch (error) {
+        logger.error(`Get moderators error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to fetch moderators" });
+    }
+};
+
+/** Update moderator permissions (moderator account must already exist) */
+export const setModeratorPermissions = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { permissions } = req.body;
+
+        if (!Array.isArray(permissions)) {
+            return res.status(400).json({ success: false, message: "permissions must be an array" });
+        }
+
+        // Strip admin-only keys silently (defence-in-depth)
+        const ADMIN_ONLY = ["users", "moderators"];
+        const safePermissions = permissions.filter(p => !ADMIN_ONLY.includes(p));
+
+        // validate all keys
+        const invalid = safePermissions.filter(p => !PERMISSION_KEYS.includes(p));
+        if (invalid.length) {
+            return res.status(400).json({
+                success: false,
+                message: `Invalid permission keys: ${invalid.join(", ")}`
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Only allow updating permissions on existing moderators
+        if (user.role !== "moderator") {
+            return res.status(400).json({ success: false, message: "This user is not a moderator. Create a moderator account instead." });
+        }
+
+        user.moderatorPermissions = safePermissions;
+        await user.save();
+        await cacheService.invalidateUser(userId);
+
+        logger.info(`Admin ${req.user.email} set moderator permissions for ${user.email}: [${safePermissions.join(", ")}]`);
+
+        res.json({
+            success: true,
+            message: "Moderator permissions updated",
+            data: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                moderatorPermissions: user.moderatorPermissions
+            }
+        });
+    } catch (error) {
+        logger.error(`Set moderator permissions error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to update permissions" });
+    }
+};
+
+/** Remove moderator role – demote back to user */
+export const removeModerator = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        if (user.role !== "moderator") {
+            return res.status(400).json({ success: false, message: "User is not a moderator" });
+        }
+
+        user.role = "user";
+        user.moderatorPermissions = [];
+        await user.save();
+        await cacheService.invalidateUser(userId);
+
+        logger.info(`Admin ${req.user.email} removed moderator role from ${user.email}`);
+
+        res.json({ success: true, message: "Moderator role removed" });
+    } catch (error) {
+        logger.error(`Remove moderator error: ${error.message}`);
+        res.status(500).json({ success: false, message: "Failed to remove moderator" });
+    }
+};
+
+/** Create a new moderator account (admin-only) */
+export const createModerator = async (req, res) => {
+    try {
+        const { username, email, password, permissions = [] } = req.body;
+
+        if (!username || !email || !password) {
+            return res.status(400).json({ success: false, message: "Username, email, and password are required" });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+        }
+
+        // Check for existing user with same email or username
+        const existing = await User.findOne({
+            $or: [{ email: email.toLowerCase() }, { username }]
+        });
+        if (existing) {
+            const field = existing.email === email.toLowerCase() ? "email" : "username";
+            return res.status(409).json({ success: false, message: `A user with this ${field} already exists` });
+        }
+
+        // Validate permission keys
+        // Strip admin-only keys silently (defence-in-depth)
+        const ADMIN_ONLY = ["users", "moderators"];
+        const safePermissions = permissions.filter(p => !ADMIN_ONLY.includes(p));
+        if (safePermissions.length > 0) {
+            const invalid = safePermissions.filter(p => !PERMISSION_KEYS.includes(p));
+            if (invalid.length) {
+                return res.status(400).json({ success: false, message: `Invalid permission keys: ${invalid.join(", ")}` });
+            }
+        }
+
+        const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+
+        const moderator = await User.create({
+            username,
+            email: email.toLowerCase(),
+            passwordHash,
+            role: "moderator",
+            verified: true,
+            profileCompleted: true,
+            moderatorPermissions: safePermissions,
+        });
+
+        logger.info(`Admin ${req.user.email} created moderator account: ${email}`);
+
+        res.status(201).json({
+            success: true,
+            message: "Moderator account created successfully",
+            data: {
+                _id: moderator._id,
+                username: moderator.username,
+                email: moderator.email,
+                role: moderator.role,
+                moderatorPermissions: moderator.moderatorPermissions,
+            }
+        });
+    } catch (error) {
+        logger.error(`Create moderator error: ${error.message}`);
+        // Return mongoose validation errors clearly
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(e => e.message);
+            return res.status(400).json({ success: false, message: messages.join(', ') });
+        }
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern || {})[0];
+            return res.status(409).json({ success: false, message: `A user with this ${field} already exists` });
+        }
+        res.status(500).json({ success: false, message: "Failed to create moderator account" });
+    }
+};
+
+/** Get current user's own permissions (for frontend sidebar filtering) */
+export const getMyPermissions = async (req, res) => {
+    try {
+        const user = req.user;
+        if (user.role === "admin") {
+            // Admin gets ALL permission keys (they have full access anyway)
+            return res.json({ success: true, data: { role: "admin", permissions: PERMISSION_KEYS } });
+        }
+        if (user.role === "moderator") {
+            // Strip any legacy admin-only keys that may still be stored
+            const ADMIN_ONLY = ["users", "moderators"];
+            const cleanPerms = (user.moderatorPermissions || []).filter(p => !ADMIN_ONLY.includes(p));
+            return res.json({
+                success: true,
+                data: { role: "moderator", permissions: cleanPerms }
+            });
+        }
+        return res.status(403).json({ success: false, message: "Not an admin or moderator" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to get permissions" });
     }
 };

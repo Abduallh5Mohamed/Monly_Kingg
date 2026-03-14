@@ -59,8 +59,8 @@ export const enhancedSanitizer = (req, res, next) => {
 
         next();
     } catch (error) {
-        // Non-fatal — continue request
-        next();
+        // Sanitization failed — reject the request rather than letting unsanitized data through
+        return res.status(400).json({ message: 'Invalid request data' });
     }
 };
 

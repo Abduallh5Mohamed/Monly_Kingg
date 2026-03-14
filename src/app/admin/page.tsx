@@ -1,6 +1,8 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 import { StatCard } from '@/components/admin/stat-card';
 import { UsersTable } from '@/components/admin/users-table';
 import { LiveActivity } from '@/components/admin/live-activity';
@@ -15,6 +17,23 @@ import {
   Activity
 } from 'lucide-react';
 
+/** Map permission keys → first page a moderator should land on */
+const PERMISSION_TO_ROUTE: Record<string, string> = {
+  orders: '/admin/orders',
+  products: '/admin/products',
+  sellers: '/admin/sellers',
+  seller_levels: '/admin/seller-levels',
+  games: '/admin/games',
+  chats: '/admin/chats',
+  analytics: '/admin/analytics',
+  settings: '/admin/settings',
+  security: '/admin/security',
+  notifications: '/admin/notifications',
+  promotions: '/admin/promotions',
+  ads: '/admin/ads',
+  discounts: '/admin/discounts',
+};
+
 interface AdminStats {
   totalUsers: number;
   verifiedUsers: number;
@@ -26,13 +45,38 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
+
+  // Moderators don't have a dashboard — redirect to their first permitted page
+  useEffect(() => {
+    if (!user) return;
+    if (user.role === 'moderator') {
+      setRedirecting(true);
+      // Find the first permitted page
+      const perms = user.moderatorPermissions || [];
+      for (const perm of perms) {
+        if (PERMISSION_TO_ROUTE[perm]) {
+          router.replace(PERMISSION_TO_ROUTE[perm]);
+          return;
+        }
+      }
+      // No permissions at all — just show a message
+      setRedirecting(false);
+      setLoading(false);
+      setError('ليس لديك صلاحيات محددة. تواصل مع الأدمن.');
+    }
+  }, [user, router]);
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (user?.role === 'admin') {
+      fetchStats();
+    }
+  }, [user]);
 
   const fetchStats = async () => {
     try {
@@ -50,6 +94,14 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   };
+
+  if (redirecting) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

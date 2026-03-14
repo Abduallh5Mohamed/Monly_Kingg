@@ -31,10 +31,22 @@ const userSchema = new mongoose.Schema({
 
   googleId: { type: String },
 
-  role: { type: String, enum: ["user", "admin"], default: "user" },
+  role: { type: String, enum: ["user", "admin", "moderator"], default: "user" },
+
+  // Moderator-specific granular permissions
+  // NOTE: "users" and "moderators" are admin-only – never assign to moderators
+  moderatorPermissions: [{
+    type: String,
+    enum: [
+      "orders", "products", "sellers", "seller_levels",
+      "games", "chats", "analytics", "settings", "security",
+      "notifications", "promotions", "ads", "discounts"
+    ]
+  }],
 
   isSeller: { type: Boolean, default: false },
   sellerApprovedAt: { type: Date },
+  commissionExempt: { type: Boolean, default: false },  // admin can exempt seller from commission
 
   // Profile info
   fullName: { type: String, trim: true },
@@ -86,7 +98,10 @@ const userSchema = new mongoose.Schema({
   }],
 
   isOnline: { type: Boolean, default: false },
-  lastSeenAt: { type: Date, default: Date.now }
+  lastSeenAt: { type: Date, default: Date.now },
+
+  // Comment ban (profanity penalty)
+  commentBannedUntil: { type: Date, default: null },
 },
   { timestamps: true, minimize: true });
 

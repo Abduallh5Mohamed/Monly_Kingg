@@ -75,6 +75,27 @@ class AdminApiService {
         };
     }
 
+    // Fetch wrapper: handles silent token refresh + retry on 401
+    private async apiFetch(url: string, opts: RequestInit = {}): Promise<Response> {
+        const method = (opts.method || 'GET').toUpperCase();
+        const isMutation = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+        if (isMutation) await this.ensureCsrfToken();
+        let response = await fetch(url, this.getRequestOptions(opts));
+        if (response.status === 401) {
+            try {
+                const refreshed = await fetch('/api/v1/auth/refresh', {
+                    method: 'POST',
+                    credentials: 'include',
+                });
+                if (refreshed.ok) {
+                    if (isMutation) await this.ensureCsrfToken();
+                    response = await fetch(url, this.getRequestOptions(opts));
+                }
+            } catch { /* silent */ }
+        }
+        return response;
+    }
+
     // Handle API response
     async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
         if (!response.ok) {
@@ -100,61 +121,40 @@ class AdminApiService {
             role
         });
 
-        const response = await fetch(`${this.baseUrl}/users?${queryParams}`,
-            this.getRequestOptions()
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/users?${queryParams}`);
         return this.handleResponse(response);
     }
 
     // Get admin dashboard statistics
     async getStats(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/stats`,
-            this.getRequestOptions()
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/stats`);
         return this.handleResponse(response);
     }
 
     // Delete user
     async deleteUser(userId: string): Promise<ApiResponse<any>> {
-        await this.ensureCsrfToken();
-        const response = await fetch(`${this.baseUrl}/users/${userId}`,
-            this.getRequestOptions({ method: 'DELETE' })
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/users/${userId}`, { method: 'DELETE' });
         return this.handleResponse(response);
     }
 
     // Toggle user active status
     async toggleUserStatus(userId: string): Promise<ApiResponse<any>> {
-        await this.ensureCsrfToken();
-        const response = await fetch(`${this.baseUrl}/users/${userId}/toggle-status`,
-            this.getRequestOptions({ method: 'PUT' })
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/users/${userId}/toggle-status`, { method: 'PUT' });
         return this.handleResponse(response);
     }
 
     // Update user role
     async updateUserRole(userId: string, role: string): Promise<ApiResponse<any>> {
-        await this.ensureCsrfToken();
-        const response = await fetch(`${this.baseUrl}/users/${userId}/role`,
-            this.getRequestOptions({
-                method: 'PUT',
-                body: JSON.stringify({ role })
-            })
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/users/${userId}/role`, {
+            method: 'PUT',
+            body: JSON.stringify({ role })
+        });
         return this.handleResponse(response);
     }
 
     // Get recent activity
     async getRecentActivity(limit: number = 10): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/activity?limit=${limit}`,
-            this.getRequestOptions()
-        );
-
+        const response = await this.apiFetch(`${this.baseUrl}/activity?limit=${limit}`);
         return this.handleResponse(response);
     }
 
@@ -163,69 +163,51 @@ class AdminApiService {
     async getSellerLevels(params: { page?: number; limit?: number; search?: string; rank?: string } = {}): Promise<ApiResponse<any>> {
         const { page = 1, limit = 20, search = '', rank = '' } = params;
         const queryParams = new URLSearchParams({ page: page.toString(), limit: limit.toString(), search, rank });
-        const response = await fetch(`${this.baseUrl}/seller-levels?${queryParams}`, this.getRequestOptions());
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels?${queryParams}`);
         return this.handleResponse(response);
     }
 
     async setSellerLevel(userId: string, level: number): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/${userId}`, this.getRequestOptions({
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/${userId}`, {
             method: 'PUT',
             body: JSON.stringify({ level })
-        }));
+        });
         return this.handleResponse(response);
     }
 
     async removeSellerLevelOverride(userId: string): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/${userId}/override`, this.getRequestOptions({ method: 'DELETE' }));
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/${userId}/override`, { method: 'DELETE' });
         return this.handleResponse(response);
     }
 
     async getLevelConfig(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/config`, this.getRequestOptions());
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/config`);
         return this.handleResponse(response);
     }
 
     async updateLevelConfig(config: { multiplier?: number; exponent?: number; maxLevel?: number; ranks?: any[] }): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/config`, this.getRequestOptions({
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/config`, {
             method: 'PUT',
             body: JSON.stringify(config)
-        }));
+        });
         return this.handleResponse(response);
     }
 
     async recalculateAllLevels(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/recalculate`, this.getRequestOptions({ method: 'POST' }));
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/recalculate`, { method: 'POST' });
         return this.handleResponse(response);
     }
 
     async getLevelStats(): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/stats`, this.getRequestOptions());
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/stats`);
         return this.handleResponse(response);
     }
 
     async getLevelsTable(from: number = 1, to: number = 100): Promise<ApiResponse<any>> {
-        const response = await fetch(`${this.baseUrl}/seller-levels/table?from=${from}&to=${to}`, this.getRequestOptions());
+        const response = await this.apiFetch(`${this.baseUrl}/seller-levels/table?from=${from}&to=${to}`);
         return this.handleResponse(response);
     }
 }
 
 // Create and export singleton instance
 export const adminApi = new AdminApiService();
-
-// Export individual functions for easier importing
-export const {
-    getUsers,
-    getStats,
-    updateUserRole,
-    deleteUser,
-    toggleUserStatus,
-    getRecentActivity,
-    getSellerLevels,
-    setSellerLevel,
-    removeSellerLevelOverride,
-    getLevelConfig,
-    updateLevelConfig,
-    recalculateAllLevels,
-    getLevelStats,
-    getLevelsTable
-} = adminApi;

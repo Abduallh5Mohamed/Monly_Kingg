@@ -16,6 +16,7 @@ import {
     SlidersHorizontal,
 } from 'lucide-react';
 import Image from 'next/image';
+import { fetchData, fetchParallel } from '@/lib/fetcher';
 
 interface Listing {
     _id: string;
@@ -73,34 +74,23 @@ export default function MarketplacePage() {
     const [games, setGames] = useState<any[]>([]);
 
     useEffect(() => {
-        fetchGames();
-        fetchListings();
-    }, []);
-
-    const fetchGames = async () => {
-        try {
-            const res = await fetch('/api/v1/games');
-            const data = await res.json();
-            if (data.data) setGames(data.data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const fetchListings = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch('/api/v1/listings/public?limit=100');
-            const data = await res.json();
-            if (data.success && data.data) {
-                setListings(data.data);
+        // Fetch games and listings in parallel with in-memory caching
+        const loadData = async () => {
+            try {
+                const [gamesData, listingsData] = await fetchParallel([
+                    { url: '/api/v1/games', options: { ttl: 300_000, tags: ['games'] } },
+                    { url: '/api/v1/listings/public?limit=100', options: { ttl: 60_000, tags: ['listings'] } },
+                ]);
+                if (gamesData?.data) setGames(gamesData.data);
+                if (listingsData?.success && listingsData?.data) setListings(listingsData.data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
             }
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+        loadData();
+    }, []);
 
     const getGameName = (listing: Listing) => {
         return typeof listing.game === 'object' ? listing.game.name : listing.game;

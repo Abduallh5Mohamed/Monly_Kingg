@@ -1,4 +1,43 @@
 import Notification from "./notification.model.js";
+import Deposit from "../deposits/deposit.model.js";
+import Withdrawal from "../withdrawals/withdrawal.model.js";
+import SellerRequest from "../sellers/sellerRequest.model.js";
+import Transaction from "../transactions/transaction.model.js";
+
+// ── Actionable notification types (need admin approval / rejection) ──
+const ACTIONABLE_TYPES = [
+    "new_deposit_request",
+    "new_withdrawal_request",
+    "new_seller_request",
+    "new_dispute",
+    "purchase_disputed",
+];
+
+// ── Pending counts – real DB state, not notification rows ──
+export const getPendingCounts = async (req, res) => {
+    try {
+        const [pendingDeposits, pendingWithdrawals, pendingSellerRequests, disputedTransactions] =
+            await Promise.all([
+                Deposit.countDocuments({ status: "pending" }),
+                Withdrawal.countDocuments({ status: "pending" }),
+                SellerRequest.countDocuments({ status: "pending" }),
+                Transaction.countDocuments({ status: "disputed" }),
+            ]);
+
+        const total = pendingDeposits + pendingWithdrawals + pendingSellerRequests + disputedTransactions;
+
+        return res.status(200).json({
+            pendingDeposits,
+            pendingWithdrawals,
+            pendingSellerRequests,
+            disputedTransactions,
+            total,
+        });
+    } catch (error) {
+        console.error("Get pending counts error:", error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 
 // Get user's notifications (paginated)
 export const getMyNotifications = async (req, res) => {

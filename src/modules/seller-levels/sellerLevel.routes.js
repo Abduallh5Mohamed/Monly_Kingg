@@ -1,7 +1,4 @@
 import express from "express";
-import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
-import { adminLimiter } from "../../middlewares/rateLimiter.js";
 import {
   listSellersWithLevels,
   setSellerLevel,
@@ -15,10 +12,7 @@ import {
 
 const router = express.Router();
 
-// All routes require admin auth
-router.use(authMiddleware);
-router.use(requireAdmin);
-router.use(adminLimiter);
+// Auth is already applied by the parent admin router
 
 // Config
 router.get("/config", getConfig);

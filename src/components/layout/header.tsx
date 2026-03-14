@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 export function Header() {
   const [activeSection, setActiveSection] = useState('home');
   const { user, logout, isAuthenticated, loading } = useAuth();
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -22,6 +23,10 @@ export function Header() {
     { name: 'Accounts', href: '#accounts' },
     { name: 'Support', href: '#support' },
   ];
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,28 +88,27 @@ export function Header() {
 
         {/* Right Section */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {loading ? (
+          {!isHydrated || loading ? (
             <div className="flex items-center gap-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
             </div>
           ) : isAuthenticated && user ? (
             <>
               {/* User Info - Desktop */}
-              <Link href="/user/dashboard" className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-all">
+              <Link href="/user" className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-white/20 transition-all">
                 <User className="h-3.5 w-3.5 text-primary" />
                 <span className="text-white text-xs font-medium max-w-[100px] truncate">{user.username}</span>
               </Link>
 
               {user.role === 'admin' && (
-                <Link href="/admin" className="hidden sm:block">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="font-bold rounded-full border-purple-500/50 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300 text-xs h-8 px-3"
-                  >
-                    Admin
-                  </Button>
-                </Link>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:inline-flex font-bold rounded-full border-purple-500/50 text-purple-400 hover:bg-purple-500 hover:text-white transition-all duration-300 text-xs h-8 px-3"
+                >
+                  <Link href="/admin">Admin</Link>
+                </Button>
               )}
               <Button
                 onClick={handleLogout}
@@ -125,17 +129,17 @@ export function Header() {
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login">
-                <Button variant="ghost" size="sm" className="font-bold rounded-full text-white hover:bg-white/10 text-xs sm:text-sm h-8 sm:h-9">
+              <Button asChild variant="ghost" size="sm" className="font-bold rounded-full text-white hover:bg-white/10 text-xs sm:text-sm h-8 sm:h-9">
+                <Link href="/login">
                   Login
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm" className="font-bold rounded-full bg-primary hover:bg-primary/80 text-white text-xs sm:text-sm h-8 sm:h-9">
+                </Link>
+              </Button>
+              <Button asChild size="sm" className="font-bold rounded-full bg-primary hover:bg-primary/80 text-white text-xs sm:text-sm h-8 sm:h-9">
+                <Link href="/register">
                   <UserPlus className="mr-1.5 h-3.5 w-3.5 hidden sm:inline" />
                   Sign Up
-                </Button>
-              </Link>
+                </Link>
+              </Button>
               {/* Mobile hamburger for non-auth */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -166,7 +170,7 @@ export function Header() {
               <>
                 <div className="border-t border-white/10 my-2" />
                 <Link
-                  href="/user/dashboard"
+                  href="/user"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all"
                 >

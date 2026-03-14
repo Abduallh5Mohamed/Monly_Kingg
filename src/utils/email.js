@@ -1,6 +1,15 @@
 import nodemailer from "nodemailer";
 
-export const sendEmail = async (to, subject, text) => {
+function stripHtml(html = "") {
+  return String(html)
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export const sendEmail = async (to, subject, content) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: 465,
@@ -11,10 +20,14 @@ export const sendEmail = async (to, subject, text) => {
     },
   });
 
+  const body = String(content || "");
+  const looksLikeHtml = /<[^>]+>/.test(body);
+
   await transporter.sendMail({
-    from: `"account_store" <${process.env.SMTP_USER}>`,
+    from: `"MonlyKing" <${process.env.SMTP_USER}>`,
     to,
     subject,
-    text,
+    text: looksLikeHtml ? stripHtml(body) : body,
+    ...(looksLikeHtml ? { html: body } : {}),
   });
 };

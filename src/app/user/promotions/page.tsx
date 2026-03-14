@@ -58,7 +58,7 @@ export default function MyPromotionsPage() {
 
   useEffect(() => {
     if (!authLoading && (!user || !user.isSeller)) {
-      router.push('/user/dashboard');
+      router.push('/user');
     }
   }, [user, authLoading]);
 
@@ -137,8 +137,8 @@ export default function MyPromotionsPage() {
               key={f}
               onClick={() => { setFilter(f); setPage(1); }}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                  : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
                 }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}

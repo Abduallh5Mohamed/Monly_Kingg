@@ -10,6 +10,7 @@ import { ensureCsrfToken } from '@/utils/csrf';
 type TxStatus = 'waiting_seller' | 'waiting_buyer' | 'completed' | 'disputed' | 'refunded' | 'auto_confirmed';
 
 interface Credential { key: string; value: string; }
+interface GameField { name: string; type: 'email' | 'password' | 'phone' | 'number' | 'text'; required: boolean; placeholder?: string; }
 interface Transaction {
   _id: string;
   amount: number;
@@ -20,7 +21,7 @@ interface Transaction {
   disputeReason?: string;
   resolvedNote?: string;
   timeline: { event: string; note: string; timestamp: string }[];
-  listing: { _id: string; title: string; coverImage: string; price: number };
+  listing: { _id: string; title: string; coverImage: string; price: number; game?: { _id: string; name: string; fields: GameField[] } };
   buyer: { _id: string; username: string; avatar?: string };
   seller: { _id: string; username: string; avatar?: string };
 }
@@ -36,8 +37,9 @@ export default function TransactionDetailPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Seller credential form
-  const [fields, setFields] = useState<Credential[]>([{ key: '', value: '' }]);
+  // Seller credential form (initialized from game fields)
+  const [fields, setFields] = useState<Credential[]>([]);
+  const [gameFieldsLoaded, setGameFieldsLoaded] = useState(false);
 
   // Dispute
   const [showDisputeForm, setShowDisputeForm] = useState(false);
@@ -55,13 +57,38 @@ export default function TransactionDetailPage() {
 
   useEffect(() => { fetchTx(); }, [fetchTx]);
 
+  // Initialize fields from game-defined fields when transaction loads
+  useEffect(() => {
+    if (tx && !gameFieldsLoaded) {
+      const gameFields = tx.listing?.game?.fields;
+      if (gameFields && gameFields.length > 0) {
+        setFields(gameFields.map(gf => ({ key: gf.name, value: '' })));
+      } else {
+        setFields([{ key: '', value: '' }]);
+      }
+      setGameFieldsLoaded(true);
+    }
+  }, [tx, gameFieldsLoaded]);
+
   const isSeller = user && tx && user.id === tx.seller._id;
   const isBuyer = user && tx && user.id === tx.buyer._id;
 
   // ── Seller: submit credentials ───────────────────────────────────────────
   const handleSubmitCredentials = async () => {
-    if (fields.some(f => !f.key.trim() || !f.value.trim())) {
-      setError('All fields must have a label and a value.'); return;
+    const gFields = tx?.listing?.game?.fields ?? [];
+    if (gFields.length > 0) {
+      // Validate game-defined required fields
+      for (let i = 0; i < fields.length; i++) {
+        const gf = gFields[i];
+        if (gf?.required && !fields[i].value.trim()) {
+          setError(`"${fields[i].key}" is required.`); return;
+        }
+      }
+    } else {
+      // Generic fallback validation
+      if (fields.some(f => !f.key.trim() || !f.value.trim())) {
+        setError('All fields must have a label and a value.'); return;
+      }
     }
     setSubmitting(true); setError('');
     try {
@@ -125,10 +152,22 @@ export default function TransactionDetailPage() {
   };
 
   // ── Field helpers ────────────────────────────────────────────────────────
+  const gameFields = tx?.listing?.game?.fields ?? [];
+  const hasGameFields = gameFields.length > 0;
   const addField = () => setFields(f => [...f, { key: '', value: '' }]);
   const removeField = (i: number) => setFields(f => f.filter((_, idx) => idx !== i));
   const updateField = (i: number, k: keyof Credential, v: string) =>
     setFields(f => f.map((fld, idx) => idx === i ? { ...fld, [k]: v } : fld));
+
+  const getInputType = (fieldType?: string) => {
+    switch (fieldType) {
+      case 'email': return 'email';
+      case 'password': return 'password';
+      case 'phone': return 'tel';
+      case 'number': return 'number';
+      default: return 'text';
+    }
+  };
 
   // ────────────────────────────────────────────────────────────────────────
   if (loading) return (
@@ -216,33 +255,59 @@ export default function TransactionDetailPage() {
             <p className="text-white/50 text-sm mb-4">Add the account details the buyer needs. These will only be visible to the buyer after submission.</p>
 
             <div className="space-y-3 mb-4">
-              {fields.map((f, i) => (
-                <div key={i} className="flex gap-2">
-                  <input
-                    placeholder="Field name (e.g. Email)"
-                    value={f.key}
-                    onChange={e => updateField(i, 'key', e.target.value)}
-                    className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
-                  />
-                  <input
-                    placeholder="Value"
-                    value={f.value}
-                    onChange={e => updateField(i, 'value', e.target.value)}
-                    className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
-                  />
-                  {fields.length > 1 && (
-                    <button onClick={() => removeField(i)} className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
+              {hasGameFields ? (
+                /* Game-defined fields: show labeled inputs */
+                fields.map((f, i) => {
+                  const gf = gameFields[i];
+                  return (
+                    <div key={i} className="space-y-1.5">
+                      <label className="text-white/70 text-sm font-medium flex items-center gap-1">
+                        {f.key}
+                        {gf?.required && <span className="text-red-400">*</span>}
+                      </label>
+                      <input
+                        type={getInputType(gf?.type)}
+                        placeholder={gf?.placeholder || `Enter ${f.key}`}
+                        value={f.value}
+                        onChange={e => updateField(i, 'value', e.target.value)}
+                        required={gf?.required}
+                        className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                /* Fallback: generic key/value fields */
+                fields.map((f, i) => (
+                  <div key={i} className="flex gap-2">
+                    <input
+                      placeholder="Field name (e.g. Email)"
+                      value={f.key}
+                      onChange={e => updateField(i, 'key', e.target.value)}
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
+                    />
+                    <input
+                      placeholder="Value"
+                      value={f.value}
+                      onChange={e => updateField(i, 'value', e.target.value)}
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
+                    />
+                    {fields.length > 1 && (
+                      <button onClick={() => removeField(i)} className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
 
             <div className="flex gap-3">
-              <button onClick={addField} className="flex items-center gap-2 text-white/60 hover:text-white text-sm py-2 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 transition-all">
-                <Plus className="w-4 h-4" /> Add Field
-              </button>
+              {!hasGameFields && (
+                <button onClick={addField} className="flex items-center gap-2 text-white/60 hover:text-white text-sm py-2 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 transition-all">
+                  <Plus className="w-4 h-4" /> Add Field
+                </button>
+              )}
               <Button onClick={handleSubmitCredentials} disabled={submitting}
                 className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold">
                 {submitting ? 'Sending…' : 'Send Credentials'}

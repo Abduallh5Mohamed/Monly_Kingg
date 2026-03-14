@@ -1,4 +1,5 @@
 import LevelConfig from "./levelConfig.model.js";
+import SiteSettings from "../admin/siteSettings.model.js";
 import {
   getLevelProgress,
   updateSellerLevel,
@@ -81,7 +82,32 @@ export const updateConfig = async (req, res) => {
     if (multiplier !== undefined) config.multiplier = multiplier;
     if (exponent !== undefined) config.exponent = exponent;
     if (maxLevel !== undefined) config.maxLevel = maxLevel;
-    if (ranks !== undefined) config.ranks = ranks;
+
+    // Validate rank commission percentages against global rate
+    if (ranks !== undefined) {
+      const siteSettings = await SiteSettings.getSingleton();
+      const globalCommission = siteSettings.commissionPercent || 0;
+
+      for (const rank of ranks) {
+        if (rank.commissionPercent !== null && rank.commissionPercent !== undefined && rank.commissionPercent !== "") {
+          const val = parseFloat(rank.commissionPercent);
+          if (isNaN(val) || val < 0) {
+            return res.status(400).json({ success: false, message: `Rank "${rank.name}" has invalid commission value` });
+          }
+          if (val >= globalCommission) {
+            return res.status(400).json({
+              success: false,
+              message: `Rank "${rank.name}" commission (${val}%) must be less than the global rate (${globalCommission}%)`,
+            });
+          }
+          rank.commissionPercent = val;
+        } else {
+          rank.commissionPercent = null;
+        }
+      }
+      config.ranks = ranks;
+    }
+
     config.updatedBy = req.user._id;
 
     await config.save();

@@ -188,22 +188,22 @@ async function updateUserWithSync(userId, updates) {
 
 /**
  * Write-Through: update user balance atomically, then sync cache
- * CRITICAL: Financial operation — DB is source of truth
+ * CRITICAL: Financial operation — uses atomic $inc, DB is source of truth
  */
 async function updateBalanceWithSync(userId, balanceChange, reason = 'balance update') {
   try {
-    const user = await User.findById(userId);
-    if (!user) throw new Error('User not found');
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { 'wallet.balance': balanceChange } },
+      { new: true }
+    ).select('-passwordHash -verificationCode -resetPasswordToken -refreshTokens -authLogs -__v').lean();
 
-    const oldBalance = user.wallet?.balance || 0;
-    user.wallet.balance = oldBalance + balanceChange;
-    await user.save();
+    if (!updatedUser) throw new Error('User not found');
 
-    // Sync to cache after DB commit
-    await cacheUser(user);
+    await cacheUser(updatedUser);
 
-    logger.info(`[Cache] Balance: user ${userId} ${oldBalance} → ${user.wallet.balance} (${reason})`);
-    return user;
+    logger.info(`[Cache] Balance: user ${userId} changed by ${balanceChange} → ${updatedUser.wallet?.balance} (${reason})`);
+    return updatedUser;
   } catch (error) {
     logger.error(`[Cache] updateBalanceWithSync error: ${error.message}`);
     throw error;

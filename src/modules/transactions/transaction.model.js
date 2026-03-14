@@ -37,6 +37,18 @@ const transactionSchema = new mongoose.Schema({
     note: { type: String }
   }],
 
+  // ── Commission & Payout ─────────────────────────────────────────────────
+  commissionPercent: { type: Number, default: 0 },      // snapshot of site commission at time of purchase
+  commissionAmount: { type: Number, default: 0 },       // amount deducted as commission
+  sellerNetAmount: { type: Number, default: 0 },        // amount seller actually receives (amount - commission)
+  payoutStatus: {
+    type: String,
+    enum: ["none", "pending_payout", "paid_out"],
+    default: "none"
+  },
+  payoutAt: { type: Date },          // when seller funds should be released
+  paidOutAt: { type: Date },         // when actually paid out
+
   disputeReason: { type: String },
   resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   resolvedNote: { type: String },
@@ -58,5 +70,6 @@ transactionSchema.index({ seller: 1, status: 1, createdAt: -1 });
 transactionSchema.index({ listing: 1 });
 transactionSchema.index({ autoConfirmAt: 1, status: 1 }); // for auto-confirm job
 transactionSchema.index({ idempotencyKey: 1 }, { unique: true, sparse: true });
+transactionSchema.index({ payoutStatus: 1, payoutAt: 1 }); // for payout release job
 
 export default mongoose.model("Transaction", transactionSchema);

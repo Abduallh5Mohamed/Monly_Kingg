@@ -13,7 +13,7 @@ export default function SellerDiscountsPage() {
 
     useEffect(() => {
         if (!authLoading && (!user || !user.isSeller)) {
-            router.push('/user/dashboard');
+            router.push('/user');
         }
     }, [user, authLoading, router]);
 

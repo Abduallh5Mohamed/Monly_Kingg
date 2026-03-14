@@ -1,6 +1,6 @@
 import express from "express";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import * as txController from "./transaction.controller.js";
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.post("/:id/confirm", txController.confirmReceived);
 router.post("/:id/dispute", txController.openDispute);
 
 // Admin: resolve dispute (refund or release)
-router.post("/:id/resolve", requireAdmin, txController.adminResolveDispute);
+router.post("/:id/resolve", requireAdminOrMod, requirePermission("orders"), txController.adminResolveDispute);
 
 // Pending count for bottom navbar badge
 router.get("/pending-count", txController.getPendingCount);
@@ -29,11 +29,11 @@ router.get("/pending-count", txController.getPendingCount);
 // My transactions list
 router.get("/mine", txController.getMyTransactions);
 
-// Admin: all transactions
-router.get("/admin/all", requireAdmin, txController.adminGetAll);
+// Admin / Moderator: all transactions
+router.get("/admin/all", requireAdminOrMod, requirePermission("orders"), txController.adminGetAll);
 
-// Admin: single transaction detail (with seller ID info)
-router.get("/admin/:id", requireAdmin, txController.adminGetTransactionDetail);
+// Admin / Moderator: single transaction detail (with seller ID info)
+router.get("/admin/:id", requireAdminOrMod, requirePermission("orders"), txController.adminGetTransactionDetail);
 
 // Single transaction (buyer, seller, or admin)
 router.get("/:id", txController.getTransactionById);

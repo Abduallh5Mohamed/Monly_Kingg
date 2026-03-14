@@ -44,7 +44,7 @@ export default function ModernLoginForm() {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className="fixed inset-0 overflow-hidden">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -52,8 +52,8 @@ export default function ModernLoginForm() {
       />
       <div className="absolute inset-0 bg-black/30" />
       
-      {/* Content positioned to the right */}
-      <div className="relative z-10 min-h-screen flex items-center justify-end pr-8 md:pr-16 lg:pr-24 pt-20">
+      {/* Content - centered on mobile, right-aligned on desktop */}
+      <div className="relative z-10 h-full flex items-center justify-center md:justify-end px-4 md:pr-16 lg:pr-24 pt-16 pb-6 overflow-y-auto">
         <Card className="w-full max-w-md shadow-xl border-0 bg-transparent backdrop-blur-md">
         <CardHeader className="space-y-1 text-center pb-8">
           <CardTitle className="text-3xl font-bold text-white">

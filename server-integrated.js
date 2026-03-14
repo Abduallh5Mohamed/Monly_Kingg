@@ -98,9 +98,13 @@ nextApp.prepare().then(async () => {
   // Silence Chrome DevTools .well-known probe
   app.use('/.well-known', (req, res) => res.status(204).end());
 
-  // Increase payload limit for image uploads (base64) — but limit to 10MB to prevent abuse
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  // Default payload limit: 2MB for normal requests
+  app.use(express.json({ limit: '2mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '2mb' }));
+
+  // Higher limit for routes that handle base64 image uploads
+  app.use('/api/v1/users/profile', express.json({ limit: '5mb' }));
+  app.use('/api/v1/users/complete-profile', express.json({ limit: '5mb' }));
 
   // ✅ SECURITY: NoSQL injection protection (deep recursive, handles arrays + prototype pollution)
   function sanitizeObject(obj, depth = 0) {
@@ -129,7 +133,8 @@ nextApp.prepare().then(async () => {
       sanitizeObject(req.query);
       sanitizeObject(req.params);
     } catch (err) {
-      // non-fatal: continue request
+      // Sanitization failed — reject request to prevent injection bypass
+      return res.status(400).json({ message: 'Invalid request data' });
     }
     next();
   });
@@ -248,8 +253,9 @@ nextApp.prepare().then(async () => {
       if (req.headers['x-no-compression']) return false;
       return compression.filter(req, res);
     },
-    level: 4,
-    threshold: 1024,
+    level: 6, // Balanced compression (good ratio + reasonable CPU)
+    threshold: 512, // Compress anything > 512 bytes
+    memLevel: 8, // More memory = faster compression
   }));
 
   // Serve static files from uploads directory with security headers
@@ -261,13 +267,17 @@ nextApp.prepare().then(async () => {
     next();
   }, express.static(uploadsPath), async (req, res, next) => {
     // Fallback: if file not found in root, search subdirectories
+    // Exclude sensitive directories — those require auth
     const fileName = path.basename(req.path);
-    const fs = await import('fs');
-    const subdirs = ['ads', 'other', 'avatars', 'listings', 'receipts', 'chat_media', 'profile_picture', 'payment_proof', 'account_image', 'ticket_attachment'];
-    for (const dir of subdirs) {
+    const { access } = await import('fs/promises');
+    const publicDirs = ['ads', 'other', 'avatars', 'listings', 'chat_media', 'profile_picture', 'account_image'];
+    for (const dir of publicDirs) {
       const filePath = path.join(uploadsPath, dir, fileName);
-      if (fs.existsSync(filePath)) {
+      try {
+        await access(filePath);
         return res.sendFile(filePath);
+      } catch {
+        // File not in this dir, continue
       }
     }
     next();
@@ -305,6 +315,9 @@ nextApp.prepare().then(async () => {
     import("./src/modules/promotions/promotion.routes.js"),
     import("./src/modules/transactions/transaction.routes.js"),
     import("./src/modules/campaigns/campaign.routes.js"),
+    import("./src/modules/favorites/favorite.routes.js"),
+    import("./src/modules/tickets/ticket.routes.js"),
+    import("./src/modules/ratings/sellerRating.routes.js"),
   ]);
 
   const routePaths = [
@@ -312,7 +325,8 @@ nextApp.prepare().then(async () => {
     "/api/v1/seller", "/api/v1/listings", "/api/v1/games",
     "/api/v1/withdrawals", "/api/v1/deposits", "/api/v1/notifications",
     "/api/v1/ads", "/api/v1/discounts", "/api/v1/promotions",
-    "/api/v1/transactions", "/api/v1/campaigns",
+    "/api/v1/transactions", "/api/v1/campaigns", "/api/v1/favorites",
+    "/api/v1/tickets", "/api/v1/ratings",
   ];
 
   routeModules.forEach((result, i) => {
@@ -355,8 +369,11 @@ nextApp.prepare().then(async () => {
 
   // Global error handler middleware (must be before Next.js handler)
   app.use((err, req, res, next) => {
-    // Log the error
+    // Log the error with stack trace for debugging
     console.error('[ERROR]', err.message);
+    if (err.stack && process.env.NODE_ENV !== 'production') {
+      console.error(err.stack);
+    }
 
     // Handle MongoDB duplicate key errors
     if (err.code === 11000) {
@@ -464,7 +481,19 @@ nextApp.prepare().then(async () => {
       }
 
       console.log('📡 Closing server...');
-      server.close(() => {
+      server.close(async () => {
+        // Close database and cache connections
+        try {
+          const mongoose = (await import('mongoose')).default;
+          await mongoose.connection.close();
+          console.log('✅ MongoDB connection closed');
+        } catch (_) { }
+
+        try {
+          await redis.disconnect();
+          console.log('✅ Redis connection closed');
+        } catch (_) { }
+
         console.log('✅ Server closed successfully');
         process.exit(0);
       });

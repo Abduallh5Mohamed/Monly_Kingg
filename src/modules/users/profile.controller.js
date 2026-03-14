@@ -2,30 +2,33 @@ import User from "./user.model.js";
 import Listing from "../listings/listing.model.js";
 import Favorite from "../favorites/favorite.model.js";
 import cacheService from '../../services/cacheService.js';
-import fs from 'fs';
+import fs from 'fs/promises';
+import fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Helper function to save base64 image
-const saveBase64Image = (base64String, userId) => {
-    try {
-        console.log('🖼️ [saveBase64Image] Called with userId:', userId);
-        console.log('🖼️ [saveBase64Image] Base64 string length:', base64String ? base64String.length : 0);
-        console.log('🖼️ [saveBase64Image] Starts with data:image:', base64String?.startsWith('data:image/'));
+// Max avatar size: 2MB (base64 encoded ~2.7MB string)
+const MAX_AVATAR_BASE64_LENGTH = 2_700_000;
 
+// Helper function to save base64 image
+const saveBase64Image = async (base64String, userId) => {
+    try {
         // Check if it's a base64 string
         if (!base64String || !base64String.startsWith('data:image/')) {
-            console.log('❌ [saveBase64Image] Invalid base64 string');
+            return null;
+        }
+
+        // Size limit check
+        if (base64String.length > MAX_AVATAR_BASE64_LENGTH) {
             return null;
         }
 
         // Extract image data
-        const matches = base64String.match(/^data:image\/(\w+);base64,(.+)$/);
+        const matches = base64String.match(/^data:image\/(jpeg|jpg|png|gif|webp);base64,(.+)$/);
         if (!matches) {
-            console.log('❌ [saveBase64Image] Regex match failed');
             return null;
         }
 
@@ -33,30 +36,79 @@ const saveBase64Image = (base64String, userId) => {
         const data = matches[2];
         const buffer = Buffer.from(data, 'base64');
 
-        // Create unique filename
-        const filename = `avatar-${userId}-${Date.now()}.${ext}`;
+        // Create unique filename with crypto-safe random
+        const { randomUUID } = await import('crypto');
+        const filename = `avatar-${userId}-${randomUUID()}.${ext}`;
         const uploadsDir = path.join(__dirname, '../../../uploads/avatars');
 
-        console.log('📁 [saveBase64Image] Upload dir:', uploadsDir);
-
         // Ensure directory exists
-        if (!fs.existsSync(uploadsDir)) {
-            console.log('📁 [saveBase64Image] Creating directory...');
-            fs.mkdirSync(uploadsDir, { recursive: true });
-        }
+        await fs.mkdir(uploadsDir, { recursive: true });
 
         const filepath = path.join(uploadsDir, filename);
-        fs.writeFileSync(filepath, buffer);
+        await fs.writeFile(filepath, buffer);
 
-        console.log('✅ [saveBase64Image] File saved:', filepath);
-
-        const avatarPath = `/uploads/avatars/${filename}`;
-        console.log('✅ [saveBase64Image] Returning path:', avatarPath);
-
-        return avatarPath;
+        return `/uploads/avatars/${filename}`;
     } catch (error) {
-        console.error('❌ [saveBase64Image] Error:', error);
+        console.error('[saveBase64Image] Error:', error.message);
         return null;
+    }
+};
+
+// Get public seller profile (no sensitive data)
+export const getPublicSellerProfile = async (req, res) => {
+    try {
+        const { sellerId } = req.params;
+
+        if (!sellerId || !sellerId.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({ message: "Invalid seller ID" });
+        }
+
+        const user = await User.findById(sellerId)
+            .select("username avatar bio isSeller verified createdAt stats isOnline lastSeenAt sellerApprovedAt")
+            .lean();
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Get seller's available listings
+        const listings = await Listing.find({ seller: sellerId, status: "available" })
+            .select("title price coverImage game status createdAt images")
+            .populate("game", "name icon")
+            .sort({ createdAt: -1 })
+            .limit(50)
+            .lean();
+
+        // Count total sold
+        const totalSold = await Listing.countDocuments({ seller: sellerId, status: "sold" });
+
+        return res.json({
+            success: true,
+            data: {
+                seller: {
+                    id: user._id,
+                    username: user.username,
+                    avatar: user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`,
+                    bio: user.bio,
+                    isSeller: user.isSeller,
+                    verified: user.verified,
+                    createdAt: user.createdAt,
+                    sellerSince: user.sellerApprovedAt,
+                    isOnline: user.isOnline,
+                    lastSeenAt: user.lastSeenAt,
+                    stats: {
+                        level: user.stats?.level || 1,
+                        rank: user.stats?.rank || "Starter",
+                        successfulTrades: user.stats?.successfulTrades || 0,
+                        totalSold,
+                    }
+                },
+                listings
+            }
+        });
+    } catch (error) {
+        console.error("Get public seller profile error:", error);
+        return res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -70,21 +122,32 @@ export const getProfile = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const userFromCache = await cacheService.getUser(userId);
-
-        const [user, myListings, favorites, totalSales] = await Promise.all([
-            userFromCache || User.findById(userId)
+        // Try cache first, only query DB if cache miss
+        let user = await cacheService.getUser(userId);
+        if (!user) {
+            user = await User.findById(userId)
                 .select("-passwordHash -verificationCode -verificationCodeValidation -forgotPasswordCode -forgotPasswordCodeValidation -passwordResetToken -passwordResetExpires -refreshTokens -failedLoginAttempts -lockUntil -authLogs -twoFA.secret")
-                .lean(),
-            Listing.find({ seller: userId })
-                .select('game status createdAt title price')
-                .populate("game", "name icon")
-                .sort({ createdAt: -1 })
-                .limit(20)
-                .lean(),
+                .lean();
+        }
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Run secondary queries in parallel (only if needed)
+        const [myListings, favorites, totalSales] = await Promise.all([
+            user.isSeller
+                ? Listing.find({ seller: userId })
+                    .select('game status createdAt title price')
+                    .populate("game", "name icon")
+                    .sort({ createdAt: -1 })
+                    .limit(20)
+                    .lean()
+                : Promise.resolve([]),
             Favorite.find({ user: userId })
                 .populate({
                     path: "listing",
+                    select: "title price coverImage game status",
                     populate: { path: "game", select: "name icon" }
                 })
                 .sort({ createdAt: -1 })
@@ -203,28 +266,21 @@ export const updateProfile = async (req, res) => {
 
         // Handle avatar - convert base64 to file if needed
         if (avatar !== undefined) {
-            console.log('🎨 [updateProfile] Avatar received, type:', typeof avatar, 'length:', avatar?.length);
-            console.log('🎨 [updateProfile] Avatar starts with data:image/:', avatar?.startsWith('data:image/'));
-
             if (avatar.startsWith('data:image/')) {
-                // Base64 image - save it
-                console.log('🎨 [updateProfile] Converting base64 to file...');
-                const avatarPath = saveBase64Image(avatar, userId);
+                // Base64 image - save it (async)
+                const avatarPath = await saveBase64Image(avatar, userId);
 
                 if (avatarPath) {
-                    console.log('✅ [updateProfile] Avatar saved, setting path:', avatarPath);
                     updates.avatar = avatarPath;
 
-                    // Delete old avatar if exists
+                    // Delete old avatar if exists (async, non-blocking)
                     if (user.avatar && user.avatar.startsWith('/uploads/avatars/')) {
                         const oldPath = path.join(__dirname, '../../../', user.avatar);
-                        if (fs.existsSync(oldPath)) {
-                            fs.unlinkSync(oldPath);
-                        }
+                        fs.unlink(oldPath).catch(() => { });
                     }
                 }
-            } else if (avatar.startsWith('/uploads/') || avatar.startsWith('http')) {
-                // Already a valid URL - keep it
+            } else if (avatar.startsWith('/uploads/')) {
+                // Only allow internal upload paths — reject external URLs to prevent SSRF
                 updates.avatar = avatar;
             }
         }

@@ -33,11 +33,11 @@ export default function AdminLayout({
   }, []);
 
   useEffect(() => {
-    if (mounted && !loading && (!user || user.role !== 'admin')) {
+    if (mounted && !loading && (!user || (user.role !== 'admin' && user.role !== 'moderator'))) {
       router.replace('/login');
     }
-    // Fetch CSRF token as soon as admin is confirmed
-    if (mounted && !loading && user?.role === 'admin') {
+    // Fetch CSRF token as soon as admin/moderator is confirmed
+    if (mounted && !loading && (user?.role === 'admin' || user?.role === 'moderator')) {
       fetchCsrfToken();
     }
   }, [user, loading, router, mounted]);
@@ -51,7 +51,7 @@ export default function AdminLayout({
     );
   }
 
-  if (!user || user.role !== 'admin') {
+  if (!user || (user.role !== 'admin' && user.role !== 'moderator')) {
     return (
       <div className="min-h-screen bg-[#0f1117] flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>

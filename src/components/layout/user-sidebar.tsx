@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Store, MessageCircle, CreditCard, User, ArrowRightLeft } from 'lucide-react';
+import { Home, Store, MessageCircle, CreditCard, User, ArrowRightLeft, Bell } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useSocket } from '@/lib/socket-context';
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +22,9 @@ export function UserSidebar() {
     const { on } = useSocket();
     const [mounted, setMounted] = useState(false);
     const [chatUnread, setChatUnread] = useState(false);
+    const [notifUnread, setNotifUnread] = useState(false);
+
+    const isOnNotifPage = !!(pathname?.startsWith('/user/notifications'));
 
     // Keep a ref so the socket callback always sees the latest pathname
     const pathnameRef = useRef(pathname);
@@ -64,13 +67,51 @@ export function UserSidebar() {
         });
     }, [on]);
 
+    // ── Fetch notification unread count ─────────────────────────────────────
+    useEffect(() => {
+        if (!user) return;
+        let mounted = true;
+        const fetchNotifCount = async () => {
+            try {
+                const res = await fetch('/api/v1/notifications/unread-count', { credentials: 'include' });
+                if (!res.ok || !mounted) return;
+                const data = await res.json();
+                setNotifUnread((data.unreadCount || 0) > 0);
+            } catch { /* silent */ }
+        };
+        fetchNotifCount();
+        const iv = setInterval(fetchNotifCount, 30000);
+        return () => { mounted = false; clearInterval(iv); };
+    }, [user]);
+
+    // ── Clear notif dot when on notifications page ─────────────────────────
+    useEffect(() => {
+        if (isOnNotifPage) setNotifUnread(false);
+    }, [isOnNotifPage]);
+
+    const isSeller = !!(user?.isSeller);
+
     const leftItems: NavItem[] = [
         {
             icon: MessageCircle, label: 'Chat', path: '/user/chat',
             dot: chatUnread && !isOnChatPage,
             activeColor: 'from-pink-500 to-rose-500', glowColor: 'rgba(236,72,153,0.35)'
         },
-        { icon: Store, label: 'Store', path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
+        ...(isSeller
+            ? [
+                { icon: Store, label: 'Store', path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
+                {
+                    icon: Bell, label: 'Alerts', path: '/user/notifications',
+                    dot: notifUnread && !isOnNotifPage,
+                    activeColor: 'from-cyan-400 to-blue-500', glowColor: 'rgba(34,211,238,0.35)'
+                },
+            ]
+            : [{
+                icon: Bell, label: 'Alerts', path: '/user/notifications',
+                dot: notifUnread && !isOnNotifPage,
+                activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)'
+            }]
+        ),
     ];
 
     const rightItems: NavItem[] = [
@@ -94,7 +135,7 @@ export function UserSidebar() {
             <Link
                 key={item.path}
                 href={item.path}
-                className="relative flex flex-col items-center justify-center gap-0.5 py-2 px-3.5 transition-all duration-300 group"
+                className={`relative flex flex-col items-center justify-center gap-0.5 py-2 transition-all duration-300 group ${isSeller ? 'px-2.5' : 'px-3.5'}`}
             >
                 {/* Active dot indicator */}
                 {isActive && (

@@ -12,16 +12,9 @@ const nextConfig = {
     } : false,
   },
 
-  // Reduce bundle size via tree-shaking
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
-    },
-  },
-
   // Experimental perf features
   experimental: {
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select', '@radix-ui/react-tabs', '@radix-ui/react-toast'],
     scrollRestoration: true,
   },
 
@@ -126,6 +119,32 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        // Cache uploaded images for 1 day (they have unique filenames)
+        source: '/uploads/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+        ],
+      },
+      {
+        // API responses: short cache + stale-while-revalidate for fast perceived load
+        source: '/api/v1/games/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=300, stale-while-revalidate=600' },
+        ],
+      },
+      {
+        source: '/api/v1/listings/browse',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=60, stale-while-revalidate=120' },
+        ],
+      },
+      {
+        source: '/api/v1/listings/public',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=60, stale-while-revalidate=120' },
         ],
       },
       {

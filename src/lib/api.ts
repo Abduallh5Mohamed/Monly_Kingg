@@ -33,6 +33,7 @@ interface UserData {
   avatar?: string;
   bio?: string;
   profileCompleted?: boolean;
+  moderatorPermissions?: string[];
 }
 
 interface AuthResponse {

@@ -2,6 +2,7 @@ import Withdrawal from "./withdrawal.model.js";
 import User from "../users/user.model.js";
 import cacheService from '../../services/cacheService.js';
 import socketService from '../../services/socketService.js';
+import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
 
 export const submitWithdrawal = async (req, res) => {
   try {
@@ -52,6 +53,16 @@ export const submitWithdrawal = async (req, res) => {
 
     // Notify admins of new withdrawal in real-time
     socketService.notifyAdminsNewWithdrawal(withdrawal);
+
+    // Persist DB notification for all admins
+    notifyAllAdmins({
+      type: 'new_withdrawal_request',
+      title: 'New Withdrawal Request',
+      message: `${withdrawal.user.username} requested a withdrawal of ${withdrawal.amount} EGP via ${withdrawal.method}`,
+      relatedModel: 'Withdrawal',
+      relatedId: withdrawal._id,
+      metadata: { amount: withdrawal.amount, method: withdrawal.method },
+    });
 
     return res.status(201).json({ message: "Withdrawal request submitted successfully", data: withdrawal });
   } catch (error) {
@@ -160,6 +171,16 @@ export const approveWithdrawal = async (req, res) => {
     // Notify user of their withdrawal approval
     socketService.notifyUserWithdrawalStatus(withdrawal.user._id.toString(), withdrawal);
 
+    // Persist DB notification for user
+    createNotification({
+      userId: withdrawal.user._id,
+      type: 'withdrawal_approved',
+      title: 'Withdrawal Approved ✅',
+      message: `Your withdrawal of ${withdrawal.amount} EGP has been approved. Transfer will be processed soon.`,
+      relatedModel: 'Withdrawal',
+      relatedId: withdrawal._id,
+    });
+
     return res.status(200).json({ message: "Withdrawal approved", data: withdrawal });
   } catch (error) {
     console.error("Approve withdrawal error:", error);
@@ -190,6 +211,16 @@ export const rejectWithdrawal = async (req, res) => {
 
     // Notify user of their withdrawal rejection
     socketService.notifyUserWithdrawalStatus(withdrawal.user.toString(), withdrawal);
+
+    // Persist DB notification for user
+    createNotification({
+      userId: withdrawal.user,
+      type: 'withdrawal_rejected',
+      title: 'Withdrawal Rejected ❌',
+      message: `Your withdrawal request has been rejected. Reason: ${withdrawal.rejectionReason}`,
+      relatedModel: 'Withdrawal',
+      relatedId: withdrawal._id,
+    });
 
     return res.status(200).json({ message: "Withdrawal rejected", data: withdrawal });
   } catch (error) {

@@ -67,6 +67,12 @@ export const createCampaign = async (req, res) => {
             return res.status(400).json({ success: false, message: "discountPercent must be 1-100" });
         }
 
+        // Validate end date is in the future
+        const parsedEndDate = new Date(endDate);
+        if (parsedEndDate <= new Date()) {
+            return res.status(400).json({ success: false, message: "endDate must be in the future" });
+        }
+
         // Validate games exist
         const games = await Game.find({ _id: { $in: gameIds }, status: "active" });
         if (games.length !== gameIds.length) {
@@ -295,14 +301,15 @@ export const getActiveCampaigns = async (req, res) => {
                     .limit(30)
                     .lean();
 
-                // Calculate discounted commission info for display
+                // Calculate discounted prices for display
                 listings = listings.map(l => ({
                     ...l,
                     campaignDiscount: {
                         type: "mandatory",
                         discountPercent: campaign.discountPercent,
-                        // The buyer sees the same price, but system takes less commission
-                        label: `${campaign.discountPercent}% off platform commission`,
+                        originalPrice: l.price,
+                        discountedPrice: parseFloat((l.price * (1 - campaign.discountPercent / 100)).toFixed(2)),
+                        label: `${campaign.discountPercent}% off`,
                     },
                 }));
             } else {
@@ -370,15 +377,39 @@ export const getMyInvites = async (req, res) => {
         const sellerId = req.user._id;
         const now = new Date();
 
+        // Get all games the seller has listings for
+        const sellerListings = await Listing.find({
+            seller: sellerId,
+            status: "available",
+        }).select("game").lean();
+        const sellerGameIds = [...new Set(sellerListings.map(l => l.game.toString()))];
+
+        // Find campaigns where seller was notified OR has listings matching campaign games
         const campaigns = await Campaign.find({
             type: "voluntary",
             status: "active",
             endDate: { $gte: now },
-            notifiedSellers: sellerId,
+            $or: [
+                { notifiedSellers: sellerId },
+                { games: { $in: sellerGameIds } },
+            ],
         })
             .populate("games", "name slug icon")
             .sort({ createdAt: -1 })
             .lean();
+
+        // Auto-add seller to notifiedSellers for any campaign they weren't notified about
+        for (const campaign of campaigns) {
+            const wasNotified = (campaign.notifiedSellers || []).some(
+                id => id.toString() === sellerId.toString()
+            );
+            if (!wasNotified) {
+                await Campaign.updateOne(
+                    { _id: campaign._id },
+                    { $addToSet: { notifiedSellers: sellerId } }
+                );
+            }
+        }
 
         // For each campaign, get seller's eligible listings and participation status
         const enriched = await Promise.all(campaigns.map(async (campaign) => {

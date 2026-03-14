@@ -2,6 +2,7 @@ import Deposit from "./deposit.model.js";
 import User from "../users/user.model.js";
 import cacheService from '../../services/cacheService.js';
 import socketService from '../../services/socketService.js';
+import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -110,6 +111,16 @@ export const submitDeposit = async (req, res) => {
 
         // Notify admins of new deposit in real-time
         socketService.notifyAdminsNewDeposit(deposit);
+
+        // Persist DB notification for all admins
+        notifyAllAdmins({
+            type: 'new_deposit_request',
+            title: 'New Deposit Request',
+            message: `${deposit.user.username} requested a deposit of ${deposit.amount} EGP via ${deposit.paymentMethod}`,
+            relatedModel: 'Deposit',
+            relatedId: deposit._id,
+            metadata: { amount: deposit.amount, paymentMethod: deposit.paymentMethod },
+        });
 
         return res.status(201).json({
             message: "Deposit request submitted successfully",
@@ -231,6 +242,16 @@ export const approveDeposit = async (req, res) => {
         // Real-time: notify user of approval
         socketService.notifyUserDepositStatus(deposit.user._id.toString(), deposit);
 
+        // Persist DB notification for user
+        createNotification({
+            userId: deposit.user._id,
+            type: 'deposit_approved',
+            title: 'Deposit Approved ✅',
+            message: `${amountToCredit} EGP has been added to your balance successfully`,
+            relatedModel: 'Deposit',
+            relatedId: deposit._id,
+        });
+
         return res.status(200).json({
             message: `Deposit approved and ${amountToCredit} LE added to balance`,
             data: deposit
@@ -262,6 +283,16 @@ export const rejectDeposit = async (req, res) => {
         socketService.notifyAdminsDepositUpdate(deposit);
         // Real-time: notify user of rejection
         socketService.notifyUserDepositStatus(deposit.user._id.toString(), deposit);
+
+        // Persist DB notification for user
+        createNotification({
+            userId: deposit.user._id,
+            type: 'deposit_rejected',
+            title: 'Deposit Rejected ❌',
+            message: `Your deposit request has been rejected. Reason: ${deposit.rejectionReason}`,
+            relatedModel: 'Deposit',
+            relatedId: deposit._id,
+        });
 
         return res.status(200).json({ message: "Deposit rejected", data: deposit });
     } catch (error) {

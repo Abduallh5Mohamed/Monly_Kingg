@@ -82,10 +82,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [user]);
 
   useEffect(() => {
+    const publicAuthPages = [
+      '/login',
+      '/register',
+      '/forgot-password',
+      '/reset-password',
+      '/verify-email',
+    ];
+    const isPublicAuthPage = pathname === '/' || publicAuthPages.some((page) => pathname?.startsWith(page));
+
+    if (isPublicAuthPage) {
+      setLoading(false);
+      return;
+    }
+
     // Always check auth on mount - cookies are httpOnly so document.cookie can't see them
     // The server will validate the tokens via the cookie header automatically
     checkAuthStatus();
-  }, []); // Only on mount
+    // Auto-refresh token every 12 minutes (token expires at 15 min)
+    const refreshInterval = setInterval(checkAuthStatus, 12 * 60 * 1000);
+    return () => clearInterval(refreshInterval);
+  }, [pathname]);
 
   // Track route changes (ref — no re-render)
   useEffect(() => {
@@ -104,8 +121,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setLastAuthCheck(Date.now());
         lastActivityRef.current = Date.now(); // Reset activity on successful auth
       } else {
-        // Failed to refresh - clear user
-        console.log('❌ Auth status: Failed to refresh token', response.message);
+        // Failed to refresh - clear user. "No token" is expected for logged-out visitors.
+        if (response.message !== 'No token') {
+          console.log('❌ Auth status: Failed to refresh token', response.message);
+        }
         setUser(null);
       }
     } catch (error) {
@@ -142,12 +161,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (response.data.userData.profileCompleted !== true) {
           console.log('➡️ Redirecting to /complete-profile');
           router.push('/complete-profile');
-        } else if (response.data.userData.role === 'admin') {
+        } else if (response.data.userData.role === 'admin' || response.data.userData.role === 'moderator') {
           console.log('➡️ Redirecting to /admin/dashboard');
           router.push('/admin/dashboard');
         } else {
-          console.log('➡️ Redirecting to /user/dashboard');
-          router.push('/user/dashboard');
+          console.log('➡️ Redirecting to /user');
+          router.push('/user');
         }
         return true;
       } else {
@@ -246,7 +265,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           console.log('🎯 [Frontend] Redirect Decision:', {
             profileCompleted: response.data.userData.profileCompleted,
             shouldCompleteProfile,
-            willRedirectTo: shouldCompleteProfile ? '/complete-profile' : '/user/dashboard'
+            willRedirectTo: shouldCompleteProfile ? '/complete-profile' : '/user'
           });
 
           // Redirect to complete-profile if profileCompleted is false, undefined, or null
@@ -256,8 +275,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             router.replace('/complete-profile');
           } else {
             // Redirect user to dashboard
-            console.log('➡️ [Frontend] Redirecting to /user/dashboard');
-            router.replace('/user/dashboard');
+            console.log('➡️ [Frontend] Redirecting to /user');
+            router.replace('/user');
           }
         }, 100);
 

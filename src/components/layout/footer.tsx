@@ -19,7 +19,7 @@ const quickLinks = [
 const accountLinks = [
   { name: 'Login', href: '/login' },
   { name: 'Register', href: '/register' },
-  { name: 'Dashboard', href: '/user/dashboard' },
+  { name: 'Dashboard', href: '/user' },
   { name: 'Become a Seller', href: '/register' },
 ];
 

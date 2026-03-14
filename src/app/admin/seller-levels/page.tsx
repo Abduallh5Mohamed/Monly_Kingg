@@ -35,6 +35,7 @@ interface RankConfig {
   maxLevel: number;
   color: string;
   icon: string;
+  commissionPercent: number | null;
 }
 
 interface LevelConfigData {
@@ -102,11 +103,10 @@ export default function SellerLevelsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  activeTab === tab.id
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${activeTab === tab.id
                     ? 'bg-white/[0.08] text-white'
                     : 'text-white/40 hover:text-white/70 hover:bg-white/[0.04]'
-                }`}
+                  }`}
               >
                 <Icon className="h-4 w-4" />
                 {tab.label}
@@ -483,7 +483,7 @@ function ConfigTab() {
   const addRank = () => {
     const lastRank = ranks[ranks.length - 1];
     const newMin = lastRank ? lastRank.maxLevel + 1 : 1;
-    setRanks([...ranks, { name: 'New Rank', minLevel: newMin, maxLevel: newMin + 49, color: '#FFFFFF', icon: '⭐' }]);
+    setRanks([...ranks, { name: 'New Rank', minLevel: newMin, maxLevel: newMin + 49, color: '#FFFFFF', icon: '⭐', commissionPercent: null }]);
   };
 
   const removeRank = (index: number) => {
@@ -559,7 +559,7 @@ function ConfigTab() {
 
       {/* Ranks Configuration */}
       <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6 lg:col-span-2">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-lg font-semibold text-white">Rank Tiers</h3>
             <p className="text-white/40 text-sm">Define rank names, colors, and level ranges</p>
@@ -567,6 +567,14 @@ function ConfigTab() {
           <Button variant="outline" size="sm" onClick={addRank} className="border-white/[0.06] text-white/70">
             <Plus className="h-4 w-4 mr-1" /> Add Rank
           </Button>
+        </div>
+
+        <div className="flex items-start gap-2.5 p-3 mb-5 bg-yellow-500/5 border border-yellow-500/10 rounded-lg">
+          <AlertTriangle className="h-4 w-4 text-yellow-500 shrink-0 mt-0.5" />
+          <p className="text-xs text-yellow-500/80">
+            <strong className="text-yellow-500">Commission per rank:</strong> Set a custom commission % for each rank tier.
+            Leave empty to use the global rate. The rank rate must be lower than the global commission rate set in Financial Settings.
+          </p>
         </div>
 
         <div className="space-y-3">
@@ -610,6 +618,20 @@ function ConfigTab() {
                   className="w-8 h-8 rounded cursor-pointer border border-white/[0.06]"
                 />
                 <LevelBadge level={rank.minLevel} rank={rank.name} rankColor={rank.color} rankIcon={rank.icon} size="sm" />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-white/40 text-xs">Commission</span>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="100"
+                  placeholder="Global"
+                  value={rank.commissionPercent ?? ''}
+                  onChange={(e) => updateRank(index, 'commissionPercent', e.target.value === '' ? null : parseFloat(e.target.value))}
+                  className="w-16 bg-white/[0.04] text-white text-center border border-white/[0.06] rounded p-1 text-sm placeholder:text-white/20 [color-scheme:dark]"
+                />
+                <span className="text-white/40 text-xs">%</span>
               </div>
               <button onClick={() => removeRank(index)} className="ml-auto p-1.5 rounded hover:bg-red-500/10 text-white/20 hover:text-red-500 transition-colors">
                 <Trash2 className="h-3.5 w-3.5" />
@@ -755,11 +777,10 @@ function LevelsTableTab() {
           <button
             key={opt.label}
             onClick={() => setRange({ from: opt.from, to: opt.to })}
-            className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-              range.from === opt.from
+            className={`px-3 py-1.5 rounded-md text-sm transition-all ${range.from === opt.from
                 ? 'bg-white/[0.08] text-white font-medium'
                 : 'text-white/40 hover:text-white/60 hover:bg-white/[0.04]'
-            }`}
+              }`}
           >
             Lv {opt.label}
           </button>

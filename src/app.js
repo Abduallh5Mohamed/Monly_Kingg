@@ -19,7 +19,10 @@ import cacheRoutes from "./routes/cache.routes.js";
 import rankingRoutes from "./routes/ranking.routes.js";
 import transactionRoutes from "./modules/transactions/transaction.routes.js";
 import sellerLevelRoutes from "./modules/seller-levels/sellerLevel.routes.js";
+import ticketRoutes from "./modules/tickets/ticket.routes.js";
+import sellerRatingRoutes from "./modules/ratings/sellerRating.routes.js";
 import { startAutoConfirmJob } from "./jobs/autoConfirmTransactions.js";
+import { startPayoutReleaseJob } from "./jobs/sellerPayoutRelease.js";
 import { startTransactionWorkers } from "./workers/transactionWorker.js";
 import { runStartupRecovery } from "./jobs/startupRecovery.js";
 import helmet from "helmet";
@@ -33,6 +36,11 @@ import passport from "./config/passport.js";
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
 import "./modules/users/user.model.js";
+import "./modules/ratings/sellerRating.model.js";
+import "./modules/ratings/commentPenalty.model.js";
+import "./modules/admin/securityEvent.model.js";
+import "./modules/admin/blockedIP.model.js";
+import "./modules/admin/auditLog.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,6 +51,7 @@ dotenv.config();
 connectDB().then(() => {
   createIndexes();
   startAutoConfirmJob();
+  startPayoutReleaseJob();
   startTransactionWorkers();
   // Delay recovery scan slightly to allow models/connections to fully initialize
   setTimeout(runStartupRecovery, 5000);
@@ -117,6 +126,7 @@ app.use(globalLimiter);
 
 // API Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/admin/seller-levels", sellerLevelRoutes);
@@ -130,6 +140,8 @@ app.use("/api/v1/discounts", csrfProtection, discountRoutes);
 app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
+app.use("/api/v1/tickets", ticketRoutes);
+app.use("/api/v1/ratings", sellerRatingRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

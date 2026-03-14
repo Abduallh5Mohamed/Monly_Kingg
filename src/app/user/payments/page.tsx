@@ -844,6 +844,28 @@ export default function PaymentsPage() {
                       <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">💳 Vodafone Cash</option>
                       <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ InstaPay</option>
                     </select>
+
+                    {/* Send-to number info */}
+                    {depositPaymentMethod && (
+                      <div className="mt-3 flex items-center gap-3 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl p-4">
+                        <div className="w-9 h-9 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-5 h-5 text-cyan-400" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-400 mb-0.5">Send to this number</p>
+                          <p className="text-lg font-bold text-cyan-300 tracking-wider" dir="ltr">0100 2714265</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('01002714265');
+                          }}
+                          className="ml-auto text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg px-3 py-1.5 transition-all"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Amount */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown, Tag } from 'lucide-react';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown, Tag, Heart, LifeBuoy } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -297,6 +297,28 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                             <span className="text-sm font-medium">Discounts</span>
                           </Link>
                         )}
+
+                        <Link
+                          href="/user/favourites"
+                          onClick={() => setProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-pink-500/10 transition-colors">
+                            <Heart className="w-4 h-4 text-white/40 group-hover:text-pink-400 transition-colors" />
+                          </div>
+                          <span className="text-sm font-medium">Favourites</span>
+                        </Link>
+
+                        <Link
+                          href="/user/tickets"
+                          onClick={() => setProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-orange-500/10 transition-colors">
+                            <LifeBuoy className="w-4 h-4 text-white/40 group-hover:text-orange-400 transition-colors" />
+                          </div>
+                          <span className="text-sm font-medium">الدعم الفني</span>
+                        </Link>
                       </div>
 
                       {/* Logout button */}
@@ -357,11 +379,40 @@ interface Notification {
   message: string;
   read: boolean;
   createdAt: string;
+  relatedId?: string;
   metadata?: { rejectionReason?: string };
+}
+
+function getNotificationUrl(n: Notification): string | null {
+  const id = n.relatedId;
+  switch (n.type) {
+    case 'purchase_initiated':
+    case 'credentials_sent':
+    case 'purchase_confirmed':
+    case 'purchase_disputed':
+    case 'dispute_resolved':
+    case 'auto_confirmed':
+      return id ? `/user/transactions/${id}` : '/user/transactions';
+    case 'seller_approved':
+    case 'seller_rejected':
+      return '/user/profile';
+    case 'new_message':
+      return '/user/chats';
+    case 'level_up':
+      return '/user/seller-levels';
+    case 'deposit_approved':
+    case 'deposit_rejected':
+    case 'withdrawal_approved':
+    case 'withdrawal_rejected':
+      return '/user/payments';
+    default:
+      return null;
+  }
 }
 
 function NotificationBell() {
   const { user } = useAuth();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -444,7 +495,25 @@ function NotificationBell() {
   const typeIcons: Record<string, React.ReactNode> = {
     seller_approved: <CheckCircle2 className="w-4 h-4 text-green-400" />,
     seller_rejected: <XCircle className="w-4 h-4 text-red-400" />,
+    deposit_approved: <CheckCircle2 className="w-4 h-4 text-green-400" />,
+    deposit_rejected: <XCircle className="w-4 h-4 text-red-400" />,
+    withdrawal_approved: <CheckCircle2 className="w-4 h-4 text-green-400" />,
+    withdrawal_rejected: <XCircle className="w-4 h-4 text-red-400" />,
+    purchase_initiated: <Info className="w-4 h-4 text-blue-400" />,
+    credentials_sent: <Info className="w-4 h-4 text-cyan-400" />,
+    purchase_confirmed: <CheckCircle2 className="w-4 h-4 text-green-400" />,
+    purchase_disputed: <XCircle className="w-4 h-4 text-orange-400" />,
+    dispute_resolved: <Info className="w-4 h-4 text-blue-400" />,
+    level_up: <Crown className="w-4 h-4 text-yellow-400" />,
+    new_message: <Info className="w-4 h-4 text-cyan-400" />,
     system: <Info className="w-4 h-4 text-blue-400" />,
+  };
+
+  const handleNotificationClick = async (n: Notification) => {
+    if (!n.read) await markAsRead(n._id);
+    setOpen(false);
+    const url = getNotificationUrl(n);
+    if (url) router.push(url);
   };
 
   return (
@@ -462,7 +531,7 @@ function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.06] bg-[#0a0e17]/98 backdrop-blur-2xl shadow-2xl shadow-black/50 z-[100]">
+        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.10] bg-[#0a0e17]/70 backdrop-blur-xl shadow-2xl shadow-black/50 z-[100]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
             <div className="flex items-center gap-2">
@@ -490,28 +559,31 @@ function NotificationBell() {
             </div>
           ) : (
             <div>
-              {notifications.map((n) => (
-                <button
-                  key={n._id}
-                  onClick={() => { if (!n.read) markAsRead(n._id); }}
-                  className={`w-full text-left px-5 py-4 border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors ${!n.read ? 'bg-cyan-500/[0.03]' : ''
-                    }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex-shrink-0">
-                      {typeIcons[n.type] || <Info className="w-4 h-4 text-white/40" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-white truncate">{n.title}</p>
-                        {!n.read && <span className="w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0" />}
+              {notifications.map((n) => {
+                const url = getNotificationUrl(n);
+                return (
+                  <button
+                    key={n._id}
+                    onClick={() => handleNotificationClick(n)}
+                    className={`w-full text-left px-5 py-4 border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors ${!n.read ? 'bg-cyan-500/[0.03]' : ''
+                      } ${url ? 'cursor-pointer' : 'cursor-default'}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 flex-shrink-0">
+                        {typeIcons[n.type] || <Info className="w-4 h-4 text-white/40" />}
                       </div>
-                      <p className="text-xs text-white/50 mt-0.5 line-clamp-2">{n.message}</p>
-                      <p className="text-[10px] text-white/25 mt-1">{timeAgo(n.createdAt)}</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-white truncate">{n.title}</p>
+                          {!n.read && <span className="w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0" />}
+                        </div>
+                        <p className="text-xs text-white/50 mt-0.5 line-clamp-2">{n.message}</p>
+                        <p className="text-[10px] text-white/25 mt-1">{timeAgo(n.createdAt)}</p>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>

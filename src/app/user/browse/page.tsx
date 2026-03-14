@@ -25,6 +25,7 @@ import {
     Tag,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
 
 /* ── Types ── */
 interface Listing {
@@ -38,6 +39,12 @@ interface Listing {
     details: Record<string, unknown>;
     status: string;
     createdAt: string;
+    discount?: {
+        originalPrice: number;
+        discountedPrice: number;
+        discountPercent: number;
+        isMandatory?: boolean;
+    };
 }
 
 interface Game {
@@ -48,9 +55,11 @@ interface Game {
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
 function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
     const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
-    const discount = Math.floor(10 + ((listing.price * 7) % 60));
-    const originalPrice = (listing.price * (100 / (100 - discount))).toFixed(2);
-    const passPrice = (listing.price * 0.82).toFixed(2);
+    const hasDiscount = !!listing.discount;
+    const discountPercent = hasDiscount ? listing.discount!.discountPercent : 0;
+    const originalPrice = hasDiscount ? listing.discount!.originalPrice : listing.price;
+    const displayPrice = hasDiscount ? listing.discount!.discountedPrice : listing.price;
+    const passPrice = (displayPrice * 0.82).toFixed(2);
 
     return (
         <Link
@@ -85,11 +94,11 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                         <span className="absolute bottom-2 left-2 bg-cyan-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
                             <Tag className="w-3 h-3" /> Your Listing
                         </span>
-                    ) : (
+                    ) : hasDiscount ? (
                         <span className="absolute bottom-2 left-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-lg">
-                            -{discount}%
+                            -{discountPercent}%
                         </span>
-                    )}
+                    ) : null}
 
                     {/* Seller */}
                     {listing.seller && (
@@ -117,8 +126,8 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
                     {/* Prices */}
                     <div className="flex items-end justify-between mt-2.5 pt-2.5 border-t border-white/[0.04]">
                         <div>
-                            {!isOwner && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice}</p>}
-                            <p className="text-base font-black text-white">EGP {listing.price.toFixed(2)}</p>
+                            {!isOwner && hasDiscount && <p className="text-[10px] text-white/20 line-through">EGP {originalPrice.toFixed(2)}</p>}
+                            <p className="text-base font-black text-white">EGP {displayPrice.toFixed(2)}</p>
                         </div>
                         {!isOwner && (
                             <button
@@ -147,7 +156,17 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
 
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
+    const router = useRouter();
+
+    // Redirect non-sellers away
+    useEffect(() => {
+        if (authLoading) return;
+        if (user && !user.isSeller) {
+            router.replace('/user');
+        }
+    }, [user, authLoading, router]);
+
     const [listings, setListings] = useState<Listing[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);

@@ -79,7 +79,7 @@ export default function CompleteProfilePage() {
         if (user.profileCompleted === true) {
             console.log('✅ Profile already completed, redirecting to dashboard');
             // Admins go to admin dashboard, regular users go to user dashboard
-            router.replace(user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
+            router.replace(user.role === 'admin' ? '/admin/dashboard' : '/user');
             return;
         }
 
@@ -272,7 +272,7 @@ export default function CompleteProfilePage() {
 
                 // Redirect to dashboard after a brief delay
                 setTimeout(() => {
-                    router.replace('/user/dashboard');
+                    router.replace('/user');
                 }, 200);
             } else {
                 toast({

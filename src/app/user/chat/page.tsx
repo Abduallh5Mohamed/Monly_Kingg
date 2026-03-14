@@ -22,7 +22,7 @@ import {
   X,
   Trash2
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Message {
   _id: string;
@@ -84,6 +84,9 @@ export default function SupportPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sellerIdParam = searchParams.get('seller');
+  const sellerHandledRef = useRef(false);
 
   // Refs to avoid stale closures in socket event handlers
   const selectedChatRef = useRef<Chat | null>(null);
@@ -283,6 +286,25 @@ export default function SupportPage() {
   useEffect(() => {
     loadChats();
   }, []);
+
+  // Auto-open seller chat when navigated from listing page with ?seller=
+  useEffect(() => {
+    if (!sellerIdParam || sellerHandledRef.current || isLoading || !currentUserId) return;
+    sellerHandledRef.current = true;
+
+    // Check if we already have a chat with this seller
+    const existingChat = chats.find(c =>
+      c.type === 'direct' &&
+      c.participants.some(p => p._id === sellerIdParam)
+    );
+
+    if (existingChat) {
+      setSelectedChat(existingChat);
+    } else {
+      // Create new chat with the seller
+      startNewChat(sellerIdParam);
+    }
+  }, [sellerIdParam, isLoading, currentUserId, chats]);
 
   // Load messages when chat selected
   useEffect(() => {

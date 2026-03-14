@@ -11,8 +11,10 @@ const connectDB = async () => {
             socketTimeoutMS: 45000,
             // Connection pooling - optimized for concurrent access
             maxPoolSize: 50,
-            minPoolSize: 5,
+            minPoolSize: 10,
             maxIdleTimeMS: 30000,
+            // Wait queue — prevent request pile-up when pool is exhausted
+            waitQueueTimeoutMS: 5000,
             // Performance optimizations
             retryWrites: true,
             retryReads: true,
@@ -22,7 +24,9 @@ const connectDB = async () => {
             compressors: ['zlib'],
             zlibCompressionLevel: 3, // Faster compression
             // Auto-index creation disabled for performance
-            autoIndex: false
+            autoIndex: false,
+            // Read preference — read from secondaries when available (reduces primary load)
+            readPreference: process.env.NODE_ENV === 'production' ? 'secondaryPreferred' : 'primary',
         };
 
         const conn = await mongoose.connect(process.env.MONGO_URI, options);
@@ -59,7 +63,14 @@ export async function createIndexes() {
         await Chat.collection.createIndex({ participants: 1, 'lastMessage.timestamp': -1 });
         await Chat.collection.createIndex({ type: 1, isActive: 1, updatedAt: -1 });
 
-        console.log('✅ Database indexes created');
+        // Sync all schema-defined indexes for every registered model
+        // (autoIndex is disabled, so we do this explicitly at startup)
+        const modelNames = mongoose.modelNames();
+        await Promise.allSettled(
+            modelNames.map(name => mongoose.model(name).syncIndexes())
+        );
+
+        console.log(`✅ Database indexes synced for ${modelNames.length} models`);
     } catch (error) {
         console.log('⚠️  Index creation skipped:', error.message);
     }

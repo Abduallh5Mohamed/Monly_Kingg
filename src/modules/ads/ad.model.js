@@ -23,7 +23,7 @@ const adSchema = new mongoose.Schema(
     },
     position: {
       type: String,
-      enum: ["hero", "between_games", "banner", "sidebar", "popup"],
+      enum: ["hero", "between_games"],
       default: "hero",
     },
     priority: {

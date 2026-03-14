@@ -25,12 +25,7 @@ import {
   Zap,
   Calendar,
   CheckCircle,
-  Star,
   ShoppingCart,
-  Flame,
-  Sparkles,
-  TrendingDown,
-  Crown,
   Edit2,
   Percent,
   Tag,
@@ -47,6 +42,12 @@ interface Listing {
   coverImage: string;
   status: 'available' | 'sold';
   createdAt: string;
+  discount?: {
+    originalPrice: number;
+    discountedPrice: number;
+    discountPercent: number;
+    isMandatory?: boolean;
+  };
 }
 
 interface Stats {
@@ -64,50 +65,7 @@ const GAME_BADGES: Record<string, { color: string; label: string }> = {
   'League of Legends': { color: 'bg-blue-500', label: 'RIOT EUW' },
 };
 
-// Promo badge options
-const PROMO_BADGES = [
-  { label: 'TRENDING', color: 'bg-emerald-500', icon: TrendingUp },
-  { label: 'HOT', color: 'bg-red-500', icon: Flame },
-  { label: 'NEW', color: 'bg-cyan-500', icon: Sparkles },
-  { label: 'POPULAR', color: 'bg-purple-500', icon: Crown },
-];
 
-function getPromoBadge(index: number) {
-  return PROMO_BADGES[index % PROMO_BADGES.length];
-}
-
-// Generate consistent discount based on listing ID (no Math.random to avoid hydration errors)
-function getDiscountForListing(listingId: string) {
-  const discounts = [20, 25, 27, 30, 33, 35];
-  // Use simple hash of listing ID to get consistent discount
-  let hash = 0;
-  for (let i = 0; i < listingId.length; i++) {
-    hash = ((hash << 5) - hash) + listingId.charCodeAt(i);
-    hash = hash & hash;
-  }
-  return discounts[Math.abs(hash) % discounts.length];
-}
-
-// Generate consistent rating based on listing ID
-function getRatingForListing(listingId: string) {
-  let hash = 0;
-  for (let i = 0; i < listingId.length; i++) {
-    hash = ((hash << 5) - hash) + listingId.charCodeAt(i);
-    hash = hash & hash;
-  }
-  const rating = 4.5 + (Math.abs(hash) % 5) / 10; // 4.5 to 4.9
-  return rating.toFixed(1);
-}
-
-// Generate consistent review count based on listing ID
-function getReviewCountForListing(listingId: string) {
-  let hash = 0;
-  for (let i = 0; i < listingId.length; i++) {
-    hash = ((hash << 5) - hash) + listingId.charCodeAt(i);
-    hash = hash & hash;
-  }
-  return 80 + (Math.abs(hash) % 200); // 80 to 280
-}
 
 export default function SellerStorePage() {
   const { user, loading: authLoading } = useAuth();
@@ -141,7 +99,7 @@ export default function SellerStorePage() {
 
   useEffect(() => {
     if (!authLoading && (!user || !user.isSeller)) {
-      router.push('/user/dashboard');
+      router.push('/user');
     }
   }, [user, authLoading]);
 
@@ -431,16 +389,11 @@ export default function SellerStorePage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {listings.map((listing, index) => {
+              {listings.map((listing) => {
                 const gameName = getGameName(listing);
                 const coverUrl = getCoverImageUrl(listing);
-                const promoBadge = getPromoBadge(index);
-                const PromoBadgeIcon = promoBadge.icon;
-                const discount = getDiscountForListing(listing._id);
-                const originalPrice = Math.round(listing.price / (1 - discount / 100));
+                const hasDiscount = !!listing.discount;
                 const gameBadge = GAME_BADGES[gameName] || { color: 'bg-gray-500', label: gameName?.toUpperCase?.() || 'GAME' };
-                const rating = getRatingForListing(listing._id);
-                const reviewCount = getReviewCountForListing(listing._id);
 
                 return (
                   <div
@@ -471,13 +424,11 @@ export default function SellerStorePage() {
 
                       {/* Top badges */}
                       <div className="absolute top-3 left-3 flex flex-col gap-2">
-                        <span className={`${promoBadge.color} text-white text-xs font-bold px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-lg uppercase`}>
-                          <PromoBadgeIcon className="w-3.5 h-3.5" />
-                          {promoBadge.label}
-                        </span>
-                        <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-lg">
-                          -{discount}%
-                        </span>
+                        {hasDiscount && (
+                          <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-lg shadow-lg">
+                            -{listing.discount!.discountPercent}%
+                          </span>
+                        )}
                       </div>
 
                       {/* Game badge - top right */}
@@ -529,13 +480,11 @@ export default function SellerStorePage() {
                         {listing.title}
                       </h3>
 
-                      {/* Rating */}
+                      {/* Created date */}
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                          <span className="text-sm text-white/90 font-bold">{rating}</span>
-                        </div>
-                        <span className="text-xs text-white/40">({reviewCount} reviews)</span>
+                        <span className="text-xs text-white/40">
+                          {new Date(listing.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
                       </div>
 
                       {/* Spacer */}
@@ -544,32 +493,38 @@ export default function SellerStorePage() {
                       {/* Price */}
                       <div className="mb-4">
                         <div className="flex items-baseline gap-2">
-                          <span className="text-3xl font-bold text-white">EGP {listing.price}</span>
-                          <span className="text-sm text-white/30 line-through">EGP {originalPrice}</span>
+                          <span className="text-3xl font-bold text-white">EGP {hasDiscount ? listing.discount!.discountedPrice : listing.price}</span>
+                          {hasDiscount && (
+                            <span className="text-sm text-white/30 line-through">EGP {listing.discount!.originalPrice}</span>
+                          )}
                         </div>
                       </div>
 
                       {/* Seller Action Buttons */}
-                      <div className="grid grid-cols-3 gap-2">
-                        {/* Edit Button */}
-                        <button
-                          onClick={() => router.push(`/user/store/edit/${listing._id}`)}
-                          className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-200 group"
-                          title="Edit Listing"
-                        >
-                          <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                          <span className="text-[10px] font-semibold">Edit</span>
-                        </button>
+                      <div className={`grid gap-2 ${listing.status === 'sold' ? 'grid-cols-1' : 'grid-cols-3'}`}>
+                        {/* Edit Button - only for available listings */}
+                        {listing.status !== 'sold' && (
+                          <button
+                            onClick={() => router.push(`/user/store/edit/${listing._id}`)}
+                            className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-500/50 transition-all duration-200 group"
+                            title="Edit Listing"
+                          >
+                            <Edit2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-semibold">Edit</span>
+                          </button>
+                        )}
 
-                        {/* Discount Button */}
-                        <button
-                          onClick={() => openDiscountModal(listing)}
-                          className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
-                          title="Add Discount"
-                        >
-                          <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                          <span className="text-[10px] font-semibold">Discount</span>
-                        </button>
+                        {/* Discount Button - only for available listings */}
+                        {listing.status !== 'sold' && (
+                          <button
+                            onClick={() => openDiscountModal(listing)}
+                            className="flex flex-col items-center justify-center gap-1 h-16 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-green-500/30 hover:border-emerald-500/50 transition-all duration-200 group"
+                            title="Add Discount"
+                          >
+                            <Percent className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-semibold">Discount</span>
+                          </button>
+                        )}
 
                         {/* Delete Button */}
                         <button

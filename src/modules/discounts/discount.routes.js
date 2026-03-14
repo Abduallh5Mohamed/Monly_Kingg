@@ -12,7 +12,7 @@ import {
   cancelMyListingDiscount,
 } from "./discount.controller.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { requireAdmin } from "../../middlewares/roleMiddleware.js";
+import { requireAdmin, requireAdminOrMod, requirePermission } from "../../middlewares/roleMiddleware.js";
 import { adminLimiter, userWriteLimiter } from "../../middlewares/rateLimiter.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 
@@ -29,9 +29,10 @@ router.post("/my-listing", authMiddleware, userWriteLimiter, invalidateCache(...
 router.get("/my-listing/:listingId", authMiddleware, getMyListingDiscount);
 router.delete("/my-listing/:listingId", authMiddleware, userWriteLimiter, invalidateCache(...DISCOUNT_PATTERNS), cancelMyListingDiscount);
 
-// Admin routes
+// Admin / Moderator routes (requires "discounts" permission)
 router.use(authMiddleware);
-router.use(requireAdmin);
+router.use(requireAdminOrMod);
+router.use(requirePermission("discounts"));
 router.use(adminLimiter);
 
 router.post("/", invalidateCache(...DISCOUNT_PATTERNS), createDiscount);

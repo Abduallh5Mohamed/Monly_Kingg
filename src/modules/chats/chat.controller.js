@@ -15,6 +15,11 @@ export const sendMessage = async (req, res) => {
             return res.status(400).json({ success: false, message: "Message content is required" });
         }
 
+        // Limit message length to prevent abuse
+        if (content.length > 5000) {
+            return res.status(400).json({ success: false, message: "Message too long (max 5000 characters)" });
+        }
+
         const now = new Date();
         const msgId = new mongoose.Types.ObjectId();
 
@@ -130,42 +135,58 @@ export const getChatMessages = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
         const skip = (page - 1) * limit;
-        const userIdStr = userId.toString();
 
-        // Single query — populate only participants (2 users max), NOT messages.sender
-        const chat = await Chat.findOne(
-            { _id: chatId, participants: userId },
-            { participants: 1, type: 1, lastMessage: 1, deletedMessagesFor: 1, messages: 1 }
-        ).populate('participants', 'username email avatar role').lean();
+        // Use aggregation to paginate messages server-side instead of loading the entire array
+        const result = await Chat.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(chatId), participants: new mongoose.Types.ObjectId(userId) } },
+            {
+                $project: {
+                    participants: 1,
+                    type: 1,
+                    lastMessage: 1,
+                    deletedMessagesFor: 1,
+                    totalMessages: { $size: { $ifNull: ['$messages', []] } },
+                    messages: { $slice: ['$messages', skip, limit] },
+                }
+            }
+        ]);
 
-        if (!chat) {
+        if (!result.length) {
             return res.status(404).json({ success: false, message: "Chat not found" });
         }
 
-        // Build a lookup map for participant info (direct chat = 2 users max)
+        const chat = result[0];
+
+        // Populate participants
+        const participantDocs = await User.find(
+            { _id: { $in: chat.participants } },
+            'username email avatar role'
+        ).lean();
+
         const participantMap = {};
-        for (const p of chat.participants) {
+        for (const p of participantDocs) {
             participantMap[p._id.toString()] = { _id: p._id, username: p.username, email: p.email, avatar: p.avatar };
         }
 
+        const userIdStr = userId.toString();
+
         // Filter out soft-deleted messages
-        const rawDeleted = chat.deletedMessagesFor;
-        const deletedMsgIds = (rawDeleted instanceof Map ? rawDeleted.get(userIdStr) : rawDeleted?.[userIdStr]) || [];
+        const deletedMsgIds = chat.deletedMessagesFor?.[userIdStr] || [];
         const deletedSet = new Set(deletedMsgIds.map(id => id.toString()));
 
-        const allMessages = (chat.messages || []).filter(msg => !deletedSet.has(msg._id.toString()));
-        const totalMessages = allMessages.length;
+        const pageMessages = (chat.messages || [])
+            .filter(msg => !deletedSet.has(msg._id.toString()))
+            .map(msg => ({
+                ...msg,
+                sender: participantMap[msg.sender.toString()] || { _id: msg.sender }
+            }));
 
-        // Paginate (latest messages last)
-        const pageMessages = allMessages.slice(skip, skip + limit).map(msg => ({
-            ...msg,
-            sender: participantMap[msg.sender.toString()] || { _id: msg.sender }
-        }));
+        const totalMessages = chat.totalMessages || 0;
 
         res.json({
             success: true,
             data: {
-                chat: { _id: chat._id, type: chat.type, participants: chat.participants, lastMessage: chat.lastMessage },
+                chat: { _id: chat._id, type: chat.type, participants: participantDocs, lastMessage: chat.lastMessage },
                 messages: pageMessages,
                 pagination: { page, limit, total: totalMessages, pages: Math.ceil(totalMessages / limit) }
             }

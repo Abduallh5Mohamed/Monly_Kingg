@@ -9,10 +9,22 @@ export default function csrfProtection(req, res, next) {
     '/v1/auth/verify-email',
     '/v1/auth/resend-code',
     '/v1/auth/forgot-password',
+    '/v1/auth/verify-reset-token',
     '/v1/auth/reset-password',
     '/v1/auth/csrf-token',
     '/v1/auth/google',
-    '/v1/auth/google/callback'
+    '/v1/auth/google/callback',
+    '/auth/register',
+    '/auth/login',
+    '/auth/refresh',
+    '/auth/verify-email',
+    '/auth/resend-code',
+    '/auth/forgot-password',
+    '/auth/verify-reset-token',
+    '/auth/reset-password',
+    '/auth/csrf-token',
+    '/auth/google',
+    '/auth/google/callback'
   ];
 
   // Exact path match

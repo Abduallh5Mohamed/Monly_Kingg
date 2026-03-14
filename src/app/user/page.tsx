@@ -13,6 +13,7 @@ import {
   Zap,
   Loader2,
   ShoppingCart,
+  Heart,
   CreditCard,
   Timer,
   Headphones,
@@ -35,25 +36,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-
-/* ── SVG Platform Icons ── */
-const SteamIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M11.979 0C5.678 0 .511 4.86.022 10.95l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.063 0 .125.003.187.006l2.866-4.158V8.77c0-2.344 1.904-4.25 4.248-4.25 2.344 0 4.248 1.906 4.248 4.25 0 2.343-1.904 4.248-4.248 4.248l-.073-.001-4.088 2.92c0 .052.003.104.003.156 0 1.757-1.43 3.187-3.187 3.187-1.542 0-2.826-1.093-3.127-2.554L.238 14.41c1.301 5.332 6.103 9.29 11.74 9.29C18.616 23.7 24 18.316 24 11.85 24 5.384 18.617 0 11.979 0z" />
-  </svg>
-);
-
-const XboxIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M4.102 21.033C6.211 22.881 8.977 24 12 24c3.026 0 5.789-1.119 7.902-2.967 1.877-1.912-4.316-8.709-7.902-11.417-3.582 2.708-9.779 9.505-7.898 11.417zm11.16-14.406c2.5 2.961 7.484 10.313 6.076 12.912C23.056 17.36 24 14.8 24 12c0-4.571-2.548-8.545-6.301-10.58l-.001.001c-.125-.074-.249-.145-.376-.214-.327.396-1.48 1.953-2.06 4.42zm-9.116 12.91c-1.409-2.6 3.577-9.951 6.078-12.91-.578-2.468-1.734-4.024-2.061-4.42-.156.086-.31.177-.461.27C5.857 4.641 3.43 8.025 3.07 12h.006c0 2.819.951 5.395 2.07 7.537z" />
-  </svg>
-);
-
-const PlayStationIcon = ({ className = 'w-8 h-8' }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M8.985 2.596v17.548l3.915 1.261V6.688c0-.69.304-1.151.794-.991.636.181.76.814.76 1.505v5.876c2.441 1.193 4.362-.002 4.362-3.153 0-3.237-1.126-4.675-4.438-5.827-1.307-.448-3.728-1.186-5.393-1.502z" />
-  </svg>
-);
+import { ensureCsrfToken } from '@/utils/csrf';
+import { fetchData, fetchParallel, prefetch } from '@/lib/fetcher';
 
 /* ── Types ── */
 interface Listing {
@@ -67,11 +51,19 @@ interface Listing {
   details: Record<string, unknown>;
   status: string;
   createdAt: string;
+  discount?: {
+    originalPrice: number;
+    discountedPrice: number;
+    discountPercent: number;
+    isMandatory?: boolean;
+  };
 }
 
 interface Game {
   _id: string;
   name: string;
+  slug: string;
+  icon?: string;
 }
 
 interface DashboardAd {
@@ -92,7 +84,7 @@ interface ActiveDiscount {
     price: number;
     coverImage: string | null;
     images: string[];
-    game: { name: string } | null;
+    game: { _id: string; name: string } | null;
     status: string;
   } | null;
   originalPrice: number;
@@ -124,28 +116,6 @@ interface ActiveCampaign {
 }
 
 /* ═══════════ STATIC DEMO DATA ═══════════ */
-/* ── Category Icons ── */
-const CATEGORIES = [
-  { icon: SteamIcon, label: 'Steam', count: '2.4K' },
-  { icon: Gamepad2, label: 'Games & DLCs', count: '1.8K' },
-  { icon: CreditCard, label: 'Gift Cards', count: '950' },
-  { icon: Timer, label: 'Subscriptions', count: '620' },
-  { icon: Monitor, label: 'Accounts', count: '3.1K' },
-  { icon: XboxIcon, label: 'Xbox', count: '780' },
-  { icon: PlayStationIcon, label: 'PlayStation', count: '640' },
-  { icon: Laptop, label: 'Software', count: '420' },
-  { icon: Gift, label: 'Lifestyle', count: '310' },
-];
-
-/* ── Platform Filter Tabs ── */
-const PLATFORM_TABS = [
-  { id: 'all', name: 'All', icon: Gamepad2, color: 'from-cyan-500 to-blue-500' },
-  { id: 'fifa', name: 'FIFA', icon: Gamepad2, color: 'from-green-500 to-green-600' },
-  { id: 'pubg', name: 'PUBG', icon: Gamepad2, color: 'from-orange-500 to-orange-600' },
-  { id: 'arc-raiders', name: 'Arc Raiders', icon: Gamepad2, color: 'from-pink-500 to-pink-600' },
-  { id: 'valorant', name: 'Valorant', icon: Gamepad2, color: 'from-red-500 to-red-600' },
-  { id: 'lol', name: 'League of Legends', icon: Gamepad2, color: 'from-purple-500 to-purple-600' },
-];
 
 /* ═══════════ EMPTY STATE COMPONENT ═══════════ */
 function EmptyGameSection({ gameName, isSeller }: { gameName: string; isSeller?: boolean }) {
@@ -229,14 +199,20 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
 }
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
-function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount; gridMode?: boolean }) {
+function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, onToggleFavorite }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount; gridMode?: boolean; isFavorited?: boolean; onToggleFavorite?: (id: string, e: React.MouseEvent) => void }) {
   const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
 
-  // Only show discount if it exists from API
-  const hasDiscount = discount && discount.listing?._id === listing._id;
-  const discountPercent = hasDiscount ? discount.discountPercent : 0;
-  const originalPrice = hasDiscount ? discount.originalPrice : listing.price;
-  const displayPrice = hasDiscount ? discount.discountedPrice : listing.price;
+  // Individual discount (from Discounts API) takes priority, then campaign discount (from listing.discount)
+  const hasIndividualDiscount = discount && discount.listing?._id === listing._id;
+  const hasCampaignDiscount = !hasIndividualDiscount && !!listing.discount;
+  const hasDiscount = hasIndividualDiscount || hasCampaignDiscount;
+
+  const discountPercent = hasIndividualDiscount ? discount.discountPercent
+    : hasCampaignDiscount ? listing.discount!.discountPercent : 0;
+  const originalPrice = hasIndividualDiscount ? discount.originalPrice
+    : hasCampaignDiscount ? listing.discount!.originalPrice : listing.price;
+  const displayPrice = hasIndividualDiscount ? discount.discountedPrice
+    : hasCampaignDiscount ? listing.discount!.discountedPrice : listing.price;
 
   // Helper to get full avatar URL
   const getAvatarUrl = (avatar?: string) => {
@@ -276,6 +252,15 @@ function ProductCard({ listing, currentUserId, discount, gridMode }: { listing: 
                 <Zap className="w-3 h-3" /> -{discountPercent}%
               </span>
             ) : null}
+            {!isOwner && onToggleFavorite && (
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(listing._id, e); }}
+                className={`ml-auto w-7 h-7 rounded-lg backdrop-blur-md flex items-center justify-center transition-all ${isFavorited ? 'bg-pink-500/30 text-pink-400' : 'bg-black/40 text-white/50 hover:text-pink-400 hover:bg-pink-500/20'}`}
+                title={isFavorited ? 'Remove from favourites' : 'Add to favourites'}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-current' : ''}`} />
+              </button>
+            )}
           </div>
         </div>
 
@@ -599,13 +584,44 @@ export default function UserDashboardPage() {
   const [popularListings, setPopularListings] = useState<Listing[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  const [selectedGameFilter, setSelectedGameFilter] = useState<string>('all');
   const [dashboardAds, setDashboardAds] = useState<DashboardAd[]>([]);
   const [activeDiscounts, setActiveDiscounts] = useState<ActiveDiscount[]>([]);
   const [activeCampaigns, setActiveCampaigns] = useState<ActiveCampaign[]>([]);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
 
   // Filter hooks removed - static data removed, using dynamic data from API
+
+  // Fetch favorite IDs once when user is available
+  useEffect(() => {
+    if (!user) return;
+    fetch('/api/v1/favorites/ids', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data?.data) setFavoriteIds(new Set(data.data)); })
+      .catch(() => { });
+  }, [user]);
+
+  const handleToggleFavorite = useCallback(async (listingId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) return;
+    try {
+      const csrfToken = await ensureCsrfToken() || '';
+      const res = await fetch(`/api/v1/favorites/${listingId}`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'X-XSRF-TOKEN': csrfToken },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setFavoriteIds(prev => {
+          const next = new Set(prev);
+          if (data.favorited) next.add(listingId); else next.delete(listingId);
+          return next;
+        });
+      }
+    } catch { /* silent */ }
+  }, [user]);
 
   const toggleSection = (section: string) => {
     setExpandedSection(prev => prev === section ? null : section);
@@ -614,64 +630,36 @@ export default function UserDashboardPage() {
   // ═══ DYNAMIC GAME LISTINGS ═══
   const [gameListings, setGameListings] = useState<Record<string, Listing[]>>({});
 
-  // ═══ OPTIMIZED: Fetch all data in parallel with caching ═══
+  // ═══ OPTIMIZED: Fetch all data in parallel with in-memory SWR cache ═══
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        // Check cache first (valid for 5 minutes)
-        const cacheKey = 'dashboard_data';
-        const cacheTimestamp = 'dashboard_timestamp';
-        const cachedData = sessionStorage.getItem(cacheKey);
-        const cachedTime = sessionStorage.getItem(cacheTimestamp);
-        const now = Date.now();
-        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
-        if (cachedData && cachedTime && (now - parseInt(cachedTime)) < CACHE_DURATION) {
-          const data = JSON.parse(cachedData);
-          setGames(data.games || []);
-          setGameListings(data.gameListings || {});
-          setDashboardAds(data.ads || []);
-          setActiveDiscounts(data.discounts || []);
-          setActiveCampaigns(data.campaigns || []);
-          setListings(data.listings || []);
-          setTrendingListings(data.trending || []);
-          setPopularListings(data.popular || []);
-          setLoading(false);
-          return;
-        }
-
-        // Fetch games, ads, discounts, and campaigns first (critical)
-        const [gamesRes, adsRes, discountsRes, campaignsRes] = await Promise.all([
-          fetch('/api/v1/games'),
-          fetch('/api/v1/ads/active'),
-          fetch('/api/v1/discounts/active'),
-          fetch('/api/v1/campaigns/active'),
-        ]);
-
-        const [gamesData, adsData, discountsData, campaignsData] = await Promise.all([
-          gamesRes.json(),
-          adsRes.json(),
-          discountsRes.json(),
-          campaignsRes.json(),
+        // Fetch critical data in parallel with SWR caching (instant on revisit)
+        const [gamesData, adsData, discountsData, campaignsData] = await fetchParallel([
+          { url: '/api/v1/games', options: { ttl: 300_000, tags: ['games'] } },
+          { url: '/api/v1/ads/active', options: { ttl: 120_000, tags: ['ads'] } },
+          { url: '/api/v1/discounts/active', options: { ttl: 120_000, tags: ['discounts'] } },
+          { url: '/api/v1/campaigns/active', options: { ttl: 120_000, tags: ['campaigns'] } },
         ]);
 
         let gameListingsData: Record<string, Listing[]> = {};
-        let rankingsListings = { listings: [], trending: [], popular: [] };
 
         // Set games and fetch their listings
         if (gamesData.data) {
           setGames(gamesData.data);
 
-          // Fetch listings for all games in parallel
-          const listingsPromises = gamesData.data.map((game: Game) =>
-            fetch(`/api/v1/listings/browse?game=${game._id}&limit=12&sort=newest`)
-              .then((r) => r.json())
-              .then((data) => ({ gameId: game._id, listings: data.data || [] }))
-              .catch(() => ({ gameId: game._id, listings: [] }))
+          // Fetch listings for all games in parallel with per-game caching
+          const allListings = await Promise.all(
+            gamesData.data.map((game: Game) =>
+              fetchData(`/api/v1/listings/browse?game=${game._id}&limit=12&sort=newest`, {
+                ttl: 60_000, // 1 min cache per game listings
+                tags: ['listings', `game:${game._id}`],
+              })
+                .then((data: any) => ({ gameId: game._id, listings: data.data || [] }))
+                .catch(() => ({ gameId: game._id, listings: [] }))
+            )
           );
-
-          const allListings = await Promise.all(listingsPromises);
-          allListings.forEach(({ gameId, listings }) => {
+          allListings.forEach(({ gameId, listings }: any) => {
             gameListingsData[gameId] = listings;
           });
           setGameListings(gameListingsData);
@@ -686,44 +674,21 @@ export default function UserDashboardPage() {
         // Set campaigns
         if (campaignsData.data) setActiveCampaigns(campaignsData.data);
 
-        // Fetch rankings separately with shorter timeout (non-blocking)
-        fetch('/api/v1/rankings/homepage?limit=10', {
-          signal: AbortSignal.timeout(5000) // 5 second timeout
+        // Fetch rankings separately (non-blocking, cached 2 min)
+        fetchData('/api/v1/rankings/homepage?limit=10', {
+          ttl: 120_000,
+          tags: ['rankings'],
+          timeout: 5000,
         })
-          .then(r => r.json())
-          .then(rankingsData => {
+          .then((rankingsData: any) => {
             if (rankingsData.success && rankingsData.data) {
-              const bs = rankingsData.data.bestSeller || [];
-              const tr = rankingsData.data.trending || [];
-              const pop = rankingsData.data.popular || [];
-
-              rankingsListings.listings = bs;
-              rankingsListings.trending = tr;
-              rankingsListings.popular = pop;
-
-              setListings(bs);
-              setTrendingListings(tr);
-              setPopularListings(pop);
+              setListings(rankingsData.data.bestSeller || []);
+              setTrendingListings(rankingsData.data.trending || []);
+              setPopularListings(rankingsData.data.popular || []);
             }
           })
-          .catch(err => {
-            console.warn('Rankings fetch failed or timed out:', err.message);
-            // Continue without rankings - not critical
-          });
+          .catch(() => { });
 
-        // Cache the data
-        const dataToCache = {
-          games: gamesData.data || [],
-          gameListings: gameListingsData,
-          ads: adsData.data || [],
-          discounts: discountsData.data || [],
-          campaigns: campaignsData.data || [],
-          listings: rankingsListings.listings,
-          trending: rankingsListings.trending,
-          popular: rankingsListings.popular,
-        };
-        sessionStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-        sessionStorage.setItem(cacheTimestamp, now.toString());
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
       } finally {
@@ -750,6 +715,37 @@ export default function UserDashboardPage() {
     }
     return map;
   }, {} as Record<string, ActiveDiscount>);
+
+  // ═══ GAME FILTER LOGIC ═══
+  const filteredGames = useMemo(() => {
+    if (selectedGameFilter === 'all') return games;
+    return games.filter(g => g._id === selectedGameFilter);
+  }, [games, selectedGameFilter]);
+
+  const filteredDiscounts = useMemo(() => {
+    if (selectedGameFilter === 'all') return activeDiscounts;
+    return activeDiscounts.filter(d => d.listing?.game?._id === selectedGameFilter);
+  }, [activeDiscounts, selectedGameFilter]);
+
+  const filteredCampaigns = useMemo(() => {
+    if (selectedGameFilter === 'all') return activeCampaigns;
+    return activeCampaigns.filter(c => c.games.some(g => g._id === selectedGameFilter));
+  }, [activeCampaigns, selectedGameFilter]);
+
+  const filteredBestSellers = useMemo(() => {
+    if (selectedGameFilter === 'all') return listings;
+    return listings.filter(l => l.game?._id === selectedGameFilter);
+  }, [listings, selectedGameFilter]);
+
+  const filteredTrending = useMemo(() => {
+    if (selectedGameFilter === 'all') return trendingListings;
+    return trendingListings.filter(l => l.game?._id === selectedGameFilter);
+  }, [trendingListings, selectedGameFilter]);
+
+  const filteredPopular = useMemo(() => {
+    if (selectedGameFilter === 'all') return popularListings;
+    return popularListings.filter(l => l.game?._id === selectedGameFilter);
+  }, [popularListings, selectedGameFilter]);
 
   return (
     <UserDashboardLayout>
@@ -783,21 +779,34 @@ export default function UserDashboardPage() {
 
           {/* Platform Tabs inside hero */}
           <div className="relative flex items-center gap-2 mt-6 overflow-x-auto scrollbar-hide pb-1">
-            {PLATFORM_TABS.map((platform) => {
-              const Icon = platform.icon;
-              const isActive = selectedPlatform === platform.id;
+            {/* "All" tab */}
+            <button
+              onClick={() => setSelectedGameFilter('all')}
+              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${selectedGameFilter === 'all'
+                ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]'
+                : 'text-white/35 hover:text-white/60 hover:bg-white/[0.04]'
+                }`}
+            >
+              {selectedGameFilter === 'all' && <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 opacity-15" />}
+              <Gamepad2 className="w-4 h-4 relative z-10" />
+              <span className="relative z-10">All</span>
+            </button>
+            {/* Dynamic game tabs */}
+            {games.map((game) => {
+              const isActive = selectedGameFilter === game._id;
+              const gameColor = getGameColor(game.name);
               return (
                 <button
-                  key={platform.id}
-                  onClick={() => setSelectedPlatform(platform.id)}
+                  key={game._id}
+                  onClick={() => setSelectedGameFilter(game._id)}
                   className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300 ${isActive
                     ? 'bg-white/[0.1] text-white shadow-lg border border-white/[0.1]'
                     : 'text-white/35 hover:text-white/60 hover:bg-white/[0.04]'
                     }`}
                 >
-                  {isActive && <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${platform.color} opacity-15`} />}
-                  <Icon className="w-4 h-4 relative z-10" />
-                  <span className="relative z-10">{platform.name}</span>
+                  {isActive && <div className={`absolute inset-0 rounded-xl bg-gradient-to-r ${gameColor} opacity-15`} />}
+                  <Gamepad2 className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">{game.name}</span>
                 </button>
               );
             })}
@@ -834,30 +843,10 @@ export default function UserDashboardPage() {
           </section>
         )}
 
-        {/* ═══════════ CATEGORY ICONS - Bento Grid Style ═══════════ */}
-        <section>
-          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
-            {CATEGORIES.map((cat, i) => {
-              const Icon = cat.icon;
-              return (
-                <Link key={i} href="/user/dashboard" className="group flex flex-col items-center gap-2 py-3 px-2 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 hover:-translate-y-0.5">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-white/30 group-hover:text-cyan-400 group-hover:bg-cyan-500/10 transition-all duration-300">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="text-center">
-                    <span className="text-[10px] text-white/45 font-medium group-hover:text-white/70 transition-colors leading-tight block">
-                      {cat.label}
-                    </span>
-                    <span className="text-[8px] text-white/15 font-medium">{cat.count}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+
 
         {/* ═══════════ DISCOUNTED PRODUCTS (FROM ADMIN) ═══════════ */}
-        {activeDiscounts.length > 0 && (
+        {filteredDiscounts.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
@@ -875,13 +864,13 @@ export default function UserDashboardPage() {
                   <p className="text-[10px] text-white/20 mt-0.5">Exclusive discounts, grab before they're gone</p>
                 </div>
               </div>
-              <Link href="/user/dashboard" className="text-[11px] text-white/25 hover:text-red-400 transition-colors font-medium flex items-center gap-1 group">
+              <Link href="/user" className="text-[11px] text-white/25 hover:text-red-400 transition-colors font-medium flex items-center gap-1 group">
                 View All
                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
             <HorizontalScroll>
-              {activeDiscounts.map((disc) => {
+              {filteredDiscounts.map((disc) => {
                 if (!disc.listing) return null;
                 const coverImg = disc.listing.coverImage || (disc.listing.images?.length > 0 ? disc.listing.images[0] : null);
                 return (
@@ -937,7 +926,7 @@ export default function UserDashboardPage() {
         )}
 
         {/* ═══════════ CAMPAIGN DISCOUNT SECTIONS ═══════════ */}
-        {activeCampaigns.map((campaign) => {
+        {filteredCampaigns.map((campaign) => {
           const isMandatory = campaign.type === 'mandatory';
           const gradientColor = isMandatory ? 'from-orange-500 to-amber-600' : 'from-blue-500 to-cyan-600';
           const badgeColor = isMandatory ? 'bg-orange-500/15 text-orange-400 border-orange-500/15' : 'bg-blue-500/15 text-blue-400 border-blue-500/15';
@@ -1001,10 +990,9 @@ export default function UserDashboardPage() {
                 {campaign.listings.map((listing) => {
                   const cd = listing.campaignDiscount;
                   const coverImg = listing.coverImage || (listing.images?.length > 0 ? listing.images[0] : null);
-                  const isVoluntary = cd?.type === 'voluntary';
-                  const displayPrice = isVoluntary && cd?.discountedPrice ? cd.discountedPrice : listing.price;
-                  const originalPrice = isVoluntary && cd?.originalPrice ? cd.originalPrice : listing.price;
-                  const hasRealDiscount = isVoluntary && cd?.discountedPrice;
+                  const displayPrice = cd?.discountedPrice ? cd.discountedPrice : listing.price;
+                  const originalPrice = cd?.originalPrice ? cd.originalPrice : listing.price;
+                  const hasRealDiscount = !!cd?.discountedPrice;
 
                   return (
                     <Link
@@ -1085,7 +1073,7 @@ export default function UserDashboardPage() {
         })}
 
         {/* ═══════════ 🔥 BEST SELLERS (RANKED BY ALGORITHM) ═══════════ */}
-        {listings.length > 0 && (
+        {filteredBestSellers.length > 0 && (
           <section>
             <SectionHeader icon={Flame} title="Best Sellers" color="from-orange-500 to-red-500" subtitle="Top performing accounts by sales" />
             {loading ? (
@@ -1097,8 +1085,8 @@ export default function UserDashboardPage() {
               </div>
             ) : (
               <HorizontalScroll>
-                {listings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                {filteredBestSellers.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} isFavorited={favoriteIds.has(listing._id)} onToggleFavorite={handleToggleFavorite} />
                 ))}
               </HorizontalScroll>
             )}
@@ -1106,7 +1094,7 @@ export default function UserDashboardPage() {
         )}
 
         {/* ═══════════ DYNAMIC GAME SECTIONS (WITH ADS BETWEEN) ═══════════ */}
-        {games.map((game, index) => {
+        {filteredGames.map((game, index) => {
           const listings = gameListings[game._id] || [];
           const gameColor = getGameColor(game.name);
           // Show a between_games ad only at one random slot
@@ -1126,7 +1114,7 @@ export default function UserDashboardPage() {
                 {listings.length > 0 ? (
                   <HorizontalScroll>
                     {listings.map((listing) => (
-                      <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                      <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} isFavorited={favoriteIds.has(listing._id)} onToggleFavorite={handleToggleFavorite} />
                     ))}
                   </HorizontalScroll>
                 ) : (
@@ -1217,7 +1205,7 @@ export default function UserDashboardPage() {
         </section>
 
         {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}
-        {listings.length > 0 && (
+        {filteredBestSellers.length > 0 && (
           <section>
             <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" subtitle="Fresh from our sellers" isExpanded={expandedSection === 'latest'} onToggle={() => toggleSection('latest')} />
             {loading ? (
@@ -1229,14 +1217,14 @@ export default function UserDashboardPage() {
               </div>
             ) : expandedSection === 'latest' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-                {listings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} gridMode />
+                {filteredBestSellers.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} gridMode isFavorited={favoriteIds.has(listing._id)} onToggleFavorite={handleToggleFavorite} />
                 ))}
               </div>
             ) : (
               <HorizontalScroll>
-                {trendingListings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                {filteredTrending.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} isFavorited={favoriteIds.has(listing._id)} onToggleFavorite={handleToggleFavorite} />
                 ))}
               </HorizontalScroll>
             )}
@@ -1244,7 +1232,7 @@ export default function UserDashboardPage() {
         )}
 
         {/* ═══════════ ⭐ POPULAR (RANKED BY ALGORITHM) ═══════════ */}
-        {popularListings.length > 0 && (
+        {filteredPopular.length > 0 && (
           <section>
             <SectionHeader icon={Star} title="Most Popular" color="from-amber-500 to-yellow-600" subtitle="Community favorites" />
             {loading ? (
@@ -1256,8 +1244,8 @@ export default function UserDashboardPage() {
               </div>
             ) : (
               <HorizontalScroll>
-                {popularListings.map((listing) => (
-                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} />
+                {filteredPopular.map((listing) => (
+                  <ProductCard key={listing._id} listing={listing} currentUserId={user?.id} discount={discountMap[listing._id]} isFavorited={favoriteIds.has(listing._id)} onToggleFavorite={handleToggleFavorite} />
                 ))}
               </HorizontalScroll>
             )}

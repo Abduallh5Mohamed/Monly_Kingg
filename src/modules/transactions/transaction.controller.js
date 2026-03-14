@@ -6,10 +6,14 @@ import Discount from "../discounts/discount.model.js";
 import Campaign from "../campaigns/campaign.model.js";
 import Notification from "../notifications/notification.model.js";
 import SellerRequest from "../sellers/sellerRequest.model.js";
+import { notifyAllAdmins } from "../notifications/notificationHelper.js";
 import cacheService from "../../services/cacheService.js";
 import socketService from "../../services/socketService.js";
 import logger from "../../utils/logger.js";
+import { sendEmail } from "../../utils/email.js";
+import { buildTransactionInvoiceEmail } from "../../utils/emailTemplates.js";
 import { encrypt, decrypt } from "../../utils/encryption.js";
+import { updateSellerLevel } from "../seller-levels/sellerLevel.service.js";
 
 // ─── Credential encryption helpers ───────────────────────────────────────────
 function encryptCredentials(credentials) {
@@ -73,6 +77,15 @@ async function queueNotification({ userId, type, title, message, relatedId, meta
   }
 }
 
+function sendMonlyKingInvoiceEmail({ to, subject, payload }) {
+  if (!to) return Promise.resolve();
+  return Promise.resolve(
+    sendEmail(to, subject, buildTransactionInvoiceEmail(payload))
+  ).catch((err) => {
+    logger.warn(`[Transaction] invoice email failed for ${to}: ${err.message}`);
+  });
+}
+
 // ─── POST /api/v1/transactions ───────────────────────────────────────────────
 // Buyer starts the purchase — deducts balance to hold
 export const createTransaction = async (req, res) => {
@@ -100,7 +113,7 @@ export const createTransaction = async (req, res) => {
     }
 
     // Load listing
-    const listing = await Listing.findById(listingId).populate("seller", "_id username");
+    const listing = await Listing.findById(listingId).populate("seller", "_id username email");
     if (!listing) {
       return res.status(404).json({ success: false, message: "Listing not found" });
     }
@@ -108,19 +121,34 @@ export const createTransaction = async (req, res) => {
       return res.status(400).json({ success: false, message: "You cannot buy your own listing" });
     }
 
-    // ── Determine the final price (check discounts & campaigns) ──
+    // ── Determine the final price (check discounts & campaigns in parallel) ──
     let finalPrice = listing.price;
     let discountApplied = null;
 
     const now = new Date();
+    const gameId = listing.game?._id || listing.game;
 
-    // 1) Individual listing discount
-    const activeDiscount = await Discount.findOne({
-      listing: listingId,
-      status: "active",
-      $or: [{ endDate: null }, { endDate: { $gte: now } }],
-    }).lean();
+    const [activeDiscount, voluntaryCampaign, mandatoryCampaign] = await Promise.all([
+      Discount.findOne({
+        listing: listingId,
+        status: "active",
+        $or: [{ endDate: null }, { endDate: { $gte: now } }],
+      }).lean(),
+      Campaign.findOne({
+        type: "voluntary",
+        status: "active",
+        endDate: { $gte: now },
+        "participatingListings.listing": listing._id,
+      }).lean(),
+      Campaign.findOne({
+        type: "mandatory",
+        status: "active",
+        endDate: { $gte: now },
+        games: gameId,
+      }).lean(),
+    ]);
 
+    // Priority: individual discount > voluntary > mandatory
     if (activeDiscount) {
       finalPrice = activeDiscount.discountedPrice;
       discountApplied = {
@@ -129,45 +157,24 @@ export const createTransaction = async (req, res) => {
         originalPrice: activeDiscount.originalPrice,
         finalPrice: activeDiscount.discountedPrice,
       };
-    } else {
-      // 2) Voluntary campaign
-      const voluntaryCampaign = await Campaign.findOne({
-        type: "voluntary",
-        status: "active",
-        endDate: { $gte: now },
-        "participatingListings.listing": listing._id,
-      }).lean();
-
-      if (voluntaryCampaign) {
-        finalPrice = +(listing.price * (1 - voluntaryCampaign.discountPercent / 100)).toFixed(2);
-        discountApplied = {
-          type: "campaign_voluntary",
-          campaignId: voluntaryCampaign._id,
-          percent: voluntaryCampaign.discountPercent,
-          originalPrice: listing.price,
-          finalPrice,
-        };
-      } else {
-        // 3) Mandatory campaign
-        const gameId = listing.game?._id || listing.game;
-        const mandatoryCampaign = await Campaign.findOne({
-          type: "mandatory",
-          status: "active",
-          endDate: { $gte: now },
-          games: gameId,
-        }).lean();
-
-        if (mandatoryCampaign) {
-          finalPrice = +(listing.price * (1 - mandatoryCampaign.discountPercent / 100)).toFixed(2);
-          discountApplied = {
-            type: "campaign_mandatory",
-            campaignId: mandatoryCampaign._id,
-            percent: mandatoryCampaign.discountPercent,
-            originalPrice: listing.price,
-            finalPrice,
-          };
-        }
-      }
+    } else if (voluntaryCampaign) {
+      finalPrice = +(listing.price * (1 - voluntaryCampaign.discountPercent / 100)).toFixed(2);
+      discountApplied = {
+        type: "campaign_voluntary",
+        campaignId: voluntaryCampaign._id,
+        percent: voluntaryCampaign.discountPercent,
+        originalPrice: listing.price,
+        finalPrice,
+      };
+    } else if (mandatoryCampaign) {
+      finalPrice = +(listing.price * (1 - mandatoryCampaign.discountPercent / 100)).toFixed(2);
+      discountApplied = {
+        type: "campaign_mandatory",
+        campaignId: mandatoryCampaign._id,
+        percent: mandatoryCampaign.discountPercent,
+        originalPrice: listing.price,
+        finalPrice,
+      };
     }
 
     // ── ATOMIC Step 1: Deduct buyer balance + add to hold ───────────────────
@@ -273,6 +280,50 @@ export const createTransaction = async (req, res) => {
       },
     });
 
+    // Send branded invoice emails (no credentials included)
+    await Promise.allSettled([
+      sendMonlyKingInvoiceEmail({
+        to: updatedBuyer.email,
+        subject: "MonlyKing invoice - purchase created",
+        payload: {
+          heading: "Purchase Initiated",
+          intro: "Your purchase has been created and is now waiting for seller credentials.",
+          transactionId: transaction._id.toString(),
+          status: "waiting_seller",
+          listingTitle: listing.title,
+          amount: finalPrice,
+          originalAmount: discountApplied ? discountApplied.originalPrice : finalPrice,
+          discountPercent: discountApplied ? discountApplied.percent : null,
+          buyerName: updatedBuyer.username,
+          buyerEmail: updatedBuyer.email,
+          sellerName: listing.seller.username,
+          sellerEmail: listing.seller.email,
+          note: "This invoice contains transaction details only. Account credentials are never emailed.",
+          createdAt: transaction.createdAt,
+        },
+      }),
+      sendMonlyKingInvoiceEmail({
+        to: listing.seller.email,
+        subject: "MonlyKing invoice - new sale request",
+        payload: {
+          heading: "New Sale Request",
+          intro: "A buyer started a purchase for your listing. Submit credentials inside the platform.",
+          transactionId: transaction._id.toString(),
+          status: "waiting_seller",
+          listingTitle: listing.title,
+          amount: finalPrice,
+          originalAmount: discountApplied ? discountApplied.originalPrice : finalPrice,
+          discountPercent: discountApplied ? discountApplied.percent : null,
+          buyerName: updatedBuyer.username,
+          buyerEmail: updatedBuyer.email,
+          sellerName: listing.seller.username,
+          sellerEmail: listing.seller.email,
+          note: "Do not share credentials by email. Submit them only through the secured transaction page.",
+          createdAt: transaction.createdAt,
+        },
+      }),
+    ]);
+
     return res.status(201).json({
       success: true,
       message: "Purchase initiated. Waiting for seller to submit credentials.",
@@ -352,7 +403,7 @@ export const submitCredentials = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
+  
 // ─── POST /api/v1/transactions/:id/confirm ──────────────────────────────────
 // Buyer confirms receipt — releases funds to seller
 export const confirmReceived = async (req, res) => {
@@ -418,14 +469,24 @@ export const openDispute = async (req, res) => {
       reason: transaction.disputeReason,
     });
 
-    // DB notification for admin users (all admins)
+    // DB notification for the seller
     await createNotification({
-      userId: transaction.seller.toString(), // also notify seller
+      userId: transaction.seller.toString(),
       type: "purchase_disputed",
       title: "⚠️ Dispute Opened",
-      message: `A buyer opened a dispute for "${transaction.listing.title}": ${transaction.disputeReason}`,
+      message: `A buyer opened a dispute on "${transaction.listing.title}": ${transaction.disputeReason}`,
       relatedId: transaction._id,
-      metadata: { transactionId: transaction._id },
+      metadata: { transactionId: transaction._id.toString() },
+    });
+
+    // DB notification for all admins
+    notifyAllAdmins({
+      type: 'new_dispute',
+      title: 'New Dispute Needs Review ⚠️',
+      message: `A buyer opened a dispute on "${transaction.listing.title}" worth ${transaction.amount} EGP`,
+      relatedModel: 'Transaction',
+      relatedId: transaction._id,
+      metadata: { transactionId: transaction._id.toString() },
     });
 
     return res.json({ success: true, message: "Dispute opened. Admin will review shortly." });
@@ -536,7 +597,11 @@ export const getTransactionById = async (req, res) => {
   try {
     const userId = req.user._id.toString();
     const transaction = await Transaction.findById(req.params.id)
-      .populate("listing", "title coverImage price details game")
+      .populate({
+        path: "listing",
+        select: "title coverImage price details game",
+        populate: { path: "game", select: "name fields" },
+      })
       .populate("buyer", "username avatar email")
       .populate("seller", "username avatar");
 
@@ -591,13 +656,8 @@ export const adminGetAll = async (req, res) => {
       const trimmed = search.trim();
       if (mongoose.Types.ObjectId.isValid(trimmed)) {
         filter._id = trimmed;
-      } else {
-        // Try partial match on the hex string
-        filter.$or = [
-          ...(trimmed.length >= 3 ? [{ _id: { $regex: trimmed, $options: "i" } }] : []),
-        ];
-        if (!filter.$or.length) delete filter.$or;
       }
+      // Removed unsafe $regex on _id to prevent ReDoS
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -662,29 +722,111 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
   const sellerId = transaction.seller.toString();
   const buyerId = transaction.buyer.toString();
 
+  // ── Load site settings for commission % and payout delay ────────────────
+  const SiteSettings = (await import("../admin/siteSettings.model.js")).default;
+  const settings = await SiteSettings.getSingleton();
+
+  const payoutDelayDays = settings.sellerPayoutDelayDays || 0;
+
+  // ── Check if seller is commission-exempt ────────────────────────────────
+  const seller = await User.findById(sellerId).select("commissionExempt stats.level stats.levelOverride").lean();
+  const isExempt = seller?.commissionExempt === true;
+
+  // ── Determine commission: exempt → 0, rank-specific → rank rate, else → global ──
+  let commissionPercent;
+  if (isExempt) {
+    commissionPercent = 0;
+  } else {
+    const globalCommission = settings.commissionPercent || 0;
+    // Check for rank-level commission rate
+    const LevelConfig = (await import("../seller-levels/levelConfig.model.js")).default;
+    const { getRankForLevel } = await import("../seller-levels/sellerLevel.service.js");
+    const levelConfig = await LevelConfig.getConfig();
+    const sellerLevel = seller?.stats?.levelOverride || seller?.stats?.level || 1;
+    const rankInfo = getRankForLevel(sellerLevel, levelConfig);
+    if (rankInfo.commissionPercent !== null && rankInfo.commissionPercent < globalCommission) {
+      commissionPercent = rankInfo.commissionPercent;
+    } else {
+      commissionPercent = globalCommission;
+    }
+  }
+
+  // ── Calculate commission ────────────────────────────────────────────────
+  const commissionAmount = +(transaction.amount * commissionPercent / 100).toFixed(2);
+  const sellerNetAmount = +(transaction.amount - commissionAmount).toFixed(2);
+
   // ── Atomic: release buyer hold ──────────────────────────────────────────
   await User.findByIdAndUpdate(buyerId, {
     $inc: { "wallet.hold": -transaction.amount },
   });
 
-  // ── Atomic: credit seller balance ───────────────────────────────────────
-  // Use findOneAndUpdate with $inc — fully atomic, no read-modify-write race.
-  // Also invalidates the cache so the next read is fresh from DB.
-  const updatedSeller = await User.findByIdAndUpdate(
-    sellerId,
-    {
+  // ── Credit commission to admin balance ──────────────────────────────────
+  if (commissionAmount > 0) {
+    await SiteSettings.findByIdAndUpdate(settings._id, {
+      $inc: { adminCommissionBalance: commissionAmount },
+    });
+  }
+
+  // ── Determine if we should delay payout or pay immediately ──────────────
+  if (payoutDelayDays > 0) {
+    // Hold the seller net amount — will be released after N days by the payout job
+    const payoutAt = new Date(Date.now() + payoutDelayDays * 24 * 60 * 60 * 1000);
+
+    // Update transaction with commission info and payout schedule
+    transaction.status = finalStatus;
+    transaction.commissionPercent = commissionPercent;
+    transaction.commissionAmount = commissionAmount;
+    transaction.sellerNetAmount = sellerNetAmount;
+    transaction.payoutStatus = "pending_payout";
+    transaction.payoutAt = payoutAt;
+    transaction.timeline.push({ event: finalStatus, note });
+    transaction.timeline.push({
+      event: "payout_scheduled",
+      note: `Seller payout of ${sellerNetAmount} EGP scheduled for ${payoutAt.toISOString().split('T')[0]} (${payoutDelayDays} day hold, ${commissionPercent}% commission deducted)`,
+    });
+    await transaction.save();
+
+    // Update seller stats (volume & trades count) even though payment is delayed
+    await User.findByIdAndUpdate(sellerId, {
       $inc: {
-        "wallet.balance": transaction.amount,
         "stats.totalVolume": transaction.amount,
         "stats.successfulTrades": 1,
       },
-    },
-    { new: true }
-  );
+    });
+  } else {
+    // No delay — pay seller immediately (minus commission)
+    const updatedSeller = await User.findByIdAndUpdate(
+      sellerId,
+      {
+        $inc: {
+          "wallet.balance": sellerNetAmount,
+          "stats.totalVolume": transaction.amount,
+          "stats.successfulTrades": 1,
+        },
+      },
+      { new: true }
+    );
 
-  // Sync updated seller to cache (best-effort)
-  if (updatedSeller) {
-    cacheService.cacheUser?.(updatedSeller)?.catch(() => {});
+    // Sync updated seller to cache (best-effort)
+    if (updatedSeller) {
+      cacheService.cacheUser?.(updatedSeller)?.catch(() => { });
+    }
+
+    // Update transaction with commission info
+    transaction.status = finalStatus;
+    transaction.commissionPercent = commissionPercent;
+    transaction.commissionAmount = commissionAmount;
+    transaction.sellerNetAmount = sellerNetAmount;
+    transaction.payoutStatus = "paid_out";
+    transaction.paidOutAt = new Date();
+    transaction.timeline.push({ event: finalStatus, note });
+    if (commissionAmount > 0) {
+      transaction.timeline.push({
+        event: "commission_deducted",
+        note: `${commissionPercent}% commission (${commissionAmount} EGP) deducted. Seller received ${sellerNetAmount} EGP.`,
+      });
+    }
+    await transaction.save();
   }
 
   // Recalculate seller level (async, non-blocking)
@@ -697,26 +839,77 @@ async function _releaseFundsToSeller(transaction, finalStatus, note) {
     status: "sold",
   });
 
-  // Update transaction status
-  transaction.status = finalStatus;
-  transaction.timeline.push({ event: finalStatus, note });
-  await transaction.save();
+  const [buyerUser, sellerUser, listingDoc] = await Promise.all([
+    User.findById(buyerId).select("username email").lean(),
+    User.findById(sellerId).select("username email").lean(),
+    Listing.findById(transaction.listing._id || transaction.listing).select("title").lean(),
+  ]);
 
   // ── Durable notifications (survive server crash) ─────────────────────────
+  const paymentMsg = payoutDelayDays > 0
+    ? `Transaction confirmed! ${sellerNetAmount} EGP will be credited to your wallet in ${payoutDelayDays} days (${commissionPercent}% commission deducted).`
+    : `${sellerNetAmount} EGP has been credited to your wallet for the sale${commissionAmount > 0 ? ` (${commissionPercent}% commission deducted)` : ''}.`;
+
   await queueNotification({
     userId: sellerId,
     type: finalStatus === "auto_confirmed" ? "auto_confirmed" : "purchase_confirmed",
-    title: "💰 Payment Received!",
-    message: `${transaction.amount} EGP has been credited to your wallet for the sale.`,
+    title: payoutDelayDays > 0 ? "✅ Sale Confirmed!" : "💰 Payment Received!",
+    message: paymentMsg,
     relatedId: transaction._id,
     metadata: {
       transactionId: transaction._id.toString(),
-      amount: transaction.amount,
+      amount: sellerNetAmount,
       socketTargetId: sellerId,
     },
     socketEvent: finalStatus === "auto_confirmed" ? "notifySellerAutoConfirmed" : "notifySellerPurchaseConfirmed",
-    socketPayload: { transactionId: transaction._id, amount: transaction.amount },
+    socketPayload: { transactionId: transaction._id, amount: sellerNetAmount },
   });
+
+  // Invoice update email to both parties
+  const statusLabel = finalStatus === "auto_confirmed" ? "auto_confirmed" : "completed";
+  const listingTitle = listingDoc?.title || "Listing";
+  await Promise.allSettled([
+    sendMonlyKingInvoiceEmail({
+      to: buyerUser?.email,
+      subject: `MonlyKing invoice update - ${statusLabel}`,
+      payload: {
+        heading: "Transaction Updated",
+        intro: "Your transaction status has been updated.",
+        transactionId: transaction._id.toString(),
+        status: statusLabel,
+        listingTitle,
+        amount: transaction.amount,
+        originalAmount: transaction.originalAmount || transaction.amount,
+        discountPercent: transaction.discountPercent,
+        buyerName: buyerUser?.username,
+        buyerEmail: buyerUser?.email,
+        sellerName: sellerUser?.username,
+        sellerEmail: sellerUser?.email,
+        note: `Seller net amount: ${sellerNetAmount.toFixed(2)} EGP. Commission: ${commissionAmount.toFixed(2)} EGP (${commissionPercent}%).`,
+        createdAt: transaction.createdAt,
+      },
+    }),
+    sendMonlyKingInvoiceEmail({
+      to: sellerUser?.email,
+      subject: `MonlyKing invoice update - ${statusLabel}`,
+      payload: {
+        heading: "Sale Status Updated",
+        intro: "A sale on your listing was finalized.",
+        transactionId: transaction._id.toString(),
+        status: statusLabel,
+        listingTitle,
+        amount: transaction.amount,
+        originalAmount: transaction.originalAmount || transaction.amount,
+        discountPercent: transaction.discountPercent,
+        buyerName: buyerUser?.username,
+        buyerEmail: buyerUser?.email,
+        sellerName: sellerUser?.username,
+        sellerEmail: sellerUser?.email,
+        note: `You will receive ${sellerNetAmount.toFixed(2)} EGP${payoutDelayDays > 0 ? ` after ${payoutDelayDays} day(s)` : ""}.`,
+        createdAt: transaction.createdAt,
+      },
+    }),
+  ]);
 
   // Notify buyer of status update (best-effort — not critical)
   try {
@@ -743,6 +936,12 @@ async function _refundBuyer(transaction, note) {
   transaction.timeline.push({ event: "refunded", note: note || "Admin refunded buyer" });
   await transaction.save();
 
+  const [buyerUser, sellerUser, listingDoc] = await Promise.all([
+    User.findById(buyerId).select("username email").lean(),
+    User.findById(sellerId).select("username email").lean(),
+    Listing.findById(transaction.listing._id || transaction.listing).select("title").lean(),
+  ]);
+
   // Durable notification to buyer
   await queueNotification({
     userId: buyerId,
@@ -758,6 +957,49 @@ async function _refundBuyer(transaction, note) {
     socketEvent: "notifyDisputeResolved",
     socketPayload: { transactionId: transaction._id, decision: "refund" },
   });
+
+  await Promise.allSettled([
+    sendMonlyKingInvoiceEmail({
+      to: buyerUser?.email,
+      subject: "MonlyKing invoice update - refunded",
+      payload: {
+        heading: "Refund Processed",
+        intro: "Your transaction was refunded after admin review.",
+        transactionId: transaction._id.toString(),
+        status: "refunded",
+        listingTitle: listingDoc?.title || "Listing",
+        amount: transaction.amount,
+        originalAmount: transaction.originalAmount || transaction.amount,
+        discountPercent: transaction.discountPercent,
+        buyerName: buyerUser?.username,
+        buyerEmail: buyerUser?.email,
+        sellerName: sellerUser?.username,
+        sellerEmail: sellerUser?.email,
+        note: `${transaction.amount.toFixed(2)} EGP has been returned to your wallet balance.`,
+        createdAt: transaction.createdAt,
+      },
+    }),
+    sendMonlyKingInvoiceEmail({
+      to: sellerUser?.email,
+      subject: "MonlyKing invoice update - refunded",
+      payload: {
+        heading: "Order Refunded",
+        intro: "A transaction linked to your listing was refunded.",
+        transactionId: transaction._id.toString(),
+        status: "refunded",
+        listingTitle: listingDoc?.title || "Listing",
+        amount: transaction.amount,
+        originalAmount: transaction.originalAmount || transaction.amount,
+        discountPercent: transaction.discountPercent,
+        buyerName: buyerUser?.username,
+        buyerEmail: buyerUser?.email,
+        sellerName: sellerUser?.username,
+        sellerEmail: sellerUser?.email,
+        note: "Listing was returned to available state.",
+        createdAt: transaction.createdAt,
+      },
+    }),
+  ]);
 
   try {
     socketService.notifyDisputeResolved(sellerId, { transactionId: transaction._id, decision: "refund" });
