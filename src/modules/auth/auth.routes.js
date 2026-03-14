@@ -16,7 +16,7 @@ router.get("/csrf-token", (req, res) => {
         maxAge: 15 * 60 * 1000,
         path: "/"
     });
-      // SECURITY FIX: [CRIT-07] Set CSRF token in cookie only, not response body.
+      // SECURITY FIX [C-02]: Set CSRF token in cookie only, not response body.
       res.json({ success: true });
 });
 

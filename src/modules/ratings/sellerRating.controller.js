@@ -5,6 +5,7 @@ import Transaction from "../transactions/transaction.model.js";
 import { createNotification } from "../notifications/notificationHelper.js";
 import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 // ─── Profanity word list (Arabic + English) ───────────────────────────────────
 const PROFANITY_LIST = [
@@ -174,8 +175,8 @@ export const addRating = async (req, res) => {
 export const getSellerRatings = async (req, res) => {
   try {
     const { sellerId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
     if (!mongoose.Types.ObjectId.isValid(sellerId)) {
       return res.status(400).json({ message: "Invalid seller ID" });
@@ -186,7 +187,7 @@ export const getSellerRatings = async (req, res) => {
         .populate("rater", "username avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(Number(limit))
+        .limit(limit)
         .lean(),
       SellerRating.countDocuments({ seller: sellerId }),
       SellerRating.aggregate([
@@ -262,15 +263,15 @@ export const deleteRating = async (req, res) => {
 export const getMyRatings = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
     const [ratings, total] = await Promise.all([
       SellerRating.find({ rater: userId })
         .populate("seller", "username avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(Number(limit))
+        .limit(limit)
         .lean(),
       SellerRating.countDocuments({ rater: userId }),
     ]);

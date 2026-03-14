@@ -48,7 +48,7 @@ export default function csrfProtection(req, res, next) {
   const csrfCookie = req.cookies?.[process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN"];
   const csrfHeader = req.get("X-XSRF-TOKEN");
 
-  // SECURITY FIX: [HIGH-01] Use constant-time token comparison to reduce timing attack surface.
+  // SECURITY FIX [H-01]: Use constant-time token comparison to reduce timing attack surface.
   const isTokenMismatch =
     !csrfCookie ||
     !csrfHeader ||

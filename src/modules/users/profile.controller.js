@@ -40,7 +40,7 @@ const saveBase64Image = async (base64String, userId) => {
         const data = matches[2];
         const buffer = Buffer.from(data, 'base64');
 
-        // SECURITY FIX: [HIGH-08] Verify actual file signature (magic bytes) of decoded avatar data.
+        // SECURITY FIX [H-07]: Verify actual file signature (magic bytes) of decoded avatar data.
         const detected = await fileTypeFromBuffer(buffer);
         if (!detected || !ALLOWED_IMAGE_MIMES.includes(detected.mime)) {
             logger.warn(`[saveBase64Image] Magic bytes mismatch for user ${userId}: declared ${ext}, actual ${detected?.mime}`);
@@ -418,7 +418,7 @@ export const completeProfile = async (req, res) => {
 
         // Handle avatar upload if file is present
         if (req.file) {
-            // SECURITY FIX: [MED-06] Enforce safe avatar filename and correct avatars path.
+            // SECURITY FIX [H-08]: Enforce safe avatar filename and correct avatars path.
             const filename = path.basename(req.file.filename);
             if (!SAFE_FILENAME_RE.test(filename) || filename.includes('..')) {
                 return res.status(400).json({ message: "Invalid file name" });

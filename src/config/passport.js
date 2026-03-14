@@ -71,7 +71,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.create({
             email,
             username: username.length >= 5 ? username : username + "user1",
-            // SECURITY FIX: [MED-01] Use cryptographically random placeholder for OAuth-only users.
+            // SECURITY FIX [H-06]: Use cryptographically random placeholder for OAuth-only users.
             passwordHash: "google-oauth-" + crypto.randomBytes(32).toString('hex'),
             googleId: profile.id,
             fullName: profile.displayName || "",

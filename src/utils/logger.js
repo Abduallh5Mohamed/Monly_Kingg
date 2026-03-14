@@ -22,7 +22,7 @@ class Logger {
     try {
       const data = this.buffer.join('');
       this.buffer = [];
-      // SECURITY FIX: [LOW-01] Rotate log file when it exceeds max size.
+      // SECURITY FIX [L-01]: Rotate log file when it exceeds max size.
       fs.stat(this.logFile, (err, stats) => {
         if (!err && stats.size > this.maxLogSize) {
           const rotated = this.logFile.replace('.log', `.${Date.now()}.log`);

@@ -8,7 +8,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { listingWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
-import { verifyImageFilesFromFields } from "../../middlewares/verifyFileType.js";
+import { verifyImageFileType } from "../../middlewares/verifyFileType.js";
 import {
   createListing,
   getMyListings,
@@ -70,17 +70,18 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
+  // SECURITY FIX [L-02]: Enforce per-file and total-file count caps for listing uploads.
+  limits: { fileSize: 5 * 1024 * 1024, files: 11 }
 });
 
 // Multer error handler middleware
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ message: 'File too large. Maximum size is 10MB.' });
+      return res.status(400).json({ message: 'File too large. Maximum size is 5MB.' });
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({ message: 'Too many files. Maximum is 10 images.' });
+      return res.status(400).json({ message: 'Too many files. Maximum is 11 files total.' });
     }
     return res.status(400).json({ message: 'File upload error: ' + err.message });
   }
@@ -110,8 +111,8 @@ router.post(
     { name: 'coverImage', maxCount: 1 }
   ]),
   handleMulterError,
-  // SECURITY FIX: [CRIT-02] Verify listing images via magic bytes for fields-based uploads.
-  verifyImageFilesFromFields,
+  // SECURITY FIX [C-04]: Verify actual file contents via magic bytes.
+  verifyImageFileType,
   invalidateCache(LISTING_CACHE_PATTERN),
   createListing
 );

@@ -53,7 +53,7 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// SECURITY FIX: [CRIT-03] Verify real image signature for uploaded deposit receipts.
+// SECURITY FIX [C-05]: Verify real image signature for uploaded deposit receipts.
 router.post("/request", depositLimiter, uploadLimiter, authMiddleware, upload.single("receipt"), verifyImageFileType, submitDeposit);
 router.get("/my-requests", authMiddleware, getMyDeposits);
 

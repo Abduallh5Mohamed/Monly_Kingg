@@ -14,12 +14,15 @@ const router = express.Router();
 router.get("/my/given", authMiddleware, getMyRatings);
 
 // Add or update a rating for a seller
+// SECURITY FIX [M-02]: Validate sellerId param to prevent CastError injection.
 router.post("/:sellerId", authMiddleware, validateObjectId("sellerId"), addRating);
 
 // Get all ratings for a seller (public)
+// SECURITY FIX [M-02]: Validate sellerId param to prevent CastError injection.
 router.get("/:sellerId", validateObjectId("sellerId"), getSellerRatings);
 
 // Delete own rating
+// SECURITY FIX [M-02]: Validate ratingId param to prevent CastError injection.
 router.delete("/:ratingId", authMiddleware, validateObjectId("ratingId"), deleteRating);
 
 export default router;

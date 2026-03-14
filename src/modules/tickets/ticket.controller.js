@@ -1,5 +1,6 @@
 import * as ticketService from "./ticket.service.js";
 import logger from "../../utils/logger.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 // ─── POST /api/v1/tickets ─────────────────────────────────────────────────────
 // User/Seller creates a new ticket
@@ -39,11 +40,13 @@ export const createTicket = async (req, res) => {
 // Get current user's tickets
 export const getMyTickets = async (req, res) => {
   try {
-    const { status, page = 1, limit = 20 } = req.query;
+    const { status } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit } = safePaginate(req.query, 20, 100);
     const result = await ticketService.getUserTickets(req.user._id, {
       status,
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page,
+      limit,
     });
 
     res.json({ success: true, data: result });
@@ -57,13 +60,15 @@ export const getMyTickets = async (req, res) => {
 // Admin: get all tickets
 export const adminGetAll = async (req, res) => {
   try {
-    const { status, userRole, priority, page = 1, limit = 20, search } = req.query;
+    const { status, userRole, priority, search } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit } = safePaginate(req.query, 20, 100);
     const result = await ticketService.getAllTickets({
       status,
       userRole,
       priority,
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page,
+      limit,
       search,
     });
 

@@ -19,12 +19,12 @@ const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
 
-// SECURITY FIX: [MED-02] Mask identifiers before logging sensitive user data.
+// SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
 
 async function appendAuthLog(userId, { action, success = true, ip = null, userAgent = null }) {
   try {
-    // SECURITY FIX: [MED-03] Keep authLogs bounded to avoid unbounded growth.
+    // SECURITY FIX [M-03]: Keep authLogs bounded to avoid unbounded growth.
     await User.updateOne(
       { _id: userId },
       {
@@ -258,7 +258,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       const newFailedAttempts = (user.failedLoginAttempts || 0) + 1;
       const updateData = {
         $inc: { failedLoginAttempts: 1 },
-        // SECURITY FIX: [MED-03] Keep auth logs bounded during failed login tracking.
+        // SECURITY FIX [M-03]: Keep auth logs bounded during failed login tracking.
         $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
       };
 
@@ -426,6 +426,10 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
   }
 
   if (disconnectUserId) {
+    // SECURITY FIX [L-06]: Invalidate auth middleware cache on logout.
+    if (redis.isReady()) {
+      await redis.del(`auth:user:${disconnectUserId}`).catch(() => {});
+    }
     socketService.disconnectUser(disconnectUserId);
   }
 
@@ -485,7 +489,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     user.lastPasswordResetSentAt = new Date();
 
-    // SECURITY FIX: [HIGH-02] Cache hash only, never raw reset token.
+    // SECURITY FIX [H-02]: Cache hash only, never raw reset token.
     await cacheService.cachePasswordResetToken(user._id, resetTokenHash);
 
     await user.save();
@@ -612,7 +616,7 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
     // Revoke all existing refresh tokens for security
     await revokeAllRefreshTokens(user, "password_reset");
 
-    // SECURITY FIX: Blacklist active access token when present.
+    // SECURITY FIX [H-09]: Blacklist active access token when present.
     if (currentAccessToken && redis.isReady()) {
       const tokenHash = crypto.createHash("sha256").update(currentAccessToken).digest("hex");
       await redis.getClient().set(`bl:token:${tokenHash}`, "1", { EX: 15 * 60 });
@@ -620,6 +624,10 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
 
     // Clear user from cache (password changed, need fresh data)
     await cacheService.invalidateUser(user._id);
+    // SECURITY FIX [L-06]: Explicitly clear auth middleware cache key after password reset.
+    if (redis.isReady()) {
+      await redis.del(`auth:user:${user._id.toString()}`).catch(() => {});
+    }
     await cacheService.removePasswordResetToken(user._id);
 
     await user.save();

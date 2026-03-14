@@ -27,7 +27,7 @@ const ALLOWED_UPLOAD_TYPES = [
 ];
 
 const getSafeUploadType = (value) => {
-  // SECURITY FIX: [MED-08] Strict upload type allowlist to prevent path traversal.
+  // SECURITY FIX [H-05]: Strict upload type allowlist to prevent path traversal.
   return ALLOWED_UPLOAD_TYPES.includes(value) ? value : "other";
 };
 

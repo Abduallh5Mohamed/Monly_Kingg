@@ -51,7 +51,7 @@ const verifyByMagicBytes = (allowedTypes, invalidMessage) => async (req, res, ne
 };
 
 export const verifyImageFileType = async (req, res, next) => {
-  // SECURITY FIX: Validate all uploaded files (single, array, and fields-object uploads).
+  // SECURITY FIX [C-04]: Support req.file and req.files for magic-byte image checks.
   const files = getUploadedFiles(req);
   if (!files.length) return next();
 
@@ -79,7 +79,7 @@ export const verifyImageFileType = async (req, res, next) => {
 };
 
 export const verifyImageFilesFromFields = async (req, res, next) => {
-  // SECURITY FIX: [CRIT-02] Verify magic-bytes for multer fields uploads (req.files object).
+  // SECURITY FIX [C-04]: Legacy helper kept for compatibility with older upload pipelines.
   const files = getUploadedFiles(req);
   if (!files.length) return next();
 

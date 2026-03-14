@@ -27,7 +27,7 @@ export const uploadFile = async (req, res) => {
 
     const { type, relatedModel, relatedId } = req.body;
     const file = req.file;
-    // SECURITY FIX: [MED-08] Whitelist upload types to avoid path traversal via req.body.type.
+    // SECURITY FIX [H-05]: Whitelist upload types to avoid path traversal via req.body.type.
     const subDir = ALLOWED_UPLOAD_TYPES.has(type) ? type : "other";
 
     // إنشاء سجل في قاعدة البيانات

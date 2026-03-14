@@ -53,7 +53,7 @@ router.get("/my-permissions", getMyPermissions);
 
 // ── User management (admin-only – never delegated to moderators) ────
 router.get("/users", requireAdmin, getAllUsers);
-// SECURITY FIX: Validate all ObjectId params before controller logic.
+// SECURITY FIX [M-01]: Validate all ObjectId params before controller logic.
 router.get("/users/:userId/detail", requireAdmin, validateObjectId("userId"), getUserDetail);
 router.put("/users/:userId/role", requireAdmin, validateObjectId("userId"), updateUserRole);
 router.delete("/users/:userId", requireAdmin, validateObjectId("userId"), deleteUser);
@@ -88,7 +88,7 @@ router.put("/change-password", changePassword);
 router.get("/commission", requirePermission("analytics"), getEarnedCommission);
 
 // ── Instant payout release ──────────────────────────────────────
-router.post("/transactions/:id/instant-release", requirePermission("orders"), validateObjectId(), adminInstantRelease);
+router.post("/transactions/:id/instant-release", requirePermission("orders"), validateObjectId("id"), adminInstantRelease);
 
 // ── Commission exemption ────────────────────────────────────────
 router.get("/exempt-sellers", requirePermission("sellers"), getExemptSellers);
@@ -97,16 +97,16 @@ router.put("/users/:userId/commission-exempt", requirePermission("sellers"), val
 // ── Listings management ─────────────────────────────────────────
 router.get("/listings/stats", requirePermission("products"), getAdminListingStats);
 router.get("/listings", requirePermission("products"), getAdminListings);
-router.delete("/listings/:id", requirePermission("products"), validateObjectId(), deleteAdminListing);
-router.put("/listings/:id/status", requirePermission("products"), validateObjectId(), updateAdminListingStatus);
+router.delete("/listings/:id", requirePermission("products"), validateObjectId("id"), deleteAdminListing);
+router.put("/listings/:id/status", requirePermission("products"), validateObjectId("id"), updateAdminListingStatus);
 
 // ── Games management ────────────────────────────────────────────
 router.get("/games/stats", requirePermission("games"), getAdminGameStats);
 router.get("/games", requirePermission("games"), getAdminGames);
 router.post("/games", requirePermission("games"), createAdminGame);
-router.put("/games/:id", requirePermission("games"), validateObjectId(), updateAdminGame);
-router.delete("/games/:id", requirePermission("games"), validateObjectId(), deleteAdminGame);
-router.put("/games/:id/toggle-status", requirePermission("games"), validateObjectId(), toggleAdminGameStatus);
+router.put("/games/:id", requirePermission("games"), validateObjectId("id"), updateAdminGame);
+router.delete("/games/:id", requirePermission("games"), validateObjectId("id"), deleteAdminGame);
+router.put("/games/:id/toggle-status", requirePermission("games"), validateObjectId("id"), toggleAdminGameStatus);
 
 // ── Moderator management (admin-only) ──────────────────────────
 router.get("/moderators", requireAdmin, getModerators);

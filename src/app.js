@@ -21,6 +21,8 @@ import transactionRoutes from "./modules/transactions/transaction.routes.js";
 import sellerLevelRoutes from "./modules/seller-levels/sellerLevel.routes.js";
 import ticketRoutes from "./modules/tickets/ticket.routes.js";
 import sellerRatingRoutes from "./modules/ratings/sellerRating.routes.js";
+import depositRoutes from "./modules/deposits/deposit.routes.js";
+import withdrawalRoutes from "./modules/withdrawals/withdrawal.routes.js";
 import { startAutoConfirmJob } from "./jobs/autoConfirmTransactions.js";
 import { startPayoutReleaseJob } from "./jobs/sellerPayoutRelease.js";
 import { startTransactionWorkers } from "./workers/transactionWorker.js";
@@ -67,7 +69,7 @@ const SAFE_UPLOAD_FILENAME_REGEX = /^[a-zA-Z0-9._-]+$/;
 
 function getSafeUploadFilename(rawFilename) {
   const filename = path.basename(rawFilename || "");
-  // SECURITY FIX: [HIGH-05] Reject suspicious filenames even after basename normalization.
+  // SECURITY FIX [H-04]: Reject suspicious filenames even after basename normalization.
   if (!SAFE_UPLOAD_FILENAME_REGEX.test(filename) || filename.includes('..')) {
     return null;
   }
@@ -85,7 +87,7 @@ if (Number.isInteger(parsedProxyHops) && parsedProxyHops > 0) {
 // Compression middleware for better performance
 app.use(compression({
   filter: (req, res) => {
-    // SECURITY FIX: [LOW-04] Remove client-controlled compression bypass header.
+    // SECURITY FIX [M-08]: Remove client-controlled compression bypass header.
     return compression.filter(req, res);
   },
   level: 4, // Fast compression
@@ -96,7 +98,7 @@ app.use(compression({
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// SECURITY FIX: [HIGH-05] Enforce accepted content types for state-changing requests.
+// SECURITY FIX [H-04]: Enforce accepted content types for state-changing requests.
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH"].includes(req.method) && req.headers["content-type"]) {
     const contentType = req.headers["content-type"];
@@ -194,7 +196,7 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// SECURITY FIX: [HIGH-04] Replace open static serving with validated file handlers.
+// SECURITY FIX [H-04]: Replace open static serving with validated file handlers.
 app.get('/uploads/listings/:filename', (req, res) => {
   const filename = getSafeUploadFilename(req.params.filename);
   if (!filename) {
@@ -210,7 +212,7 @@ app.get('/uploads/listings/:filename', (req, res) => {
   });
 });
 
-// SECURITY FIX: [HIGH-04] Replace open static serving for /other with validated file handler.
+// SECURITY FIX [H-04]: Replace open static serving for /other with validated file handler.
 app.get('/uploads/other/:filename', (req, res) => {
   const filename = getSafeUploadFilename(req.params.filename);
   if (!filename) {
@@ -290,27 +292,30 @@ app.use(globalLimiter);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to sensitive admin routes.
+// SECURITY FIX [C-01]: Add CSRF protection to all state-changing routes.
 app.use("/api/v1/admin", csrfProtection, adminRoutes);
-// SECURITY FIX: [CRIT-01] Keep direct admin seller-level mount protected.
+// SECURITY FIX [C-01]: Keep direct admin seller-level mount protected.
 app.use("/api/v1/admin/seller-levels", csrfProtection, sellerLevelRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to seller routes.
+// SECURITY FIX [C-01]: Add CSRF protection to seller routes.
 app.use("/api/v1/seller", csrfProtection, sellerRoutes);
 app.use("/api/v1/listings", csrfProtection, listingRoutes);
 app.use("/api/v1/promotions", csrfProtection, promotionRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to notification routes.
+// SECURITY FIX [C-01]: Add CSRF protection to notification routes.
 app.use("/api/v1/notifications", csrfProtection, notificationRoutes);
 app.use("/api/v1/games", gamesRoutes);
 app.use("/api/v1/ads", adsRoutes);
 app.use("/api/v1/discounts", csrfProtection, discountRoutes);
 app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to transaction routes.
+// SECURITY FIX [C-01]: Add CSRF protection to transaction routes.
 app.use("/api/v1/transactions", csrfProtection, transactionRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to ticket routes.
+// SECURITY FIX [C-01]: Add CSRF protection to ticket routes.
 app.use("/api/v1/tickets", csrfProtection, ticketRoutes);
-// SECURITY FIX: [CRIT-01] Add CSRF protection to rating routes.
+// SECURITY FIX [C-01]: Add CSRF protection to rating routes.
 app.use("/api/v1/ratings", csrfProtection, sellerRatingRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to deposit and withdrawal routes.
+app.use("/api/v1/deposits", csrfProtection, depositRoutes);
+app.use("/api/v1/withdrawals", csrfProtection, withdrawalRoutes);
 
 // Convert invalid ObjectId cast failures into clean 400 responses.
 app.use((err, req, res, next) => {

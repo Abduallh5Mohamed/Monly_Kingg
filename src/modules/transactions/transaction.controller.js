@@ -14,6 +14,7 @@ import { sendEmail } from "../../utils/email.js";
 import { buildTransactionInvoiceEmail } from "../../utils/emailTemplates.js";
 import { encrypt, decrypt } from "../../utils/encryption.js";
 import { updateSellerLevel } from "../seller-levels/sellerLevel.service.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 // ─── Credential encryption helpers ───────────────────────────────────────────
 function encryptCredentials(credentials) {
@@ -358,6 +359,18 @@ export const submitCredentials = async (req, res) => {
     if (!credentials || !Array.isArray(credentials) || credentials.length === 0) {
       return res.status(400).json({ success: false, message: "credentials array is required" });
     }
+    // SECURITY FIX [L-04]: Validate credentials array size and key/value lengths.
+    if (credentials.length > 20) {
+      return res.status(400).json({ success: false, message: "Too many credential fields (max 20)" });
+    }
+    for (const cred of credentials) {
+      if (!cred || typeof cred.key !== "string" || typeof cred.value !== "string") {
+        return res.status(400).json({ success: false, message: "Invalid credential format" });
+      }
+      if (cred.key.length > 100 || cred.value.length > 500) {
+        return res.status(400).json({ success: false, message: "Credential key/value exceeds maximum length" });
+      }
+    }
 
     const AUTO_CONFIRM_HOURS = 48;
     const autoConfirmAt = new Date(Date.now() + AUTO_CONFIRM_HOURS * 60 * 60 * 1000);
@@ -454,9 +467,14 @@ export const openDispute = async (req, res) => {
       return res.status(400).json({ success: false, message: "Cannot dispute at this stage" });
     }
 
+    // SECURITY FIX [L-03]: Enforce dispute reason length limits.
+    const sanitizedReason = typeof reason === "string"
+      ? reason.trim().slice(0, 1000)
+      : "No reason provided";
+
     transaction.status = "disputed";
-    transaction.disputeReason = reason || "No reason provided";
-    transaction.timeline.push({ event: "dispute_opened", note: reason || "Buyer opened dispute" });
+    transaction.disputeReason = sanitizedReason || "No reason provided";
+    transaction.timeline.push({ event: "dispute_opened", note: sanitizedReason || "Buyer opened dispute" });
     await transaction.save();
 
     // Notify admin via socket
@@ -540,7 +558,9 @@ export const adminResolveDispute = async (req, res) => {
 export const getMyTransactions = async (req, res) => {
   try {
     const userId = req.user._id.toString();
-    const { role, status, page = 1, limit = 20 } = req.query;
+    const { role, status } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
     const filter = {};
     if (role === "buyer") filter.buyer = userId;
@@ -549,13 +569,12 @@ export const getMyTransactions = async (req, res) => {
 
     if (status) filter.status = status;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
         .select("-credentials") // ✅ SECURITY: Never include credentials in list views
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .populate("listing", "title coverImage price game")
         .populate("buyer", "username avatar")
         .populate("seller", "username avatar"),
@@ -569,7 +588,7 @@ export const getMyTransactions = async (req, res) => {
     return res.json({
       success: true,
       data: transactions,
-      pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+      pagination: { total, page, limit },
       pendingCounts: { asBuyer: pendingAsBuyer, asSeller: pendingAsSeller },
     });
   } catch (err) {
@@ -647,7 +666,9 @@ export const getTransactionById = async (req, res) => {
 // ─── Admin: GET /api/v1/transactions/admin/all ──────────────────────────────
 export const adminGetAll = async (req, res) => {
   try {
-    const { status, page = 1, limit = 30, search } = req.query;
+    const { status, search } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 30, 100);
     const filter = {};
     if (status) filter.status = status;
 
@@ -660,13 +681,12 @@ export const adminGetAll = async (req, res) => {
       // Removed unsafe $regex on _id to prevent ReDoS
     }
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
         .select("-credentials") // ✅ SECURITY: Never include credentials in admin list view
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .populate("listing", "title price")
         .populate("buyer", "username email")
         .populate("seller", "username email"),
@@ -676,7 +696,7 @@ export const adminGetAll = async (req, res) => {
     return res.json({
       success: true,
       data: transactions,
-      pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+      pagination: { total, page, limit },
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: "Server error" });

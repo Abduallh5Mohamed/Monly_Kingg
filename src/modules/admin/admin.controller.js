@@ -17,13 +17,16 @@ import crypto from "crypto";
 import redis from "../../config/redis.js";
 import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
 import escapeRegex from "../../utils/escapeRegex.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
     try {
-        const { page = 1, limit = 10, role = "all" } = req.query;
+        const { role = "all" } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 10, 100);
         const search = (req.query.search || "").trim().slice(0, 100);
 
         // Build filter
@@ -39,12 +42,11 @@ export const getAllUsers = async (req, res) => {
         }
 
         // Get users with pagination
-        const skip = (page - 1) * limit;
         const users = await User.find(filter)
             .select("-passwordHash -verificationCode -passwordResetToken")
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit));
+            .limit(limit);
 
         // Get total count
         const total = await User.countDocuments(filter);
@@ -56,7 +58,7 @@ export const getAllUsers = async (req, res) => {
             data: {
                 users,
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(total / limit),
                     totalUsers: total,
                     hasNext: page * limit < total,
@@ -247,13 +249,14 @@ export const deleteUser = async (req, res) => {
 /* ---------------- Get Recent Activity ---------------- */
 export const getRecentActivity = async (req, res) => {
     try {
-        const { limit = 10 } = req.query;
+        // SECURITY FIX [M-06]: Cap limit parameter to avoid oversized queries.
+        const { limit } = safePaginate({ page: 1, limit: req.query.limit }, 10, 100);
 
         // Get recent users with their auth logs
         const recentUsers = await User.find()
             .select("email username role verified createdAt authLogs")
             .sort({ createdAt: -1 })
-            .limit(parseInt(limit) * 2); // Get more to filter
+            .limit(limit * 2); // Get more to filter
 
         // Extract recent activities
         const activities = [];
@@ -293,7 +296,7 @@ export const getRecentActivity = async (req, res) => {
         // Sort by timestamp and limit
         const sortedActivities = activities
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-            .slice(0, parseInt(limit));
+            .slice(0, limit);
 
         res.json({
             success: true,
@@ -359,7 +362,9 @@ export const toggleUserStatus = async (req, res) => {
 /* ---------------- Get All Chats (Admin Monitoring) ---------------- */
 export const getAllChats = async (req, res) => {
     try {
-        const { page = 1, limit = 20, type = 'all', search = '' } = req.query;
+        const { type = 'all', search = '' } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         // Build filter
         const filter = { isActive: true };
@@ -387,14 +392,12 @@ export const getAllChats = async (req, res) => {
             }
         }
 
-        const skip = (page - 1) * limit;
-
         const chats = await Chat.find(filter)
             .populate('participants', 'username email avatar role verified')
             .populate('lastMessage.sender', 'username email avatar')
             .sort({ 'lastMessage.timestamp': -1, updatedAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit))
+            .limit(limit)
             .select('-messages') // Don't load messages for list view
             .lean();
 
@@ -420,7 +423,7 @@ export const getAllChats = async (req, res) => {
             data: {
                 chats: chatsWithStats,
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(total / limit),
                     totalChats: total,
                     hasNext: page * limit < total,
@@ -441,7 +444,8 @@ export const getAllChats = async (req, res) => {
 export const getChatDetails = async (req, res) => {
     try {
         const { chatId } = req.params;
-        const { page = 1, limit = 50 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit } = safePaginate(req.query, 50, 100);
 
         const chat = await Chat.findById(chatId)
             .populate('participants', 'username email avatar role verified createdAt')
@@ -498,7 +502,7 @@ export const getChatDetails = async (req, res) => {
                     lastActivity: chat.lastMessage?.timestamp || chat.updatedAt
                 },
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(totalMessages / limit),
                     totalMessages,
                     hasNext: page * limit < totalMessages,
@@ -801,7 +805,7 @@ export const changePassword = async (req, res) => {
         // Invalidate cached user so tokens re-validated
         await cacheService.invalidateUser(user._id);
 
-        // SECURITY FIX: [MED-04] Blacklist current access token on password change.
+        // SECURITY FIX [H-09]: Blacklist current access token on password change.
         const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
         if (accessToken && redis.isReady()) {
             try {
@@ -948,8 +952,8 @@ export const updateSiteSettings = async (req, res) => {
 /* ---------------- Get Earned Commission Stats ---------------- */
 export const getEarnedCommission = async (req, res) => {
     try {
-        const { page = 1, limit = 30 } = req.query;
-        const skip = (parseInt(page) - 1) * parseInt(limit);
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 30, 100);
 
         const settings = await SiteSettings.getSingleton();
 
@@ -960,7 +964,7 @@ export const getEarnedCommission = async (req, res) => {
             Transaction.find(filter)
                 .sort({ createdAt: -1 })
                 .skip(skip)
-                .limit(parseInt(limit))
+                .limit(limit)
                 .select("buyer seller listing amount commissionPercent commissionAmount sellerNetAmount payoutStatus paidOutAt status createdAt")
                 .populate("listing", "title price")
                 .populate("buyer", "username")
@@ -1033,7 +1037,7 @@ export const getEarnedCommission = async (req, res) => {
                 currentCommissionPercent: settings.commissionPercent,
                 currentPayoutDelay: settings.sellerPayoutDelayDays,
                 transactions,
-                pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+                pagination: { total, page, limit },
             },
         });
     } catch (error) {
@@ -1051,13 +1055,13 @@ export const getEarnedCommission = async (req, res) => {
 export const getAdminListings = async (req, res) => {
     try {
         const {
-            page = 1,
-            limit = 20,
             search = "",
             status = "all",
             game = "all",
             sort = "newest"
         } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         const filter = {};
 
@@ -1086,15 +1090,13 @@ export const getAdminListings = async (req, res) => {
         else if (sort === "price_desc") sortOption = { price: -1 };
         else if (sort === "title") sortOption = { title: 1 };
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-
         const [listings, total] = await Promise.all([
             Listing.find(filter)
                 .populate("game", "name")
                 .populate("seller", "username email avatar")
                 .sort(sortOption)
                 .skip(skip)
-                .limit(parseInt(limit))
+                .limit(limit)
                 .lean(),
             Listing.countDocuments(filter),
         ]);
@@ -1136,8 +1138,8 @@ export const getAdminListings = async (req, res) => {
             data: {
                 listings: enrichedListings,
                 pagination: {
-                    currentPage: parseInt(page),
-                    totalPages: Math.ceil(total / parseInt(limit)),
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
                     total,
                     hasNext: page * limit < total,
                     hasPrev: page > 1

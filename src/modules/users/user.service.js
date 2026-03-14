@@ -17,7 +17,7 @@ export const getUserById = async (id) => {
 };
 
 export const updateUser = async (id, updates) => {
-  // SECURITY FIX: [CRIT-06] Never allow sensitive/privileged field updates through service layer.
+  // SECURITY FIX [C-03]: Never allow sensitive/privileged field updates through service layer.
   const BLOCKED_FIELDS = [
     'role', 'wallet', 'isSeller', 'commissionExempt', 'verified',
     'moderatorPermissions', 'stats', 'passwordHash', 'refreshTokens',
@@ -60,7 +60,7 @@ export const searchUsers = async (query, excludeUserId) => {
   try {
     const safeQuery = escapeRegex(String(query || '').trim().slice(0, 100));
 
-    // SECURITY FIX: [MED-07] Restrict search to username only to reduce email enumeration risk.
+    // SECURITY FIX [M-04]: Restrict search to username only to reduce email enumeration risk.
     const users = await User.find({
       _id: { $ne: excludeUserId }, // Exclude current user
       username: { $regex: safeQuery, $options: 'i' }

@@ -571,7 +571,7 @@ export const resendLimiter = createRateLimiter('resendCode', {}, {
 
 export const passwordResetLimiter = createRateLimiter('passwordReset', {}, {
   useUserKey: false,
-  // SECURITY FIX: Increase brute-force resistance on password reset flows.
+  // SECURITY FIX [H-03]: Enable progressive and bot penalties for reset brute-force resistance.
   progressive: true,
   botPenalty: true
 });

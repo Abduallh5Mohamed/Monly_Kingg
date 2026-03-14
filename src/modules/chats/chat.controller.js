@@ -3,6 +3,7 @@ import User from "../users/user.model.js";
 import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
 import socketService from "../../services/socketService.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
 const ALLOWED_MESSAGE_TYPES = new Set(['text', 'image', 'video', 'audio', 'file']);
@@ -15,7 +16,7 @@ export const sendMessage = async (req, res) => {
         const { chatId } = req.params;
         const userId = req.user._id;
         const { content, fileUrl } = req.body;
-        // SECURITY FIX: [LOW-03] Strict whitelist for message type values.
+        // SECURITY FIX [M-05]: Strict whitelist for message type values.
         const type = ALLOWED_MESSAGE_TYPES.has(req.body.type) ? req.body.type : 'text';
         const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
@@ -105,7 +106,8 @@ export const sendMessage = async (req, res) => {
 export const getUserChats = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { page = 1, limit = 20 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         const chats = await Chat.find({
             participants: userId,
@@ -115,8 +117,8 @@ export const getUserChats = async (req, res) => {
             .populate('participants', 'username email avatar role')
             .populate('lastMessage.sender', 'username avatar')
             .sort({ 'lastMessage.timestamp': -1 })
-            .skip((page - 1) * limit)
-            .limit(parseInt(limit))
+            .skip(skip)
+            .limit(limit)
             .select('-messages') // Don't load messages
             .lean();
 
@@ -137,8 +139,8 @@ export const getUserChats = async (req, res) => {
             data: {
                 chats: chatsWithUnread,
                 pagination: {
-                    page: parseInt(page),
-                    limit: parseInt(limit),
+                    page,
+                    limit,
                     total,
                     pages: Math.ceil(total / limit)
                 }

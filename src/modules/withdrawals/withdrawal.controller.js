@@ -5,6 +5,7 @@ import socketService from '../../services/socketService.js';
 import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
 import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
+import { safePaginate } from '../../utils/pagination.js';
 
 export const submitWithdrawal = async (req, res) => {
   try {
@@ -21,7 +22,7 @@ export const submitWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal amount must be between 500 and 50000 LE" });
     }
 
-    // SECURITY FIX: [HIGH-09] Block creating multiple pending withdrawal requests.
+    // SECURITY FIX [C-06]: Block concurrent/duplicate withdrawal submissions.
     const existingPending = await Withdrawal.findOne({ user: userId, status: "pending" }).lean();
     if (existingPending) {
       return res.status(400).json({
@@ -29,7 +30,7 @@ export const submitWithdrawal = async (req, res) => {
       });
     }
 
-    // SECURITY FIX: [CRIT-05] Prevent rapid duplicate submission race window.
+    // SECURITY FIX [C-06]: Prevent rapid duplicate submission race window.
     const recentWithdrawal = await Withdrawal.findOne({
       user: userId,
       status: "pending",
@@ -98,19 +99,20 @@ export const submitWithdrawal = async (req, res) => {
 export const getMyWithdrawals = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { page = 1, limit = 10 } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
     const withdrawals = await Withdrawal.find({ user: userId })
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .skip(skip)
+      .limit(limit);
 
     const total = await Withdrawal.countDocuments({ user: userId });
 
     return res.status(200).json({
       data: withdrawals,
       total,
-      page: Number(page),
+      page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
@@ -121,15 +123,17 @@ export const getMyWithdrawals = async (req, res) => {
 
 export const getAllWithdrawals = async (req, res) => {
   try {
-    const { status = "all", page = 1, limit = 20 } = req.query;
+    const { status = "all" } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 20, 100);
     const filter = status !== "all" ? { status } : {};
 
     const withdrawals = await Withdrawal.find(filter)
       .populate("user", "username email")
       .populate("reviewedBy", "username")
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .skip(skip)
+      .limit(limit);
 
     const total = await Withdrawal.countDocuments(filter);
     const pendingCount = await Withdrawal.countDocuments({ status: "pending" });
@@ -138,7 +142,7 @@ export const getAllWithdrawals = async (req, res) => {
       data: withdrawals,
       total,
       pendingCount,
-      page: Number(page),
+      page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
@@ -158,7 +162,7 @@ export const approveWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal already processed" });
     }
 
-    // SECURITY FIX: [HIGH-06] Atomic check-and-deduct prevents TOCTOU race on wallet balance.
+    // SECURITY FIX [C-07]: Atomic balance check-and-deduct prevents TOCTOU race.
     const updatedUser = await User.findOneAndUpdate(
       {
         _id: withdrawal.user._id,

@@ -267,10 +267,19 @@ export const logout = async (req, res) => {
       await authService.revokeRefreshTokenForUser(refreshToken, req.ip, accessToken);
     }
 
-    // clear cookies
-    res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
-    res.clearCookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN");
+    // SECURITY FIX [M-09]: Clear cookies with matching options used when setting them.
+    const cookieOpts = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      path: "/"
+    };
+    res.clearCookie("access_token", cookieOpts);
+    res.clearCookie("refresh_token", cookieOpts);
+    res.clearCookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", {
+      ...cookieOpts,
+      httpOnly: false
+    });
 
     res.status(200).json({ message: "Logged out" });
   } catch (err) {
@@ -369,8 +378,8 @@ export const getCsrfToken = async (req, res) => {
     });
 
     res.status(200).json({
-      success: true,
-      message: "CSRF token generated"
+      // SECURITY FIX [C-02]: Never return CSRF token in body; cookie-only delivery.
+      success: true
     });
   } catch (err) {
     res.status(500).json({

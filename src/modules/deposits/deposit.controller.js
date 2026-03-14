@@ -5,6 +5,7 @@ import socketService from '../../services/socketService.js';
 import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
 import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
+import { safePaginate } from '../../utils/pagination.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -24,7 +25,7 @@ const validateContactInfo = (contact) => {
 export const submitDeposit = async (req, res) => {
     try {
         const userId = req.user._id;
-        // SECURITY FIX: [CRIT-04] Idempotency key prevents race-condition double submission.
+        // SECURITY FIX [M-07]: Idempotency key prevents race-condition double submission.
         const rawIdempotencyHeader = req.headers["x-idempotency-key"];
         const idempotencyKey = typeof rawIdempotencyHeader === "string" && rawIdempotencyHeader.trim()
             ? rawIdempotencyHeader.trim()
@@ -80,7 +81,7 @@ export const submitDeposit = async (req, res) => {
         }
 
         if (idempotencyKey) {
-            // SECURITY FIX: [CRIT-04] Return existing response for repeated idempotent request.
+            // SECURITY FIX [M-07]: Return existing response for repeated idempotent request.
             const existing = await Deposit.findOne({ idempotencyKey }).lean();
             if (existing) {
                 return res.status(200).json({
@@ -186,19 +187,20 @@ export const submitDeposit = async (req, res) => {
 export const getMyDeposits = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { page = 1, limit = 10 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
         const deposits = await Deposit.find({ user: userId })
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(Number(limit));
+            .skip(skip)
+            .limit(limit);
 
         const total = await Deposit.countDocuments({ user: userId });
 
         return res.status(200).json({
             data: deposits,
             total,
-            page: Number(page),
+            page,
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
@@ -209,14 +211,16 @@ export const getMyDeposits = async (req, res) => {
 
 export const getAllDeposits = async (req, res) => {
     try {
-        const { status = "all", page = 1, limit = 20 } = req.query;
+        const { status = "all" } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
         const filter = status !== "all" ? { status } : {};
 
         const deposits = await Deposit.find(filter)
             .populate("user", "username email phone profile.province profile.phone")
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(Number(limit));
+            .skip(skip)
+            .limit(limit);
 
         const total = await Deposit.countDocuments(filter);
         const pendingCount = await Deposit.countDocuments({ status: "pending" });
@@ -225,7 +229,7 @@ export const getAllDeposits = async (req, res) => {
             data: deposits,
             total,
             pendingCount,
-            page: Number(page),
+            page,
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
@@ -238,34 +242,35 @@ export const approveDeposit = async (req, res) => {
     try {
         const { id } = req.params;
         const { amount: editedAmount } = req.body;
-
-        const deposit = await Deposit.findById(id).populate("user");
-
-        if (!deposit) {
-            return res.status(404).json({ message: "Deposit not found" });
-        }
-        if (deposit.status !== "pending") {
-            return res.status(400).json({ message: "Deposit already processed" });
-        }
-
-        let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
+        let normalizedEditedAmount = null;
 
         if (editedAmount !== undefined && editedAmount !== null) {
             const parsedAmount = Number(editedAmount);
-            const normalizedAmount = Math.round(parsedAmount * 100) / 100;
-            if (!Number.isFinite(parsedAmount) || normalizedAmount < 500 || normalizedAmount > 50000) {
+            normalizedEditedAmount = Math.round(parsedAmount * 100) / 100;
+            if (!Number.isFinite(parsedAmount) || normalizedEditedAmount < 500 || normalizedEditedAmount > 50000) {
                 return res.status(400).json({
                     message: "Invalid amount. Must be between 500 and 50000 LE"
                 });
             }
-            amountToCredit = normalizedAmount;
-            deposit.amount = normalizedAmount;
         }
 
-        deposit.status = "approved";
-        deposit.processedBy = req.user._id;
-        deposit.processedAt = new Date();
-        await deposit.save();
+        // SECURITY FIX [C-08]: Atomic status transition prevents concurrent double approval.
+        const deposit = await Deposit.findOneAndUpdate(
+            { _id: id, status: "pending" },
+            { $set: { status: "processing" } },
+            { new: true }
+        ).populate("user");
+
+        if (!deposit) {
+            return res.status(400).json({ message: "Deposit already processed or not found" });
+        }
+
+        let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
+
+        if (normalizedEditedAmount !== null) {
+            amountToCredit = normalizedEditedAmount;
+            deposit.amount = normalizedEditedAmount;
+        }
 
         // Credit user balance
         await cacheService.updateBalanceWithSync(
@@ -274,7 +279,13 @@ export const approveDeposit = async (req, res) => {
             `deposit approval #${id}`
         );
 
-        // SECURITY FIX: [HIGH-07] Do not mutate admin wallet during deposit approvals.
+        // SECURITY FIX [C-08]: Finalize lock after successful credit.
+        deposit.status = "approved";
+        deposit.processedBy = req.user._id;
+        deposit.processedAt = new Date();
+        await deposit.save();
+
+        // SECURITY FIX [C-08]: Keep admin wallet unchanged during deposit approval flow.
 
         try {
             await AuditLog.create({

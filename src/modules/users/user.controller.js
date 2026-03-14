@@ -45,11 +45,11 @@ export const getUser = async (req, res, next) => {
 
 export const updateUser = async (req, res, next) => {
   try {
-    // SECURITY FIX: [CRIT-06] Strict allowlist prevents mass assignment to privileged fields.
+    // SECURITY FIX [C-03]: Strict allowlist prevents mass assignment to privileged fields.
     const ALLOWED_FIELDS_USER = ["fullName", "bio", "address"];
     const ALLOWED_FIELDS_ADMIN = [
       ...ALLOWED_FIELDS_USER,
-      "username", "email", "phone", "avatar", "isOnline", "lastSeenAt"
+      "username", "email", "phone", "avatar", "isOnline"
     ];
     const isAdmin = req.user.role === "admin";
     const allowedFields = isAdmin ? ALLOWED_FIELDS_ADMIN : ALLOWED_FIELDS_USER;
