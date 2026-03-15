@@ -37,7 +37,6 @@ import passport from "./config/passport.js";
 import crypto from "crypto";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 import logger from "./utils/logger.js";
-import escapeRegex from "./utils/escapeRegex.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -119,10 +118,11 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH"].includes(req.method) && req.headers["content-type"]) {
     const contentType = req.headers["content-type"];
+    const ct = contentType.split(';')[0].trim().toLowerCase();
     const isAllowed =
-      contentType.includes("application/json") ||
-      contentType.includes("multipart/form-data") ||
-      contentType.includes("application/x-www-form-urlencoded");
+      ct === "application/json" ||
+      ct === "multipart/form-data" ||
+      ct === "application/x-www-form-urlencoded";
 
     if (!isAllowed) {
       return res.status(415).json({ message: "Unsupported Media Type" });
@@ -255,9 +255,10 @@ app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
 
     if (!isAdmin) {
       const Deposit = (await import('./modules/deposits/deposit.model.js')).default;
+      const receiptPath = `/uploads/receipts/${filename}`;
       const deposit = await Deposit.findOne({
         user: req.user._id,
-        receiptImage: { $regex: escapeRegex(filename), $options: 'i' }
+        receiptImage: receiptPath
       }).lean();
 
       if (!deposit) {
@@ -338,6 +339,16 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ success: false, message: "Invalid ID format" });
   }
   next(err);
+});
+
+app.use((err, req, res, next) => {
+  const status = err.status || err.statusCode || 500;
+  const isProd = process.env.NODE_ENV === 'production';
+  logger.error(`[Unhandled Error] ${err.message}`, { stack: err.stack, path: req.path });
+  return res.status(status).json({
+    success: false,
+    message: isProd ? 'Internal server error' : err.message
+  });
 });
 
 app.get("/", (req, res) => {

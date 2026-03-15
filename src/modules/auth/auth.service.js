@@ -122,15 +122,19 @@ function generateRefreshTokenString() {
   return crypto.randomBytes(64).toString("hex");
 }
 
+function hashToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
 async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
   const tokenString = generateRefreshTokenString();
   const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
   user.refreshTokens.push({
-    token: tokenString,
+    token: hashToken(tokenString),
     expiresAt,
-    ip,
-    userAgent
+    ip: anonymizeIp(ip),
+    userAgent: truncateUserAgent(userAgent)
   });
 
   await user.save();
@@ -139,7 +143,7 @@ async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
 
 // Revoke a refresh token (mark as revoked)
 async function revokeRefreshToken(user, token, ip) {
-  const rt = user.refreshTokens.find(r => r.token === token);
+  const rt = user.refreshTokens.find(r => r.token === hashToken(token));
   if (!rt) return false;
   rt.revoked = true;
   rt.revokedAt = new Date();
@@ -160,8 +164,9 @@ async function revokeAllRefreshTokens(user, reason = null) {
 }
 
 // Validate refresh token for a user instance
-function isRefreshTokenValid(rtObj) {
+function isRefreshTokenValid(rtObj, rawToken = null) {
   if (!rtObj) return false;
+  if (rawToken && rtObj.token !== hashToken(rawToken)) return false;
   if (rtObj.revoked) return false;
   if (Date.now() >= new Date(rtObj.expiresAt).getTime()) return false;
   return true;
@@ -361,7 +366,12 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       .slice(-9);
     const nextRefreshTokens = [
       ...validRefreshTokens,
-      { token: refreshTokenString, expiresAt, ip, userAgent },
+      {
+        token: hashToken(refreshTokenString),
+        expiresAt,
+        ip: anonymizeIp(ip),
+        userAgent: truncateUserAgent(userAgent)
+      },
     ];
 
     // Single atomic DB update: reset counters + push refresh token + push audit log
@@ -420,13 +430,14 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 /* ---------------- refreshTokens (rotation) ---------------- */
 export const refreshTokens = async (refreshToken, ip = null, userAgent = null) => {
   try {// find user containing this refresh token
-    const user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
+    const hashedRefreshToken = hashToken(refreshToken);
+    const user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
 
     if (!user) throw new Error("Invalid token");
 
-    const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
+    const rtObj = user.refreshTokens.find(r => r.token === hashedRefreshToken);
 
-    if (!isRefreshTokenValid(rtObj)) {
+    if (!isRefreshTokenValid(rtObj, refreshToken)) {
       await appendAuthLog(user._id, { action: "refresh", success: false, ip, userAgent });
       throw new Error("Invalid token");
     }
@@ -438,10 +449,10 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     // mark old
     rtObj.revoked = true;
     rtObj.revokedAt = new Date();
-    rtObj.replacedByToken = newRefreshToken;
+    rtObj.replacedByToken = hashToken(newRefreshToken);
 
     // SECURITY FIX [VULN-06]: Remove rotated token explicitly from persistent token list.
-    user.refreshTokens = user.refreshTokens.filter((r) => r.token !== refreshToken);
+    user.refreshTokens = user.refreshTokens.filter((r) => r.token !== hashedRefreshToken);
 
     const now = new Date();
     const validTokens = user.refreshTokens.filter((r) => !r.revoked && new Date(r.expiresAt) > now);
@@ -454,10 +465,10 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
       ...validTokens,
       ...recentRevoked,
       {
-        token: newRefreshToken,
+        token: hashToken(newRefreshToken),
         expiresAt,
-        ip,
-        userAgent
+        ip: anonymizeIp(ip),
+        userAgent: truncateUserAgent(userAgent)
       }
     ];
 
@@ -469,8 +480,9 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
   } catch (err) {
     // Detect possible reuse: if rtObj existed but invalid (expired or revoked) and token matches a revoked token without replacedByToken, treat as reuse
     try {
-      const suspectUser = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens +email");
-      const suspectRt = suspectUser?.refreshTokens.find(r => r.token === refreshToken);
+      const hashedRefreshToken = hashToken(refreshToken);
+      const suspectUser = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens +email");
+      const suspectRt = suspectUser?.refreshTokens.find(r => r.token === hashedRefreshToken);
       if (suspectRt && suspectRt.revoked && suspectRt.replacedByToken && suspectRt.replacedByToken !== null) {
         // normal rotation path, ignore
       } else if (suspectRt && suspectRt.revoked && !suspectRt.replacedByToken) {
@@ -495,10 +507,11 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
   let disconnectUserId = null;
 
   if (refreshToken) {
-    user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
+    const hashedRefreshToken = hashToken(refreshToken);
+    user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
     if (user) {
       disconnectUserId = user._id?.toString() || null;
-      const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
+      const rtObj = user.refreshTokens.find(r => r.token === hashedRefreshToken);
       if (rtObj) {
         rtObj.revoked = true;
         rtObj.revokedAt = new Date();

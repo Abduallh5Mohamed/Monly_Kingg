@@ -342,7 +342,26 @@ export const updateListing = async (req, res) => {
         return res.status(400).json({ message: "Invalid image URLs — only internal uploads allowed" });
       }
 
-      listing.images = validImages.slice(0, 10);
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { fileURLToPath } = await import('url');
+      const { dirname } = await import('path');
+      const __fn = fileURLToPath(import.meta.url);
+      const __dn = dirname(__fn);
+      const uploadsRoot = path.join(__dn, '../../../uploads');
+      const existChecks = await Promise.all(
+        validImages.map(async (url) => {
+          const rel = url.replace(/^\/uploads\//, '');
+          const abs = path.join(uploadsRoot, rel);
+          if (!abs.startsWith(uploadsRoot)) return false;
+          try { await fs.access(abs); return true; } catch { return false; }
+        })
+      );
+      const confirmedImages = validImages.filter((_, i) => existChecks[i]);
+      if (confirmedImages.length !== validImages.length) {
+        return res.status(400).json({ message: "One or more image files not found on server" });
+      }
+      listing.images = confirmedImages.slice(0, 10);
     }
 
     if (req.body.coverImage !== undefined) {

@@ -12,7 +12,7 @@ const refreshTokenSubSchema = new mongoose.Schema({
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: [true, 'Email is required'], trim: true, lowercase: true },
+  email: { type: String, required: [true, 'Email is required'], trim: true, lowercase: true, unique: true },
   username: { type: String, unique: true, required: [true, 'Username is required!'], minLength: [5, "Username must have 5 characters!"], lowercase: true, trim: true },
   passwordHash: { type: String, required: [true, "Password must be provided!"], trim: true, select: false },
 
@@ -121,7 +121,7 @@ userSchema.pre('save', function (next) {
 
 // Indexes for performance optimization
 userSchema.index({ username: 1, createdAt: -1 });
-userSchema.index({ email: 1 }, { unique: true, sparse: true }); // للبحث السريع بالإيميل
+userSchema.index({ email: 1 }); // للبحث السريع بالإيميل
 userSchema.index({ verificationCode: 1 }); // للتحقق من الإيميل
 userSchema.index({ passwordResetToken: 1 }); // لإعادة تعيين كلمة المرور
 userSchema.index({ 'refreshTokens.token': 1 }); // للبحث في refresh tokens

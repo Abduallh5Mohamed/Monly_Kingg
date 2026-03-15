@@ -4,13 +4,6 @@ export default function csrfProtection(req, res, next) {
   const method = req.method;
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
 
-  // SECURITY NOTE: Bearer token requests bypass CSRF (token-in-header is self-CSRF-protected
-  // because it cannot be set by cross-origin forms). These requests use authorization header auth.
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    return next();
-  }
-
   const publicPaths = [
     '/v1/auth/register',
     '/v1/auth/login',

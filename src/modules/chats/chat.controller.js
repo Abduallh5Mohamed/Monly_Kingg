@@ -316,7 +316,7 @@ export const createSupportChat = async (req, res) => {
                 type: 'support',
                 participants: [userId],
                 messages: [{
-                    sender: userId,
+                    sender: null,
                     content: 'Hello! How can I help you today?',
                     type: 'text',
                     timestamp: new Date(),
@@ -325,7 +325,7 @@ export const createSupportChat = async (req, res) => {
                 }],
                 lastMessage: {
                     content: 'Hello! How can I help you today?',
-                    sender: userId,
+                    sender: null,
                     timestamp: new Date(),
                     type: 'text'
                 },
