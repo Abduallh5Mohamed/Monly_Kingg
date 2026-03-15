@@ -403,7 +403,7 @@ export const submitCredentials = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-  
+
 // ─── POST /api/v1/transactions/:id/confirm ──────────────────────────────────
 // Buyer confirms receipt — releases funds to seller
 export const confirmReceived = async (req, res) => {

@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useSocket } from '@/lib/socket-context';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/lib/language-context';
 import { ensureCsrfToken } from '@/utils/csrf';
 
 interface Deposit {
@@ -70,6 +71,9 @@ const countryCodes = [
 ];
 
 export default function PaymentsPage() {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
+  const locale = language === 'ar' ? 'ar-EG' : 'en-US';
   const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
   const { isConnected, on } = useSocket();
   const { toast } = useToast();
@@ -240,7 +244,7 @@ export default function PaymentsPage() {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'X-XSRF-TOKEN': csrfToken,
+          'X-XSRF-TOKEN': csrfToken || '',
         },
         body: formData,
       });
@@ -257,7 +261,7 @@ export default function PaymentsPage() {
           window.dispatchEvent(new Event('userDataUpdated'));
         }, 2500);
       } else {
-        setDepositErrorMessage(data.message || 'Failed to submit deposit request');
+        setDepositErrorMessage(data.message || tr('فشل إرسال طلب الإيداع', 'Failed to submit deposit request'));
         setShowDepositErrorModal(true);
         setTimeout(() => {
           setShowDepositErrorModal(false);
@@ -265,7 +269,7 @@ export default function PaymentsPage() {
       }
     } catch (error) {
       console.error('Error submitting deposit:', error);
-      setDepositErrorMessage('Network error, please try again');
+      setDepositErrorMessage(tr('خطأ في الشبكة، يرجى المحاولة مرة أخرى', 'Network error, please try again'));
       setShowDepositErrorModal(true);
       setTimeout(() => {
         setShowDepositErrorModal(false);
@@ -281,15 +285,15 @@ export default function PaymentsPage() {
     setWithdrawSuccess('');
 
     if (!withdrawAmount || !withdrawMethod || !withdrawCountryCode || !withdrawPhoneNumber) {
-      setWithdrawError('All fields are required');
+      setWithdrawError(tr('كل الحقول مطلوبة', 'All fields are required'));
       return;
     }
     if (Number(withdrawAmount) < 500) {
-      setWithdrawError('Minimum withdrawal amount is 500 EGP');
+      setWithdrawError(tr('الحد الأدنى للسحب هو 500 ج.م', 'Minimum withdrawal amount is 500 EGP'));
       return;
     }
     if (!/^\d{11}$/.test(withdrawPhoneNumber)) {
-      setWithdrawError('Phone number must be exactly 11 digits');
+      setWithdrawError(tr('رقم الهاتف يجب أن يكون 11 رقمًا بالضبط', 'Phone number must be exactly 11 digits'));
       return;
     }
 
@@ -301,7 +305,7 @@ export default function PaymentsPage() {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'X-XSRF-TOKEN': csrfToken,
+          'X-XSRF-TOKEN': csrfToken || '',
         },
         body: JSON.stringify({
           amount: Number(withdrawAmount),
@@ -312,7 +316,7 @@ export default function PaymentsPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setWithdrawSuccess('Withdrawal request submitted successfully!');
+        setWithdrawSuccess(tr('تم إرسال طلب السحب بنجاح!', 'Withdrawal request submitted successfully!'));
         setShowWithdrawForm(false);
         resetWithdrawForm();
         setTimeout(() => {
@@ -355,9 +359,9 @@ export default function PaymentsPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#f5f5dc] mb-2">
-            💰 Payment Center
+            💰 {tr('مركز المدفوعات', 'Payments Center')}
           </h1>
-          <p className="text-gray-400">Manage your deposits and withdrawals</p>
+          <p className="text-gray-400">{tr('إدارة الإيداعات وعمليات السحب', 'Manage your deposits and withdrawals')}</p>
         </div>
 
         {/* Tabs */}
@@ -370,7 +374,7 @@ export default function PaymentsPage() {
               }`}
           >
             <ArrowDownCircle className="w-5 h-5" />
-            Deposit
+            {tr('إيداع', 'Deposit')}
           </button>
           <button
             onClick={() => setActiveTab('withdraw')}
@@ -380,7 +384,7 @@ export default function PaymentsPage() {
               }`}
           >
             <ArrowUpCircle className="w-5 h-5" />
-            Withdraw
+            {tr('سحب', 'Withdraw')}
           </button>
         </div>
 
@@ -394,7 +398,7 @@ export default function PaymentsPage() {
                 className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30 transition-all"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                New Deposit
+                {tr('إيداع جديد', 'New Deposit')}
               </Button>
             </div>
 
@@ -406,14 +410,14 @@ export default function PaymentsPage() {
             ) : deposits.length === 0 ? (
               <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-12 text-center">
                 <ArrowDownCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-[#f5f5dc] mb-2">No Deposits Yet</h3>
-                <p className="text-gray-400 mb-6">You haven't submitted any deposit requests yet.</p>
+                <h3 className="text-xl font-bold text-[#f5f5dc] mb-2">{tr('لا توجد إيداعات بعد', 'No deposits yet')}</h3>
+                <p className="text-gray-400 mb-6">{tr('لم تقم بإرسال أي طلب إيداع حتى الآن.', 'You have not submitted any deposit request yet.')}</p>
                 <Button
                   onClick={() => setShowDepositModal(true)}
                   className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Submit Your First Deposit
+                  {tr('إرسال أول طلب إيداع', 'Submit Your First Deposit')}
                 </Button>
               </div>
             ) : (
@@ -440,7 +444,7 @@ export default function PaymentsPage() {
                               </span>
                             </div>
                             <h3 className="text-lg font-bold text-[#f5f5dc]">
-                              {deposit.gameTitle || 'Deposit Request'}
+                              {deposit.gameTitle || tr('طلب إيداع', 'Deposit Request')}
                             </h3>
                             <p className="text-sm text-gray-400">
                               {deposit.paymentMethod === 'vodafone_cash' ? '💳 Vodafone Cash' : '⚡ InstaPay'}
@@ -455,14 +459,14 @@ export default function PaymentsPage() {
                           <div className="flex items-center gap-2 text-sm">
                             <Users className="w-4 h-4 text-gray-400" />
                             <span className="text-gray-400">
-                              Sender: <span className="text-[#f5f5dc]">{deposit.senderFullName}</span>
+                              {tr('المرسل', 'Sender')}: <span className="text-[#f5f5dc]">{deposit.senderFullName}</span>
                             </span>
                           </div>
                         )}
                         <div className="flex items-center gap-2 text-sm">
                           <Calendar className="w-4 h-4 text-gray-400" />
                           <span className="text-gray-400">
-                            {new Date(deposit.createdAt).toLocaleDateString('en-US', {
+                            {new Date(deposit.createdAt).toLocaleDateString(locale, {
                               year: 'numeric',
                               month: 'short',
                               day: 'numeric',
@@ -475,7 +479,7 @@ export default function PaymentsPage() {
                           <div className="flex items-center gap-2 text-sm">
                             <Clock className="w-4 h-4 text-gray-400" />
                             <span className="text-gray-400">
-                              Deposit: {new Date(deposit.depositDate).toLocaleDateString()}
+                              {tr('وقت الإيداع', 'Deposit time')}: {new Date(deposit.depositDate).toLocaleDateString(locale)}
                             </span>
                           </div>
                         )}
@@ -483,7 +487,7 @@ export default function PaymentsPage() {
 
                       {/* Amount */}
                       <div className="flex items-center gap-2 pl-15">
-                        <span className="text-gray-400 text-sm">Amount:</span>
+                        <span className="text-gray-400 text-sm">{tr('المبلغ', 'Amount')}:</span>
                         <span className="text-2xl font-bold text-cyan-400">
                           {deposit.amount.toLocaleString()} EGP
                         </span>
@@ -492,7 +496,7 @@ export default function PaymentsPage() {
                       {/* Receipt Image */}
                       {deposit.receiptImage && (
                         <div className="mt-4 pl-15">
-                          <p className="text-sm text-gray-400 mb-2 font-medium">RECEIPT IMAGE</p>
+                          <p className="text-sm text-gray-400 mb-2 font-medium">{tr('صورة الإيصال', 'Receipt Image')}</p>
                           <div className="inline-block">
                             <div className="relative group">
                               <a
@@ -547,12 +551,12 @@ export default function PaymentsPage() {
                 {showWithdrawForm ? (
                   <>
                     <X className="w-4 h-4 mr-2" />
-                    Cancel
+                    {tr('إلغاء', 'Cancel')}
                   </>
                 ) : (
                   <>
                     <Plus className="w-4 h-4 mr-2" />
-                    New Request
+                    {tr('طلب جديد', 'New Request')}
                   </>
                 )}
               </Button>
@@ -563,7 +567,7 @@ export default function PaymentsPage() {
               <div className="bg-gradient-to-br from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded-2xl p-6">
                 <h3 className="text-xl font-bold text-[#f5f5dc] mb-6 flex items-center gap-2">
                   <ArrowUpCircle className="w-6 h-6 text-emerald-400" />
-                  New Withdrawal Request
+                  {tr('طلب سحب جديد', 'New Withdrawal Request')}
                 </h3>
                 <form onSubmit={handleWithdrawSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -571,31 +575,31 @@ export default function PaymentsPage() {
                     <div>
                       <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                         <DollarSign className="w-4 h-4 text-emerald-400" />
-                        Amount (LE) <span className="text-red-400">*</span>
+                        {tr('المبلغ (ج.م)', 'Amount (EGP)')} <span className="text-red-400">*</span>
                       </label>
                       <input
                         type="number"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        placeholder="Enter amount"
+                        placeholder={tr('أدخل المبلغ', 'Enter amount')}
                         min="500"
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                       />
-                      <p className="text-xs text-gray-400 mt-1.5 ml-1">⚠️ Minimum: 500 LE</p>
+                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('⚠️ الحد الأدنى: 500 ج.م', '⚠️ Minimum: 500 EGP')}</p>
                     </div>
 
                     {/* Method */}
                     <div>
                       <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                         <Wallet className="w-4 h-4 text-emerald-400" />
-                        Payment Method <span className="text-red-400">*</span>
+                        {tr('طريقة السحب', 'Withdrawal method')} <span className="text-red-400">*</span>
                       </label>
                       <select
                         value={withdrawMethod}
                         onChange={(e) => setWithdrawMethod(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all text-base"
                       >
-                        <option value="" className="bg-[#1a1d2e] text-gray-400">-- Select Method --</option>
+                        <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- اختر الطريقة --', '-- Select method --')}</option>
                         <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">📱 Vodafone Cash</option>
                         <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ InstaPay</option>
                       </select>
@@ -605,7 +609,7 @@ export default function PaymentsPage() {
                     <div>
                       <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                         <Globe className="w-4 h-4 text-emerald-400" />
-                        Country Code <span className="text-red-400">*</span>
+                        {tr('مفتاح الدولة', 'Country code')} <span className="text-red-400">*</span>
                       </label>
                       <select
                         value={withdrawCountryCode}
@@ -624,17 +628,17 @@ export default function PaymentsPage() {
                     <div>
                       <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                         <Phone className="w-4 h-4 text-emerald-400" />
-                        Phone Number <span className="text-red-400">*</span>
+                        {tr('رقم الهاتف', 'Phone number')} <span className="text-red-400">*</span>
                       </label>
                       <input
                         type="text"
                         value={withdrawPhoneNumber}
                         onChange={(e) => setWithdrawPhoneNumber(e.target.value)}
-                        placeholder="11 digits"
+                        placeholder={tr('11 رقم', '11 digits')}
                         maxLength={11}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                       />
-                      <p className="text-xs text-gray-400 mt-1.5 ml-1">📱 Must be exactly 11 digits</p>
+                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('📱 يجب أن يكون 11 رقمًا بالضبط', '📱 Must be exactly 11 digits')}</p>
                     </div>
                   </div>
 
@@ -648,7 +652,7 @@ export default function PaymentsPage() {
                       variant="outline"
                       className="border-white/10 text-gray-300 hover:bg-white/5"
                     >
-                      Cancel
+                      {tr('إلغاء', 'Cancel')}
                     </Button>
                     <Button
                       type="submit"
@@ -658,12 +662,12 @@ export default function PaymentsPage() {
                       {withdrawSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Submitting...
+                          {tr('جاري الإرسال...', 'Submitting...')}
                         </>
                       ) : (
                         <>
                           <CheckCircle2 className="w-4 h-4 mr-2" />
-                          Submit Request
+                          {tr('إرسال الطلب', 'Submit Request')}
                         </>
                       )}
                     </Button>
@@ -680,14 +684,14 @@ export default function PaymentsPage() {
             ) : withdrawals.length === 0 ? (
               <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-12 text-center">
                 <ArrowUpCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-[#f5f5dc] mb-2">No Withdrawals Yet</h3>
-                <p className="text-gray-400 mb-6">You haven't submitted any withdrawal requests yet.</p>
+                <h3 className="text-xl font-bold text-[#f5f5dc] mb-2">{tr('لا توجد طلبات سحب بعد', 'No withdrawal requests yet')}</h3>
+                <p className="text-gray-400 mb-6">{tr('لم تقم بإرسال أي طلب سحب حتى الآن.', 'You have not submitted any withdrawal request yet.')}</p>
                 <Button
                   onClick={() => setShowWithdrawForm(true)}
                   className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg shadow-emerald-500/30"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Submit Your First Withdrawal
+                  {tr('إرسال أول طلب سحب', 'Submit Your First Withdrawal')}
                 </Button>
               </div>
             ) : (
@@ -716,7 +720,7 @@ export default function PaymentsPage() {
                               </span>
                             </div>
                             <h3 className="text-lg font-bold text-[#f5f5dc]">
-                              Withdrawal Request
+                              {tr('طلب سحب', 'Withdrawal Request')}
                             </h3>
                             <p className="text-sm text-gray-400 flex items-center gap-1">
                               <MethodIcon className="w-4 h-4" />
@@ -731,7 +735,7 @@ export default function PaymentsPage() {
                         <div className="flex items-center gap-2 text-sm">
                           <Calendar className="w-4 h-4 text-gray-400" />
                           <span className="text-gray-400">
-                            {new Date(withdrawal.createdAt).toLocaleDateString('en-US', {
+                            {new Date(withdrawal.createdAt).toLocaleDateString(locale, {
                               year: 'numeric',
                               month: 'short',
                               day: 'numeric',
@@ -752,7 +756,7 @@ export default function PaymentsPage() {
 
                       {/* Amount */}
                       <div className="flex items-center gap-2 pl-15 mb-3">
-                        <span className="text-gray-400 text-sm">Amount:</span>
+                        <span className="text-gray-400 text-sm">{tr('المبلغ', 'Amount')}:</span>
                         <span className="text-2xl font-bold text-emerald-400">
                           {withdrawal.amount.toLocaleString()} EGP
                         </span>
@@ -761,7 +765,7 @@ export default function PaymentsPage() {
                       {/* Rejection Reason */}
                       {withdrawal.status === 'rejected' && withdrawal.rejectionReason && (
                         <div className="mt-4 pl-15 bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                          <p className="text-sm font-semibold text-red-400 mb-1">Rejection Reason:</p>
+                          <p className="text-sm font-semibold text-red-400 mb-1">{tr('سبب الرفض', 'Rejection reason')}:</p>
                           <p className="text-sm text-gray-300">{withdrawal.rejectionReason}</p>
                         </div>
                       )}
@@ -779,10 +783,10 @@ export default function PaymentsPage() {
                       className="border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-30"
                     >
                       <ChevronLeft className="w-4 h-4 mr-1" />
-                      Previous
+                      {tr('السابق', 'Previous')}
                     </Button>
                     <span className="text-gray-400 text-sm">
-                      Page {withdrawPage} of {withdrawTotalPages}
+                      {language === 'ar' ? `صفحة ${withdrawPage} من ${withdrawTotalPages}` : `Page ${withdrawPage} of ${withdrawTotalPages}`}
                     </span>
                     <Button
                       onClick={() => setWithdrawPage((p) => Math.min(withdrawTotalPages, p + 1))}
@@ -790,7 +794,7 @@ export default function PaymentsPage() {
                       variant="outline"
                       className="border-white/10 text-gray-300 hover:bg-white/5 disabled:opacity-30"
                     >
-                      Next
+                      {tr('التالي', 'Next')}
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
@@ -811,8 +815,8 @@ export default function PaymentsPage() {
                     <ArrowDownCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-[#f5f5dc]">Deposit Request</h2>
-                    <p className="text-sm text-gray-400">Submit your payment details</p>
+                    <h2 className="text-2xl font-bold text-[#f5f5dc]">{tr('طلب إيداع', 'Deposit Request')}</h2>
+                    <p className="text-sm text-gray-400">{tr('أرسل بيانات التحويل الخاصة بك', 'Submit your transfer details')}</p>
                   </div>
                 </div>
                 <button
@@ -833,14 +837,14 @@ export default function PaymentsPage() {
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-cyan-400" />
-                      Payment Method <span className="text-red-400">*</span>
+                      {tr('طريقة الدفع', 'Payment method')} <span className="text-red-400">*</span>
                     </label>
                     <select
                       value={depositPaymentMethod}
                       onChange={(e) => setDepositPaymentMethod(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition-all text-base"
                     >
-                      <option value="" className="bg-[#1a1d2e] text-gray-400">-- Select Payment Method --</option>
+                      <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- اختر طريقة الدفع --', '-- Select payment method --')}</option>
                       <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">💳 Vodafone Cash</option>
                       <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ InstaPay</option>
                     </select>
@@ -852,7 +856,7 @@ export default function PaymentsPage() {
                           <Phone className="w-5 h-5 text-cyan-400" />
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400 mb-0.5">Send to this number</p>
+                          <p className="text-xs text-gray-400 mb-0.5">{tr('حوّل إلى هذا الرقم', 'Transfer to this number')}</p>
                           <p className="text-lg font-bold text-cyan-300 tracking-wider" dir="ltr">0100 2714265</p>
                         </div>
                         <button
@@ -862,7 +866,7 @@ export default function PaymentsPage() {
                           }}
                           className="ml-auto text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-lg px-3 py-1.5 transition-all"
                         >
-                          Copy
+                          {tr('نسخ', 'Copy')}
                         </button>
                       </div>
                     )}
@@ -872,31 +876,31 @@ export default function PaymentsPage() {
                   <div>
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <DollarSign className="w-4 h-4 text-cyan-400" />
-                      Amount (EGP) <span className="text-red-400">*</span>
+                      {tr('المبلغ (ج.م)', 'Amount (EGP)')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="number"
                       value={depositAmount}
                       onChange={(e) => setDepositAmount(e.target.value)}
-                      placeholder="Enter amount"
+                      placeholder={tr('أدخل المبلغ', 'Enter amount')}
                       min="100"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
-                    <p className="text-xs text-gray-400 mt-1.5 ml-1">⚠️ Minimum: 100 EGP</p>
+                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('⚠️ الحد الأدنى: 100 ج.م', '⚠️ Minimum: 100 EGP')}</p>
                   </div>
 
                   {/* Game Title (Optional) */}
                   <div>
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                      Game Title (Optional)
+                      {tr('اسم اللعبة (اختياري)', 'Game title (optional)')}
                     </label>
                     <select
                       value={depositGameTitle}
                       onChange={(e) => setDepositGameTitle(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all text-base"
                     >
-                      <option value="" className="bg-[#1a1d2e] text-gray-400">-- Not Specified --</option>
+                      <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- غير محدد --', '-- Unspecified --')}</option>
                       <option value="FIFA" className="bg-[#1a1d2e] text-[#f5f5dc]">⚽ FIFA</option>
                       <option value="PUBG" className="bg-[#1a1d2e] text-[#f5f5dc]">🎮 PUBG</option>
                       <option value="Arc Raiders" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ Arc Raiders</option>
@@ -909,13 +913,13 @@ export default function PaymentsPage() {
                   <div>
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4 text-blue-400" />
-                      Sender Full Name <span className="text-red-400">*</span>
+                      {tr('الاسم الكامل للمرسل', 'Sender full name')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
                       value={depositSenderFullName}
                       onChange={(e) => setDepositSenderFullName(e.target.value)}
-                      placeholder="Full name of wallet owner"
+                      placeholder={tr('الاسم الكامل لصاحب المحفظة', 'Wallet owner full name')}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
                   </div>
@@ -924,23 +928,23 @@ export default function PaymentsPage() {
                   <div>
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <Phone className="w-4 h-4 text-orange-400" />
-                      Sender Phone/Email <span className="text-red-400">*</span>
+                      {tr('هاتف/بريد المرسل', 'Sender phone/email')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
                       value={depositSenderPhoneOrEmail}
                       onChange={(e) => setDepositSenderPhoneOrEmail(e.target.value)}
-                      placeholder="Phone or email used for transfer"
+                      placeholder={tr('الهاتف أو البريد المستخدم في التحويل', 'Phone or email used for transfer')}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
-                    <p className="text-xs text-gray-400 mt-1.5 ml-1">📱 Phone or email you used to send payment</p>
+                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('📱 الهاتف أو البريد الذي استخدمته في التحويل', '📱 Phone or email used in your transfer')}</p>
                   </div>
 
                   {/* Deposit Date */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-pink-400" />
-                      Deposit Date & Time <span className="text-red-400">*</span>
+                      {tr('تاريخ ووقت الإيداع', 'Deposit date & time')} <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="datetime-local"
@@ -954,7 +958,7 @@ export default function PaymentsPage() {
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-[#f5f5dc] mb-2 flex items-center gap-2">
                       <Upload className="w-4 h-4 text-yellow-400" />
-                      Receipt Image <span className="text-red-400">*</span>
+                      {tr('صورة الإيصال', 'Receipt image')} <span className="text-red-400">*</span>
                     </label>
 
                     {!depositReceiptPreview ? (
@@ -971,10 +975,10 @@ export default function PaymentsPage() {
                             <Upload className="w-8 h-8 text-cyan-400" />
                           </div>
                           <p className="text-[#f5f5dc] font-semibold text-lg mb-2">
-                            Click to upload receipt image
+                            {tr('اضغط لرفع صورة الإيصال', 'Click to upload receipt image')}
                           </p>
                           <p className="text-sm text-gray-400">
-                            PNG, JPG, JPEG • Max 10MB
+                            {tr('PNG, JPG, JPEG • الحد الأقصى 10MB', 'PNG, JPG, JPEG • Max 10MB')}
                           </p>
                         </label>
                       </div>
@@ -993,7 +997,7 @@ export default function PaymentsPage() {
                           <X className="w-5 h-5" />
                         </button>
                         <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg p-2 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <p className="text-cyan-400 text-sm font-medium">✓ Image uploaded successfully</p>
+                          <p className="text-cyan-400 text-sm font-medium">{tr('✓ تم رفع الصورة بنجاح', '✓ Image uploaded successfully')}</p>
                         </div>
                       </div>
                     )}
@@ -1012,7 +1016,7 @@ export default function PaymentsPage() {
               {/* Modal Footer */}
               <div className="flex items-center justify-between gap-3 p-6 border-t border-white/10 bg-white/[0.02]">
                 <p className="text-xs text-gray-400">
-                  All fields marked with <span className="text-red-400">*</span> are required
+                  {tr('كل الحقول التي عليها', 'All fields marked with')} <span className="text-red-400">*</span> {tr('إلزامية', 'are required')}
                 </p>
                 <div className="flex gap-3">
                   <Button
@@ -1023,7 +1027,7 @@ export default function PaymentsPage() {
                     }}
                     className="border-white/10 text-gray-300 hover:bg-white/5 px-6"
                   >
-                    Cancel
+                    {tr('إلغاء', 'Cancel')}
                   </Button>
                   <Button
                     onClick={handleDepositSubmit}
@@ -1033,12 +1037,12 @@ export default function PaymentsPage() {
                     {depositSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Submitting...
+                        {tr('جاري الإرسال...', 'Submitting...')}
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="w-4 h-4 mr-2" />
-                        Submit Request
+                        {tr('إرسال الطلب', 'Submit Request')}
                       </>
                     )}
                   </Button>
@@ -1068,13 +1072,13 @@ export default function PaymentsPage() {
 
                 {/* Success Text */}
                 <h3 className="text-2xl font-bold text-white mb-3 animate-in slide-in-from-bottom-2 duration-500 delay-200">
-                  Success!
+                  {tr('تم بنجاح', 'Success')}
                 </h3>
                 <p className="text-gray-300 mb-2 animate-in slide-in-from-bottom-2 duration-500 delay-300">
-                  Deposit request submitted successfully
+                  {tr('تم إرسال طلب الإيداع بنجاح', 'Deposit request submitted successfully')}
                 </p>
                 <p className="text-sm text-gray-400 animate-in slide-in-from-bottom-2 duration-500 delay-400">
-                  Admin will review it soon
+                  {tr('سيتم مراجعته من الإدارة قريبًا', 'It will be reviewed by admin shortly')}
                 </p>
               </div>
             </div>
@@ -1101,13 +1105,13 @@ export default function PaymentsPage() {
 
                 {/* Error Text */}
                 <h3 className="text-2xl font-bold text-white mb-3 animate-in slide-in-from-bottom-2 duration-500 delay-200">
-                  Error!
+                  {tr('خطأ', 'Error')}
                 </h3>
                 <p className="text-gray-300 mb-2 animate-in slide-in-from-bottom-2 duration-500 delay-300">
-                  {depositErrorMessage || 'Something went wrong'}
+                  {depositErrorMessage || tr('حدث خطأ ما', 'Something went wrong')}
                 </p>
                 <p className="text-sm text-gray-400 animate-in slide-in-from-bottom-2 duration-500 delay-400">
-                  Please try again
+                  {tr('يرجى المحاولة مرة أخرى', 'Please try again')}
                 </p>
               </div>
             </div>

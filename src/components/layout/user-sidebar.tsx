@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Home, Store, MessageCircle, CreditCard, User, ArrowRightLeft, Bell } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useSocket } from '@/lib/socket-context';
+import { useLanguage } from '@/lib/language-context';
 import { useEffect, useRef, useState } from 'react';
 
 interface NavItem {
@@ -20,6 +21,7 @@ export function UserSidebar() {
     const pathname = usePathname();
     const { user } = useAuth();
     const { on } = useSocket();
+    const { t } = useLanguage();
     const [mounted, setMounted] = useState(false);
     const [chatUnread, setChatUnread] = useState(false);
     const [notifUnread, setNotifUnread] = useState(false);
@@ -93,21 +95,21 @@ export function UserSidebar() {
 
     const leftItems: NavItem[] = [
         {
-            icon: MessageCircle, label: 'Chat', path: '/user/chat',
+            icon: MessageCircle, label: t('chat'), path: '/user/chat',
             dot: chatUnread && !isOnChatPage,
             activeColor: 'from-pink-500 to-rose-500', glowColor: 'rgba(236,72,153,0.35)'
         },
         ...(isSeller
             ? [
-                { icon: Store, label: 'Store', path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
+                { icon: Store, label: t('store'), path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
                 {
-                    icon: Bell, label: 'Alerts', path: '/user/notifications',
+                    icon: Bell, label: t('alerts'), path: '/user/notifications',
                     dot: notifUnread && !isOnNotifPage,
                     activeColor: 'from-cyan-400 to-blue-500', glowColor: 'rgba(34,211,238,0.35)'
                 },
             ]
             : [{
-                icon: Bell, label: 'Alerts', path: '/user/notifications',
+                icon: Bell, label: t('alerts'), path: '/user/notifications',
                 dot: notifUnread && !isOnNotifPage,
                 activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)'
             }]
@@ -115,12 +117,12 @@ export function UserSidebar() {
     ];
 
     const rightItems: NavItem[] = [
-        { icon: ArrowRightLeft, label: 'Orders', path: '/user/transactions', activeColor: 'from-cyan-500 to-blue-500', glowColor: 'rgba(6,182,212,0.35)' },
-        { icon: CreditCard, label: 'Pay', path: '/user/payments', activeColor: 'from-emerald-500 to-green-500', glowColor: 'rgba(16,185,129,0.35)' },
-        { icon: User, label: 'Profile', path: '/user/profile', activeColor: 'from-violet-500 to-purple-500', glowColor: 'rgba(139,92,246,0.35)' },
+        { icon: ArrowRightLeft, label: t('orders'), path: '/user/transactions', activeColor: 'from-cyan-500 to-blue-500', glowColor: 'rgba(6,182,212,0.35)' },
+        { icon: CreditCard, label: t('pay'), path: '/user/payments', activeColor: 'from-emerald-500 to-green-500', glowColor: 'rgba(16,185,129,0.35)' },
+        { icon: User, label: t('profile'), path: '/user/profile', activeColor: 'from-violet-500 to-purple-500', glowColor: 'rgba(139,92,246,0.35)' },
     ];
 
-    const homeItem = { icon: Home, label: 'Home', path: '/user' };
+    const homeItem = { icon: Home, label: t('home'), path: '/user' };
 
     const isPathActive = (path: string, isHome: boolean) => {
         if (isHome) return pathname === '/user' || pathname === '/user/';
@@ -135,7 +137,7 @@ export function UserSidebar() {
             <Link
                 key={item.path}
                 href={item.path}
-                className={`relative flex flex-col items-center justify-center gap-0.5 py-2 transition-all duration-300 group ${isSeller ? 'px-2.5' : 'px-3.5'}`}
+                className={`relative flex w-12 flex-col items-center justify-center gap-0.5 py-2 transition-all duration-300 group`}
             >
                 {/* Active dot indicator */}
                 {isActive && (
@@ -156,7 +158,7 @@ export function UserSidebar() {
                     )}
                 </div>
 
-                <span className={`text-[9px] font-medium transition-all duration-300 ${isActive ? 'text-white/80' : 'text-white/25 group-hover:text-white/40'
+                <span className={`whitespace-nowrap leading-none text-[9px] font-medium transition-all duration-300 ${isActive ? 'text-white/80' : 'text-white/25 group-hover:text-white/40'
                     }`}>
                     {item.label}
                 </span>
@@ -212,7 +214,7 @@ export function UserSidebar() {
                         {/* Home label below button */}
                         <span className={`mt-1 text-[9px] font-bold transition-all duration-300 ${isHomeActive ? 'text-cyan-400' : 'text-white/20 group-hover:text-white/40'
                             }`}>
-                            Home
+                            {t('home')}
                         </span>
                     </Link>
                 </div>

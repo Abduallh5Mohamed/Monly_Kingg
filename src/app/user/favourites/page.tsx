@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { ensureCsrfToken } from '@/utils/csrf';
 import Link from 'next/link';
 import {
@@ -34,6 +35,8 @@ interface FavoriteItem {
 
 export default function FavouritesPage() {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -103,9 +106,9 @@ export default function FavouritesPage() {
             <Heart className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white">Favourites</h1>
+            <h1 className="text-lg font-bold text-white">{tr('المفضلة', 'Favourites')}</h1>
             <p className="text-[11px] text-white/30">
-              {favorites.length > 0 ? `${favorites.length} saved items` : 'Your saved items will appear here'}
+              {favorites.length > 0 ? tr(`${favorites.length} عنصر محفوظ`, `${favorites.length} saved items`) : tr('العناصر المحفوظة ستظهر هنا', 'Saved items will appear here')}
             </p>
           </div>
         </div>
@@ -114,20 +117,20 @@ export default function FavouritesPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="w-8 h-8 text-pink-400 animate-spin mb-3" />
-            <p className="text-xs text-white/20">Loading favourites...</p>
+            <p className="text-xs text-white/20">{tr('جاري تحميل المفضلة...', 'Loading favorites...')}</p>
           </div>
         ) : favorites.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
               <Heart className="w-7 h-7 text-white/10" />
             </div>
-            <p className="text-sm text-white/30 font-medium">No favourites yet</p>
-            <p className="text-xs text-white/15 mt-1">Tap the heart icon on any listing to save it here</p>
+            <p className="text-sm text-white/30 font-medium">{tr('لا توجد عناصر مفضلة بعد', 'No favorites yet')}</p>
+            <p className="text-xs text-white/15 mt-1">{tr('اضغط على أيقونة القلب في أي إعلان لحفظه هنا', 'Tap the heart icon on any listing to save it here')}</p>
             <Link
               href="/user"
               className="mt-4 px-4 py-2 rounded-lg bg-pink-500/10 border border-pink-500/15 text-pink-400 text-xs font-medium hover:bg-pink-500/20 transition-all"
             >
-              Browse Listings
+              {tr('تصفح الإعلانات', 'Browse listings')}
             </Link>
           </div>
         ) : (
@@ -162,7 +165,7 @@ export default function FavouritesPage() {
 
                       {isSold && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                          <span className="text-white/80 text-xs font-bold bg-red-500/30 px-3 py-1 rounded-lg border border-red-500/20">SOLD</span>
+                          <span className="text-white/80 text-xs font-bold bg-red-500/30 px-3 py-1 rounded-lg border border-red-500/20">{tr('مباع', 'Sold')}</span>
                         </div>
                       )}
                     </div>
@@ -196,7 +199,7 @@ export default function FavouritesPage() {
                     onClick={(e) => { e.preventDefault(); handleRemove(listing._id); }}
                     disabled={removingId === listing._id}
                     className="absolute top-2 left-2 z-10 w-7 h-7 rounded-lg bg-black/50 backdrop-blur-md flex items-center justify-center text-white/50 hover:text-red-400 hover:bg-red-500/20 transition-all opacity-0 group-hover:opacity-100"
-                    title="Remove from favourites"
+                    title={tr('إزالة من المفضلة', 'Remove from favorites')}
                   >
                     {removingId === listing._id ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -222,7 +225,7 @@ export default function FavouritesPage() {
             ) : (
               <>
                 <ChevronDown className="w-4 h-4" />
-                Load more
+                {tr('تحميل المزيد', 'Load more')}
               </>
             )}
           </button>

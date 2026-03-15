@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { useRouter } from 'next/navigation';
 import { ensureCsrfToken } from '@/utils/csrf';
 import {
@@ -103,24 +104,26 @@ function getNotificationColor(type: string): string {
     return 'from-blue-500/15 to-indigo-500/10 border-blue-500/10';
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, language: 'ar' | 'en'): string {
     const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-    if (seconds < 60) return 'Just now';
+    if (seconds < 60) return language === 'ar' ? 'الآن' : 'Just now';
     const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
+    if (minutes < 60) return language === 'ar' ? `منذ ${minutes} دقيقة` : `${minutes}m ago`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
+    if (hours < 24) return language === 'ar' ? `منذ ${hours} ساعة` : `${hours}h ago`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}d ago`;
+    if (days < 7) return language === 'ar' ? `منذ ${days} يوم` : `${days}d ago`;
     const weeks = Math.floor(days / 7);
-    if (weeks < 4) return `${weeks}w ago`;
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (weeks < 4) return language === 'ar' ? `منذ ${weeks} أسبوع` : `${weeks}w ago`;
+    return new Date(dateStr).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' });
 }
 
 type FilterType = 'all' | 'unread' | 'transactions' | 'account' | 'system';
 
 export default function NotificationsPage() {
     const { user } = useAuth();
+    const { language } = useLanguage();
+    const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
     const router = useRouter();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
@@ -215,11 +218,11 @@ export default function NotificationsPage() {
     });
 
     const filters: { id: FilterType; label: string }[] = [
-        { id: 'all', label: 'All' },
-        { id: 'unread', label: 'Unread' },
-        { id: 'transactions', label: 'Transactions' },
-        { id: 'account', label: 'Account' },
-        { id: 'system', label: 'System' },
+        { id: 'all', label: tr('الكل', 'All') },
+        { id: 'unread', label: tr('غير المقروءة', 'Unread') },
+        { id: 'transactions', label: tr('المعاملات', 'Transactions') },
+        { id: 'account', label: tr('الحساب', 'Account') },
+        { id: 'system', label: tr('النظام', 'System') },
     ];
 
     return (
@@ -237,9 +240,9 @@ export default function NotificationsPage() {
                             )}
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold text-white">Notifications</h1>
+                            <h1 className="text-lg font-bold text-white">{tr('الإشعارات', 'Notifications')}</h1>
                             <p className="text-[11px] text-white/30">
-                                {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
+                                {unreadCount > 0 ? tr(`${unreadCount} غير مقروء`, `${unreadCount} unread`) : tr('تمت القراءة بالكامل', 'All caught up')}
                             </p>
                         </div>
                     </div>
@@ -255,7 +258,7 @@ export default function NotificationsPage() {
                             ) : (
                                 <CheckCheck className="w-3.5 h-3.5" />
                             )}
-                            Mark all read
+                            {tr('تحديد الكل كمقروء', 'Mark all as read')}
                         </button>
                     )}
                 </div>
@@ -267,8 +270,8 @@ export default function NotificationsPage() {
                             key={f.id}
                             onClick={() => setFilter(f.id)}
                             className={`flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${filter === f.id
-                                    ? 'bg-white/10 text-white border border-white/15'
-                                    : 'bg-white/[0.03] text-white/40 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/60'
+                                ? 'bg-white/10 text-white border border-white/15'
+                                : 'bg-white/[0.03] text-white/40 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/60'
                                 }`}
                         >
                             {f.label}
@@ -283,16 +286,16 @@ export default function NotificationsPage() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
-                        <p className="text-xs text-white/20">Loading notifications...</p>
+                        <p className="text-xs text-white/20">{tr('جاري تحميل الإشعارات...', 'Loading notifications...')}</p>
                     </div>
                 ) : filteredNotifications.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
                             <Bell className="w-7 h-7 text-white/10" />
                         </div>
-                        <p className="text-sm text-white/30 font-medium">No notifications</p>
+                        <p className="text-sm text-white/30 font-medium">{tr('لا توجد إشعارات', 'No notifications')}</p>
                         <p className="text-xs text-white/15 mt-1">
-                            {filter === 'unread' ? "You're all caught up!" : "When something happens, you'll see it here"}
+                            {filter === 'unread' ? tr('كل شيء مقروء الآن', 'Everything is read now') : tr('عند حدوث أي شيء ستجده هنا', 'Updates will appear here')}
                         </p>
                     </div>
                 ) : (
@@ -333,11 +336,11 @@ export default function NotificationsPage() {
                                             </p>
                                             {n.metadata?.rejectionReason && (
                                                 <p className="text-[11px] text-red-400/70 mt-1 line-clamp-1">
-                                                    Reason: {n.metadata.rejectionReason}
+                                                    {tr('السبب', 'Reason')}: {n.metadata.rejectionReason}
                                                 </p>
                                             )}
                                             <p className={`text-[10px] mt-1.5 ${!n.read ? 'text-white/25' : 'text-white/15'}`}>
-                                                {timeAgo(n.createdAt)}
+                                                {timeAgo(n.createdAt, language)}
                                             </p>
                                         </div>
                                     </div>
@@ -357,7 +360,7 @@ export default function NotificationsPage() {
                                 ) : (
                                     <>
                                         <ChevronDown className="w-4 h-4" />
-                                        Load more
+                                        {tr('تحميل المزيد', 'Load more')}
                                     </>
                                 )}
                             </button>

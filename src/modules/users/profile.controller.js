@@ -1,6 +1,7 @@
 import User from "./user.model.js";
 import Listing from "../listings/listing.model.js";
 import Favorite from "../favorites/favorite.model.js";
+import SellerRating from "../ratings/sellerRating.model.js";
 import cacheService from '../../services/cacheService.js';
 import fs from 'fs/promises';
 import fsSync from 'fs';
@@ -135,7 +136,7 @@ export const getProfile = async (req, res) => {
         }
 
         // Run secondary queries in parallel (only if needed)
-        const [myListings, favorites, totalSales] = await Promise.all([
+        const [myListings, favorites, totalSales, ratingAgg] = await Promise.all([
             user.isSeller
                 ? Listing.find({ seller: userId })
                     .select('game status createdAt title price')
@@ -153,8 +154,21 @@ export const getProfile = async (req, res) => {
                 .sort({ createdAt: -1 })
                 .limit(20)
                 .lean(),
-            Listing.countDocuments({ seller: userId, status: "sold" })
+            Listing.countDocuments({ seller: userId, status: "sold" }),
+            SellerRating.aggregate([
+                { $match: { seller: user._id } },
+                {
+                    $group: {
+                        _id: null,
+                        averageRating: { $avg: "$rating" },
+                        totalRatings: { $sum: 1 },
+                    }
+                }
+            ])
         ]);
+
+        const ratingStats = ratingAgg[0] || { averageRating: 0, totalRatings: 0 };
+        const rating = Math.round((ratingStats.averageRating || 0) * 10) / 10;
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -181,7 +195,8 @@ export const getProfile = async (req, res) => {
                         ...user.stats,
                         totalPurchases: 0,
                         totalSales,
-                        rating: 4.5
+                        rating,
+                        totalRatings: ratingStats.totalRatings || 0
                     },
                     wallet: user.wallet,
                     isOnline: user.isOnline,

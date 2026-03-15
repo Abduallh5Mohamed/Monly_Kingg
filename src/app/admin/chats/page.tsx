@@ -18,7 +18,8 @@ import {
   MessageSquare,
   Users,
   TrendingUp,
-  Shield
+  Shield,
+  X
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -95,6 +96,7 @@ export default function ChatsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchStatistics();
@@ -106,6 +108,24 @@ export default function ChatsPage() {
       fetchChatDetails(selectedChat._id);
     }
   }, [selectedChat]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setZoomedImage(null);
+      }
+    };
+
+    if (zoomedImage) {
+      window.addEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [zoomedImage]);
 
   const fetchStatistics = async () => {
     try {
@@ -197,6 +217,86 @@ export default function ChatsPage() {
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString();
+  };
+
+  const normalizeMediaUrl = (value?: string) => {
+    if (!value) return null;
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    if (trimmed.startsWith('/uploads/')) return trimmed;
+    if (trimmed.startsWith('uploads/')) return `/${trimmed}`;
+    return null;
+  };
+
+  const getMessageMediaKind = (message: Message) => {
+    const explicitType = (message.type || '').toLowerCase();
+    if (['image', 'video', 'audio', 'file'].includes(explicitType)) {
+      return explicitType as 'image' | 'video' | 'audio' | 'file';
+    }
+
+    const candidate = message.content || '';
+    if (!candidate) return 'text' as const;
+
+    const lower = candidate.toLowerCase();
+    if (!/^https?:\/\//i.test(lower) && !/^\/?uploads\//i.test(lower)) {
+      return 'text' as const;
+    }
+
+    if (/\.(png|jpe?g|gif|webp|svg|bmp)$/i.test(lower)) return 'image' as const;
+    if (/\.(mp4|webm|mov|avi|mkv)$/i.test(lower)) return 'video' as const;
+    if (/\.(mp3|wav|ogg|m4a|webm)$/i.test(lower)) return 'audio' as const;
+    return 'file' as const;
+  };
+
+  const renderAdminMessageContent = (message: Message) => {
+    const mediaKind = getMessageMediaKind(message);
+    const mediaUrl =
+      normalizeMediaUrl((message as any).fileUrl) || normalizeMediaUrl(message.content);
+
+    if (mediaKind === 'image' && mediaUrl) {
+      return (
+        <img
+          src={mediaUrl}
+          alt="Shared image"
+          className="max-w-xs rounded-xl border border-white/10 cursor-zoom-in transition hover:opacity-90"
+          loading="lazy"
+          onClick={() => setZoomedImage(mediaUrl)}
+        />
+      );
+    }
+
+    if (mediaKind === 'video' && mediaUrl) {
+      return (
+        <video controls className="max-w-xs rounded-xl border border-white/10">
+          <source src={mediaUrl} />
+        </video>
+      );
+    }
+
+    if (mediaKind === 'audio' && mediaUrl) {
+      return (
+        <audio controls className="w-full min-w-[220px]">
+          <source src={mediaUrl} />
+        </audio>
+      );
+    }
+
+    if (mediaKind === 'file' && mediaUrl) {
+      const displayName = mediaUrl.split('/').pop() || 'Attachment';
+      return (
+        <a
+          href={mediaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex max-w-xs items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 hover:text-cyan-100"
+        >
+          {displayName}
+        </a>
+      );
+    }
+
+    return <p className="text-sm break-words">{message.content}</p>;
   };
 
   if (loading && chats.length === 0) {
@@ -471,7 +571,7 @@ export default function ChatsPage() {
                                 : 'bg-white/10 text-white'
                                 }`}
                             >
-                              <p className="text-sm break-words">{message.content}</p>
+                              {renderAdminMessageContent(message)}
                             </div>
                             <div className={`flex items-center gap-1 mt-1 ${!isFromSender ? 'justify-end' : 'justify-start'}`}>
                               <span className="text-xs text-white/40">
@@ -518,6 +618,29 @@ export default function ChatsPage() {
           )}
         </Card>
       </div>
+
+      {zoomedImage && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setZoomedImage(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setZoomedImage(null)}
+            className="absolute right-4 top-4 rounded-full border border-white/20 bg-black/50 p-2 text-white hover:bg-black/70"
+            aria-label="Close image preview"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <img
+            src={zoomedImage}
+            alt="Zoomed shared image"
+            className="max-h-[90vh] max-w-[95vw] rounded-xl border border-white/20 object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

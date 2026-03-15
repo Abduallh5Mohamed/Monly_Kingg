@@ -14,6 +14,7 @@ export default function csrfProtection(req, res, next) {
     '/v1/auth/csrf-token',
     '/v1/auth/google',
     '/v1/auth/google/callback',
+    '/v1/support/messages',
     '/auth/register',
     '/auth/login',
     '/auth/refresh',
@@ -24,7 +25,8 @@ export default function csrfProtection(req, res, next) {
     '/auth/reset-password',
     '/auth/csrf-token',
     '/auth/google',
-    '/auth/google/callback'
+    '/auth/google/callback',
+    '/support/messages'
   ];
 
   // Exact path match

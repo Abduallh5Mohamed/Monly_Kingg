@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
+import { useLanguage } from '@/lib/language-context';
 import {
   Send,
   Paperclip,
@@ -58,6 +59,8 @@ interface Chat {
 }
 
 export default function SupportPage() {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
@@ -862,11 +865,11 @@ export default function SupportPage() {
           {/* Sidebar Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.05]">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-400/70">Messages</p>
-              <h1 className="mt-0.5 text-xl font-bold text-white">Chats</h1>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-400/70">{tr('الرسائل', 'Messages')}</p>
+              <h1 className="mt-0.5 text-xl font-bold text-white">{tr('الدردشة', 'Chats')}</h1>
             </div>
             <button
-              title="New chat"
+              title={tr('محادثة جديدة', 'New chat')}
               className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-900/20 text-blue-400 transition hover:bg-blue-900/30 hover:text-blue-300 border border-blue-900/30"
             >
               <Zap className="h-4 w-4" />
@@ -880,7 +883,7 @@ export default function SupportPage() {
               <Input
                 value={searchQuery}
                 onChange={event => handleSearch(event.target.value)}
-                placeholder="Search conversations…"
+                placeholder={tr('ابحث في المحادثات...', 'Search conversations...')}
                 className="h-10 rounded-xl border-white/[0.06] bg-[#0b0e18] pl-9 pr-9 text-sm text-white placeholder:text-white/25 focus:border-blue-800/50 focus:ring-0"
               />
               {isSearching ? (
@@ -910,15 +913,15 @@ export default function SupportPage() {
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-900/20 border border-blue-900/30">
                     <MessageCircle className="h-6 w-6 text-white/25" />
                   </div>
-                  <p className="text-sm font-medium text-white/40">No conversations yet</p>
-                  <p className="text-xs text-white/25">Start a new chat to get help.</p>
+                  <p className="text-sm font-medium text-white/40">{tr('لا توجد محادثات بعد', 'No conversations yet')}</p>
+                  <p className="text-xs text-white/25">{tr('ابدأ محادثة جديدة للحصول على المساعدة.', 'Start a new chat to get help.')}</p>
                 </div>
               )}
 
               {/* User search results */}
               {searchQuery && userSearchResults.length > 0 && (
                 <>
-                  <p className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-blue-400/60">People</p>
+                  <p className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-blue-400/60">{tr('الأشخاص', 'People')}</p>
                   {userSearchResults.map(user => (
                     <button
                       key={user._id}
@@ -936,12 +939,12 @@ export default function SupportPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-white truncate">{user.username || user.email}</p>
-                        <p className="text-xs text-white/35 mt-0.5">Start chatting</p>
+                        <p className="text-xs text-white/35 mt-0.5">{tr('ابدأ المحادثة', 'Start chatting')}</p>
                       </div>
                     </button>
                   ))}
                   {displayedChats.length > 0 && (
-                    <p className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-white/30">Conversations</p>
+                    <p className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-white/30">{tr('المحادثات', 'Conversations')}</p>
                   )}
                 </>
               )}
@@ -979,7 +982,7 @@ export default function SupportPage() {
                       <div className="flex flex-1 min-w-0 flex-col">
                         <div className="flex items-center justify-between gap-1">
                           <p className={`text-sm font-semibold truncate ${active ? 'text-white' : 'text-white/85'}`}>
-                            {partner?.username || 'Support Team'}
+                            {partner?.username || tr('فريق الدعم', 'Support Team')}
                           </p>
                           <span className="text-[10px] shrink-0 text-white/30 font-medium">
                             {formatRelativeTime(chat.lastMessage?.timestamp)}
@@ -987,7 +990,7 @@ export default function SupportPage() {
                         </div>
                         <div className="flex items-center justify-between gap-1 mt-0.5">
                           <p className={`text-xs truncate ${typingUsers.has(chat._id) ? 'text-blue-400 italic' : 'text-white/35'}`}>
-                            {typingUsers.has(chat._id) ? 'typing…' : (chat.lastMessage?.content || 'No messages yet')}
+                            {typingUsers.has(chat._id) ? tr('يكتب الآن...', 'typing...') : (chat.lastMessage?.content || tr('لا توجد رسائل بعد', 'No messages yet'))}
                           </p>
                           {unread > 0 && (
                             <span className="shrink-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
@@ -1002,7 +1005,7 @@ export default function SupportPage() {
                     <button
                       onClick={(e) => confirmDeleteChat(chat._id, e)}
                       className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 flex h-7 w-7 items-center justify-center rounded-lg bg-red-500/10 text-red-400/70 transition hover:bg-red-500/20 hover:text-red-400"
-                      title="Delete chat"
+                      title={tr('حذف المحادثة', 'Delete chat')}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -1022,8 +1025,8 @@ export default function SupportPage() {
                 <MessageCircle className="h-8 w-8 text-blue-500/70" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-white">Select a conversation</h2>
-                <p className="mt-1 text-sm text-white/40">Choose a chat from the sidebar to start messaging.</p>
+                <h2 className="text-lg font-semibold text-white">{tr('اختر محادثة', 'Select a conversation')}</h2>
+                <p className="mt-1 text-sm text-white/40">{tr('اختر محادثة من القائمة لبدء المراسلة.', 'Choose a chat from the sidebar to start messaging.')}</p>
               </div>
             </div>
           ) : (
@@ -1054,14 +1057,14 @@ export default function SupportPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold text-white">
-                        {getChatPartner(selectedChat)?.username || 'Support Team'}
+                        {getChatPartner(selectedChat)?.username || tr('فريق الدعم', 'Support Team')}
                       </p>
                       <span className="rounded-md bg-blue-900/20 border border-blue-900/30 px-1.5 py-0.5 font-mono text-[10px] text-blue-400">
                         #{selectedChat.chatNumber}
                       </span>
                     </div>
                     <p className={`text-xs mt-0.5 ${isPartnerOnline(selectedChat) ? 'text-emerald-400' : 'text-white/30'}`}>
-                      {isPartnerOnline(selectedChat) ? '● Online' : 'Offline'}
+                      {isPartnerOnline(selectedChat) ? tr('● متصل الآن', '● Online') : tr('غير متصل', 'Offline')}
                     </p>
                   </div>
                 </div>
@@ -1081,7 +1084,7 @@ export default function SupportPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.04]">
                       <MessageCircle className="h-6 w-6 text-white/20" />
                     </div>
-                    <p className="text-sm text-white/30">No messages yet — say hello!</p>
+                    <p className="text-sm text-white/30">{tr('لا توجد رسائل بعد — ابدأ بالسلام.', 'No messages yet - say hello!')}</p>
                   </div>
                 ) : (
                   <>
@@ -1117,7 +1120,7 @@ export default function SupportPage() {
               {/* Typing indicator */}
               {typingIndicator && (
                 <div className="shrink-0 px-5 pb-1 text-xs text-blue-400/60 italic">
-                  {typingIndicator} is typing…
+                  {typingIndicator} {tr('يكتب الآن...', 'is typing...')}
                 </div>
               )}
 
@@ -1129,7 +1132,7 @@ export default function SupportPage() {
                     <button
                       type="button"
                       onClick={handleFileAttachmentClick}
-                      title="Attach file"
+                      title={tr('إرفاق ملف', 'Attach file')}
                       className="flex h-8 w-8 items-center justify-center rounded-lg text-white/35 transition hover:bg-white/[0.06] hover:text-white/70"
                     >
                       <Paperclip className="h-4 w-4" />
@@ -1137,7 +1140,7 @@ export default function SupportPage() {
                     <button
                       type="button"
                       onClick={handleImageAttachmentClick}
-                      title="Attach image"
+                      title={tr('إرفاق صورة', 'Attach image')}
                       className="flex h-8 w-8 items-center justify-center rounded-lg text-white/35 transition hover:bg-white/[0.06] hover:text-white/70"
                     >
                       <ImageIcon className="h-4 w-4" />
@@ -1145,7 +1148,7 @@ export default function SupportPage() {
                     <button
                       type="button"
                       onClick={handleEmojiToggle}
-                      title="Emoji picker"
+                      title={tr('اختيار إيموجي', 'Emoji picker')}
                       className={`flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white/[0.06] ${showEmojiPicker ? 'text-blue-400' : 'text-white/35 hover:text-white/70'}`}
                     >
                       <Smile className="h-4 w-4" />
@@ -1167,7 +1170,7 @@ export default function SupportPage() {
                         handleTyping();
                       }
                     }}
-                    placeholder="Type a message…"
+                    placeholder={tr('اكتب رسالة...', 'Type a message...')}
                     className="flex-1 border-none bg-transparent p-0 text-sm text-white placeholder:text-white/25 focus:ring-0 focus-visible:ring-0"
                   />
 
@@ -1185,14 +1188,14 @@ export default function SupportPage() {
                   {showEmojiPicker && (
                     <div className="absolute bottom-14 left-0 z-20 w-64 rounded-2xl border border-white/[0.06] bg-[#06080f] p-4 shadow-2xl shadow-black/80">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">Emoji</p>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-white/30">{tr('إيموجي', 'Emoji')}</p>
                         <button onClick={handleEmojiToggle} className="text-white/30 transition hover:text-white/70">
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
                       {recentEmojis.length > 0 && (
                         <div className="mb-3">
-                          <p className="mb-2 text-[10px] uppercase tracking-widest text-white/25">Recent</p>
+                          <p className="mb-2 text-[10px] uppercase tracking-widest text-white/25">{tr('الأخيرة', 'Recent')}</p>
                           <div className="grid grid-cols-6 gap-1">
                             {recentEmojis.map(emoji => (
                               <button
@@ -1207,7 +1210,7 @@ export default function SupportPage() {
                         </div>
                       )}
                       <div>
-                        <p className="mb-2 text-[10px] uppercase tracking-widest text-white/25">Popular</p>
+                        <p className="mb-2 text-[10px] uppercase tracking-widest text-white/25">{tr('الأكثر استخدامًا', 'Popular')}</p>
                         <div className="grid grid-cols-6 gap-1">
                           {emojiPalette.map(emoji => (
                             <button
@@ -1241,12 +1244,12 @@ export default function SupportPage() {
                 <Trash2 className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-white">Delete Conversation</h3>
-                <p className="text-xs text-white/40 mt-0.5">Hidden from your list only</p>
+                <h3 className="text-base font-semibold text-white">{tr('حذف المحادثة', 'Delete Conversation')}</h3>
+                <p className="text-xs text-white/40 mt-0.5">{tr('ستختفي من قائمتك فقط', 'Hidden from your list only')}</p>
               </div>
             </div>
             <p className="mb-5 text-sm text-white/50 leading-relaxed">
-              This conversation will be hidden on your side only. The other person can still see it.
+              {tr('سيتم إخفاء هذه المحادثة من طرفك فقط. الطرف الآخر سيظل قادرًا على رؤيتها.', 'This conversation will be hidden on your side only. The other person can still see it.')}
             </p>
             <div className="flex gap-2">
               <Button
@@ -1254,13 +1257,13 @@ export default function SupportPage() {
                 variant="outline"
                 className="flex-1 border-white/[0.08] bg-white/[0.04] text-white/70 hover:bg-white/[0.08] hover:text-white"
               >
-                Cancel
+                {tr('إلغاء', 'Cancel')}
               </Button>
               <Button
                 onClick={() => deletingChatId && handleDeleteChat(deletingChatId)}
                 className="flex-1 bg-red-500 text-white hover:bg-red-600"
               >
-                Delete
+                {tr('حذف', 'Delete')}
               </Button>
             </div>
           </div>

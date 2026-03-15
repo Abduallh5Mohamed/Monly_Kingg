@@ -1,7 +1,7 @@
 'use client';
 
 import { UserSidebar } from './user-sidebar';
-import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown, Tag, Heart, LifeBuoy } from 'lucide-react';
+import { Search, Bell, Store, X, CheckCircle2, XCircle, Info, Crown, Sparkles, Wallet, TrendingUp, User, Settings, LogOut, ChevronDown, Tag, Heart, LifeBuoy, Languages } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -9,6 +9,7 @@ import { BecomeSellerModal } from '@/components/become-seller-modal';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { ensureCsrfToken } from '@/utils/csrf';
+import { useLanguage } from '@/lib/language-context';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
+  const { language, isRTL, t, toggleLanguage } = useLanguage();
   const [sellerModalOpen, setSellerModalOpen] = useState(false);
   const [balance, setBalance] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
@@ -119,7 +121,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       <div className="min-h-screen bg-[#060811] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-400 text-sm">Loading...</p>
+          <p className="text-gray-400 text-sm">{t('loading')}</p>
         </div>
       </div>
     );
@@ -164,15 +166,18 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                   <div className={`absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-300 ${searchFocused ? 'opacity-100' : 'group-hover:opacity-100'}`}>
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20" />
                   </div>
-                  <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300 ${searchFocused ? 'text-cyan-400 scale-110' : 'text-white/25'}`} />
+                  <Search
+                    className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 transition-all duration-300 ${isRTL ? 'right-4' : 'left-4'} ${searchFocused ? 'text-cyan-400 scale-110' : 'text-white/25'}`}
+                  />
                   <input
                     type="text"
-                    placeholder="Search games, accounts, gift cards..."
+                    dir={isRTL ? 'rtl' : 'ltr'}
+                    placeholder={t('search_placeholder')}
                     onFocus={() => setSearchFocused(true)}
                     onBlur={() => setSearchFocused(false)}
-                    className="relative w-full pl-11 pr-4 bg-white/[0.04] border border-white/[0.06] text-white placeholder:text-white/20 rounded-2xl h-11 text-sm focus:outline-none focus:bg-white/[0.07] hover:bg-white/[0.06] transition-all duration-300"
+                    className={`relative w-full bg-white/[0.04] border border-white/[0.06] text-white placeholder:text-white/20 rounded-2xl h-11 text-sm focus:outline-none focus:bg-white/[0.07] hover:bg-white/[0.06] transition-all duration-300 ${isRTL ? 'pr-11 pl-16 text-right' : 'pl-11 pr-16 text-left'}`}
                   />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
+                  <div className={`absolute top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 ${isRTL ? 'left-3' : 'right-3'}`}>
                     <kbd className="px-1.5 py-0.5 text-[10px] text-white/20 bg-white/[0.05] rounded-md border border-white/[0.08] font-mono">⌘K</kbd>
                   </div>
                 </div>
@@ -189,7 +194,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/15 rounded-xl group-hover:from-emerald-500/20 group-hover:to-green-500/20 transition-all" />
                     <Store className="h-4 w-4 text-emerald-400 relative z-10" />
-                    <span className="hidden md:inline text-xs font-semibold text-emerald-300 relative z-10">My Store</span>
+                    <span className="hidden md:inline text-xs font-semibold text-emerald-300 relative z-10">{t('my_store')}</span>
                   </Link>
                 ) : (
                   <button
@@ -198,7 +203,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/15 rounded-xl group-hover:from-violet-500/20 group-hover:to-purple-500/20 transition-all" />
                     <Store className="h-4 w-4 text-violet-400 relative z-10" />
-                    <span className="hidden md:inline text-xs font-semibold text-violet-300 relative z-10">Sell Now</span>
+                    <span className="hidden md:inline text-xs font-semibold text-violet-300 relative z-10">{t('sell_now')}</span>
                   </button>
                 )}
 
@@ -234,7 +239,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                   <button
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                     className="relative group flex items-center gap-1.5 focus:outline-none"
-                    title="Profile Menu"
+                    title={t('profile_menu')}
                   >
                     <div className="w-9 h-9 rounded-xl overflow-hidden ring-2 ring-white/[0.08] group-hover:ring-cyan-500/30 transition-all duration-300 group-hover:scale-105">
                       {user?.avatar ? (
@@ -254,7 +259,10 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
 
                   {/* Dropdown Menu */}
                   {profileMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-[#12162a] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+                    <div
+                      dir={isRTL ? 'rtl' : 'ltr'}
+                      className={`absolute top-full mt-2 w-56 bg-[#12162a] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/50 overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200 ${isRTL ? 'left-0 origin-top-left' : 'right-0 origin-top-right'}`}
+                    >
                       {/* User info header */}
                       <div className="px-4 py-3 border-b border-white/[0.06]">
                         <p className="text-white font-semibold text-sm">{user?.username}</p>
@@ -271,7 +279,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
                             <User className="w-4 h-4 text-white/40 group-hover:text-cyan-400 transition-colors" />
                           </div>
-                          <span className="text-sm font-medium">Profile</span>
+                          <span className="text-sm font-medium">{t('profile')}</span>
                         </Link>
 
                         <Link
@@ -282,7 +290,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-purple-500/10 transition-colors">
                             <Settings className="w-4 h-4 text-white/40 group-hover:text-purple-400 transition-colors" />
                           </div>
-                          <span className="text-sm font-medium">Settings</span>
+                          <span className="text-sm font-medium">{t('settings')}</span>
                         </Link>
 
                         {user?.isSeller && (
@@ -294,7 +302,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                             <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-orange-500/10 transition-colors">
                               <Tag className="w-4 h-4 text-white/40 group-hover:text-orange-400 transition-colors" />
                             </div>
-                            <span className="text-sm font-medium">Discounts</span>
+                            <span className="text-sm font-medium">{t('discounts')}</span>
                           </Link>
                         )}
 
@@ -306,7 +314,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-pink-500/10 transition-colors">
                             <Heart className="w-4 h-4 text-white/40 group-hover:text-pink-400 transition-colors" />
                           </div>
-                          <span className="text-sm font-medium">Favourites</span>
+                          <span className="text-sm font-medium">{t('favourites')}</span>
                         </Link>
 
                         <Link
@@ -317,8 +325,24 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-orange-500/10 transition-colors">
                             <LifeBuoy className="w-4 h-4 text-white/40 group-hover:text-orange-400 transition-colors" />
                           </div>
-                          <span className="text-sm font-medium">الدعم الفني</span>
+                          <span className="text-sm font-medium">{t('technical_support')}</span>
                         </Link>
+
+                        <button
+                          onClick={() => {
+                            toggleLanguage();
+                            setProfileMenuOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors group"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-cyan-500/10 transition-colors">
+                            <Languages className="w-4 h-4 text-white/40 group-hover:text-cyan-400 transition-colors" />
+                          </div>
+                          <span className="text-sm font-medium">
+                            {language === 'en' ? t('switch_to_arabic') : t('switch_to_english')}
+                          </span>
+                        </button>
+
                       </div>
 
                       {/* Logout button */}
@@ -330,7 +354,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                           <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center group-hover:bg-red-500/10 transition-colors">
                             <LogOut className="w-4 h-4" />
                           </div>
-                          <span className="text-sm font-medium">Logout</span>
+                          <span className="text-sm font-medium">{t('logout')}</span>
                         </button>
                       </div>
                     </div>
@@ -397,7 +421,7 @@ function getNotificationUrl(n: Notification): string | null {
     case 'seller_rejected':
       return '/user/profile';
     case 'new_message':
-      return '/user/chats';
+      return '/user/chat';
     case 'level_up':
       return '/user/seller-levels';
     case 'deposit_approved':
@@ -413,6 +437,7 @@ function getNotificationUrl(n: Notification): string | null {
 function NotificationBell() {
   const { user } = useAuth();
   const router = useRouter();
+  const { language, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -509,6 +534,41 @@ function NotificationBell() {
     system: <Info className="w-4 h-4 text-blue-400" />,
   };
 
+  const hasArabic = (text?: string) => !!text && /[\u0600-\u06FF]/.test(text);
+  const hasLatin = (text?: string) => !!text && /[A-Za-z]/.test(text);
+
+  const localizedByType: Record<string, { arTitle: string; enTitle: string; arMsg: string; enMsg: string }> = {
+    purchase_initiated: { arTitle: 'شراء جديد', enTitle: 'New Purchase', arMsg: 'تم بدء عملية شراء جديدة.', enMsg: 'A new purchase has been initiated.' },
+    credentials_sent: { arTitle: 'تم إرسال البيانات', enTitle: 'Credentials Sent', arMsg: 'قام البائع بإرسال بيانات الحساب.', enMsg: 'The seller has sent account credentials.' },
+    purchase_confirmed: { arTitle: 'تم التأكيد', enTitle: 'Purchase Confirmed', arMsg: 'تم تأكيد عملية الشراء بنجاح.', enMsg: 'Your purchase was confirmed successfully.' },
+    purchase_disputed: { arTitle: 'نزاع مفتوح', enTitle: 'Dispute Opened', arMsg: 'تم فتح نزاع على العملية.', enMsg: 'A dispute has been opened for this transaction.' },
+    dispute_resolved: { arTitle: 'تم حل النزاع', enTitle: 'Dispute Resolved', arMsg: 'تم حل النزاع من الإدارة.', enMsg: 'The dispute was resolved by admin.' },
+    auto_confirmed: { arTitle: 'تأكيد تلقائي', enTitle: 'Auto Confirmed', arMsg: 'تم التأكيد تلقائيًا بعد انتهاء المهلة.', enMsg: 'Transaction was auto-confirmed after timeout.' },
+    seller_approved: { arTitle: 'تم قبول البائع', enTitle: 'Seller Approved', arMsg: 'تمت الموافقة على حساب البائع.', enMsg: 'Your seller profile has been approved.' },
+    seller_rejected: { arTitle: 'تم رفض البائع', enTitle: 'Seller Rejected', arMsg: 'تم رفض طلب البائع.', enMsg: 'Your seller request was rejected.' },
+    level_up: { arTitle: 'ترقية مستوى', enTitle: 'Level Up', arMsg: 'تهانينا! لقد ارتقيت إلى مستوى جديد.', enMsg: 'Congrats! You reached a new seller level.' },
+    deposit_approved: { arTitle: 'إيداع مقبول', enTitle: 'Deposit Approved', arMsg: 'تمت الموافقة على طلب الإيداع.', enMsg: 'Your deposit request was approved.' },
+    deposit_rejected: { arTitle: 'إيداع مرفوض', enTitle: 'Deposit Rejected', arMsg: 'تم رفض طلب الإيداع.', enMsg: 'Your deposit request was rejected.' },
+    withdrawal_approved: { arTitle: 'سحب مقبول', enTitle: 'Withdrawal Approved', arMsg: 'تمت الموافقة على طلب السحب.', enMsg: 'Your withdrawal request was approved.' },
+    withdrawal_rejected: { arTitle: 'سحب مرفوض', enTitle: 'Withdrawal Rejected', arMsg: 'تم رفض طلب السحب.', enMsg: 'Your withdrawal request was rejected.' },
+    new_message: { arTitle: 'رسالة جديدة', enTitle: 'New Message', arMsg: 'لديك رسالة جديدة.', enMsg: 'You have a new message.' },
+    system: { arTitle: 'إشعار النظام', enTitle: 'System Notification', arMsg: 'يوجد تحديث جديد من النظام.', enMsg: 'There is a new system update.' },
+  };
+
+  const getLocalizedNotification = (n: Notification) => {
+    const preset = localizedByType[n.type];
+    if (!preset) return { title: n.title, message: n.message };
+
+    if (language === 'en' && hasArabic(n.title)) {
+      return { title: preset.enTitle, message: hasArabic(n.message) ? preset.enMsg : n.message };
+    }
+    if (language === 'ar' && hasLatin(n.title)) {
+      return { title: preset.arTitle, message: hasLatin(n.message) ? preset.arMsg : n.message };
+    }
+
+    return { title: n.title || (language === 'ar' ? preset.arTitle : preset.enTitle), message: n.message || (language === 'ar' ? preset.arMsg : preset.enMsg) };
+  };
+
   const handleNotificationClick = async (n: Notification) => {
     if (!n.read) await markAsRead(n._id);
     setOpen(false);
@@ -535,14 +595,14 @@ function NotificationBell() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white">Notifications</h3>
+              <h3 className="text-sm font-bold text-white">{t('notifications')}</h3>
               {unreadCount > 0 && (
                 <span className="text-[10px] font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded-full">{unreadCount}</span>
               )}
             </div>
             {unreadCount > 0 && (
               <button onClick={markAllRead} className="text-xs text-white/40 hover:text-cyan-400 transition-colors font-medium">
-                Mark all read
+                {t('mark_all_read')}
               </button>
             )}
           </div>
@@ -555,12 +615,13 @@ function NotificationBell() {
           ) : notifications.length === 0 ? (
             <div className="text-center py-10 text-white/30">
               <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
-              <p className="text-xs">No notifications yet</p>
+              <p className="text-xs">{t('no_notifications')}</p>
             </div>
           ) : (
             <div>
               {notifications.map((n) => {
                 const url = getNotificationUrl(n);
+                const localized = getLocalizedNotification(n);
                 return (
                   <button
                     key={n._id}
@@ -574,11 +635,11 @@ function NotificationBell() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium text-white truncate">{n.title}</p>
+                          <p className="text-sm font-medium text-white truncate">{localized.title}</p>
                           {!n.read && <span className="w-2 h-2 rounded-full bg-cyan-400 flex-shrink-0" />}
                         </div>
-                        <p className="text-xs text-white/50 mt-0.5 line-clamp-2">{n.message}</p>
-                        <p className="text-[10px] text-white/25 mt-1">{timeAgo(n.createdAt)}</p>
+                        <p className="text-xs text-white/50 mt-0.5 line-clamp-2">{localized.message}</p>
+                        <p className="text-[10px] text-white/25 mt-1">{timeAgo(n.createdAt, language, t)}</p>
                       </div>
                     </div>
                   </button>
@@ -592,14 +653,14 @@ function NotificationBell() {
   );
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, language: 'en' | 'ar', t: (key: 'just_now') => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return 'Just now';
+  if (seconds < 60) return t('just_now');
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return language === 'ar' ? `منذ ${minutes} دقيقة` : `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return language === 'ar' ? `منذ ${hours} ساعة` : `${hours}h ago`;
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return new Date(dateStr).toLocaleDateString();
+  if (days < 7) return language === 'ar' ? `منذ ${days} يوم` : `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US');
 }

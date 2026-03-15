@@ -35,6 +35,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { Button } from '@/components/ui/button';
 import { ensureCsrfToken } from '@/utils/csrf';
 import { fetchData, fetchParallel, prefetch } from '@/lib/fetcher';
@@ -445,11 +446,11 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
   const [priceOpen, setPriceOpen] = useState(false);
 
   const sortOptions = [
-    { value: 'default', label: 'Default' },
-    { value: 'price_asc', label: 'Price: Low → High' },
-    { value: 'price_desc', label: 'Price: High → Low' },
-    { value: 'rating', label: 'Top Rated' },
-    { value: 'popular', label: 'Most Popular' },
+    { value: 'default', label: 'افتراضي' },
+    { value: 'price_asc', label: 'السعر: الأقل إلى الأعلى' },
+    { value: 'price_desc', label: 'السعر: الأعلى إلى الأقل' },
+    { value: 'rating', label: 'الأعلى تقييمًا' },
+    { value: 'popular', label: 'الأكثر شيوعًا' },
   ];
 
   return (
@@ -462,7 +463,7 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search in this section..."
+            placeholder="ابحث داخل هذا القسم..."
             className="w-full h-10 pl-10 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-[13px] placeholder:text-white/20 focus:outline-none focus:border-cyan-500/30 focus:bg-white/[0.06] transition-all duration-300"
           />
           {searchQuery && (
@@ -479,7 +480,7 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
             className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-[12px] font-medium bg-white/[0.04] border border-white/[0.08] text-white/40 hover:text-white/60 hover:bg-white/[0.06] transition-all duration-200"
           >
             <ArrowUpDown className="w-3.5 h-3.5" />
-            {sortOptions.find(s => s.value === sortBy)?.label || 'Sort'}
+            {sortOptions.find(s => s.value === sortBy)?.label || 'ترتيب'}
             <ChevronDown className={`w-3 h-3 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
           </button>
           {sortOpen && (
@@ -507,25 +508,25 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
               }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
-            Price
+            السعر
           </button>
           {priceOpen && (
             <div className="absolute top-full right-0 mt-1.5 w-56 rounded-xl bg-[#12162a] border border-white/[0.08] shadow-2xl shadow-black/50 z-50 p-3">
-              <p className="text-[11px] text-white/30 mb-2 font-medium">Price Range</p>
+              <p className="text-[11px] text-white/30 mb-2 font-medium">نطاق السعر</p>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] rounded-lg px-2.5 py-1.5 flex-1">
                   <span className="text-[11px] text-white/25">$</span>
-                  <input type="number" value={priceRange.min} onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })} placeholder="Min" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
+                  <input type="number" value={priceRange.min} onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })} placeholder="الحد الأدنى" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
                 </div>
                 <span className="text-white/15 text-[11px]">—</span>
                 <div className="flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] rounded-lg px-2.5 py-1.5 flex-1">
                   <span className="text-[11px] text-white/25">$</span>
-                  <input type="number" value={priceRange.max} onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })} placeholder="Max" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
+                  <input type="number" value={priceRange.max} onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })} placeholder="الحد الأعلى" className="w-full bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none" />
                 </div>
               </div>
               {(priceRange.min || priceRange.max) && (
                 <button onClick={() => setPriceRange({ min: '', max: '' })} className="text-[11px] text-red-400/60 hover:text-red-400 mt-2 transition-colors">
-                  Clear
+                  مسح
                 </button>
               )}
             </div>
@@ -539,7 +540,7 @@ function InlineFilterBar({ searchQuery, setSearchQuery, sortBy, setSortBy, price
             className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[11px] font-medium text-red-400/60 hover:text-red-400 bg-red-500/5 border border-red-500/10 hover:bg-red-500/10 transition-all duration-200"
           >
             <X className="w-3 h-3" />
-            Clear All
+            مسح الكل
           </button>
         )}
       </div>
@@ -579,6 +580,8 @@ function useProductFilter(products: any[]) {
    ═══════════════════════════════════ */
 export default function UserDashboardPage() {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const [listings, setListings] = useState<Listing[]>([]);
   const [trendingListings, setTrendingListings] = useState<Listing[]>([]);
   const [popularListings, setPopularListings] = useState<Listing[]>([]);
@@ -760,9 +763,9 @@ export default function UserDashboardPage() {
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-white">
-                Welcome back! <span className="inline-block animate-[float_3s_ease-in-out_infinite]">👋</span>
+                {tr('أهلًا بعودتك', 'Welcome back')} <span className="inline-block animate-[float_3s_ease-in-out_infinite]">👋</span>
               </h1>
-              <p className="text-sm text-white/30 mt-1">Find the best deals on gaming accounts & digital goods</p>
+              <p className="text-sm text-white/30 mt-1">{tr('اعثر على أفضل العروض لحسابات الألعاب والمنتجات الرقمية', 'Find the best deals on gaming accounts and digital products')}</p>
             </div>
             <div className="flex items-center gap-2">
               {/* Quick stats pills */}
@@ -772,7 +775,7 @@ export default function UserDashboardPage() {
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2">
                 <ShieldCheck className="w-4 h-4 text-green-400" />
-                <span className="text-[11px] font-semibold text-white/60">Verified Sellers</span>
+                <span className="text-[11px] font-semibold text-white/60">{tr('بائعون موثوقون', 'Trusted Sellers')}</span>
               </div>
             </div>
           </div>
@@ -789,7 +792,7 @@ export default function UserDashboardPage() {
             >
               {selectedGameFilter === 'all' && <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 opacity-15" />}
               <Gamepad2 className="w-4 h-4 relative z-10" />
-              <span className="relative z-10">All</span>
+              <span className="relative z-10">{tr('الكل', 'All')}</span>
             </button>
             {/* Dynamic game tabs */}
             {games.map((game) => {
@@ -818,7 +821,7 @@ export default function UserDashboardPage() {
           <section>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1 h-5 rounded-full bg-gradient-to-b from-orange-400 to-red-500" />
-              <span className="text-[11px] text-white/25 font-semibold uppercase tracking-widest">Sponsored</span>
+              <span className="text-[11px] text-white/25 font-semibold uppercase tracking-widest">{tr('إعلان ممول', 'Sponsored Ad')}</span>
             </div>
             <HorizontalScroll>
               {heroAds.map((ad) => (
@@ -836,7 +839,7 @@ export default function UserDashboardPage() {
                     <h3 className="text-white font-bold text-sm truncate">{ad.title}</h3>
                     {ad.description && <p className="text-white/40 text-[11px] mt-0.5 line-clamp-1">{ad.description}</p>}
                   </div>
-                  <span className="absolute top-2.5 right-2.5 bg-white/[0.08] backdrop-blur-sm text-white/40 text-[8px] px-1.5 py-0.5 rounded font-medium uppercase tracking-wider">Ad</span>
+                  <span className="absolute top-2.5 right-2.5 bg-white/[0.08] backdrop-blur-sm text-white/40 text-[8px] px-1.5 py-0.5 rounded font-medium uppercase tracking-wider">{tr('إعلان', 'AD')}</span>
                 </a>
               ))}
             </HorizontalScroll>
@@ -856,16 +859,16 @@ export default function UserDashboardPage() {
                 </div>
                 <div>
                   <h2 className="text-base font-bold text-white leading-tight flex items-center gap-2">
-                    Flash Deals
+                    {tr('عروض سريعة', 'Flash Deals')}
                     <span className="bg-red-500/15 text-red-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-500/15 animate-pulse">
-                      LIMITED
+                      {tr('لفترة محدودة', 'Limited Time')}
                     </span>
                   </h2>
-                  <p className="text-[10px] text-white/20 mt-0.5">Exclusive discounts, grab before they're gone</p>
+                  <p className="text-[10px] text-white/20 mt-0.5">{tr('خصومات حصرية، اغتنمها قبل انتهاءها', 'Exclusive discounts, grab them before they end')}</p>
                 </div>
               </div>
               <Link href="/user" className="text-[11px] text-white/25 hover:text-red-400 transition-colors font-medium flex items-center gap-1 group">
-                View All
+                {tr('عرض الكل', 'View all')}
                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
@@ -914,7 +917,7 @@ export default function UserDashboardPage() {
                           <p className="text-base font-black text-red-400">EGP {disc.discountedPrice.toFixed(2)}</p>
                         </div>
                         <div className="bg-red-500/10 border border-red-500/15 text-red-400 text-[9px] font-black px-2 py-1 rounded-lg">
-                          DEAL
+                          {tr('عرض', 'Deal')}
                         </div>
                       </div>
                     </div>
@@ -968,18 +971,18 @@ export default function UserDashboardPage() {
                       {!campaign.image && campaign.title}
                       {campaign.image && `${campaign.title} — Accounts`}
                       <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}>
-                        {isMandatory ? 'Commission Discount' : 'Price Discount'}
+                        {isMandatory ? tr('خصم عمولة', 'Commission Discount') : tr('خصم سعر', 'Price Discount')}
                       </span>
                       {daysLeft <= 3 && (
                         <span className="bg-red-500/15 text-red-400 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-500/15 animate-pulse">
-                          {daysLeft === 0 ? 'Last Day!' : `${daysLeft} days left`}
+                          {daysLeft === 0 ? tr('آخر يوم', 'Last Day') : (language === 'ar' ? `متبقي ${daysLeft} يوم` : `${daysLeft} days left`)}
                         </span>
                       )}
                     </h2>
                     <p className="text-[10px] text-white/20 mt-0.5 flex items-center gap-2">
                       {campaign.games.map(g => g.name).join(' • ')}
                       <span className="text-white/10">|</span>
-                      <span>{campaign.listingCount} accounts</span>
+                      <span>{language === 'ar' ? `${campaign.listingCount} حساب` : `${campaign.listingCount} accounts`}</span>
                     </p>
                   </div>
                 </div>
@@ -1028,7 +1031,7 @@ export default function UserDashboardPage() {
 
                         {/* Type label */}
                         <span className={`absolute bottom-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded backdrop-blur-sm ${isMandatory ? 'bg-orange-500/20 text-orange-300 border border-orange-500/20' : 'bg-blue-500/20 text-blue-300 border border-blue-500/20'}`}>
-                          {isMandatory ? 'Reduced Commission' : 'Discounted Price'}
+                          {isMandatory ? tr('عمولة مخفضة', 'Lower Commission') : tr('سعر مخفض', 'Lower Price')}
                         </span>
                       </div>
 
@@ -1060,7 +1063,7 @@ export default function UserDashboardPage() {
                             ? 'bg-orange-500/10 border-orange-500/15 text-orange-400'
                             : 'bg-blue-500/10 border-blue-500/15 text-blue-400'
                             }`}>
-                            {isMandatory ? 'DEAL' : 'SALE'}
+                            {isMandatory ? tr('عرض', 'Deal') : tr('تخفيض', 'Discount')}
                           </div>
                         </div>
                       </div>
@@ -1075,12 +1078,12 @@ export default function UserDashboardPage() {
         {/* ═══════════ 🔥 BEST SELLERS (RANKED BY ALGORITHM) ═══════════ */}
         {filteredBestSellers.length > 0 && (
           <section>
-            <SectionHeader icon={Flame} title="Best Sellers" color="from-orange-500 to-red-500" subtitle="Top performing accounts by sales" />
+            <SectionHeader icon={Flame} title={tr('الأكثر مبيعًا', 'Best Sellers')} color="from-orange-500 to-red-500" subtitle={tr('أفضل الحسابات أداءً حسب المبيعات', 'Top performing accounts by sales')} />
             {loading ? (
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="w-7 h-7 text-orange-400 animate-spin" />
-                  <span className="text-[11px] text-white/20">Loading best sellers...</span>
+                  <span className="text-[11px] text-white/20">{tr('جاري تحميل الأكثر مبيعًا...', 'Loading best sellers...')}</span>
                 </div>
               </div>
             ) : (
@@ -1107,9 +1110,9 @@ export default function UserDashboardPage() {
               <section>
                 <SectionHeader
                   icon={Gamepad2}
-                  title={`${game.name} Accounts`}
+                  title={language === 'ar' ? `حسابات ${game.name}` : `${game.name} Accounts`}
                   color={gameColor}
-                  subtitle={`Premium ${game.name} accounts`}
+                  subtitle={language === 'ar' ? `حسابات ${game.name} المميزة` : `Featured ${game.name} accounts`}
                 />
                 {listings.length > 0 ? (
                   <HorizontalScroll>
@@ -1157,7 +1160,7 @@ export default function UserDashboardPage() {
             {/* Left Content */}
             <div className="w-full md:w-3/5 p-8 md:p-10 text-center md:text-left">
               <div className="inline-block mb-4">
-                <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">Premium Membership</span>
+                <span className="text-[11px] font-bold text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-purple-400/30">{tr('عضوية مميزة', 'Premium Membership')}</span>
               </div>
 
               <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-3">
@@ -1165,29 +1168,29 @@ export default function UserDashboardPage() {
               </h3>
 
               <p className="text-white/50 text-base leading-relaxed max-w-md mb-6">
-                Unlock exclusive benefits and save <span className="text-amber-400 font-bold">up to 25%</span> on every purchase
+                {tr('احصل على مزايا حصرية ووفر حتى', 'Get exclusive benefits and save up to')} <span className="text-amber-400 font-bold">25%</span> {tr('على كل عملية شراء', 'on every purchase')}
               </p>
 
               <div className="flex flex-wrap gap-3 mb-6 justify-center md:justify-start">
                 <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                   <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-white/70 text-xs font-medium">Early Access</span>
+                  <span className="text-white/70 text-xs font-medium">{tr('وصول مبكر', 'Early Access')}</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                   <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" style={{ animationDelay: '0.3s' }} />
-                  <span className="text-white/70 text-xs font-medium">Priority Support</span>
+                  <span className="text-white/70 text-xs font-medium">{tr('دعم أولوية', 'Priority Support')}</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                   <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay: '0.6s' }} />
-                  <span className="text-white/70 text-xs font-medium">Exclusive Deals</span>
+                  <span className="text-white/70 text-xs font-medium">{tr('عروض حصرية', 'Exclusive Deals')}</span>
                 </div>
               </div>
 
               <div className="flex items-end gap-3 justify-center md:justify-start mb-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-white/40 text-sm">Starting at</span>
+                  <span className="text-white/40 text-sm">{tr('تبدأ من', 'Starts from')}</span>
                   <span className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">$2.49</span>
-                  <span className="text-lg text-white/40 font-medium">/month</span>
+                  <span className="text-lg text-white/40 font-medium">{tr('/شهريًا', '/month')}</span>
                 </div>
               </div>
 
@@ -1195,11 +1198,11 @@ export default function UserDashboardPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center justify-center gap-2.5 text-base">
                   <Zap className="w-5 h-5" />
-                  Get SEAL+PASS Now
+                  {tr('اشترك في SEAL+PASS الآن', 'Subscribe to SEAL+PASS Now')}
                 </span>
               </button>
 
-              <p className="text-white/20 text-[11px] mt-4 font-medium">✓ Cancel anytime • No hidden fees • Instant activation</p>
+              <p className="text-white/20 text-[11px] mt-4 font-medium">{tr('✓ إلغاء في أي وقت • بدون رسوم خفية • تفعيل فوري', '✓ Cancel anytime • No hidden fees • Instant activation')}</p>
             </div>
           </div>
         </section>
@@ -1207,12 +1210,12 @@ export default function UserDashboardPage() {
         {/* ═══════════ LIVE LISTINGS (FROM API) ═══════════ */}
         {filteredBestSellers.length > 0 && (
           <section>
-            <SectionHeader icon={Sparkles} title="Latest Listings" color="from-cyan-500 to-blue-600" subtitle="Fresh from our sellers" isExpanded={expandedSection === 'latest'} onToggle={() => toggleSection('latest')} />
+            <SectionHeader icon={Sparkles} title={tr('أحدث الإعلانات', 'Latest Listings')} color="from-cyan-500 to-blue-600" subtitle={tr('وصلت حديثًا من البائعين', 'Freshly listed by sellers')} isExpanded={expandedSection === 'latest'} onToggle={() => toggleSection('latest')} />
             {loading ? (
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="w-7 h-7 text-purple-400 animate-spin" />
-                  <span className="text-[11px] text-white/20">Loading trending...</span>
+                  <span className="text-[11px] text-white/20">{tr('جاري تحميل الرائج...', 'Loading trending...')}</span>
                 </div>
               </div>
             ) : expandedSection === 'latest' ? (
@@ -1239,7 +1242,7 @@ export default function UserDashboardPage() {
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="w-7 h-7 text-amber-400 animate-spin" />
-                  <span className="text-[11px] text-white/20">Loading popular...</span>
+                  <span className="text-[11px] text-white/20">{tr('جاري تحميل الأكثر شيوعًا...', 'Loading most popular...')}</span>
                 </div>
               </div>
             ) : (

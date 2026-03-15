@@ -112,8 +112,8 @@ export default function ProfilePage() {
         } catch (error) {
             console.error('Error fetching profile:', error);
             toast({
-                title: 'Error',
-                description: 'Failed to load profile',
+                title: 'خطأ',
+                description: 'فشل تحميل الملف الشخصي',
                 variant: 'destructive',
             });
         } finally {
@@ -176,8 +176,8 @@ export default function ProfilePage() {
         // Validate username change
         if (editedProfile.username !== profile.username && !canChangeUsername()) {
             toast({
-                title: 'Cannot Change Username',
-                description: `You can change username in ${getDaysUntilUsernameChange()} days`,
+                title: 'لا يمكن تغيير اسم المستخدم الآن',
+                description: `يمكنك تغيير الاسم بعد ${getDaysUntilUsernameChange()} يوم`,
                 variant: 'destructive',
             });
             return;
@@ -186,8 +186,8 @@ export default function ProfilePage() {
         // Validate phone change
         if (editedProfile.phone !== profile.phone && !canChangePhone()) {
             toast({
-                title: 'Cannot Change Phone',
-                description: `You can change phone in ${getDaysUntilPhoneChange()} days`,
+                title: 'لا يمكن تغيير رقم الهاتف الآن',
+                description: `يمكنك تغيير الرقم بعد ${getDaysUntilPhoneChange()} يوم`,
                 variant: 'destructive',
             });
             return;
@@ -200,8 +200,8 @@ export default function ProfilePage() {
 
             if (!csrfToken) {
                 toast({
-                    title: 'Error',
-                    description: 'Failed to get security token. Please refresh the page.',
+                    title: 'خطأ',
+                    description: 'تعذر الحصول على رمز الحماية. حدّث الصفحة وحاول مرة أخرى.',
                     variant: 'destructive',
                 });
                 setSaving(false);
@@ -244,21 +244,21 @@ export default function ProfilePage() {
                 sessionStorage.removeItem('dashboard_timestamp');
 
                 toast({
-                    title: 'Success',
-                    description: 'Profile updated successfully',
+                    title: 'تم بنجاح',
+                    description: 'تم تحديث الملف الشخصي بنجاح',
                 });
             } else {
                 toast({
-                    title: 'Error',
-                    description: data.message || 'Failed to update profile',
+                    title: 'خطأ',
+                    description: data.message || 'فشل تحديث الملف الشخصي',
                     variant: 'destructive',
                 });
             }
         } catch (error) {
             console.error('Error saving profile:', error);
             toast({
-                title: 'Error',
-                description: 'Network error',
+                title: 'خطأ',
+                description: 'خطأ في الشبكة',
                 variant: 'destructive',
             });
         } finally {
@@ -271,8 +271,8 @@ export default function ProfilePage() {
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
                 toast({
-                    title: 'File Too Large',
-                    description: 'Avatar must be less than 2MB',
+                    title: 'حجم الملف كبير',
+                    description: 'صورة الحساب يجب أن تكون أقل من 2MB',
                     variant: 'destructive',
                 });
                 return;
@@ -302,7 +302,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-center min-h-screen">
                     <div className="text-center">
                         <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                        <p className="text-white">Failed to load profile</p>
+                        <p className="text-white">فشل تحميل الملف الشخصي</p>
                     </div>
                 </div>
             </UserDashboardLayout>
@@ -350,20 +350,20 @@ export default function ProfilePage() {
                                 <div className="flex items-center gap-2 pb-1">
                                     {profile.verified && (
                                         <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-[11px] font-medium text-cyan-400">
-                                            <Shield className="w-3 h-3" /> Verified
+                                            <Shield className="w-3 h-3" /> موثّق
                                         </span>
                                     )}
                                     {!isEditing ? (
                                         <button onClick={handleEditToggle} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300 transition-colors">
-                                            <Edit2 className="w-3 h-3" /> Edit
+                                            <Edit2 className="w-3 h-3" /> تعديل
                                         </button>
                                     ) : (
                                         <>
                                             <Button onClick={handleSaveProfile} disabled={saving} size="sm" className="bg-cyan-500 hover:bg-cyan-400 text-white h-7 px-3 text-xs rounded-lg">
-                                                {saving ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Save
+                                                {saving ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} حفظ
                                             </Button>
                                             <button onClick={handleEditToggle} className="flex items-center gap-1 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-400 transition-colors">
-                                                <X className="w-3 h-3" /> Cancel
+                                                <X className="w-3 h-3" /> إلغاء
                                             </button>
                                         </>
                                     )}
@@ -383,7 +383,7 @@ export default function ProfilePage() {
                                 {/* Stats pills */}
                                 <div className="flex items-center gap-2 flex-wrap">
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-xl">
-                                        <span className="text-xs text-gray-500">Lv.</span>
+                                        <span className="text-xs text-gray-500">المستوى</span>
                                         <span className="text-sm font-bold text-purple-400">{profile.stats.level}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
@@ -404,10 +404,10 @@ export default function ProfilePage() {
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-sm font-semibold text-[#f5f5dc] flex items-center gap-2">
                                         <TrendingUp className="w-4 h-4 text-yellow-500" />
-                                        Seller Level
+                                        مستوى البائع
                                     </h3>
                                     <a href="/user/seller-levels" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
-                                        Details →
+                                        التفاصيل ←
                                     </a>
                                 </div>
 
@@ -430,7 +430,7 @@ export default function ProfilePage() {
                                     showPercent={false}
                                 />
                                 <div className="flex items-center justify-between mt-2">
-                                    <span className="text-[10px] text-gray-400">{levelProgress.progress?.percent || 0}% to Lv {levelProgress.currentLevel + 1}</span>
+                                    <span className="text-[10px] text-gray-400">{levelProgress.progress?.percent || 0}% إلى المستوى {levelProgress.currentLevel + 1}</span>
                                     <span className="text-[10px] text-gray-400 flex items-center gap-1">
                                         <Target className="h-3 w-3" />
                                         {(levelProgress.progress?.remaining || 0).toLocaleString()} EGP
@@ -450,13 +450,13 @@ export default function ProfilePage() {
                             <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
                                 <div className="px-5 py-4 border-b border-white/5">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                                        <User className="w-4 h-4 text-cyan-500" /> Personal Info
+                                        <User className="w-4 h-4 text-cyan-500" /> المعلومات الشخصية
                                     </h3>
                                 </div>
                                 <div className="p-5 space-y-4">
                                     {/* Username */}
                                     <div>
-                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">Username</label>
+                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">اسم المستخدم</label>
                                         {isEditing && canChangeUsername() ? (
                                             <input type="text" value={editedProfile.username || ''} onChange={(e) => setEditedProfile({ ...editedProfile, username: e.target.value })}
                                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none" />
@@ -479,7 +479,7 @@ export default function ProfilePage() {
                                         </label>
                                         {isEditing && canChangePhone() ? (
                                             <input type="tel" value={editedProfile.phone || ''} onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                                                placeholder="Enter phone number" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                                placeholder="أدخل رقم الهاتف" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
                                         ) : (
                                             <div className="flex items-center justify-between">
                                                 <span className="text-sm text-white">{profile.phone || <span className="text-gray-600">—</span>}</span>
@@ -495,11 +495,11 @@ export default function ProfilePage() {
                                     {/* Address */}
                                     <div>
                                         <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
-                                            <MapPin className="w-3 h-3" /> Address
+                                            <MapPin className="w-3 h-3" /> العنوان
                                         </label>
                                         {isEditing ? (
                                             <input type="text" value={editedProfile.address || ''} onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
-                                                placeholder="Enter address" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                                placeholder="أدخل العنوان" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
                                         ) : (
                                             <span className="text-sm text-white">{profile.address || <span className="text-gray-600">—</span>}</span>
                                         )}
@@ -508,9 +508,9 @@ export default function ProfilePage() {
                                     {/* Bio (edit only) */}
                                     {isEditing && (
                                         <div>
-                                            <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">Bio</label>
+                                            <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">نبذة</label>
                                             <textarea value={editedProfile.bio || ''} onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
-                                                placeholder="Tell us about yourself..." maxLength={500} rows={3}
+                                                placeholder="اكتب نبذة قصيرة عنك..." maxLength={500} rows={3}
                                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20 resize-none" />
                                             <p className="text-[10px] text-gray-700 text-right mt-1">{(editedProfile.bio || '').length}/500</p>
                                         </div>
@@ -522,23 +522,23 @@ export default function ProfilePage() {
                             <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
                                 <div className="px-5 py-4 border-b border-white/5">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                                        <Calendar className="w-4 h-4 text-purple-400" /> Activity
+                                        <Calendar className="w-4 h-4 text-purple-400" /> النشاط
                                     </h3>
                                 </div>
                                 <div className="p-5 space-y-3">
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">Purchases</span>
+                                        <span className="text-gray-500">المشتريات</span>
                                         <span className="font-semibold text-cyan-400">{profile.stats.totalPurchases}</span>
                                     </div>
                                     {profile.isSeller && (
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-500">Sales</span>
+                                            <span className="text-gray-500">المبيعات</span>
                                             <span className="font-semibold text-purple-400">{profile.stats.totalSales}</span>
                                         </div>
                                     )}
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">Member Since</span>
-                                        <span className="text-white/70">{new Date(profile.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                                        <span className="text-gray-500">عضو منذ</span>
+                                        <span className="text-white/70">{new Date(profile.createdAt).toLocaleDateString('ar-EG', { month: 'short', year: 'numeric' })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -550,9 +550,9 @@ export default function ProfilePage() {
                                 <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
                                         {profile.isSeller ? (
-                                            <><Package className="w-4 h-4 text-cyan-400" /> My Listings</>
+                                            <><Package className="w-4 h-4 text-cyan-400" /> إعلاناتي</>
                                         ) : (
-                                            <><Heart className="w-4 h-4 text-pink-400" /> My Favorites</>
+                                            <><Heart className="w-4 h-4 text-pink-400" /> مفضلتي</>
                                         )}
                                     </h3>
                                     <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-gray-500">
@@ -564,13 +564,13 @@ export default function ProfilePage() {
                                     {profile.isSeller && myListings.length === 0 && (
                                         <div className="flex flex-col items-center justify-center py-16 text-gray-700">
                                             <Package className="w-8 h-8 mb-2 opacity-30" />
-                                            <p className="text-sm">No listings yet</p>
+                                            <p className="text-sm">لا توجد إعلانات بعد</p>
                                         </div>
                                     )}
                                     {!profile.isSeller && favorites.length === 0 && (
                                         <div className="flex flex-col items-center justify-center py-16 text-gray-700">
                                             <Heart className="w-8 h-8 mb-2 opacity-30" />
-                                            <p className="text-sm">No favorites yet</p>
+                                            <p className="text-sm">لا توجد عناصر مفضلة بعد</p>
                                         </div>
                                     )}
 
@@ -594,7 +594,7 @@ export default function ProfilePage() {
                                                         </span>
                                                     )}
                                                     <span className="text-[11px] text-gray-600 hidden sm:block">
-                                                        {new Date(listing.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                        {new Date(listing.createdAt).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' })}
                                                     </span>
                                                 </div>
                                             </div>

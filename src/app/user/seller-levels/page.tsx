@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { useToast } from '@/hooks/use-toast';
 import { LevelBadge, LevelProgressBar } from '@/components/ui/level-badge';
 import {
@@ -47,6 +48,8 @@ interface LevelTableRow {
 
 export default function SellerLevelsPage() {
   const { user } = useAuth();
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const { toast } = useToast();
   const [progress, setProgress] = useState<LevelProgress | null>(null);
   const [table, setTable] = useState<LevelTableRow[]>([]);
@@ -72,7 +75,7 @@ export default function SellerLevelsPage() {
         setProgress(data.data);
       }
     } catch (err: any) {
-      toast({ title: 'Error', description: 'Failed to load level progress', variant: 'destructive' });
+      toast({ title: tr('خطأ', 'Error'), description: tr('فشل تحميل تقدم المستوى', 'Failed to load level progress'), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -102,13 +105,13 @@ export default function SellerLevelsPage() {
   ];
 
   const allRanks = [
-    { name: 'Starter', minLevel: 1, maxLevel: 20, color: '#9CA3AF', icon: '🌱' },
-    { name: 'Bronze', minLevel: 21, maxLevel: 50, color: '#CD7F32', icon: '🥉' },
-    { name: 'Silver', minLevel: 51, maxLevel: 100, color: '#C0C0C0', icon: '🥈' },
-    { name: 'Gold', minLevel: 101, maxLevel: 200, color: '#FFD700', icon: '🥇' },
-    { name: 'Platinum', minLevel: 201, maxLevel: 300, color: '#E5E4E2', icon: '💎' },
-    { name: 'Diamond', minLevel: 301, maxLevel: 400, color: '#B9F2FF', icon: '💠' },
-    { name: 'Master Seller', minLevel: 401, maxLevel: 500, color: '#FF4500', icon: '👑' },
+    { name: tr('مبتدئ', 'Starter'), minLevel: 1, maxLevel: 20, color: '#9CA3AF', icon: '🌱' },
+    { name: tr('برونزي', 'Bronze'), minLevel: 21, maxLevel: 50, color: '#CD7F32', icon: '🥉' },
+    { name: tr('فضي', 'Silver'), minLevel: 51, maxLevel: 100, color: '#C0C0C0', icon: '🥈' },
+    { name: tr('ذهبي', 'Gold'), minLevel: 101, maxLevel: 200, color: '#FFD700', icon: '🥇' },
+    { name: tr('بلاتيني', 'Platinum'), minLevel: 201, maxLevel: 300, color: '#E5E4E2', icon: '💎' },
+    { name: tr('ماسي', 'Diamond'), minLevel: 301, maxLevel: 400, color: '#B9F2FF', icon: '💠' },
+    { name: tr('بائع محترف', 'Master Seller'), minLevel: 401, maxLevel: 500, color: '#FF4500', icon: '👑' },
   ];
 
   if (loading) {
@@ -136,7 +139,7 @@ export default function SellerLevelsPage() {
             <div className="relative z-10">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <p className="text-white/40 text-sm mb-1">Your Seller Level</p>
+                  <p className="text-white/40 text-sm mb-1">{tr('مستواك كبائع', 'Your Seller Level')}</p>
                   <div className="flex items-center gap-3">
                     <span className="text-5xl font-bold text-white">{progress.currentLevel}</span>
                     <div className="flex flex-col">
@@ -148,21 +151,21 @@ export default function SellerLevelsPage() {
                         size="lg"
                         showLevel={false}
                       />
-                      <span className="text-white/30 text-xs mt-1">of {progress.maxLevel} max</span>
+                      <span className="text-white/30 text-xs mt-1">{tr(`من ${progress.maxLevel} كحد أقصى`, `of ${progress.maxLevel} max`)}</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/40 text-xs">Total Sales</p>
+                  <p className="text-white/40 text-xs">{tr('إجمالي المبيعات', 'Total Sales')}</p>
                   <p className="text-white text-xl font-bold">{progress.totalVolume.toLocaleString()} {progress.currency}</p>
-                  <p className="text-white/30 text-xs mt-1">{progress.successfulTrades} successful trades</p>
+                  <p className="text-white/30 text-xs mt-1">{tr(`${progress.successfulTrades} عملية ناجحة`, `${progress.successfulTrades} successful trades`)}</p>
                 </div>
               </div>
 
               {/* Progress to next level */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-white/50">Progress to Level {progress.currentLevel + 1}</span>
+                  <span className="text-white/50">{tr(`التقدم إلى المستوى ${progress.currentLevel + 1}`, `Progress to Level ${progress.currentLevel + 1}`)}</span>
                   <span className="text-white font-medium">{progress.progress.percent}%</span>
                 </div>
                 <LevelProgressBar
@@ -177,7 +180,7 @@ export default function SellerLevelsPage() {
                   </span>
                   <span className="text-white/50 flex items-center gap-1">
                     <Target className="h-3 w-3" />
-                    {progress.progress.remaining.toLocaleString()} {progress.currency} remaining
+                    {tr('المتبقي', 'remaining')} {progress.progress.remaining.toLocaleString()} {progress.currency}
                   </span>
                 </div>
               </div>
@@ -189,7 +192,7 @@ export default function SellerLevelsPage() {
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <Trophy className="h-5 w-5 text-yellow-500" />
-            Rank System
+            {tr('نظام الرتب', 'Rank System')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {allRanks.map((rank) => {
@@ -200,13 +203,12 @@ export default function SellerLevelsPage() {
               return (
                 <div
                   key={rank.name}
-                  className={`relative rounded-lg border p-4 transition-all ${
-                    isCurrentRank
+                  className={`relative rounded-lg border p-4 transition-all ${isCurrentRank
                       ? 'border-white/20 bg-white/[0.06]'
                       : isLocked
                         ? 'border-white/[0.04] bg-white/[0.01] opacity-50'
                         : 'border-white/[0.06] bg-white/[0.02]'
-                  }`}
+                    }`}
                   style={isCurrentRank ? { borderColor: `${rank.color}40` } : {}}
                 >
                   {isCurrentRank && (
@@ -219,12 +221,12 @@ export default function SellerLevelsPage() {
                     {rank.name}
                   </p>
                   <p className="text-white/30 text-xs mt-1">
-                    Level {rank.minLevel} – {rank.maxLevel}
+                    {tr('المستوى', 'Level')} {rank.minLevel} – {rank.maxLevel}
                   </p>
                   <div className="mt-2">
                     {isCurrentRank ? (
                       <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
-                        Current
+                        {tr('الحالي', 'Current')}
                       </span>
                     ) : isAchieved ? (
                       <CheckCircle className="h-4 w-4 text-green-500" />
@@ -243,13 +245,13 @@ export default function SellerLevelsPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-blue-400" />
-              Level Requirements
+              {tr('متطلبات المستويات', 'Level Requirements')}
             </h2>
             <button
               onClick={() => setShowFullTable(!showFullTable)}
               className="text-xs text-white/40 hover:text-white/60 flex items-center gap-1 transition-colors"
             >
-              {showFullTable ? 'Show Less' : 'Show Full Table'}
+              {showFullTable ? tr('عرض أقل', 'Show Less') : tr('عرض الجدول الكامل', 'Show Full Table')}
               {showFullTable ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </button>
           </div>
@@ -260,13 +262,12 @@ export default function SellerLevelsPage() {
                 <button
                   key={opt.label}
                   onClick={() => setTableRange({ from: opt.from, to: opt.to })}
-                  className={`px-3 py-1.5 rounded-md text-xs whitespace-nowrap transition-all ${
-                    tableRange.from === opt.from
+                  className={`px-3 py-1.5 rounded-md text-xs whitespace-nowrap transition-all ${tableRange.from === opt.from
                       ? 'bg-white/[0.08] text-white'
                       : 'text-white/40 hover:text-white/60 hover:bg-white/[0.04]'
-                  }`}
+                    }`}
                 >
-                  Lv {opt.label}
+                  {tr('مستوى', 'Lv')} {opt.label}
                 </button>
               ))}
             </div>
@@ -276,10 +277,10 @@ export default function SellerLevelsPage() {
             <table className="w-full">
               <thead className="sticky top-0 bg-[#0a0c10] z-10">
                 <tr className="border-b border-white/[0.06]">
-                  <th className="text-left p-2.5 text-xs font-medium text-white/40">Level</th>
-                  <th className="text-left p-2.5 text-xs font-medium text-white/40">To Next</th>
-                  <th className="text-left p-2.5 text-xs font-medium text-white/40">Total Needed</th>
-                  <th className="text-left p-2.5 text-xs font-medium text-white/40">Rank</th>
+                  <th className="text-left p-2.5 text-xs font-medium text-white/40">{tr('المستوى', 'Level')}</th>
+                  <th className="text-left p-2.5 text-xs font-medium text-white/40">{tr('حتى التالي', 'To Next')}</th>
+                  <th className="text-left p-2.5 text-xs font-medium text-white/40">{tr('الإجمالي المطلوب', 'Total Needed')}</th>
+                  <th className="text-left p-2.5 text-xs font-medium text-white/40">{tr('الرتبة', 'Rank')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,13 +296,12 @@ export default function SellerLevelsPage() {
                     return (
                       <tr
                         key={row.level}
-                        className={`border-b border-white/[0.03] hover:bg-white/[0.02] ${
-                          isCurrent ? 'bg-white/[0.04]' : ''
-                        }`}
+                        className={`border-b border-white/[0.03] hover:bg-white/[0.02] ${isCurrent ? 'bg-white/[0.04]' : ''
+                          }`}
                       >
                         <td className="p-2.5">
                           <span className={`text-sm font-medium ${isCurrent ? 'text-yellow-500' : 'text-white'}`}>
-                            {isCurrent && '→ '}Lv {row.level}
+                            {isCurrent && '→ '}{tr('مستوى', 'Lv')} {row.level}
                           </span>
                         </td>
                         <td className="p-2.5">

@@ -298,6 +298,8 @@ nextApp.prepare().then(async () => {
 
   // ── Load all routes in parallel for faster startup ──
   app.use("/api/v1/auth", authRoutes);
+  // Legacy alias used by some frontend calls
+  app.use("/api/auth", authRoutes);
   app.use("/api/v1/users", userRoutes);
 
   const routeModules = await Promise.allSettled([
@@ -317,6 +319,7 @@ nextApp.prepare().then(async () => {
     import("./src/modules/campaigns/campaign.routes.js"),
     import("./src/modules/favorites/favorite.routes.js"),
     import("./src/modules/tickets/ticket.routes.js"),
+    import("./src/modules/support/support.routes.js"),
     import("./src/modules/ratings/sellerRating.routes.js"),
   ]);
 
@@ -326,7 +329,7 @@ nextApp.prepare().then(async () => {
     "/api/v1/withdrawals", "/api/v1/deposits", "/api/v1/notifications",
     "/api/v1/ads", "/api/v1/discounts", "/api/v1/promotions",
     "/api/v1/transactions", "/api/v1/campaigns", "/api/v1/favorites",
-    "/api/v1/tickets", "/api/v1/ratings",
+    "/api/v1/tickets", "/api/v1/support", "/api/v1/ratings",
   ];
 
   routeModules.forEach((result, i) => {

@@ -25,6 +25,7 @@ import {
     Tag,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { useRouter } from 'next/navigation';
 
 /* ── Types ── */
@@ -53,7 +54,8 @@ interface Game {
 }
 
 /* ═══════════ LISTING CARD (GRID) ═══════════ */
-function ListingCard({ listing, currentUserId }: { listing: Listing; currentUserId?: string }) {
+function ListingCard({ listing, currentUserId, language }: { listing: Listing; currentUserId?: string; language: 'ar' | 'en' }) {
+    const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
     const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
     const hasDiscount = !!listing.discount;
     const discountPercent = hasDiscount ? listing.discount!.discountPercent : 0;
@@ -157,6 +159,8 @@ function ListingCard({ listing, currentUserId }: { listing: Listing; currentUser
 /* ═══════════ MAIN BROWSE PAGE ═══════════ */
 export default function StoreBrowsePage() {
     const { user, loading: authLoading } = useAuth();
+    const { language } = useLanguage();
+    const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
     const router = useRouter();
 
     // Redirect non-sellers away
@@ -261,9 +265,9 @@ export default function StoreBrowsePage() {
     }, []);
 
     const sortOptions = [
-        { value: 'newest', label: 'Newest First', icon: '🆕' },
-        { value: 'price_asc', label: 'Price: Low → High', icon: '💰' },
-        { value: 'price_desc', label: 'Price: High → Low', icon: '💎' },
+        { value: 'newest', label: tr('الأحدث أولًا', 'Newest First'), icon: '🆕' },
+        { value: 'price_asc', label: tr('السعر: الأقل إلى الأعلى', 'Price: Low to High'), icon: '💰' },
+        { value: 'price_desc', label: tr('السعر: الأعلى إلى الأقل', 'Price: High to Low'), icon: '💎' },
     ];
 
     const activeFiltersCount = [selectedGame, minPrice, maxPrice].filter(Boolean).length;
@@ -285,8 +289,8 @@ export default function StoreBrowsePage() {
                                 <Flame className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-black text-white">Store</h1>
-                                <p className="text-[11px] text-white/30">Browse & buy gaming accounts, gift cards & more</p>
+                                <h1 className="text-xl font-black text-white">{tr('المتجر', 'Store')}</h1>
+                                <p className="text-[11px] text-white/30">{tr('تصفح واشترِ حسابات الألعاب وبطاقات الهدايا والمزيد', 'Browse and buy gaming accounts, gift cards, and more')}</p>
                             </div>
                         </div>
 
@@ -297,7 +301,7 @@ export default function StoreBrowsePage() {
                                 type="text"
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
-                                placeholder="Search accounts, games, gift cards..."
+                                placeholder={tr('ابحث عن حسابات، ألعاب، بطاقات هدايا...', 'Search accounts, games, gift cards...')}
                                 className="w-full h-11 pl-11 pr-4 rounded-xl bg-white/[0.04] border border-white/[0.06] text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-cyan-500/30 focus:bg-white/[0.06] transition-all duration-300"
                             />
                             {searchInput && (
@@ -322,7 +326,7 @@ export default function StoreBrowsePage() {
                                         }`}
                                 >
                                     <Gamepad2 className="w-3.5 h-3.5" />
-                                    {selectedGameName || 'All Games'}
+                                    {selectedGameName || tr('كل الألعاب', 'All Games')}
                                     <ChevronDown className={`w-3 h-3 transition-transform ${gameDropdownOpen ? 'rotate-180' : ''}`} />
                                 </button>
 
@@ -333,7 +337,7 @@ export default function StoreBrowsePage() {
                                             className={`w-full text-left px-3 py-2 text-[12px] transition-colors ${!selectedGame ? 'text-cyan-400 bg-cyan-500/10' : 'text-white/50 hover:bg-white/[0.04] hover:text-white/70'
                                                 }`}
                                         >
-                                            All Games
+                                            {tr('كل الألعاب', 'All Games')}
                                         </button>
                                         {games.map((g) => (
                                             <button
@@ -386,7 +390,7 @@ export default function StoreBrowsePage() {
                                     }`}
                             >
                                 <SlidersHorizontal className="w-3.5 h-3.5" />
-                                Price
+                                {tr('السعر', 'Price')}
                                 {activeFiltersCount > 0 && (
                                     <span className="w-4 h-4 rounded-full bg-cyan-500 text-[9px] font-bold text-white flex items-center justify-center">
                                         {activeFiltersCount}
@@ -408,13 +412,13 @@ export default function StoreBrowsePage() {
                                     className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-red-400/60 hover:text-red-400 bg-red-500/5 border border-red-500/10 hover:bg-red-500/10 transition-all duration-200"
                                 >
                                     <X className="w-3 h-3" />
-                                    Clear
+                                    {tr('مسح', 'Clear')}
                                 </button>
                             )}
 
                             {/* Results count */}
                             <div className="ml-auto text-[11px] text-white/20 font-medium">
-                                {total > 0 ? `${total} result${total !== 1 ? 's' : ''}` : ''}
+                                {total > 0 ? tr(`${total} نتيجة`, `${total} results`) : ''}
                             </div>
                         </div>
 
@@ -427,18 +431,18 @@ export default function StoreBrowsePage() {
                                         type="number"
                                         value={minPrice}
                                         onChange={(e) => { setMinPrice(e.target.value); handleFilterChange(); }}
-                                        placeholder="Min"
+                                        placeholder={tr('الحد الأدنى', 'Min')}
                                         className="w-16 bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none"
                                     />
                                 </div>
-                                <span className="text-white/15 text-[11px]">to</span>
+                                <span className="text-white/15 text-[11px]">{tr('إلى', 'to')}</span>
                                 <div className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
                                     <span className="text-[11px] text-white/25">$</span>
                                     <input
                                         type="number"
                                         value={maxPrice}
                                         onChange={(e) => { setMaxPrice(e.target.value); handleFilterChange(); }}
-                                        placeholder="Max"
+                                        placeholder={tr('الحد الأعلى', 'Max')}
                                         className="w-16 bg-transparent text-white text-[12px] placeholder:text-white/15 focus:outline-none"
                                     />
                                 </div>
@@ -461,7 +465,7 @@ export default function StoreBrowsePage() {
                         )}
                         {minPrice && (
                             <span className="flex items-center gap-1.5 bg-white/[0.05] text-white/50 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/[0.06]">
-                                Min: ${minPrice}
+                                {tr('من', 'Min')}: ${minPrice}
                                 <button onClick={() => { setMinPrice(''); handleFilterChange(); }} className="ml-0.5 hover:text-white transition-colors">
                                     <X className="w-3 h-3" />
                                 </button>
@@ -469,7 +473,7 @@ export default function StoreBrowsePage() {
                         )}
                         {maxPrice && (
                             <span className="flex items-center gap-1.5 bg-white/[0.05] text-white/50 text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/[0.06]">
-                                Max: ${maxPrice}
+                                {tr('إلى', 'Max')}: ${maxPrice}
                                 <button onClick={() => { setMaxPrice(''); handleFilterChange(); }} className="ml-0.5 hover:text-white transition-colors">
                                     <X className="w-3 h-3" />
                                 </button>
@@ -483,7 +487,7 @@ export default function StoreBrowsePage() {
                     <div className="flex items-center justify-center py-24">
                         <div className="flex flex-col items-center gap-3">
                             <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-                            <span className="text-[12px] text-white/20">Loading listings...</span>
+                            <span className="text-[12px] text-white/20">{tr('جاري تحميل الإعلانات...', 'Loading listings...')}</span>
                         </div>
                     </div>
                 ) : listings.length === 0 ? (
@@ -492,8 +496,8 @@ export default function StoreBrowsePage() {
                             <Search className="w-8 h-8 text-white/10" />
                         </div>
                         <div className="text-center">
-                            <p className="text-white/40 text-sm font-medium">No listings found</p>
-                            <p className="text-white/20 text-[12px] mt-1">Try adjusting your filters or search query</p>
+                            <p className="text-white/40 text-sm font-medium">{tr('لا توجد إعلانات مطابقة', 'No matching listings')}</p>
+                            <p className="text-white/20 text-[12px] mt-1">{tr('جرّب تعديل الفلاتر أو البحث', 'Try adjusting filters or search')}</p>
                         </div>
                         {(selectedGame || minPrice || maxPrice || searchInput) && (
                             <button
@@ -507,7 +511,7 @@ export default function StoreBrowsePage() {
                                 }}
                                 className="text-[12px] text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
                             >
-                                Clear all filters
+                                {tr('مسح كل الفلاتر', 'Clear all filters')}
                             </button>
                         )}
                     </div>
@@ -515,7 +519,7 @@ export default function StoreBrowsePage() {
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                             {listings.map((listing) => (
-                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} />
+                                <ListingCard key={listing._id} listing={listing} currentUserId={user?.id} language={language} />
                             ))}
                         </div>
 

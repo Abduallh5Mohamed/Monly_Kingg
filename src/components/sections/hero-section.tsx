@@ -43,10 +43,10 @@ export function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-4 items-center lg:items-start">
                   <Button asChild size="lg" className="text-lg sm:text-base md:text-base lg:text-base xl:text-base font-bold rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 pl-5 sm:pl-6 pr-1 group">
                     <Link href="/login">
-                    EXPLORE THE UNIVERSE
-                    <span className="ml-2 sm:ml-3 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
-                      <PlayIcon />
-                    </span>
+                      EXPLORE THE UNIVERSE
+                      <span className="ml-2 sm:ml-3 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-black flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110">
+                        <PlayIcon />
+                      </span>
                     </Link>
                   </Button>
                 </div>

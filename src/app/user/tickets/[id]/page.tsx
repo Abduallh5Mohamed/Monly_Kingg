@@ -42,16 +42,16 @@ interface Ticket {
 }
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  open: { label: 'Open', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-  in_progress: { label: 'In Progress', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
-  answered: { label: 'Answered', color: 'text-green-400 bg-green-500/10 border-green-500/20' },
-  closed: { label: 'Closed', color: 'text-white/40 bg-white/5 border-white/10' },
+  open: { label: 'مفتوحة', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
+  in_progress: { label: 'قيد المعالجة', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
+  answered: { label: 'تم الرد', color: 'text-green-400 bg-green-500/10 border-green-500/20' },
+  closed: { label: 'مغلقة', color: 'text-white/40 bg-white/5 border-white/10' },
 };
 
 const PRIORITY_MAP: Record<string, { label: string; color: string }> = {
-  low: { label: 'Low', color: 'text-green-400' },
-  medium: { label: 'Medium', color: 'text-yellow-400' },
-  high: { label: 'High', color: 'text-red-400' },
+  low: { label: 'منخفضة', color: 'text-green-400' },
+  medium: { label: 'متوسطة', color: 'text-yellow-400' },
+  high: { label: 'مرتفعة', color: 'text-red-400' },
 };
 
 export default function TicketDetailPage() {
@@ -192,7 +192,7 @@ export default function TicketDetailPage() {
   if (!ticket) {
     return (
       <div className="min-h-screen bg-[#060811] flex items-center justify-center">
-        <p className="text-white/40">Ticket not found</p>
+        <p className="text-white/40">التذكرة غير موجودة</p>
       </div>
     );
   }
@@ -229,7 +229,7 @@ export default function TicketDetailPage() {
                 size="sm"
                 className="border-red-500/20 text-red-400 hover:bg-red-500/10 shrink-0"
               >
-                {closing ? <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" /> : 'Close'}
+                {closing ? <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" /> : 'إغلاق'}
               </Button>
             )}
           </div>
@@ -250,7 +250,7 @@ export default function TicketDetailPage() {
                   <div className={`flex items-center gap-1.5 mb-1 ${isMe ? 'justify-end' : ''}`}>
                     {isAdmin && <Shield className="w-3 h-3 text-purple-400" />}
                     <span className={`text-xs ${isAdmin ? 'text-purple-400' : 'text-white/40'}`}>
-                      {isAdmin ? 'Support' : msg.sender.username}
+                      {isAdmin ? 'الدعم' : msg.sender.username}
                     </span>
                     <span className="text-white/20 text-xs">
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -323,7 +323,7 @@ export default function TicketDetailPage() {
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white/40 hover:text-white/70 hover:bg-white/[0.08] transition-colors shrink-0"
-                title="Attach files"
+                title="إرفاق ملفات"
               >
                 <Paperclip className="w-5 h-5" />
               </button>
@@ -333,7 +333,7 @@ export default function TicketDetailPage() {
                   value={message}
                   onChange={autoResize}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type your message..."
+                  placeholder="اكتب رسالتك..."
                   maxLength={2000}
                   rows={1}
                   className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-white/20 focus:outline-none focus:border-orange-500/40 resize-none text-sm"
@@ -356,7 +356,7 @@ export default function TicketDetailPage() {
       ) : (
         <div className="bg-[#0a0d16]/95 border-t border-white/[0.06] pb-24 md:pb-4">
           <div className="max-w-3xl mx-auto px-4 py-4 text-center">
-            <p className="text-white/40 text-sm">This ticket has been closed {ticket.closedAt && `on ${new Date(ticket.closedAt).toLocaleDateString()}`}</p>
+            <p className="text-white/40 text-sm">تم إغلاق هذه التذكرة {ticket.closedAt && `بتاريخ ${new Date(ticket.closedAt).toLocaleDateString('ar-EG')}`}</p>
           </div>
         </div>
       )}

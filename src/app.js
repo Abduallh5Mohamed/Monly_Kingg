@@ -20,6 +20,7 @@ import rankingRoutes from "./routes/ranking.routes.js";
 import transactionRoutes from "./modules/transactions/transaction.routes.js";
 import sellerLevelRoutes from "./modules/seller-levels/sellerLevel.routes.js";
 import ticketRoutes from "./modules/tickets/ticket.routes.js";
+import supportRoutes from "./modules/support/support.routes.js";
 import sellerRatingRoutes from "./modules/ratings/sellerRating.routes.js";
 import { startAutoConfirmJob } from "./jobs/autoConfirmTransactions.js";
 import { startPayoutReleaseJob } from "./jobs/sellerPayoutRelease.js";
@@ -141,6 +142,7 @@ app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/tickets", ticketRoutes);
+app.use("/api/v1/support", supportRoutes);
 app.use("/api/v1/ratings", sellerRatingRoutes);
 
 app.get("/", (req, res) => {

@@ -178,18 +178,18 @@ export default function TransactionDetailPage() {
 
   if (!tx) return (
     <div className="min-h-screen bg-[#060811] flex items-center justify-center text-white">
-      <div className="text-center"><p className="text-white/50 mb-4">{error || 'Transaction not found'}</p>
-        <Button onClick={() => router.back()}>Go Back</Button></div>
+      <div className="text-center"><p className="text-white/50 mb-4">{error || 'المعاملة غير موجودة'}</p>
+        <Button onClick={() => router.back()}>رجوع</Button></div>
     </div>
   );
 
   const statusConfig: Record<TxStatus, { label: string; color: string; icon: React.ReactNode }> = {
-    waiting_seller: { label: 'Waiting for Credentials', color: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10', icon: <Clock className="w-4 h-4" /> },
-    waiting_buyer: { label: 'Review Credentials', color: 'text-cyan-400   border-cyan-500/30   bg-cyan-500/10', icon: <Shield className="w-4 h-4" /> },
-    completed: { label: 'Completed', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
-    auto_confirmed: { label: 'Auto-Confirmed', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
-    disputed: { label: 'Disputed – Under Review', color: 'text-red-400    border-red-500/30    bg-red-500/10', icon: <AlertTriangle className="w-4 h-4" /> },
-    refunded: { label: 'Refunded', color: 'text-purple-400 border-purple-500/30 bg-purple-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    waiting_seller: { label: 'بانتظار إرسال البيانات', color: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10', icon: <Clock className="w-4 h-4" /> },
+    waiting_buyer: { label: 'مراجعة البيانات', color: 'text-cyan-400   border-cyan-500/30   bg-cyan-500/10', icon: <Shield className="w-4 h-4" /> },
+    completed: { label: 'مكتملة', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    auto_confirmed: { label: 'تأكيد تلقائي', color: 'text-green-400  border-green-500/30  bg-green-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
+    disputed: { label: 'نزاع - قيد المراجعة', color: 'text-red-400    border-red-500/30    bg-red-500/10', icon: <AlertTriangle className="w-4 h-4" /> },
+    refunded: { label: 'مسترجعة', color: 'text-purple-400 border-purple-500/30 bg-purple-500/10', icon: <CheckCircle2 className="w-4 h-4" /> },
   };
   const sc = statusConfig[tx.status];
 
@@ -219,28 +219,28 @@ export default function TransactionDetailPage() {
         <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <p className="text-white/50 text-xs mb-1">Transaction ID</p>
+              <p className="text-white/50 text-xs mb-1">رقم المعاملة</p>
               <p className="text-white/70 font-mono text-xs">{tx._id}</p>
             </div>
             <div className="text-right">
-              <p className="text-white/50 text-xs mb-1">Amount</p>
+              <p className="text-white/50 text-xs mb-1">المبلغ</p>
               <p className="text-cyan-400 font-bold text-2xl">{tx.amount} EGP</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="bg-white/[0.03] rounded-xl p-3">
-              <p className="text-white/40 text-xs mb-1">Buyer</p>
+              <p className="text-white/40 text-xs mb-1">المشتري</p>
               <p className="text-white font-medium">{tx.buyer.username}</p>
             </div>
             <div className="bg-white/[0.03] rounded-xl p-3">
-              <p className="text-white/40 text-xs mb-1">Seller</p>
+              <p className="text-white/40 text-xs mb-1">البائع</p>
               <p className="text-white font-medium">{tx.seller.username}</p>
             </div>
           </div>
           {tx.autoConfirmAt && tx.status === 'waiting_buyer' && (
             <div className="mt-3 p-3 bg-yellow-500/5 border border-yellow-500/15 rounded-xl text-yellow-400 text-xs flex items-center gap-2">
               <Clock className="w-4 h-4 shrink-0" />
-              Auto-confirms at {new Date(tx.autoConfirmAt).toLocaleString()} if no action taken
+              سيتم التأكيد تلقائيًا في {new Date(tx.autoConfirmAt).toLocaleString('ar-EG')} إذا لم يتم اتخاذ إجراء
             </div>
           )}
         </div>
@@ -250,9 +250,9 @@ export default function TransactionDetailPage() {
           <div className="bg-[#0a0d16]/80 border border-yellow-500/20 rounded-2xl p-5">
             <h2 className="text-white font-bold text-lg mb-1 flex items-center gap-2">
               <Send className="w-5 h-5 text-yellow-400" />
-              Submit Account Credentials
+              إرسال بيانات الحساب
             </h2>
-            <p className="text-white/50 text-sm mb-4">Add the account details the buyer needs. These will only be visible to the buyer after submission.</p>
+            <p className="text-white/50 text-sm mb-4">أضف بيانات الحساب المطلوبة للمشتري. لن تظهر إلا للمشتري بعد الإرسال.</p>
 
             <div className="space-y-3 mb-4">
               {hasGameFields ? (
@@ -267,7 +267,7 @@ export default function TransactionDetailPage() {
                       </label>
                       <input
                         type={getInputType(gf?.type)}
-                        placeholder={gf?.placeholder || `Enter ${f.key}`}
+                        placeholder={gf?.placeholder || `أدخل ${f.key}`}
                         value={f.value}
                         onChange={e => updateField(i, 'value', e.target.value)}
                         required={gf?.required}
@@ -281,13 +281,13 @@ export default function TransactionDetailPage() {
                 fields.map((f, i) => (
                   <div key={i} className="flex gap-2">
                     <input
-                      placeholder="Field name (e.g. Email)"
+                      placeholder="اسم الحقل (مثل البريد الإلكتروني)"
                       value={f.key}
                       onChange={e => updateField(i, 'key', e.target.value)}
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
                     />
                     <input
-                      placeholder="Value"
+                      placeholder="القيمة"
                       value={f.value}
                       onChange={e => updateField(i, 'value', e.target.value)}
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-yellow-500/40"
@@ -305,12 +305,12 @@ export default function TransactionDetailPage() {
             <div className="flex gap-3">
               {!hasGameFields && (
                 <button onClick={addField} className="flex items-center gap-2 text-white/60 hover:text-white text-sm py-2 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 transition-all">
-                  <Plus className="w-4 h-4" /> Add Field
+                  <Plus className="w-4 h-4" /> إضافة حقل
                 </button>
               )}
               <Button onClick={handleSubmitCredentials} disabled={submitting}
                 className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold">
-                {submitting ? 'Sending…' : 'Send Credentials'}
+                {submitting ? 'جاري الإرسال...' : 'إرسال البيانات'}
               </Button>
             </div>
           </div>
@@ -321,9 +321,9 @@ export default function TransactionDetailPage() {
           <div className="bg-[#0a0d16]/80 border border-cyan-500/20 rounded-2xl p-5">
             <h2 className="text-white font-bold text-lg mb-1 flex items-center gap-2">
               <Shield className="w-5 h-5 text-cyan-400" />
-              Account Credentials
+              بيانات الحساب
             </h2>
-            <p className="text-white/50 text-sm mb-4">Verify the credentials below. Confirm if they're correct, or open a dispute if something is wrong.</p>
+            <p className="text-white/50 text-sm mb-4">راجع البيانات بالأسفل. أكّد إذا كانت صحيحة أو افتح نزاعًا إذا كان هناك خطأ.</p>
 
             <div className="space-y-2 mb-5">
               {tx.credentials.map((c, i) => (
@@ -338,12 +338,12 @@ export default function TransactionDetailPage() {
               <div className="flex gap-3">
                 <Button onClick={() => setShowDisputeForm(true)} variant="outline"
                   className="flex-1 bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20">
-                  <AlertTriangle className="w-4 h-4 mr-2" /> Dispute
+                  <AlertTriangle className="w-4 h-4 mr-2" /> نزاع
                 </Button>
                 <Button onClick={handleConfirm} disabled={submitting}
                   className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold">
                   <CheckCircle2 className="w-4 h-4 mr-2" />
-                  {submitting ? 'Confirming…' : 'Confirm Receipt'}
+                  {submitting ? 'جاري التأكيد...' : 'تأكيد الاستلام'}
                 </Button>
               </div>
             ) : (
@@ -351,16 +351,16 @@ export default function TransactionDetailPage() {
                 <textarea
                   value={disputeReason}
                   onChange={e => setDisputeReason(e.target.value)}
-                  placeholder="Describe the issue (e.g., wrong password, account already changed, etc.)"
+                  placeholder="اشرح المشكلة (مثل كلمة مرور خاطئة أو الحساب متغيّر...)"
                   rows={3}
                   className="w-full bg-white/[0.04] border border-red-500/20 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-red-500/40 resize-none"
                 />
                 <div className="flex gap-3">
                   <Button onClick={() => setShowDisputeForm(false)} variant="outline"
-                    className="flex-1 bg-white/[0.03] border-white/10 text-white/70">Cancel</Button>
+                    className="flex-1 bg-white/[0.03] border-white/10 text-white/70">إلغاء</Button>
                   <Button onClick={handleDispute} disabled={submitting}
                     className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold">
-                    {submitting ? 'Submitting…' : 'Submit Dispute'}
+                    {submitting ? 'جاري الإرسال...' : 'إرسال النزاع'}
                   </Button>
                 </div>
               </div>
@@ -373,9 +373,9 @@ export default function TransactionDetailPage() {
           <div className="bg-[#0a0d16]/80 border border-cyan-500/10 rounded-2xl p-5">
             <h2 className="text-white font-bold mb-2 flex items-center gap-2">
               <Clock className="w-5 h-5 text-cyan-400" />
-              Waiting for Buyer Confirmation
+              بانتظار تأكيد المشتري
             </h2>
-            <p className="text-white/50 text-sm">Your credentials have been sent. Funds will be released when the buyer confirms or after 48 hours.</p>
+            <p className="text-white/50 text-sm">تم إرسال البيانات. سيتم تحويل الأموال عند تأكيد المشتري أو بعد 48 ساعة.</p>
           </div>
         )}
 
@@ -384,7 +384,7 @@ export default function TransactionDetailPage() {
           <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
             <h2 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
               <Shield className="w-5 h-5 text-red-400" />
-              Account Credentials (Disputed)
+              بيانات الحساب (نزاع)
             </h2>
             <div className="space-y-2">
               {tx.credentials.map((c, i) => (
@@ -402,13 +402,13 @@ export default function TransactionDetailPage() {
           <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
             {tx.disputeReason && (
               <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl">
-                <p className="text-red-400 text-xs font-medium mb-1">Dispute reason</p>
+                <p className="text-red-400 text-xs font-medium mb-1">سبب النزاع</p>
                 <p className="text-white/70 text-sm">{tx.disputeReason}</p>
               </div>
             )}
             {tx.resolvedNote && (
               <div className="mt-3 p-3 bg-purple-500/5 border border-purple-500/15 rounded-xl">
-                <p className="text-purple-400 text-xs font-medium mb-1">Admin resolution</p>
+                <p className="text-purple-400 text-xs font-medium mb-1">قرار الإدارة</p>
                 <p className="text-white/70 text-sm">{tx.resolvedNote}</p>
               </div>
             )}
@@ -418,7 +418,7 @@ export default function TransactionDetailPage() {
         {/* Timeline */}
         {tx.timeline?.length > 0 && (
           <div className="bg-[#0a0d16]/80 border border-white/[0.06] rounded-2xl p-5">
-            <h2 className="text-white font-bold mb-4">Timeline</h2>
+            <h2 className="text-white font-bold mb-4">الخط الزمني</h2>
             <div className="space-y-3">
               {tx.timeline.map((t, i) => (
                 <div key={i} className="flex gap-3">
@@ -426,7 +426,7 @@ export default function TransactionDetailPage() {
                   <div>
                     <p className="text-white/80 text-sm capitalize">{t.event.replace(/_/g, ' ')}</p>
                     {t.note && <p className="text-white/40 text-xs">{t.note}</p>}
-                    <p className="text-white/30 text-xs">{new Date(t.timestamp).toLocaleString()}</p>
+                    <p className="text-white/30 text-xs">{new Date(t.timestamp).toLocaleString('ar-EG')}</p>
                   </div>
                 </div>
               ))}

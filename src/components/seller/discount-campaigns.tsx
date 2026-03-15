@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { ensureCsrfToken } from '@/utils/csrf';
 import { Button } from '@/components/ui/button';
 import {
@@ -73,6 +74,8 @@ interface MandatoryCampaign {
 
 export function DiscountCampaignsContent() {
     const { user } = useAuth();
+    const { language } = useLanguage();
+    const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
 
     // Data
     const [invites, setInvites] = useState<CampaignInvite[]>([]);
@@ -157,7 +160,7 @@ export function DiscountCampaignsContent() {
     const handleJoin = async (campaignId: string) => {
         const selected = selectedListings[campaignId];
         if (!selected || selected.size === 0) {
-            setToast({ type: 'error', msg: 'Select at least one account to join' });
+            setToast({ type: 'error', msg: tr('اختر حسابًا واحدًا على الأقل للانضمام', 'Select at least one account to join') });
             return;
         }
         setJoiningCampaign(campaignId);
@@ -171,13 +174,13 @@ export function DiscountCampaignsContent() {
             });
             const data = await res.json();
             if (data.success) {
-                setToast({ type: 'success', msg: data.message || `Joined with ${selected.size} accounts!` });
+                setToast({ type: 'success', msg: data.message || (language === 'ar' ? `تم الانضمام بـ ${selected.size} حساب` : `Joined with ${selected.size} accounts`) });
                 await fetchData();
             } else {
-                setToast({ type: 'error', msg: data.message || 'Failed to join' });
+                setToast({ type: 'error', msg: data.message || tr('فشل الانضمام', 'Failed to join') });
             }
         } catch {
-            setToast({ type: 'error', msg: 'Network error' });
+            setToast({ type: 'error', msg: tr('خطأ في الشبكة', 'Network error') });
         } finally {
             setJoiningCampaign(null);
         }
@@ -195,13 +198,13 @@ export function DiscountCampaignsContent() {
             });
             const data = await res.json();
             if (data.success) {
-                setToast({ type: 'success', msg: 'Left the campaign' });
+                setToast({ type: 'success', msg: tr('تم مغادرة الحملة', 'Left campaign successfully') });
                 await fetchData();
             } else {
-                setToast({ type: 'error', msg: data.message || 'Failed to leave' });
+                setToast({ type: 'error', msg: data.message || tr('فشل مغادرة الحملة', 'Failed to leave campaign') });
             }
         } catch {
-            setToast({ type: 'error', msg: 'Network error' });
+            setToast({ type: 'error', msg: tr('خطأ في الشبكة', 'Network error') });
         } finally {
             setLeavingCampaign(null);
         }
@@ -239,10 +242,10 @@ export function DiscountCampaignsContent() {
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                    { label: 'Invites', value: totalInvites, color: 'from-orange-500 to-amber-600', icon: Tag },
-                    { label: 'Joined', value: joinedCount, color: 'from-green-500 to-emerald-600', icon: CheckCircle },
-                    { label: 'Pending', value: pendingCount, color: 'from-yellow-500 to-orange-600', icon: Clock },
-                    { label: 'Mandatory', value: mandatoryCampaigns.length, color: 'from-red-500 to-pink-600', icon: Shield },
+                    { label: tr('الدعوات', 'Invites'), value: totalInvites, color: 'from-orange-500 to-amber-600', icon: Tag },
+                    { label: tr('المنضم', 'Joined'), value: joinedCount, color: 'from-green-500 to-emerald-600', icon: CheckCircle },
+                    { label: tr('المعلّق', 'Pending'), value: pendingCount, color: 'from-yellow-500 to-orange-600', icon: Clock },
+                    { label: tr('الإجباري', 'Mandatory'), value: mandatoryCampaigns.length, color: 'from-red-500 to-pink-600', icon: Shield },
                 ].map((stat) => {
                     const Icon = stat.icon;
                     return (
@@ -269,7 +272,7 @@ export function DiscountCampaignsContent() {
                             }`}
                     >
                         {t === 'voluntary' ? <Sparkles className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
-                        {t === 'voluntary' ? 'Voluntary Offers' : 'Mandatory Discounts'}
+                        {t === 'voluntary' ? tr('عروض اختيارية', 'Voluntary Campaigns') : tr('خصومات إجبارية', 'Mandatory Discounts')}
                     </button>
                 ))}
             </div>
@@ -284,8 +287,8 @@ export function DiscountCampaignsContent() {
                 invites.length === 0 ? (
                     <EmptyState
                         icon={Tag}
-                        title="No discount invites yet"
-                        description="When the admin creates a voluntary discount campaign for your games, it will appear here"
+                        title={tr('لا توجد دعوات خصم حتى الآن', 'No discount invites yet')}
+                        description={tr('عند إنشاء الإدارة حملة خصم اختيارية لألعابك ستظهر هنا', 'When admin creates a voluntary campaign for your games, it will appear here')}
                     />
                 ) : (
                     <div className="space-y-4">
@@ -314,15 +317,15 @@ export function DiscountCampaignsContent() {
                                                 <div className="flex items-center gap-2 mb-2">
                                                     {isJoined ? (
                                                         <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-green-500/15 border border-green-500/20 text-green-400 font-medium">
-                                                            <BadgeCheck className="w-3 h-3" /> Joined
+                                                            <BadgeCheck className="w-3 h-3" /> {tr('منضم', 'Joined')}
                                                         </span>
                                                     ) : (
                                                         <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-500/20 text-yellow-400 font-medium">
-                                                            <Clock className="w-3 h-3" /> Pending
+                                                            <Clock className="w-3 h-3" /> {tr('معلّق', 'Pending')}
                                                         </span>
                                                     )}
                                                     <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/20 text-orange-400 font-medium">
-                                                        <Percent className="w-3 h-3" /> {invite.discountPercent}% Off
+                                                        <Percent className="w-3 h-3" /> {tr('خصم', 'Discount')} {invite.discountPercent}%
                                                     </span>
                                                 </div>
                                                 <h3 className="text-lg font-bold text-white">{invite.title}</h3>
@@ -335,11 +338,11 @@ export function DiscountCampaignsContent() {
                                             <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1 text-right flex-shrink-0">
                                                 <div className="flex items-center gap-1.5 text-xs text-white/40">
                                                     <Calendar className="w-3.5 h-3.5" />
-                                                    {remaining} days left
+                                                    {language === 'ar' ? `متبقي ${remaining} يوم` : `${remaining} days left`}
                                                 </div>
                                                 <div className="flex items-center gap-1.5 text-xs text-white/40">
                                                     <Package className="w-3.5 h-3.5" />
-                                                    {invite.eligibleListings.length} eligible accounts
+                                                    {language === 'ar' ? `${invite.eligibleListings.length} حساب مؤهل` : `${invite.eligibleListings.length} eligible accounts`}
                                                 </div>
                                             </div>
                                         </div>
@@ -361,11 +364,11 @@ export function DiscountCampaignsContent() {
                                         >
                                             {isExpanded ? (
                                                 <>
-                                                    <ChevronUp className="w-4 h-4" /> Hide Accounts
+                                                    <ChevronUp className="w-4 h-4" /> {tr('إخفاء الحسابات', 'Hide accounts')}
                                                 </>
                                             ) : (
                                                 <>
-                                                    <ChevronDown className="w-4 h-4" /> Choose Accounts ({invite.eligibleListings.length})
+                                                    <ChevronDown className="w-4 h-4" /> {tr('اختيار الحسابات', 'Select accounts')} ({invite.eligibleListings.length})
                                                 </>
                                             )}
                                         </button>
@@ -377,21 +380,21 @@ export function DiscountCampaignsContent() {
                                             {/* Select all / deselect all */}
                                             <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06]">
                                                 <p className="text-xs text-white/40">
-                                                    {selected.size} of {invite.eligibleListings.length} selected
+                                                    {language === 'ar' ? `تم اختيار ${selected.size} من ${invite.eligibleListings.length}` : `${selected.size} of ${invite.eligibleListings.length} selected`}
                                                 </p>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => selectAll(invite._id, invite.eligibleListings)}
                                                         className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
                                                     >
-                                                        Select All
+                                                        {tr('اختيار الكل', 'Select all')}
                                                     </button>
                                                     <span className="text-white/10">|</span>
                                                     <button
                                                         onClick={() => deselectAll(invite._id)}
                                                         className="text-xs text-white/40 hover:text-white/60 transition-colors"
                                                     >
-                                                        Deselect All
+                                                        {tr('إلغاء تحديد الكل', 'Clear selection')}
                                                     </button>
                                                 </div>
                                             </div>
@@ -443,7 +446,7 @@ export function DiscountCampaignsContent() {
                                                             {/* Participating badge */}
                                                             {listing.isParticipating && (
                                                                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/15 text-green-400 border border-green-500/20 flex-shrink-0">
-                                                                    Active
+                                                                    {tr('نشط', 'Active')}
                                                                 </span>
                                                             )}
                                                         </button>
@@ -463,7 +466,7 @@ export function DiscountCampaignsContent() {
                                                     ) : (
                                                         <CheckCircle className="w-4 h-4 mr-2" />
                                                     )}
-                                                    {isJoined ? 'Update Selection' : 'Accept & Join'} ({selected.size})
+                                                    {isJoined ? tr('تحديث الاختيار', 'Update Selection') : tr('قبول وانضمام', 'Accept & Join')} ({selected.size})
                                                 </Button>
 
                                                 {isJoined && (
@@ -478,7 +481,7 @@ export function DiscountCampaignsContent() {
                                                         ) : (
                                                             <XCircle className="w-4 h-4 mr-2" />
                                                         )}
-                                                        Leave Campaign
+                                                        {tr('مغادرة الحملة', 'Leave Campaign')}
                                                     </Button>
                                                 )}
                                             </div>
@@ -494,18 +497,17 @@ export function DiscountCampaignsContent() {
                 mandatoryCampaigns.length === 0 ? (
                     <EmptyState
                         icon={Shield}
-                        title="No mandatory discounts"
-                        description="When the admin applies a mandatory discount on certain games, it will show here. These apply automatically to all matching listings."
+                        title={tr('لا توجد خصومات إجبارية', 'No mandatory discounts')}
+                        description={tr('عند تطبيق الإدارة خصمًا إجباريًا على ألعاب معينة سيظهر هنا، ويُطبّق تلقائيًا على كل الإعلانات المطابقة.', 'When admin applies a mandatory discount on specific games, it will appear here and apply automatically to matching listings.')}
                     />
                 ) : (
                     <div className="space-y-4">
                         <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/15">
                             <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-sm font-medium text-amber-300">Mandatory Discounts</p>
+                                <p className="text-sm font-medium text-amber-300">{tr('خصومات إجبارية', 'Mandatory discounts')}</p>
                                 <p className="text-xs text-white/40 mt-0.5">
-                                    These discounts apply automatically to all matching game listings. They reduce the platform commission,
-                                    meaning you keep the same sale price but the buyer benefits from lower fees.
+                                    {tr('هذه الخصومات تُطبّق تلقائيًا على كل إعلانات الألعاب المطابقة. تقلل عمولة المنصة، ما يعني أنك تحافظ على نفس سعر البيع بينما يستفيد المشتري برسوم أقل.', 'These discounts apply automatically to matching game listings. They reduce platform commission, so you keep the same selling price while buyers pay lower fees.')}
                                 </p>
                             </div>
                         </div>
@@ -523,10 +525,10 @@ export function DiscountCampaignsContent() {
                                     <div className="p-5">
                                         <div className="flex items-center gap-2 mb-2">
                                             <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 border border-red-500/20 text-red-400 font-medium">
-                                                <Shield className="w-3 h-3" /> Mandatory
+                                                <Shield className="w-3 h-3" /> {tr('إجباري', 'Mandatory')}
                                             </span>
                                             <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/20 text-orange-400 font-medium">
-                                                <Percent className="w-3 h-3" /> {campaign.discountPercent}% Commission Reduction
+                                                <Percent className="w-3 h-3" /> {tr('خفض عمولة', 'Commission cut')} {campaign.discountPercent}%
                                             </span>
                                         </div>
                                         <h3 className="text-lg font-bold text-white">{campaign.title}</h3>
@@ -548,11 +550,11 @@ export function DiscountCampaignsContent() {
                                         <div className="flex items-center gap-4 mt-4 text-xs text-white/40">
                                             <span className="flex items-center gap-1.5">
                                                 <Calendar className="w-3.5 h-3.5" />
-                                                {remaining} days remaining
+                                                {language === 'ar' ? `متبقي ${remaining} يوم` : `${remaining} days left`}
                                             </span>
                                             <span className="flex items-center gap-1.5">
                                                 <Users className="w-3.5 h-3.5" />
-                                                {campaign.listingCount} listings affected
+                                                {language === 'ar' ? `${campaign.listingCount} إعلان متأثر` : `${campaign.listingCount} affected listings`}
                                             </span>
                                         </div>
                                     </div>

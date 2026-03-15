@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +33,7 @@ const supportFormSchema = z.object({
 export function SupportSection() {
   const { toast } = useToast();
   const supportEmail = 'monlykingstore@gmail.com';
+  const [isSending, setIsSending] = useState(false);
   const form = useForm<z.infer<typeof supportFormSchema>>({
     resolver: zodResolver(supportFormSchema),
     defaultValues: {
@@ -41,27 +43,45 @@ export function SupportSection() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof supportFormSchema>) {
-    const subject = encodeURIComponent(`MonlyKing Support Request - ${values.name}`);
-    const body = encodeURIComponent(
-      `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`
-    );
-    window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
+  async function onSubmit(values: z.infer<typeof supportFormSchema>) {
+    try {
+      setIsSending(true);
+      const response = await fetch('/api/v1/support/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-    toast({
-      title: 'Message Sent!',
-      description: `Your email app was opened to send this message to ${supportEmail}.`,
-      variant: 'default',
-    });
-    form.reset();
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.message || 'Failed to send support message');
+      }
+
+      toast({
+        title: 'Message Sent!',
+        description: 'Your message was sent successfully. Our support team will contact you soon.',
+        variant: 'default',
+      });
+      form.reset();
+    } catch (error) {
+      toast({
+        title: 'Failed to Send',
+        description: error instanceof Error ? error.message : 'Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSending(false);
+    }
   }
 
   return (
     <section id="support" className="py-16 sm:py-24 md:py-32 bg-background/90 relative">
-        <div 
-            className="absolute inset-0 bg-gradient-to-b from-background to-transparent"
-        />
-       <div className="container mx-auto px-4 relative z-10">
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-background to-transparent"
+      />
+      <div className="container mx-auto px-4 relative z-10">
         <div className="w-full max-w-3xl mx-auto holographic-border bg-card/50 backdrop-blur-sm p-6 sm:p-8 md:p-12 rounded-lg">
           <div className="text-center mb-8">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-headline font-bold text-white text-glow uppercase">
@@ -120,8 +140,8 @@ export function SupportSection() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" size="lg" className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover hover:scale-105 active:scale-100">
-                Send Message
+              <Button type="submit" size="lg" disabled={isSending} className="w-full text-lg font-bold rounded-full button-glow transition-all duration-300 hover:button-glow-hover hover:scale-105 active:scale-100 disabled:opacity-70 disabled:cursor-not-allowed">
+                {isSending ? 'Sending...' : 'Send Message'}
                 <Send className="ml-2 h-5 w-5" />
               </Button>
             </form>

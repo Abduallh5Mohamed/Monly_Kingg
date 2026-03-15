@@ -37,22 +37,46 @@ export default function ResetPasswordForm() {
         verifyResetToken();
     }, [token, email]);
 
+    const postJsonWithFallback = async (endpoints: string[], payload: Record<string, unknown>) => {
+        let lastError: string | null = null;
+
+        for (const endpoint of endpoints) {
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                const raw = await response.text();
+                const data = raw ? JSON.parse(raw) : {};
+
+                if (response.ok) {
+                    return { ok: true, data };
+                }
+
+                lastError = data?.message || `Request failed (${response.status})`;
+            } catch (err) {
+                lastError = 'Network error while contacting server';
+            }
+        }
+
+        return { ok: false, data: { message: lastError || 'Request failed' } };
+    };
+
     const verifyResetToken = async () => {
         try {
-            const response = await fetch('/api/auth/verify-reset-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, token }),
-            });
+            const result = await postJsonWithFallback(
+                ['/api/v1/auth/verify-reset-token', '/api/auth/verify-reset-token'],
+                { email, token }
+            );
 
-            const data = await response.json();
-
-            if (response.ok && data.valid) {
+            if (result.ok && result.data?.valid) {
                 setTokenValid(true);
             } else {
-                setError(data.message || 'Invalid or expired reset token');
+                setError(result.data?.message || 'Invalid or expired reset token');
             }
         } catch (error) {
             setError('Failed to verify reset token');
@@ -95,29 +119,24 @@ export default function ResetPasswordForm() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/auth/reset-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            const result = await postJsonWithFallback(
+                ['/api/v1/auth/reset-password', '/api/auth/reset-password'],
+                {
                     email,
                     token,
                     newPassword: password
-                }),
-            });
+                }
+            );
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (result.ok) {
                 setResetSuccess(true);
-                setMessage(data.message || 'Password reset successful');
+                setMessage(result.data?.message || 'Password reset successful');
                 // Redirect to login after 3 seconds
                 setTimeout(() => {
                     router.push('/login');
                 }, 3000);
             } else {
-                setError(data.message || 'Failed to reset password');
+                setError(result.data?.message || 'Failed to reset password');
             }
         } catch (error) {
             setError('Network error. Please try again.');
