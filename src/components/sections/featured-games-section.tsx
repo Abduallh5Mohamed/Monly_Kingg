@@ -1,8 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, ChevronDown, Star, X } from 'lucide-react';
 
 interface GameAccount {
   id: string;
@@ -87,29 +84,6 @@ const gameCategories: GameCategory[] = [
 ];
 
 export function FeaturedGamesSection() {
-  const [selectedGame, setSelectedGame] = useState<GameCategory | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        // don't close when clicking game buttons
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleGameSelect = (game: GameCategory) => {
-    if (selectedGame?.name === game.name && isOpen) {
-      setIsOpen(false);
-    } else {
-      setSelectedGame(game);
-      setIsOpen(true);
-    }
-  };
-
   return (
     <section id="games" className="py-24 sm:py-32 bg-background relative overflow-hidden">
       {/* Background glow */}
@@ -130,15 +104,10 @@ export function FeaturedGamesSection() {
         {/* Game Selection Grid */}
         <div className="flex overflow-x-auto pb-4 gap-3 sm:gap-4 mb-8 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 snap-x snap-mandatory scrollbar-hide">
           {gameCategories.map((game) => {
-            const isSelected = selectedGame?.name === game.name && isOpen;
             return (
-              <button
+              <div
                 key={game.name}
-                onClick={() => handleGameSelect(game)}
-                className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 text-left flex-shrink-0 w-[200px] sm:w-auto snap-start ${isSelected
-                  ? 'border-primary shadow-[0_0_30px_rgba(34,211,238,0.3)] scale-[1.02]'
-                  : 'border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-primary/10'
-                  }`}
+                className="group relative overflow-hidden rounded-2xl border-2 transition-all duration-500 text-left flex-shrink-0 w-[200px] sm:w-auto snap-start border-white/10 hover:border-white/30 hover:shadow-lg hover:shadow-primary/10"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
@@ -146,15 +115,9 @@ export function FeaturedGamesSection() {
                     alt={game.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={`object-cover transition-all duration-700 ${isSelected ? 'scale-110 brightness-75' : 'group-hover:scale-110 brightness-50 group-hover:brightness-[0.6]'}`}
+                    className="object-cover transition-all duration-700 group-hover:scale-110 brightness-50 group-hover:brightness-[0.6]"
                   />
-                  <div className={`absolute inset-0 transition-all duration-500 ${isSelected ? 'bg-gradient-to-t from-black/90 via-black/50 to-transparent' : 'bg-gradient-to-t from-black/80 via-black/40 to-transparent'}`} />
-
-                  {isSelected && (
-                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                      <ChevronDown className="w-4 h-4 text-white" />
-                    </div>
-                  )}
+                  <div className="absolute inset-0 transition-all duration-500 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -168,94 +131,14 @@ export function FeaturedGamesSection() {
                 </div>
 
                 <div
-                  className={`absolute bottom-0 left-0 right-0 h-[3px] transition-all duration-500 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}
+                  className="absolute bottom-0 left-0 right-0 h-[3px] transition-all duration-500 opacity-0 group-hover:opacity-50"
                   style={{ background: `linear-gradient(90deg, transparent, ${game.color}, transparent)` }}
                 />
-              </button>
+              </div>
             );
           })}
         </div>
-
-        {/* Dropdown Accounts Panel */}
-        <div ref={dropdownRef} className={`transition-all duration-700 ease-out overflow-hidden ${isOpen && selectedGame ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-          {selectedGame && (
-            <div className="relative rounded-2xl border border-white/10 bg-card/80 backdrop-blur-xl overflow-hidden">
-              {/* Header */}
-              <div className="relative px-4 sm:px-6 py-4 sm:py-5 border-b border-white/10">
-                <div className="absolute inset-0 opacity-10" style={{ background: `linear-gradient(135deg, ${selectedGame.color}20, transparent)` }} />
-                <div className="flex items-center justify-between relative z-10">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border-2 flex-shrink-0" style={{ borderColor: selectedGame.color + '60' }}>
-                      <Image src={selectedGame.logo} alt={selectedGame.name} fill sizes="48px" className="object-cover" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-white">{selectedGame.name}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">{selectedGame.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-muted-foreground">{selectedGame.accounts.length} listings</span>
-                    <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-                      <X className="w-4 h-4 text-white/60" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Accounts Grid */}
-              <div className="p-4 sm:p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-                  {selectedGame.accounts.map((account, index) => (
-                    <div
-                      key={account.id}
-                      className="group/card relative rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] overflow-hidden transition-all duration-500 hover:border-white/20 hover:shadow-lg hover:-translate-y-1"
-                      style={{
-                        animation: isOpen ? `slideUp 0.5s ease-out ${index * 100}ms both` : 'none'
-                      }}
-                    >
-                      <div className="relative aspect-[4/3] overflow-hidden">
-                        <Image src={account.image} alt={account.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover/card:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                        <div className="absolute top-3 right-3 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20">
-                          <span className="text-white font-bold text-sm">${account.price}</span>
-                        </div>
-                        <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/60 backdrop-blur-md">
-                          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                          <span className="text-xs text-white font-medium">{account.rating}</span>
-                        </div>
-                        <div className="absolute bottom-3 left-3">
-                          <span className="px-3 py-1 rounded-full text-xs font-bold text-white border" style={{ backgroundColor: selectedGame.color + '30', borderColor: selectedGame.color + '60' }}>
-                            {account.rank}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h4 className="font-bold text-white text-sm mb-1 group-hover/card:text-primary transition-colors">{account.title}</h4>
-                        <p className="text-xs text-muted-foreground mb-3">by {account.seller}</p>
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {account.features.map((feature, i) => (
-                            <span key={i} className="px-2 py-0.5 rounded-md bg-white/5 text-[10px] text-white/70 border border-white/10">{feature}</span>
-                          ))}
-                        </div>
-                        <Button size="sm" className="w-full rounded-lg text-xs font-bold transition-all duration-300 hover:shadow-lg" style={{ background: `linear-gradient(135deg, ${selectedGame.color}, ${selectedGame.color}cc)` }}>
-                          View Details <ArrowRight className="w-3 h-3 ml-1" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </section>
   );
 }
