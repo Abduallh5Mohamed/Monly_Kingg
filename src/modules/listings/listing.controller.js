@@ -24,6 +24,7 @@ let _campaignCache = { data: null, expiresAt: 0 };
 const CAMPAIGN_CACHE_TTL = 120_000; // 2 minutes
 const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_TITLE_LENGTH = 200;
 const MAX_DESCRIPTION_LENGTH = 2000;
 const MAX_DETAILS_SIZE_BYTES = 10_000;
 const MAX_DETAILS_DEPTH = 5;
@@ -101,7 +102,11 @@ export const createListing = async (req, res) => {
     }
 
     // Validation
-    if (!req.body.title || !req.body.game || !req.body.price) {
+    if (!req.body.title || req.body.title.length > MAX_TITLE_LENGTH) {
+      return res.status(400).json({ message: "Title is required and must not exceed 200 characters" });
+    }
+
+    if (!req.body.game || !req.body.price) {
       return res.status(400).json({ message: "Title, game, and price are required" });
     }
 
@@ -298,7 +303,12 @@ export const updateListing = async (req, res) => {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    if (req.body.title) listing.title = req.body.title;
+    if (req.body.title !== undefined) {
+      if (!req.body.title || req.body.title.length > MAX_TITLE_LENGTH) {
+        return res.status(400).json({ message: "Title is required and must not exceed 200 characters" });
+      }
+      listing.title = req.body.title;
+    }
     if (req.body.game) listing.game = req.body.game;
     if (req.body.description !== undefined) {
       if (req.body.description && req.body.description.length > MAX_DESCRIPTION_LENGTH) {

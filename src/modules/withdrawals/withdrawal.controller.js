@@ -7,6 +7,34 @@ import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
 import { safePaginate } from '../../utils/pagination.js';
 import redis from '../../config/redis.js';
+import { encrypt, decrypt } from '../../utils/encryption.js';
+
+/**
+ * Safely decrypt a withdrawal field for responses.
+ * @param {unknown} value
+ * @returns {unknown}
+ */
+const safeDecryptField = (value) => {
+  if (typeof value !== 'string' || !value) return value;
+  try {
+    return decrypt(value);
+  } catch (_error) {
+    return null;
+  }
+};
+
+/**
+ * Decrypt withdrawal PII fields before returning API payloads.
+ * @param {Record<string, any>} withdrawal
+ * @returns {Record<string, any>}
+ */
+const decryptWithdrawalForResponse = (withdrawal) => {
+  if (!withdrawal) return withdrawal;
+  const obj = withdrawal.toObject ? withdrawal.toObject() : { ...withdrawal };
+  obj.phoneNumber = safeDecryptField(obj.phoneNumber);
+  obj.countryCode = safeDecryptField(obj.countryCode);
+  return obj;
+};
 
 export const submitWithdrawal = async (req, res) => {
   let lockKey = null;
@@ -74,8 +102,8 @@ export const submitWithdrawal = async (req, res) => {
       user: userId,
       amount: normalizedAmount,
       method,
-      countryCode,
-      phoneNumber,
+      countryCode: encrypt(countryCode),
+      phoneNumber: encrypt(phoneNumber),
       balanceReserved: true,
     });
 
@@ -94,9 +122,10 @@ export const submitWithdrawal = async (req, res) => {
 
     // Populate user details for socket notification
     await withdrawal.populate('user', 'username email');
+    const safeWithdrawal = decryptWithdrawalForResponse(withdrawal);
 
     // Notify admins of new withdrawal in real-time
-    socketService.notifyAdminsNewWithdrawal(withdrawal);
+    socketService.notifyAdminsNewWithdrawal(safeWithdrawal);
 
     // Persist DB notification for all admins
     notifyAllAdmins({
@@ -108,7 +137,7 @@ export const submitWithdrawal = async (req, res) => {
       metadata: { amount: withdrawal.amount, method: withdrawal.method },
     });
 
-    return res.status(201).json({ message: "Withdrawal request submitted successfully", data: withdrawal });
+    return res.status(201).json({ message: "Withdrawal request submitted successfully", data: safeWithdrawal });
   } catch (error) {
     logger.error(`Submit withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
@@ -130,10 +159,12 @@ export const getMyWithdrawals = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
+    const safeWithdrawals = withdrawals.map((withdrawal) => decryptWithdrawalForResponse(withdrawal));
+
     const total = await Withdrawal.countDocuments({ user: userId });
 
     return res.status(200).json({
-      data: withdrawals,
+      data: safeWithdrawals,
       total,
       page,
       totalPages: Math.ceil(total / limit),
@@ -158,11 +189,13 @@ export const getAllWithdrawals = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
+    const safeWithdrawals = withdrawals.map((withdrawal) => decryptWithdrawalForResponse(withdrawal));
+
     const total = await Withdrawal.countDocuments(filter);
     const pendingCount = await Withdrawal.countDocuments({ status: "pending" });
 
     return res.status(200).json({
-      data: withdrawals,
+      data: safeWithdrawals,
       total,
       pendingCount,
       page,
@@ -213,6 +246,7 @@ export const approveWithdrawal = async (req, res) => {
     withdrawal.reviewedBy = req.user._id;
     withdrawal.reviewedAt = new Date();
     await withdrawal.save();
+    const safeWithdrawal = decryptWithdrawalForResponse(withdrawal);
 
     try {
       await AuditLog.create({
@@ -241,10 +275,10 @@ export const approveWithdrawal = async (req, res) => {
     }
 
     // Notify admins of withdrawal update in real-time
-    socketService.notifyAdminsWithdrawalUpdate(withdrawal);
+    socketService.notifyAdminsWithdrawalUpdate(safeWithdrawal);
 
     // Notify user of their withdrawal approval
-    socketService.notifyUserWithdrawalStatus(withdrawal.user._id.toString(), withdrawal);
+    socketService.notifyUserWithdrawalStatus(withdrawal.user._id.toString(), safeWithdrawal);
 
     // Persist DB notification for user
     createNotification({
@@ -256,7 +290,7 @@ export const approveWithdrawal = async (req, res) => {
       relatedId: withdrawal._id,
     });
 
-    return res.status(200).json({ message: "Withdrawal approved", data: withdrawal });
+    return res.status(200).json({ message: "Withdrawal approved", data: safeWithdrawal });
   } catch (error) {
     logger.error(`Approve withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
@@ -308,11 +342,13 @@ export const rejectWithdrawal = async (req, res) => {
       throw saveErr;
     }
 
+    const safeWithdrawal = decryptWithdrawalForResponse(withdrawal);
+
     // Notify admins of withdrawal update in real-time
-    socketService.notifyAdminsWithdrawalUpdate(withdrawal);
+    socketService.notifyAdminsWithdrawalUpdate(safeWithdrawal);
 
     // Notify user of their withdrawal rejection
-    socketService.notifyUserWithdrawalStatus(withdrawal.user.toString(), withdrawal);
+    socketService.notifyUserWithdrawalStatus(withdrawal.user.toString(), safeWithdrawal);
 
     // Persist DB notification for user
     createNotification({
@@ -324,7 +360,7 @@ export const rejectWithdrawal = async (req, res) => {
       relatedId: withdrawal._id,
     });
 
-    return res.status(200).json({ message: "Withdrawal rejected", data: withdrawal });
+    return res.status(200).json({ message: "Withdrawal rejected", data: safeWithdrawal });
   } catch (error) {
     logger.error(`Reject withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });

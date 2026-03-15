@@ -15,8 +15,10 @@ export const submitPromotion = async (req, res) => {
       return res.status(400).json({ message: "Listing and days are required" });
     }
 
-    if (days < 1 || days > 30) {
-      return res.status(400).json({ message: "Days must be between 1 and 30" });
+    const parsedDays = Number(days);
+
+    if (!Number.isInteger(parsedDays) || parsedDays < 1 || parsedDays > 30) {
+      return res.status(400).json({ message: "Days must be a whole number between 1 and 30" });
     }
 
     // Verify the listing belongs to this seller
@@ -43,12 +45,12 @@ export const submitPromotion = async (req, res) => {
       });
     }
 
-    const cost = days * PRICE_PER_DAY;
+    const cost = parsedDays * PRICE_PER_DAY;
 
     const promotion = new Promotion({
       listing: listingId,
       seller: sellerId,
-      days,
+      days: parsedDays,
       cost,
     });
 

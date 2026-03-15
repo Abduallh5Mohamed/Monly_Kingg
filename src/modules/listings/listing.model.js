@@ -41,7 +41,7 @@ function validateListingDetails(details) {
 const listingSchema = new mongoose.Schema({
   seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   game: { type: mongoose.Schema.Types.ObjectId, ref: "Game", required: true },
-  title: { type: String, required: true },
+  title: { type: String, required: true, maxlength: 200 },
   description: { type: String, maxlength: 2000 },
   price: { type: Number, required: true },
   details: {

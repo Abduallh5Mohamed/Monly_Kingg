@@ -67,6 +67,7 @@ function detectProfanity(text) {
 }
 
 const BAN_DURATION_DAYS = 6;
+const MAX_COMMENT_LENGTH = 500;
 
 // ─── Add or update a rating ───────────────────────────────────────────────────
 export const addRating = async (req, res) => {
@@ -74,6 +75,12 @@ export const addRating = async (req, res) => {
     const { sellerId } = req.params;
     const raterId = req.user._id;
     const { rating, comment } = req.body;
+
+    if (comment && typeof comment === 'string' && comment.length > MAX_COMMENT_LENGTH) {
+      return res.status(400).json({
+        message: `Comment must not exceed ${MAX_COMMENT_LENGTH} characters`
+      });
+    }
 
     // Validate rating value
     if (!rating || rating < 1 || rating > 5) {

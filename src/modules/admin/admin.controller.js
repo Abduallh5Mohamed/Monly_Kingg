@@ -50,6 +50,30 @@ function decryptAdminDepositFields(deposit) {
     return normalized;
 }
 
+/**
+ * Decrypt sensitive withdrawal fields for admin display.
+ * @param {Record<string, any>} withdrawal
+ * @returns {Record<string, any>}
+ */
+function decryptAdminWithdrawalFields(withdrawal) {
+    if (!withdrawal) return withdrawal;
+    const normalized = { ...withdrawal };
+
+    const tryDecrypt = (value) => {
+        if (typeof value !== "string" || !value) return value;
+        try {
+            return decrypt(value);
+        } catch (error) {
+            logger.error(`Admin withdrawal decryption failed: ${error.message}`);
+            return null;
+        }
+    };
+
+    normalized.countryCode = tryDecrypt(normalized.countryCode);
+    normalized.phoneNumber = tryDecrypt(normalized.phoneNumber);
+    return normalized;
+}
+
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
     try {
@@ -679,25 +703,14 @@ export const getUserDetail = async (req, res) => {
                 .lean(),
         ]);
 
+            const safeRecentWithdrawals = recentWithdrawals.map((withdrawal) => decryptAdminWithdrawalFields(withdrawal));
+
         // Active listings count
         const [listingsActive, listingsSold, listingsTotal] = await Promise.all([
             Listing.countDocuments({ seller: userId, status: "available" }),
             Listing.countDocuments({ seller: userId, status: "sold" }),
             Listing.countDocuments({ seller: userId }),
         ]);
-
-        // Extract unique IPs from auth logs and refresh tokens
-        const ipSet = new Set();
-        if (user.authLogs) {
-            user.authLogs.forEach(log => {
-                if (log.ip) ipSet.add(log.ip);
-            });
-        }
-        if (user.refreshTokens) {
-            user.refreshTokens.forEach(rt => {
-                if (rt.ip) ipSet.add(rt.ip);
-            });
-        }
 
         // Get last login info
         const lastLogin = user.authLogs
@@ -746,7 +759,6 @@ export const getUserDetail = async (req, res) => {
                     userAgent: lastLogin.userAgent,
                     at: lastLogin.createdAt,
                 } : null,
-                knownIPs: [...ipSet],
                 authLogs: (user.authLogs || []).slice(-30).reverse(), // last 30 logs, newest first
             },
 
@@ -780,7 +792,7 @@ export const getUserDetail = async (req, res) => {
             // Withdrawals
             withdrawals: {
                 stats: withdrawalStats,
-                recent: recentWithdrawals,
+                recent: safeRecentWithdrawals,
             },
 
             // Listings
