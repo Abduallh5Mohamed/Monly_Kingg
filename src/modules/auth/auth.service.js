@@ -15,8 +15,8 @@ import redis from "../../config/redis.js";
 import socketService from "../../services/socketService.js";
 import { maskSensitive } from "../../utils/encryption.js";
 
-function hashRefreshToken(token) {
-  return crypto.createHash('sha256').update(token).digest('hex');
+function hashRefreshToken(raw) {
+  return crypto.createHash('sha256').update(raw).digest('hex');
 }
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
@@ -32,7 +32,7 @@ const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4
  * @param {string|null} ip
  * @returns {string|null}
  */
-function anonymizeIp(ip) {
+export function anonymizeIp(ip) {
   if (!ip) return null;
   return crypto
     .createHash("sha256")
@@ -46,7 +46,7 @@ function anonymizeIp(ip) {
  * @param {string|null} userAgent
  * @returns {string|null}
  */
-function truncateUserAgent(userAgent) {
+export function truncateUserAgent(userAgent) {
   if (!userAgent) return null;
   return String(userAgent).slice(0, 200);
 }

@@ -42,6 +42,7 @@ router.get("/google", passport.authenticate("google", {
   // FIX: Removed state:true — passport session state flow is incompatible with session:false JWT setup.
 }));
 router.get("/google/callback",
+  loginLimiter,
   passport.authenticate("google", {
     session: false,
     // FIX: Removed callbackURL here to avoid strategy/authenticate callback mismatch.

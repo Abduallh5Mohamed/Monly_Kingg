@@ -338,16 +338,19 @@ app.use((err, req, res, next) => {
   if (err.name === "CastError" && err.kind === "ObjectId") {
     return res.status(400).json({ success: false, message: "Invalid ID format" });
   }
-  next(err);
-});
 
-app.use((err, req, res, next) => {
   const status = err.status || err.statusCode || 500;
-  const isProd = process.env.NODE_ENV === 'production';
-  logger.error(`[Unhandled Error] ${err.message}`, { stack: err.stack, path: req.path });
+  const isProd = process.env.NODE_ENV === "production";
+
+  logger.error(`[UnhandledError] ${err.message}`, {
+    path: req.path,
+    method: req.method,
+    stack: isProd ? undefined : err.stack
+  });
+
   return res.status(status).json({
     success: false,
-    message: isProd ? 'Internal server error' : err.message
+    message: isProd ? "Internal server error" : (err.message || "Internal server error")
   });
 });
 

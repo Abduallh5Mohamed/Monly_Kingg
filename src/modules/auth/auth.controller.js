@@ -1,4 +1,5 @@
 import * as authService from "./auth.service.js";
+import { anonymizeIp, truncateUserAgent } from "./auth.service.js";
 import User from "../users/user.model.js";
 import Joi from "joi";
 import crypto from "crypto";
@@ -338,7 +339,13 @@ export const verifyResetToken = async (req, res) => {
 const resetPasswordSchema = Joi.object({
   email: Joi.string().email().required(),
   token: Joi.string().required(),
-  newPassword: Joi.string().min(8).required()
+  newPassword: Joi.string()
+    .min(8)
+    .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"))
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    })
 });
 
 export const resetPassword = async (req, res) => {
@@ -427,8 +434,8 @@ export const googleCallback = async (req, res) => {
     user.authLogs.push({
       action: "google_login",
       success: true,
-      ip,
-      userAgent,
+      ip: anonymizeIp(ip),
+      userAgent: truncateUserAgent(userAgent),
       createdAt: new Date()
     });
 

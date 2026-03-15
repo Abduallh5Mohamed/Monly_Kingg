@@ -209,7 +209,6 @@ export const getAdminStats = async (req, res) => {
 export const updateUserRole = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { role } = req.body;
 
         if (userId === req.user._id.toString()) {
             return res.status(400).json({
@@ -218,12 +217,20 @@ export const updateUserRole = async (req, res) => {
             });
         }
 
+        const { role } = req.body;
+
         if (!["user", "admin"].includes(role)) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid role. Moderators must be created via the Moderators page."
             });
         }
+
+        const existingUser = await User.findById(userId).select("role email").lean();
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        const previousRole = existingUser.role;
 
         const user = await User.findByIdAndUpdate(
             userId,
@@ -240,6 +247,28 @@ export const updateUserRole = async (req, res) => {
 
         // Clear user from cache
         await cacheService.invalidateUser(userId);
+
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "role_update",
+                targetModel: "User",
+                targetId: userId,
+                targetUser: userId,
+                details: {
+                    previousRole,
+                    newRole: role,
+                    targetEmail: user.email,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for role update ${userId}: ${auditErr.message}`);
+        }
 
         // Log the action
         user.authLogs.push({
