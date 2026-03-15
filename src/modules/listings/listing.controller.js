@@ -537,7 +537,8 @@ export const browseListings = async (req, res) => {
     // Run listing query + count in parallel
     const [listings, total] = await Promise.all([
       Listing.find(filter)
-        .select('title game seller price coverImage images details status createdAt')
+        // SECURITY FIX [VULN-14]: Exclude free-form details from public listing payloads.
+        .select('title game seller price coverImage images status createdAt')
         .populate("game", "name")
         .populate("seller", "username avatar")
         .sort(sortOption)
@@ -607,7 +608,8 @@ export const getAllListings = async (req, res) => {
     // Run listing query + count in parallel
     const [listings, total] = await Promise.all([
       Listing.find(filter)
-        .select('title game seller price coverImage images details status createdAt')
+        // SECURITY FIX [VULN-14]: Exclude free-form details from public listing payloads.
+        .select('title game seller price coverImage images status createdAt')
         .populate("game", "name slug icon")
         .populate("seller", "username")
         .sort(sortOptions)
@@ -637,6 +639,8 @@ export const getAllListings = async (req, res) => {
 export const getListingById = async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id)
+      // SECURITY FIX [VULN-14]: Do not expose free-form details on public listing view.
+      .select('-details')
       .populate("game", "name slug icon category")
       .populate("seller", "username email isSeller")
       .lean();

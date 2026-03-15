@@ -47,12 +47,14 @@ export const authMiddleware = async (req, res, next) => {
     // Try Redis cache first (avoid DB hit on every request)
     const cacheKey = `auth:user:${decoded.id}`;
     let user = null;
+    let fromCache = false;
 
     if (redis.isReady()) {
       try {
         const cached = await redis.get(cacheKey);
         if (cached) {
           user = cached;
+          fromCache = true;
         }
       } catch (_) {
         // Cache error - fall through to DB
@@ -72,6 +74,22 @@ export const authMiddleware = async (req, res, next) => {
       if (redis.isReady()) {
         redis.set(cacheKey, user, 300).catch(() => { });
       }
+    }
+
+    // SECURITY FIX [VULN-13]: Prevent lockout bypass via stale cache by re-checking lockUntil from DB when cache is used.
+    if (fromCache) {
+      const lockInfo = await User.findById(decoded.id).select("lockUntil").lean();
+      if (lockInfo?.lockUntil && new Date(lockInfo.lockUntil) > new Date()) {
+        if (redis.isReady()) {
+          redis.del(cacheKey).catch(() => { });
+        }
+        return res.status(423).json({ message: "Account is temporarily locked. Please try again later." });
+      }
+    }
+
+    // SECURITY FIX [VULN-13]: Enforce lockout guard before granting API access.
+    if (user.lockUntil && new Date(user.lockUntil) > new Date()) {
+      return res.status(423).json({ message: "Account is temporarily locked. Please try again later." });
     }
 
     req.user = user;

@@ -95,9 +95,25 @@ app.use(compression({
   threshold: 1024, // Only compress responses > 1KB
 }));
 
-// Payload limit
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+// SECURITY FIX [VULN-04]: Apply stricter global body limits and skip only the dedicated large-avatar profile route.
+const defaultJsonParser = express.json({ limit: '500kb' });
+const defaultUrlencodedParser = express.urlencoded({ extended: true, limit: '500kb' });
+
+app.use((req, res, next) => {
+  const isProfileUpdateRoute = req.method === "PUT" && /^\/api\/v1\/users\/profile\/?$/.test(req.path);
+  if (isProfileUpdateRoute) {
+    return next();
+  }
+  return defaultJsonParser(req, res, next);
+});
+
+app.use((req, res, next) => {
+  const isProfileUpdateRoute = req.method === "PUT" && /^\/api\/v1\/users\/profile\/?$/.test(req.path);
+  if (isProfileUpdateRoute) {
+    return next();
+  }
+  return defaultUrlencodedParser(req, res, next);
+});
 
 // SECURITY FIX [H-04]: Enforce accepted content types for state-changing requests.
 app.use((req, res, next) => {

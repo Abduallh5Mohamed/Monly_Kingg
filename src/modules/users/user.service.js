@@ -2,12 +2,15 @@ import User from "./user.model.js";
 import bcrypt from "bcrypt";
 import escapeRegex from "../../utils/escapeRegex.js";
 
+const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
+
 export const createUser = async (data) => {
   // منع تحديد الدور عند إنشاء مستخدم
   const userData = { ...data };
   delete userData.role;
 
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
+  // SECURITY FIX [VULN-12]: Use centralized bcrypt rounds from environment.
+  const hashedPassword = await bcrypt.hash(userData.password, BCRYPT_ROUNDS);
   const user = new User({ ...userData, password: hashedPassword, role: "user" }); // الدور دائمًا 'user'
   return await user.save();
 };
@@ -32,7 +35,8 @@ export const updateUser = async (id, updates) => {
   }
 
   if (updates.password) {
-    updates.passwordHash = await bcrypt.hash(updates.password, 10);
+    // SECURITY FIX [VULN-12]: Keep password hashing rounds consistent across modules.
+    updates.passwordHash = await bcrypt.hash(updates.password, BCRYPT_ROUNDS);
     delete updates.password;
   }
 
