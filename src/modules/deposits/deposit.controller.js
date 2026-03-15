@@ -272,18 +272,31 @@ export const approveDeposit = async (req, res) => {
             deposit.amount = normalizedEditedAmount;
         }
 
-        // Credit user balance
-        await cacheService.updateBalanceWithSync(
-            deposit.user._id,
-            amountToCredit,
-            `deposit approval #${id}`
-        );
+        // SECURITY FIX [C-3]: Roll back credited balance if persisting approval fails.
+        try {
+            await cacheService.updateBalanceWithSync(
+                deposit.user._id,
+                amountToCredit,
+                `deposit approval #${id}`
+            );
 
-        // SECURITY FIX [C-08]: Finalize lock after successful credit.
-        deposit.status = "approved";
-        deposit.processedBy = req.user._id;
-        deposit.processedAt = new Date();
-        await deposit.save();
+            // SECURITY FIX [C-08]: Finalize lock after successful credit.
+            deposit.status = "approved";
+            deposit.processedBy = req.user._id;
+            deposit.processedAt = new Date();
+            await deposit.save();
+        } catch (saveErr) {
+            try {
+                await cacheService.updateBalanceWithSync(
+                    deposit.user._id,
+                    -amountToCredit,
+                    `deposit approval rollback #${id}`
+                );
+            } catch (rollbackErr) {
+                logger.error(`Deposit rollback failed for ${deposit._id}: ${rollbackErr.message}`);
+            }
+            throw saveErr;
+        }
 
         // SECURITY FIX [C-08]: Keep admin wallet unchanged during deposit approval flow.
 
@@ -369,6 +382,27 @@ export const rejectDeposit = async (req, res) => {
             relatedModel: 'Deposit',
             relatedId: deposit._id,
         });
+
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_deposit_rejected",
+                targetModel: "Deposit",
+                targetId: deposit._id,
+                targetUser: deposit.user._id,
+                details: {
+                    depositId: deposit._id.toString(),
+                    reason: deposit.rejectionReason,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for deposit rejection ${deposit._id}: ${auditErr.message}`);
+        }
 
         return res.status(200).json({ message: "Deposit rejected", data: deposit });
     } catch (error) {

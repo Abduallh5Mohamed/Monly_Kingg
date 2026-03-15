@@ -37,6 +37,7 @@ import passport from "./config/passport.js";
 import crypto from "crypto";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
 import logger from "./utils/logger.js";
+import escapeRegex from "./utils/escapeRegex.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -237,11 +238,10 @@ app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
     const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
 
     if (!isAdmin) {
-      const escaped = filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const Deposit = (await import('./modules/deposits/deposit.model.js')).default;
       const deposit = await Deposit.findOne({
         user: req.user._id,
-        receiptImage: { $regex: escaped }
+        receiptImage: { $regex: escapeRegex(filename), $options: 'i' }
       }).lean();
 
       if (!deposit) {

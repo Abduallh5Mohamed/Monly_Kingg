@@ -50,16 +50,20 @@ export const submitWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Invalid payment method. Only Vodafone Cash and InstaPay are allowed" });
     }
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // SECURITY FIX [C-2]: Atomic check-and-deduct to prevent concurrent double-spend.
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId, "wallet.balance": { $gte: normalizedAmount } },
+      { $inc: { "wallet.balance": -normalizedAmount } },
+      { new: true }
+    ).lean();
 
-    const userBalance = user.wallet?.balance || 0;
-
-    if (normalizedAmount > userBalance) {
+    if (!updatedUser) {
+      const check = await User.findById(userId).select("wallet").lean();
+      if (!check) {
+        return res.status(404).json({ message: "User not found" });
+      }
       return res.status(400).json({
-        message: `Insufficient balance. Your balance is ${userBalance} LE, but you requested ${normalizedAmount} LE`
+        message: `Insufficient balance. Available: ${check?.wallet?.balance || 0} LE`
       });
     }
 
@@ -69,9 +73,21 @@ export const submitWithdrawal = async (req, res) => {
       method,
       countryCode,
       phoneNumber,
+      balanceReserved: true,
     });
 
-    await withdrawal.save();
+    try {
+      await withdrawal.save();
+    } catch (saveErr) {
+      // Rollback reserved balance if withdrawal document fails to persist.
+      await User.findByIdAndUpdate(userId, {
+        $inc: { "wallet.balance": normalizedAmount },
+      });
+      throw saveErr;
+    }
+
+    // Keep cache in sync after atomic reservation.
+    await cacheService.cacheUser(updatedUser);
 
     // Populate user details for socket notification
     await withdrawal.populate('user', 'username email');
@@ -162,24 +178,29 @@ export const approveWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal already processed" });
     }
 
-    // SECURITY FIX [C-07]: Atomic balance check-and-deduct prevents TOCTOU race.
-    const updatedUser = await User.findOneAndUpdate(
-      {
-        _id: withdrawal.user._id,
-        "wallet.balance": { $gte: withdrawal.amount }
-      },
-      { $inc: { "wallet.balance": -withdrawal.amount } },
-      { new: true }
-    ).lean();
+    // Backward compatibility: old pending withdrawals may not have reserved balance.
+    if (withdrawal.balanceReserved === true) {
+      withdrawal.balanceReserved = false;
+    } else {
+      // SECURITY FIX [C-07]: Atomic balance check-and-deduct prevents TOCTOU race.
+      const updatedUser = await User.findOneAndUpdate(
+        {
+          _id: withdrawal.user._id,
+          "wallet.balance": { $gte: withdrawal.amount }
+        },
+        { $inc: { "wallet.balance": -withdrawal.amount } },
+        { new: true }
+      ).lean();
 
-    if (!updatedUser) {
-      return res.status(400).json({
-        message: "Insufficient balance. User's balance may have changed."
-      });
+      if (!updatedUser) {
+        return res.status(400).json({
+          message: "Insufficient balance. User's balance may have changed."
+        });
+      }
+
+      // Keep cache synchronized with atomic DB balance update.
+      await cacheService.cacheUser(updatedUser);
     }
-
-    // Keep cache synchronized with atomic DB balance update.
-    await cacheService.cacheUser(updatedUser);
 
     withdrawal.status = "approved";
     withdrawal.reviewedBy = req.user._id;
@@ -247,11 +268,38 @@ export const rejectWithdrawal = async (req, res) => {
       return res.status(400).json({ message: "Withdrawal already processed" });
     }
 
+    let refundApplied = false;
+    if (withdrawal.balanceReserved === true) {
+      const refundedUser = await User.findByIdAndUpdate(
+        withdrawal.user,
+        { $inc: { "wallet.balance": withdrawal.amount } },
+        { new: true }
+      ).lean();
+
+      if (!refundedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await cacheService.cacheUser(refundedUser);
+      withdrawal.balanceReserved = false;
+      refundApplied = true;
+    }
+
     withdrawal.status = "rejected";
     withdrawal.rejectionReason = reason || "Request denied";
     withdrawal.reviewedBy = req.user._id;
     withdrawal.reviewedAt = new Date();
-    await withdrawal.save();
+
+    try {
+      await withdrawal.save();
+    } catch (saveErr) {
+      if (refundApplied) {
+        await User.findByIdAndUpdate(withdrawal.user, {
+          $inc: { "wallet.balance": -withdrawal.amount }
+        });
+      }
+      throw saveErr;
+    }
 
     // Notify admins of withdrawal update in real-time
     socketService.notifyAdminsWithdrawalUpdate(withdrawal);

@@ -362,7 +362,9 @@ export const resetPassword = async (req, res) => {
 
     res.status(200).json(result);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const safeMessages = ["Invalid or expired token", "Password too weak", "Token already used"];
+    const msg = safeMessages.includes(err.message) ? err.message : "Invalid request";
+    res.status(400).json({ message: msg });
   }
 };
 

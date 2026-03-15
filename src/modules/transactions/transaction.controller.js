@@ -15,6 +15,7 @@ import { buildTransactionInvoiceEmail } from "../../utils/emailTemplates.js";
 import { encrypt, decrypt } from "../../utils/encryption.js";
 import { updateSellerLevel } from "../seller-levels/sellerLevel.service.js";
 import { safePaginate } from "../../utils/pagination.js";
+import { notificationQueue } from "../../queues/transactionQueue.js";
 
 // ─── Credential encryption helpers ───────────────────────────────────────────
 function encryptCredentials(credentials) {

@@ -278,13 +278,26 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const refreshTokenString = generateRefreshTokenString();
     const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
+    // SECURITY FIX [M-1]: Prune expired/revoked refresh tokens and keep only recent valid entries.
+    const now = new Date();
+    const validRefreshTokens = (user.refreshTokens || [])
+      .filter((rt) => !rt.revoked && new Date(rt.expiresAt) > now)
+      .slice(-9);
+    const nextRefreshTokens = [
+      ...validRefreshTokens,
+      { token: refreshTokenString, expiresAt, ip, userAgent },
+    ];
+
     // Single atomic DB update: reset counters + push refresh token + push audit log
     await User.updateOne(
       { _id: user._id },
       {
-        $set: { failedLoginAttempts: 0, lockUntil: null },
+        $set: {
+          failedLoginAttempts: 0,
+          lockUntil: null,
+          refreshTokens: nextRefreshTokens,
+        },
         $push: {
-          refreshTokens: { token: refreshTokenString, expiresAt, ip, userAgent },
           authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -50 }
         }
       }

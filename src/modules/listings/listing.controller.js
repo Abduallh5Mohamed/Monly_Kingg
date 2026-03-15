@@ -14,6 +14,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import logger from "../../utils/logger.js";
 import escapeRegex from "../../utils/escapeRegex.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -176,15 +177,16 @@ export const createListing = async (req, res) => {
 // Get my listings (seller)
 export const getMyListings = async (req, res) => {
   try {
-    const { status = "all", page = 1, limit = 20 } = req.query;
+    const { page, limit, skip } = safePaginate(req.query, 20, 100);
+    const { status = "all" } = req.query;
     const filter = { seller: req.user._id };
     if (status !== "all") filter.status = status;
 
     const listings = await Listing.find(filter)
       .populate("game", "name")
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
+      .skip(skip)
+      .limit(limit)
       .lean();
 
     const total = await Listing.countDocuments(filter);
@@ -195,7 +197,7 @@ export const getMyListings = async (req, res) => {
     return res.status(200).json({
       data: listings,
       total,
-      page: Number(page),
+      page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {

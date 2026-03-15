@@ -50,6 +50,10 @@ const withdrawalSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    balanceReserved: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

@@ -2,6 +2,7 @@ import Upload from "./upload.model.js";
 import path from "path";
 import fs from "fs/promises";
 import logger from "../../utils/logger.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 const ALLOWED_UPLOAD_TYPES = new Set([
   "profile_picture",
@@ -74,7 +75,8 @@ export const uploadFile = async (req, res) => {
  */
 export const getUserUploads = async (req, res) => {
   try {
-    const { type, limit = 50, page = 1 } = req.query;
+    const { page, limit, skip } = safePaginate(req.query, 50, 100);
+    const { type } = req.query;
     const userId = req.params.userId || req.user._id;
 
     // التحقق من الصلاحيات
@@ -88,13 +90,11 @@ export const getUserUploads = async (req, res) => {
     const query = { uploadedBy: userId, isDeleted: false };
     if (type) query.type = type;
 
-    const skip = (page - 1) * limit;
-
     const [uploads, total] = await Promise.all([
       Upload.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .lean(),
       Upload.countDocuments(query)
     ]);
@@ -104,8 +104,8 @@ export const getUserUploads = async (req, res) => {
       data: uploads,
       pagination: {
         total,
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page,
+        limit,
         pages: Math.ceil(total / limit)
       }
     });
