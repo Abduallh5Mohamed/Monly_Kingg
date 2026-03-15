@@ -329,7 +329,9 @@ export const verifyResetToken = async (req, res) => {
     const result = await authService.verifyResetToken(value.email, value.token);
     res.status(200).json({ valid: result.valid });
   } catch (err) {
-    res.status(400).json({ message: err.message, valid: false });
+    const safeMessages = ["Invalid or expired reset token"];
+    const msg = safeMessages.includes(err.message) ? err.message : "Invalid request";
+    res.status(400).json({ message: msg, valid: false });
   }
 };
 

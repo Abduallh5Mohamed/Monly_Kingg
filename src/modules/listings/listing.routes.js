@@ -86,7 +86,7 @@ const handleMulterError = (err, req, res, next) => {
     return res.status(400).json({ message: 'File upload error: ' + err.message });
   }
   if (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: 'File upload failed. Please check your file and try again.' });
   }
   next();
 };
