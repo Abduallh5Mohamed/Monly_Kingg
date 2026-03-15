@@ -18,6 +18,7 @@ import { maskSensitive } from "../../utils/encryption.js";
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
+const OTP_HMAC_SECRET = process.env.OTP_SECRET || process.env.JWT_SECRET || "dev_fallback_otp_secret";
 
 // SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
@@ -44,6 +45,50 @@ function anonymizeIp(ip) {
 function truncateUserAgent(userAgent) {
   if (!userAgent) return null;
   return String(userAgent).slice(0, 200);
+}
+
+/**
+ * SECURITY FIX [VULN-08]: Hash OTP codes with HMAC-SHA256.
+ * @param {string} code
+ * @returns {string}
+ */
+function hashOtpCode(code) {
+  return crypto
+    .createHmac("sha256", OTP_HMAC_SECRET)
+    .update(String(code))
+    .digest("hex");
+}
+
+/**
+ * Constant-time comparison for same-length hex strings.
+ * @param {string} a
+ * @param {string} b
+ * @returns {boolean}
+ */
+function timingSafeEqualHex(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  const aBuf = Buffer.from(a, "hex");
+  const bBuf = Buffer.from(b, "hex");
+  if (aBuf.length === 0 || bBuf.length === 0 || aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+/**
+ * Verify OTP against stored value (supports legacy bcrypt hashes).
+ * @param {string} inputCode
+ * @param {string|null} storedCode
+ * @returns {Promise<boolean>}
+ */
+async function verifyOtpCode(inputCode, storedCode) {
+  if (!storedCode) return false;
+
+  // Backward compatibility for older bcrypt-hashed OTP records.
+  if (/^\$2[aby]\$/.test(storedCode)) {
+    return bcrypt.compare(String(inputCode), storedCode);
+  }
+
+  const hashedInput = hashOtpCode(inputCode);
+  return timingSafeEqualHex(hashedInput, storedCode);
 }
 
 async function appendAuthLog(userId, { action, success = true, ip = null, userAgent = null }) {
@@ -127,7 +172,8 @@ export const register = async ({ email, username, password }) => {
   try {
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const rawCode = crypto.randomInt(100000, 1000000).toString(); // correct range
-    const verificationCode = await bcrypt.hash(rawCode, BCRYPT_ROUNDS);
+    // SECURITY FIX [VULN-08]: Replace bcrypt OTP hashing with HMAC-SHA256.
+    const verificationCode = hashOtpCode(rawCode);
     const verificationCodeValidation = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = await User.create({
@@ -183,7 +229,7 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
       throw new Error("Invalid or expired code");
     }
 
-    const isMatch = await bcrypt.compare(code, user.verificationCode);
+    const isMatch = await verifyOtpCode(code, user.verificationCode);
     if (!isMatch) throw new Error("Invalid or expired code");
 
     user.verified = true;
@@ -229,7 +275,8 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
     }
 
     const rawCode = crypto.randomInt(100000, 1000000).toString();
-    const hashedCode = await bcrypt.hash(rawCode, BCRYPT_ROUNDS);
+    // SECURITY FIX [VULN-08]: Replace bcrypt OTP hashing with HMAC-SHA256.
+    const hashedCode = hashOtpCode(rawCode);
     user.verificationCode = hashedCode;
     user.verificationCodeValidation = new Date(Date.now() + 10 * 60 * 1000);
     user.lastVerificationSentAt = new Date();
@@ -392,6 +439,9 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     rtObj.revoked = true;
     rtObj.revokedAt = new Date();
     rtObj.replacedByToken = newRefreshToken;
+
+    // SECURITY FIX [VULN-06]: Remove rotated token explicitly from persistent token list.
+    user.refreshTokens = user.refreshTokens.filter((r) => r.token !== refreshToken);
 
     const now = new Date();
     const validTokens = user.refreshTokens.filter((r) => !r.revoked && new Date(r.expiresAt) > now);

@@ -58,7 +58,15 @@ router.get("/seller/:sellerId", authMiddleware, validateObjectId("sellerId"), ca
 router.post("/complete-profile", authMiddleware, uploadLimiter, upload.single("avatar"), verifyImageFileType, profileController.completeProfile);
 router.get("/profile", authMiddleware, cacheResponse(60), profileController.getProfile);
 router.get("/profile/:userId", authMiddleware, validateObjectId("userId"), cacheResponse(60), profileController.getProfile);
-router.put("/profile", authMiddleware, userWriteLimiter, invalidateCache('api_cache:*:/api/v1/users/profile*'), profileController.updateProfile);
+router.put(
+    "/profile",
+    authMiddleware,
+    // SECURITY FIX [VULN-04]: Enforce JSON payload size cap on profile updates.
+    express.json({ limit: '3mb' }),
+    userWriteLimiter,
+    invalidateCache('api_cache:*:/api/v1/users/profile*'),
+    profileController.updateProfile
+);
 
 // Favorites routes
 router.post("/favorites", authMiddleware, userWriteLimiter, profileController.addToFavorites);

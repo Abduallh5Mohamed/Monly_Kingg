@@ -193,81 +193,94 @@ export const createTransaction = async (req, res) => {
       };
     }
 
-    // ── ATOMIC Step 1: Deduct buyer balance + add to hold ───────────────────
-    // Uses findOneAndUpdate with a balance guard so it's a single atomic
-    // MongoDB operation — no read-modify-write race condition.
-    const updatedBuyer = await User.findOneAndUpdate(
-      {
-        _id: buyerId,
-        "wallet.balance": { $gte: finalPrice }, // guard: enough funds?
-      },
-      {
-        $inc: {
-          "wallet.balance": -finalPrice,
-          "wallet.hold": finalPrice,
-        },
-      },
-      { new: true }
-    );
-
-    if (!updatedBuyer) {
-      // Either user doesn't exist or balance is insufficient
-      const buyer = await User.findById(buyerId).select("wallet").lean();
-      if (!buyer) {
-        return res.status(404).json({ success: false, message: "User not found" });
-      }
-      return res.status(400).json({
-        success: false,
-        message: "Insufficient balance",
-        required: finalPrice,
-        available: buyer.wallet?.balance || 0,
-      });
-    }
-
-    // ── ATOMIC Step 2: Lock listing (prevents two buyers buying the same item) ─
-    // findOneAndUpdate only succeeds if listing is still "available" — atomic lock.
-    const lockedListing = await Listing.findOneAndUpdate(
-      { _id: listingId, status: "available" },
-      { $set: { status: "in_progress" } },
-      { new: true }
-    );
-
-    if (!lockedListing) {
-      // Listing was snapped up by another buyer — rollback balance deduction
-      await User.findByIdAndUpdate(buyerId, {
-        $inc: {
-          "wallet.balance": finalPrice,
-          "wallet.hold": -finalPrice,
-        },
-      });
-      return res.status(400).json({ success: false, message: "Listing is no longer available" });
-    }
-
-    // ── Step 3: Create transaction record ───────────────────────────────────
-    // If this crashes, the recovery scanner on startup will detect an
-    // orphaned hold (hold set but no waiting_seller tx) and alert admins.
+    let updatedBuyer;
     let transaction;
+    const session = await mongoose.startSession();
+
     try {
-      transaction = await Transaction.create({
-        buyer: buyerId,
-        seller: listing.seller._id,
-        listing: listingId,
-        amount: finalPrice,
-        originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
-        discountPercent: discountApplied ? discountApplied.percent : undefined,
-        status: "waiting_seller",
-        idempotencyKey: idempotencyKey || undefined,
-        timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
+      // SECURITY FIX [VULN-01]: Wrap debit + listing lock + transaction create in one DB transaction.
+      await session.withTransaction(async () => {
+        updatedBuyer = await User.findOneAndUpdate(
+          {
+            _id: buyerId,
+            "wallet.balance": { $gte: finalPrice },
+          },
+          {
+            $inc: {
+              "wallet.balance": -finalPrice,
+              "wallet.hold": finalPrice,
+            },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedBuyer) {
+          const insufficientBalanceError = new Error("Insufficient balance");
+          insufficientBalanceError.code = "INSUFFICIENT_BALANCE";
+          throw insufficientBalanceError;
+        }
+
+        const lockedListing = await Listing.findOneAndUpdate(
+          { _id: listingId, status: "available" },
+          { $set: { status: "in_progress" } },
+          { new: true, session }
+        );
+
+        if (!lockedListing) {
+          const listingUnavailableError = new Error("Listing is no longer available");
+          listingUnavailableError.code = "LISTING_UNAVAILABLE";
+          throw listingUnavailableError;
+        }
+
+        const createdTransactions = await Transaction.create([
+          {
+            buyer: buyerId,
+            seller: listing.seller._id,
+            listing: listingId,
+            amount: finalPrice,
+            originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
+            discountPercent: discountApplied ? discountApplied.percent : undefined,
+            status: "waiting_seller",
+            idempotencyKey: idempotencyKey || undefined,
+            timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
+          }
+        ], { session });
+
+        transaction = createdTransactions[0];
       });
-    } catch (createErr) {
-      // Rollback: restore buyer balance & listing status
-      await Promise.allSettled([
-        User.findByIdAndUpdate(buyerId, {
-          $inc: { "wallet.balance": finalPrice, "wallet.hold": -finalPrice },
-        }),
-        Listing.findByIdAndUpdate(listingId, { $set: { status: "available" } }),
-      ]);
-      throw createErr;
+    } catch (txnErr) {
+      if (txnErr?.code === "INSUFFICIENT_BALANCE") {
+        const buyer = await User.findById(buyerId).select("wallet").lean();
+        if (!buyer) {
+          return res.status(404).json({ success: false, message: "User not found" });
+        }
+        return res.status(400).json({
+          success: false,
+          message: "Insufficient balance",
+          required: finalPrice,
+          available: buyer.wallet?.balance || 0,
+        });
+      }
+
+      if (txnErr?.code === "LISTING_UNAVAILABLE") {
+        return res.status(400).json({ success: false, message: "Listing is no longer available" });
+      }
+
+      if (txnErr?.code === 11000 && idempotencyKey) {
+        const existing = await Transaction.findOne({ idempotencyKey }).lean();
+        if (existing) {
+          return res.status(200).json({
+            success: true,
+            message: "Purchase already initiated (idempotent response).",
+            data: { transactionId: existing._id },
+          });
+        }
+      }
+
+      throw txnErr;
+    } finally {
+      // SECURITY FIX [VULN-01]: Always release DB session resources.
+      await session.endSession();
     }
 
     // ── Step 4: Queue seller notification (durable) ─────────────────────────

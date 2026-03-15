@@ -298,9 +298,14 @@ export const getMyListingById = async (req, res) => {
 // Update a listing
 export const updateListing = async (req, res) => {
   try {
-    const listing = await Listing.findOne({ _id: req.params.id, seller: req.user._id });
+    const listing = await Listing.findById(req.params.id);
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
+    }
+
+    // SECURITY FIX [VULN-02]: Enforce explicit owner/admin authorization for listing updates.
+    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Access denied" });
     }
 
     if (req.body.title !== undefined) {
@@ -376,10 +381,17 @@ export const updateListing = async (req, res) => {
 // Delete a listing
 export const deleteListing = async (req, res) => {
   try {
-    const listing = await Listing.findOneAndDelete({ _id: req.params.id, seller: req.user._id });
+    const listing = await Listing.findById(req.params.id);
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
+
+    // SECURITY FIX [VULN-02]: Enforce explicit owner/admin authorization for listing deletion.
+    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    await listing.deleteOne();
     return res.status(200).json({ message: "Listing deleted" });
   } catch (error) {
     logger.error("Delete listing error:", error);

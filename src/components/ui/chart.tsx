@@ -44,7 +44,10 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
+  // SECURITY FIX [VULN-07]: Sanitize chart id before interpolating into CSS selectors.
+  const rawChartId = String(id || uniqueId.replace(/:/g, ""))
+  const safeChartId = rawChartId.replace(/[^a-zA-Z0-9_-]/g, "")
+  const chartId = `chart-${safeChartId || uniqueId.replace(/:/g, "")}`
 
   return (
     <ChartContext.Provider value={{ config }}>

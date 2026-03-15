@@ -224,6 +224,11 @@ export const updateProfile = async (req, res) => {
         const userId = req.user._id;
         const { fullName, username, phone, address, avatar, bio } = req.body;
 
+        // SECURITY FIX [VULN-04]: Reject oversized base64 avatar input before any processing.
+        if (typeof avatar === 'string' && avatar.length > MAX_AVATAR_BASE64_LENGTH) {
+            return res.status(413).json({ message: "Avatar image too large" });
+        }
+
         for (const [field, maxLen] of Object.entries(MAX_LENGTHS)) {
             const val = req.body[field];
             if (val !== undefined && typeof val === 'string' && val.length > maxLen) {

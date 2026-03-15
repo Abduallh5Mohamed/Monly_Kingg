@@ -225,7 +225,7 @@ export const refresh = async (req, res) => {
       path: "/"
     });
 
-    // Generate new CSRF token when refreshing
+    // SECURITY FIX [VULN-03]: Regenerate CSRF token on each access-token refresh.
     const csrfToken = crypto.randomBytes(24).toString("hex");
     res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
       httpOnly: false,

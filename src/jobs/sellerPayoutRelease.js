@@ -8,6 +8,7 @@ import Transaction from "../modules/transactions/transaction.model.js";
 import User from "../modules/users/user.model.js";
 import cacheService from "../services/cacheService.js";
 import logger from "../utils/logger.js";
+import mongoose from "mongoose";
 
 export async function runSellerPayoutRelease() {
     try {
@@ -29,28 +30,60 @@ export async function runSellerPayoutRelease() {
                 const sellerId = tx.seller.toString();
                 const sellerNetAmount = tx.sellerNetAmount || tx.amount;
 
-                // ── Atomic: credit seller balance ──────────────────────────────────
-                const updatedSeller = await User.findByIdAndUpdate(
-                    sellerId,
-                    {
-                        $inc: { "wallet.balance": sellerNetAmount },
-                    },
-                    { new: true }
-                );
+                const session = await mongoose.startSession();
+                let updatedSeller = null;
 
-                // Sync updated seller to cache
-                if (updatedSeller) {
-                    cacheService.cacheUser?.(updatedSeller)?.catch(() => { });
+                try {
+                    // SECURITY FIX [VULN-10]: Use a DB transaction so payout state and wallet credit stay consistent.
+                    await session.withTransaction(async () => {
+                        const updatedTx = await Transaction.findOneAndUpdate(
+                            {
+                                _id: tx._id,
+                                payoutStatus: "pending_payout",
+                                payoutAt: { $lte: now },
+                                status: { $in: ["completed", "auto_confirmed"] },
+                            },
+                            {
+                                $set: {
+                                    payoutStatus: "paid_out",
+                                    paidOutAt: new Date(),
+                                },
+                                $push: {
+                                    timeline: {
+                                        event: "payout_released",
+                                        note: `${sellerNetAmount} EGP released to seller wallet after hold period.`,
+                                    },
+                                },
+                            },
+                            { new: true, session }
+                        );
+
+                        if (!updatedTx) {
+                            return;
+                        }
+
+                        updatedSeller = await User.findByIdAndUpdate(
+                            sellerId,
+                            {
+                                $inc: { "wallet.balance": sellerNetAmount },
+                            },
+                            { new: true, session }
+                        );
+
+                        if (!updatedSeller) {
+                            throw new Error("Seller not found during payout release");
+                        }
+                    });
+                } finally {
+                    await session.endSession();
                 }
 
-                // Update transaction payout status
-                tx.payoutStatus = "paid_out";
-                tx.paidOutAt = new Date();
-                tx.timeline.push({
-                    event: "payout_released",
-                    note: `${sellerNetAmount} EGP released to seller wallet after hold period.`,
-                });
-                await tx.save();
+                // Sync updated seller to cache after commit
+                if (updatedSeller) {
+                    cacheService.cacheUser?.(updatedSeller)?.catch(() => { });
+                } else {
+                    continue;
+                }
 
                 logger.info(`[PayoutRelease] ✅ ${tx._id} — ${sellerNetAmount} EGP released to seller ${sellerId}`);
 
