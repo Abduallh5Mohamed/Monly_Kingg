@@ -3,6 +3,11 @@ import User from "../users/user.model.js";
 import cacheService from '../../services/cacheService.js';
 import socketService from '../../services/socketService.js';
 import { notifyAllAdmins, createNotification } from '../notifications/notificationHelper.js';
+import AuditLog from '../admin/auditLog.model.js';
+import logger from '../../utils/logger.js';
+import { safePaginate } from '../../utils/pagination.js';
+import { encrypt, decrypt } from '../../utils/encryption.js';
+import redis from '../../config/redis.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -19,9 +24,50 @@ const validateContactInfo = (contact) => {
     return emailRegex.test(contact) || phoneRegex.test(contact);
 };
 
+/**
+ * Safely decrypt a sensitive deposit field for API responses.
+ * @param {unknown} value
+ * @returns {unknown}
+ */
+const safeDecryptDepositField = (value) => {
+    if (typeof value !== 'string' || !value) return value;
+    try {
+        return decrypt(value);
+    } catch (error) {
+        logger.error(`Deposit field decryption failed: ${error.message}`);
+        return null;
+    }
+};
+
+/**
+ * Decrypt sensitive deposit fields before returning them in responses.
+ * @param {Record<string, any>} deposit
+ * @returns {Record<string, any>}
+ */
+const decryptDepositForResponse = (deposit) => {
+    if (!deposit) return deposit;
+    const normalized = deposit.toObject ? deposit.toObject() : { ...deposit };
+    normalized.senderFullName = safeDecryptDepositField(normalized.senderFullName);
+    normalized.senderPhoneOrEmail = safeDecryptDepositField(normalized.senderPhoneOrEmail);
+    if (normalized.gameTitle !== undefined) {
+        normalized.gameTitle = safeDecryptDepositField(normalized.gameTitle);
+    }
+    return normalized;
+};
+
 export const submitDeposit = async (req, res) => {
     try {
         const userId = req.user._id;
+        // SECURITY FIX [M-07]: Idempotency key prevents race-condition double submission.
+        const rawIdempotencyHeader = req.headers["x-idempotency-key"];
+        let idempotencyKey = null;
+        if (rawIdempotencyHeader) {
+            const trimmed = String(rawIdempotencyHeader).trim();
+            if (trimmed.length > 64 || !/^[a-zA-Z0-9\-_]+$/.test(trimmed)) {
+                return res.status(400).json({ message: "Invalid idempotency key format" });
+            }
+            idempotencyKey = trimmed;
+        }
         const {
             paymentMethod,
             amount,
@@ -51,9 +97,10 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Payment method must be either 'instapay' or 'vodafone_cash'" });
         }
 
-        const parsedAmount = parseFloat(amount);
-        if (isNaN(parsedAmount) || parsedAmount < 500) {
-            return res.status(400).json({ message: "Amount must be at least 500 LE" });
+        const parsedAmount = Number(amount);
+        const normalizedAmount = Math.round(parsedAmount * 100) / 100;
+        if (!Number.isFinite(parsedAmount) || normalizedAmount < 500 || normalizedAmount > 50000) {
+            return res.status(400).json({ message: "Amount must be between 500 and 50000 LE" });
         }
 
         const depositDateTime = new Date(depositDate);
@@ -71,6 +118,23 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Receipt image is required" });
         }
 
+        if (idempotencyKey) {
+            // SECURITY FIX [M-07]: Return existing response for repeated idempotent request.
+            const existing = await Deposit.findOne({ idempotencyKey }).lean();
+            if (existing) {
+                return res.status(200).json({
+                    message: "Already submitted",
+                    data: {
+                        _id: existing._id,
+                        amount: existing.amount,
+                        paymentMethod: existing.paymentMethod,
+                        status: existing.status,
+                        createdAt: existing.createdAt,
+                    }
+                });
+            }
+        }
+
         const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         if (!allowedMimeTypes.includes(req.file.mimetype)) {
             return res.status(400).json({ message: "Only JPEG, PNG, and WEBP images are allowed" });
@@ -80,13 +144,21 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Image size must not exceed 10MB" });
         }
 
-        const recentDeposit = await Deposit.findOne({
-            user: userId,
-            createdAt: { $gte: new Date(Date.now() - 60000) }
-        });
-
-        if (recentDeposit) {
-            return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+        if (redis.isReady()) {
+            const depositRateLockKey = `deposit:rate:${userId}`;
+            const acquired = await redis.getClient().set(depositRateLockKey, '1', { NX: true, EX: 60 });
+            if (!acquired) {
+                return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+            }
+        } else {
+            // Fallback: DB check (still vulnerable to race but best effort without Redis)
+            const recentDeposit = await Deposit.findOne({
+                user: userId,
+                createdAt: { $gte: new Date(Date.now() - 60000) }
+            });
+            if (recentDeposit) {
+                return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+            }
         }
 
         const receiptImagePath = `/uploads/receipts/${req.file.filename}`;
@@ -94,17 +166,37 @@ export const submitDeposit = async (req, res) => {
         const deposit = new Deposit({
             user: userId,
             paymentMethod,
-            amount: parsedAmount,
-            senderFullName: sanitizedFullName,
-            senderPhoneOrEmail: sanitizedPhoneOrEmail,
+            amount: normalizedAmount,
+            senderFullName: encrypt(sanitizedFullName),
+            senderPhoneOrEmail: encrypt(sanitizedPhoneOrEmail),
             depositDate: depositDateTime,
             receiptImage: receiptImagePath,
-            gameTitle: sanitizedGameTitle,
-            paidAmount: parsedAmount,
-            creditedAmount: parsedAmount
+            gameTitle: sanitizedGameTitle ? encrypt(sanitizedGameTitle) : undefined,
+            paidAmount: normalizedAmount,
+            creditedAmount: normalizedAmount,
+            idempotencyKey: idempotencyKey || undefined,
         });
 
-        await deposit.save();
+        try {
+            await deposit.save();
+        } catch (saveErr) {
+            if (saveErr?.code === 11000 && idempotencyKey) {
+                const existing = await Deposit.findOne({ idempotencyKey }).lean();
+                if (existing) {
+                    return res.status(200).json({
+                        message: "Already submitted",
+                        data: {
+                            _id: existing._id,
+                            amount: existing.amount,
+                            paymentMethod: existing.paymentMethod,
+                            status: existing.status,
+                            createdAt: existing.createdAt,
+                        }
+                    });
+                }
+            }
+            throw saveErr;
+        }
 
         // Populate user details for socket notification
         await deposit.populate('user', 'username email phone profile.province profile.phone');
@@ -133,7 +225,7 @@ export const submitDeposit = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Submit deposit error:", error);
+        logger.error(`Submit deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -141,50 +233,57 @@ export const submitDeposit = async (req, res) => {
 export const getMyDeposits = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { page = 1, limit = 10 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
         const deposits = await Deposit.find({ user: userId })
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(Number(limit));
+            .skip(skip)
+            .limit(limit);
+
+        const safeDeposits = deposits.map((deposit) => decryptDepositForResponse(deposit));
 
         const total = await Deposit.countDocuments({ user: userId });
 
         return res.status(200).json({
-            data: deposits,
+            data: safeDeposits,
             total,
-            page: Number(page),
+            page,
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get my deposits error:", error);
+        logger.error(`Get my deposits error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
 
 export const getAllDeposits = async (req, res) => {
     try {
-        const { status = "all", page = 1, limit = 20 } = req.query;
+        const { status = "all" } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
         const filter = status !== "all" ? { status } : {};
 
         const deposits = await Deposit.find(filter)
             .populate("user", "username email phone profile.province profile.phone")
             .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(Number(limit));
+            .skip(skip)
+            .limit(limit);
+
+        const safeDeposits = deposits.map((deposit) => decryptDepositForResponse(deposit));
 
         const total = await Deposit.countDocuments(filter);
         const pendingCount = await Deposit.countDocuments({ status: "pending" });
 
         return res.status(200).json({
-            data: deposits,
+            data: safeDeposits,
             total,
             pendingCount,
-            page: Number(page),
+            page,
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get all deposits error:", error);
+        logger.error(`Get all deposits error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -193,48 +292,88 @@ export const approveDeposit = async (req, res) => {
     try {
         const { id } = req.params;
         const { amount: editedAmount } = req.body;
+        let normalizedEditedAmount = null;
 
-        const deposit = await Deposit.findById(id).populate("user");
+        if (editedAmount !== undefined && editedAmount !== null) {
+            const parsedAmount = Number(editedAmount);
+            normalizedEditedAmount = Math.round(parsedAmount * 100) / 100;
+            if (!Number.isFinite(parsedAmount) || normalizedEditedAmount < 500 || normalizedEditedAmount > 50000) {
+                return res.status(400).json({
+                    message: "Invalid amount. Must be between 500 and 50000 LE"
+                });
+            }
+        }
+
+        // SECURITY FIX [C-08]: Atomic status transition prevents concurrent double approval.
+        const deposit = await Deposit.findOneAndUpdate(
+            { _id: id, status: "pending" },
+            { $set: { status: "processing" } },
+            { new: true }
+        ).populate("user");
 
         if (!deposit) {
-            return res.status(404).json({ message: "Deposit not found" });
-        }
-        if (deposit.status !== "pending") {
-            return res.status(400).json({ message: "Deposit already processed" });
+            return res.status(400).json({ message: "Deposit already processed or not found" });
         }
 
         let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
 
-        if (editedAmount !== undefined && editedAmount !== null) {
-            const parsedAmount = parseFloat(editedAmount);
-            if (isNaN(parsedAmount) || parsedAmount < 500) {
-                return res.status(400).json({
-                    message: "Invalid amount. Must be at least 500 LE"
-                });
-            }
-            amountToCredit = parsedAmount;
-            deposit.amount = parsedAmount;
+        if (normalizedEditedAmount !== null) {
+            amountToCredit = normalizedEditedAmount;
+            deposit.amount = normalizedEditedAmount;
         }
 
-        deposit.status = "approved";
-        deposit.processedBy = req.user._id;
-        deposit.processedAt = new Date();
-        await deposit.save();
-
-        // Credit user balance
-        await cacheService.updateBalanceWithSync(
-            deposit.user._id,
-            amountToCredit,
-            `deposit approval #${id}`
-        );
-
-        // Deduct from admin balance
-        if (req.user.role === 'admin') {
+        // SECURITY FIX [C-3]: Roll back credited balance if persisting approval fails.
+        try {
             await cacheService.updateBalanceWithSync(
-                req.user._id,
-                -amountToCredit,
-                `deposit approval #${id} (admin deduction)`
+                deposit.user._id,
+                amountToCredit,
+                `deposit approval #${id}`
             );
+
+            // SECURITY FIX [C-08]: Finalize lock after successful credit.
+            deposit.status = "approved";
+            deposit.processedBy = req.user._id;
+            deposit.processedAt = new Date();
+            await deposit.save();
+        } catch (saveErr) {
+            try {
+                await cacheService.updateBalanceWithSync(
+                    deposit.user._id,
+                    -amountToCredit,
+                    `deposit approval rollback #${id}`
+                );
+            } catch (rollbackErr) {
+                logger.error(`Deposit rollback failed for ${deposit._id}: ${rollbackErr.message}`);
+            }
+            throw saveErr;
+        }
+
+        // SECURITY FIX [C-08]: Keep admin wallet unchanged during deposit approval flow.
+
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_deposit_approved",
+                targetModel: "Deposit",
+                targetId: deposit._id,
+                targetUser: deposit.user._id,
+                details: {
+                    depositId: deposit._id.toString(),
+                    amountCredited: amountToCredit,
+                    paymentMethod: deposit.paymentMethod,
+                },
+                metadata: {
+                    depositId: deposit._id.toString(),
+                    amountCredited: amountToCredit,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for deposit approval ${deposit._id}: ${auditErr.message}`);
         }
 
         // Real-time: notify admins of deposit update
@@ -254,10 +393,10 @@ export const approveDeposit = async (req, res) => {
 
         return res.status(200).json({
             message: `Deposit approved and ${amountToCredit} LE added to balance`,
-            data: deposit
+            data: decryptDepositForResponse(deposit)
         });
     } catch (error) {
-        console.error("Approve deposit error:", error);
+        logger.error(`Approve deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -294,9 +433,30 @@ export const rejectDeposit = async (req, res) => {
             relatedId: deposit._id,
         });
 
-        return res.status(200).json({ message: "Deposit rejected", data: deposit });
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_deposit_rejected",
+                targetModel: "Deposit",
+                targetId: deposit._id,
+                targetUser: deposit.user._id,
+                details: {
+                    depositId: deposit._id.toString(),
+                    reason: deposit.rejectionReason,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for deposit rejection ${deposit._id}: ${auditErr.message}`);
+        }
+
+        return res.status(200).json({ message: "Deposit rejected", data: decryptDepositForResponse(deposit) });
     } catch (error) {
-        console.error("Reject deposit error:", error);
+        logger.error(`Reject deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
     }
 };

@@ -44,7 +44,10 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
+  // SECURITY FIX [VULN-07]: Sanitize chart id before interpolating into CSS selectors.
+  const rawChartId = String(id || uniqueId.replace(/:/g, ""))
+  const safeChartId = rawChartId.replace(/[^a-zA-Z0-9_-]/g, "")
+  const chartId = `chart-${safeChartId || uniqueId.replace(/:/g, "")}`
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -68,6 +71,8 @@ const ChartContainer = React.forwardRef<
 ChartContainer.displayName = "Chart"
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  // SECURITY FIX [VULN-07]: Sanitize selector token before injecting dynamic CSS.
+  const safeChartId = String(id).replace(/[^a-zA-Z0-9_-]/g, "")
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
   )
@@ -82,7 +87,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
         __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart=${safeChartId}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =

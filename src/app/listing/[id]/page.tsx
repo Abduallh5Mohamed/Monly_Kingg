@@ -100,6 +100,7 @@ export default function ListingDetailPage() {
     const [ratingLoading, setRatingLoading] = useState(false);
     const [ratingError, setRatingError] = useState('');
     const [ratingSuccess, setRatingSuccess] = useState('');
+    const [hasCompletedPurchaseWithSeller, setHasCompletedPurchaseWithSeller] = useState(false);
 
     useEffect(() => {
         if (params.id) {
@@ -113,6 +114,64 @@ export default function ListingDetailPage() {
             fetchSellerRatings();
         }
     }, [listing?.seller?._id, ratingsPage]);
+
+    useEffect(() => {
+        let isActive = true;
+
+        const checkRatingEligibility = async () => {
+            if (!user || !listing?.seller?._id || user.id === listing.seller._id) {
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(false);
+                }
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/v1/transactions/mine?role=buyer&status=completed&limit=100', {
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    if (isActive) {
+                        setHasCompletedPurchaseWithSeller(false);
+                    }
+                    return;
+                }
+
+                const data = await res.json();
+                const transactions: Array<{ seller?: { _id?: string } | string }> =
+                    Array.isArray(data?.data) ? data.data : [];
+
+                const canRateSeller = transactions.some((tx) => {
+                    const txSellerId = typeof tx.seller === 'string' ? tx.seller : tx.seller?._id;
+                    return txSellerId === listing.seller._id;
+                });
+
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(canRateSeller);
+                }
+            } catch {
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(false);
+                }
+            }
+        };
+
+        checkRatingEligibility();
+
+        return () => {
+            isActive = false;
+        };
+    }, [user?.id, listing?.seller?._id]);
+
+    useEffect(() => {
+        if (
+            showRatingForm &&
+            (!user || !listing?.seller?._id || user.id === listing.seller._id || !hasCompletedPurchaseWithSeller)
+        ) {
+            setShowRatingForm(false);
+        }
+    }, [showRatingForm, user?.id, listing?.seller?._id, hasCompletedPurchaseWithSeller]);
 
     const fetchListing = async () => {
         try {
@@ -257,7 +316,7 @@ export default function ListingDetailPage() {
     );
 
     const allImages = listing ? [listing.coverImage, ...listing.images].filter(Boolean) : [];
-    const canRate = user && listing && user.id !== listing.seller._id;
+    const canRate = Boolean(user && listing && user.id !== listing.seller._id && hasCompletedPurchaseWithSeller);
 
     if (loading) {
         return (

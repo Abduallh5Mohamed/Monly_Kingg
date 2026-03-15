@@ -18,6 +18,7 @@ import {
   getSecuritySettings,
   updateSecuritySettings
 } from "./security.controller.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 
 const router = express.Router();
 
@@ -26,14 +27,15 @@ router.get("/overview", getSecurityOverview);
 
 // 2. Session Management
 router.get("/sessions", getAllSessions);
-router.post("/sessions/:userId/terminate", terminateSession);
-router.post("/sessions/:userId/force-logout", forceLogoutUser);
+// SECURITY FIX [L-05]: Validate userId in security session routes.
+router.post("/sessions/:userId/terminate", validateObjectId("userId"), terminateSession);
+router.post("/sessions/:userId/force-logout", validateObjectId("userId"), forceLogoutUser);
 router.post("/sessions/terminate-all", terminateAllSessions);
 
 // 3. IP Security
 router.get("/blocked-ips", getBlockedIPs);
 router.post("/blocked-ips", blockIP);
-router.delete("/blocked-ips/:id", unblockIP);
+router.delete("/blocked-ips/:id", validateObjectId("id"), unblockIP);
 
 // 4. Login Attempts
 router.get("/login-attempts", getLoginAttempts);
@@ -42,7 +44,7 @@ router.post("/login-attempts/:ip/flag", flagSuspicious);
 
 // 5. Alerts
 router.get("/alerts", getSecurityAlerts);
-router.post("/alerts/:id/resolve", resolveAlert);
+router.post("/alerts/:id/resolve", validateObjectId("id"), resolveAlert);
 router.post("/alerts/test-webhook", testWebhook);
 
 // 6. Audit Logs

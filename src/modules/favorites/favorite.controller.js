@@ -1,5 +1,6 @@
 import Favorite from "./favorite.model.js";
 import Listing from "../listings/listing.model.js";
+import logger from "../../utils/logger.js";
 
 /**
  * POST /api/v1/favorites/:listingId
@@ -26,7 +27,7 @@ export const toggleFavorite = async (req, res) => {
         await Favorite.create({ user: userId, listing: listingId });
         return res.json({ success: true, favorited: true, message: "Added to favorites" });
     } catch (error) {
-        console.error("Toggle favorite error:", error);
+        logger.error("Toggle favorite error:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -74,7 +75,7 @@ export const getMyFavorites = async (req, res) => {
             totalPages: Math.ceil(total / limit),
         });
     } catch (error) {
-        console.error("Get favorites error:", error);
+        logger.error("Get favorites error:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -90,7 +91,7 @@ export const getMyFavoriteIds = async (req, res) => {
         const ids = favorites.map(f => f.listing.toString());
         return res.json({ success: true, data: ids });
     } catch (error) {
-        console.error("Get favorite IDs error:", error);
+        logger.error("Get favorite IDs error:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };

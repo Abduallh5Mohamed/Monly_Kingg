@@ -12,6 +12,22 @@ import {
 } from "./sellerLevel.service.js";
 import logger from "../../utils/logger.js";
 
+const SAFE_LEVEL_MESSAGES = [
+  "User not found",
+  "Level must be between 1 and",
+  "Override removed",
+];
+
+/**
+ * Determine if a seller-level service error message is safe to expose.
+ * @param {unknown} message
+ * @returns {boolean}
+ */
+function isSafeLevelMessage(message) {
+  if (typeof message !== "string") return false;
+  return SAFE_LEVEL_MESSAGES.some((safe) => message === safe || message.startsWith(safe));
+}
+
 // ─── Admin: GET /api/v1/admin/seller-levels ──────────────────────────────────
 // List all sellers with level info (paginated)
 export const listSellersWithLevels = async (req, res) => {
@@ -43,7 +59,10 @@ export const setSellerLevel = async (req, res) => {
     return res.json({ success: true, data: result, message: `Level set to ${level}` });
   } catch (err) {
     logger.error(`[SellerLevels] setLevel error: ${err.message}`);
-    return res.status(400).json({ success: false, message: err.message });
+    return res.status(400).json({
+      success: false,
+      message: isSafeLevelMessage(err.message) ? err.message : "Operation failed"
+    });
   }
 };
 
@@ -56,7 +75,10 @@ export const removeOverride = async (req, res) => {
     return res.json({ success: true, data: result, message: "Override removed" });
   } catch (err) {
     logger.error(`[SellerLevels] removeOverride error: ${err.message}`);
-    return res.status(400).json({ success: false, message: err.message });
+    return res.status(400).json({
+      success: false,
+      message: isSafeLevelMessage(err.message) ? err.message : "Operation failed"
+    });
   }
 };
 
@@ -114,7 +136,10 @@ export const updateConfig = async (req, res) => {
     return res.json({ success: true, data: config, message: "Configuration updated" });
   } catch (err) {
     logger.error(`[SellerLevels] updateConfig error: ${err.message}`);
-    return res.status(400).json({ success: false, message: err.message });
+    return res.status(400).json({
+      success: false,
+      message: isSafeLevelMessage(err.message) ? err.message : "Operation failed"
+    });
   }
 };
 

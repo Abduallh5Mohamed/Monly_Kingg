@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance optimizations
-  reactStrictMode: false,
+  reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
 
@@ -46,10 +46,10 @@ const nextConfig = {
     ];
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   images: {
     unoptimized: true, // Disable Next.js image optimization for integrated server
@@ -122,10 +122,46 @@ const nextConfig = {
         ],
       },
       {
-        // Cache uploaded images for 1 day (they have unique filenames)
-        source: '/uploads/:path*',
+        // Public uploads — normal cache
+        source: '/uploads/listings/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+          { key: 'Cache-Control', value: 'public, max-age=86400' },
+        ],
+      },
+      {
+        source: '/uploads/avatars/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400' },
+        ],
+      },
+      {
+        // Public uploads — normal cache
+        source: '/uploads/other/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400' },
+        ],
+      },
+      {
+        // Sensitive uploads — no cache
+        source: '/uploads/receipts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, private' },
+          { key: 'Pragma', value: 'no-cache' },
+        ],
+      },
+      {
+        // Sensitive uploads — no cache
+        source: '/uploads/tickets/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, private' },
+          { key: 'Pragma', value: 'no-cache' },
+        ],
+      },
+      {
+        // Sensitive uploads — no cache
+        source: '/uploads/identity/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, private' },
         ],
       },
       {
@@ -150,6 +186,12 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
+          // SECURITY FIX [VULN-11]: Apply baseline browser security headers on frontend responses.
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
           { key: 'Origin-Agent-Cluster', value: '?1' },
         ],
       },

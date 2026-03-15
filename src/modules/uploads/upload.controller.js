@@ -1,6 +1,18 @@
 import Upload from "./upload.model.js";
 import path from "path";
 import fs from "fs/promises";
+import logger from "../../utils/logger.js";
+import { safePaginate } from "../../utils/pagination.js";
+
+const ALLOWED_UPLOAD_TYPES = new Set([
+  "profile_picture",
+  "payment_proof",
+  "account_image",
+  "chat_media",
+  "ticket_attachment",
+  "ads",
+  "other"
+]);
 
 /**
  * رفع ملف جديد
@@ -16,7 +28,8 @@ export const uploadFile = async (req, res) => {
 
     const { type, relatedModel, relatedId } = req.body;
     const file = req.file;
-    const subDir = type || "other";
+    // SECURITY FIX [H-05]: Whitelist upload types to avoid path traversal via req.body.type.
+    const subDir = ALLOWED_UPLOAD_TYPES.has(type) ? type : "other";
 
     // إنشاء سجل في قاعدة البيانات
     const upload = await Upload.create({
@@ -49,7 +62,7 @@ export const uploadFile = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Upload error:", error);
+    logger.error("Upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to upload file"
@@ -62,7 +75,8 @@ export const uploadFile = async (req, res) => {
  */
 export const getUserUploads = async (req, res) => {
   try {
-    const { type, limit = 50, page = 1 } = req.query;
+    const { page, limit, skip } = safePaginate(req.query, 50, 100);
+    const { type } = req.query;
     const userId = req.params.userId || req.user._id;
 
     // التحقق من الصلاحيات
@@ -76,13 +90,11 @@ export const getUserUploads = async (req, res) => {
     const query = { uploadedBy: userId, isDeleted: false };
     if (type) query.type = type;
 
-    const skip = (page - 1) * limit;
-
     const [uploads, total] = await Promise.all([
       Upload.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .lean(),
       Upload.countDocuments(query)
     ]);
@@ -92,13 +104,13 @@ export const getUserUploads = async (req, res) => {
       data: uploads,
       pagination: {
         total,
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page,
+        limit,
         pages: Math.ceil(total / limit)
       }
     });
   } catch (error) {
-    console.error("Get uploads error:", error);
+    logger.error("Get uploads error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch uploads"
@@ -133,7 +145,7 @@ export const getUploadById = async (req, res) => {
       data: upload
     });
   } catch (error) {
-    console.error("Get upload error:", error);
+    logger.error("Get upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch upload"
@@ -169,7 +181,7 @@ export const deleteUpload = async (req, res) => {
     try {
       await fs.unlink(upload.filePath);
     } catch (err) {
-      console.error("File deletion error:", err);
+      logger.error("File deletion error:", err);
     }
 
     res.json({
@@ -177,7 +189,7 @@ export const deleteUpload = async (req, res) => {
       message: "Upload deleted successfully"
     });
   } catch (error) {
-    console.error("Delete upload error:", error);
+    logger.error("Delete upload error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to delete upload"
@@ -215,7 +227,7 @@ export const updateUploadStatus = async (req, res) => {
       data: upload
     });
   } catch (error) {
-    console.error("Update status error:", error);
+    logger.error("Update status error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to update upload status"
@@ -243,7 +255,7 @@ export const getRelatedUploads = async (req, res) => {
       data: uploads
     });
   } catch (error) {
-    console.error("Get related uploads error:", error);
+    logger.error("Get related uploads error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch related uploads"

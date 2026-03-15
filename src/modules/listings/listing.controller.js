@@ -12,6 +12,9 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,6 +22,54 @@ const __dirname = dirname(__filename);
 // ─── In-process campaign cache (avoids DB hit on every browse) ───
 let _campaignCache = { data: null, expiresAt: 0 };
 const CAMPAIGN_CACHE_TTL = 120_000; // 2 minutes
+const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_TITLE_LENGTH = 200;
+const MAX_DESCRIPTION_LENGTH = 2000;
+const MAX_DETAILS_SIZE_BYTES = 10_000;
+const MAX_DETAILS_DEPTH = 5;
+
+/**
+ * Recursively validate object depth to block overly nested payloads.
+ * @param {unknown} value
+ * @param {number} depth
+ */
+function validateDetailsDepth(value, depth = 0) {
+  if (depth > MAX_DETAILS_DEPTH) {
+    throw new Error("Details object structure is too complex");
+  }
+
+  if (value && typeof value === "object") {
+    Object.values(value).forEach((child) => validateDetailsDepth(child, depth + 1));
+  }
+}
+
+/**
+ * Parse and validate listing details payload (format, size, and nesting).
+ * @param {unknown} rawDetails
+ * @returns {Record<string, unknown>}
+ */
+function parseAndValidateDetails(rawDetails) {
+  let details;
+
+  try {
+    details = typeof rawDetails === "string" ? JSON.parse(rawDetails) : rawDetails;
+  } catch (_err) {
+    throw new Error("Invalid details format");
+  }
+
+  if (!details || typeof details !== "object" || Array.isArray(details)) {
+    throw new Error("Invalid details format");
+  }
+
+  const serialized = JSON.stringify(details);
+  if (Buffer.byteLength(serialized, "utf8") > MAX_DETAILS_SIZE_BYTES) {
+    throw new Error("Details field exceeds maximum size (10KB)");
+  }
+
+  validateDetailsDepth(details);
+  return details;
+}
 
 async function getActiveCampaignsCached() {
   const now = Date.now();
@@ -36,7 +87,7 @@ async function getActiveCampaignsCached() {
 // Create a new listing (seller only)
 export const createListing = async (req, res) => {
   try {
-    console.log('📝 Creating listing with data:', {
+    logger.info('📝 Creating listing with data:', {
       title: req.body.title,
       game: req.body.game,
       price: req.body.price,
@@ -51,7 +102,11 @@ export const createListing = async (req, res) => {
     }
 
     // Validation
-    if (!req.body.title || !req.body.game || !req.body.price) {
+    if (!req.body.title || req.body.title.length > MAX_TITLE_LENGTH) {
+      return res.status(400).json({ message: "Title is required and must not exceed 200 characters" });
+    }
+
+    if (!req.body.game || !req.body.price) {
       return res.status(400).json({ message: "Title, game, and price are required" });
     }
 
@@ -60,11 +115,29 @@ export const createListing = async (req, res) => {
       return res.status(400).json({ message: "Price must be between 1 and 1,000,000" });
     }
 
+    if (req.body.description && req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+      return res.status(400).json({ message: "Description must not exceed 2000 characters" });
+    }
+
     // Handle file uploads
     const accountImages = [];
     let coverImage = null;
 
     if (req.files) {
+      const allFiles = [
+        ...(req.files.accountImages || []),
+        ...(req.files.coverImage || [])
+      ];
+
+      for (const file of allFiles) {
+        if (!ALLOWED_IMAGE_MIMES.has(file.mimetype)) {
+          return res.status(400).json({ message: 'Only JPEG, PNG, and WEBP images are allowed' });
+        }
+        if (file.size > MAX_IMAGE_SIZE) {
+          return res.status(400).json({ message: 'Image size must not exceed 10MB' });
+        }
+      }
+
       // Get account images
       if (req.files.accountImages) {
         req.files.accountImages.forEach(file => {
@@ -87,11 +160,9 @@ export const createListing = async (req, res) => {
     let details = {};
     if (req.body.details) {
       try {
-        details = typeof req.body.details === 'string'
-          ? JSON.parse(req.body.details)
-          : req.body.details;
+        details = parseAndValidateDetails(req.body.details);
       } catch (e) {
-        details = req.body.details;
+        return res.status(400).json({ message: e.message || "Invalid details format" });
       }
     }
 
@@ -154,12 +225,12 @@ export const createListing = async (req, res) => {
         });
       }
     } catch (campaignErr) {
-      console.error("Campaign notification error (non-blocking):", campaignErr.message);
+      logger.error("Campaign notification error (non-blocking):", campaignErr.message);
     }
-    console.log('✅ Listing created successfully:', listing._id);
+    logger.info('✅ Listing created successfully:', listing._id);
     return res.status(201).json({ message: "Listing created successfully", data: listing });
   } catch (error) {
-    console.error("❌ Create listing error:", error);
+    logger.error("❌ Create listing error:", error);
 
     // Handle validation errors
     if (error.name === 'ValidationError') {
@@ -167,22 +238,23 @@ export const createListing = async (req, res) => {
       return res.status(400).json({ message: messages.join(', ') });
     }
 
-    return res.status(500).json({ message: error.message || "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
 // Get my listings (seller)
 export const getMyListings = async (req, res) => {
   try {
-    const { status = "all", page = 1, limit = 20 } = req.query;
+    const { page, limit, skip } = safePaginate(req.query, 20, 100);
+    const { status = "all" } = req.query;
     const filter = { seller: req.user._id };
     if (status !== "all") filter.status = status;
 
     const listings = await Listing.find(filter)
       .populate("game", "name")
       .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
+      .skip(skip)
+      .limit(limit)
       .lean();
 
     const total = await Listing.countDocuments(filter);
@@ -193,11 +265,11 @@ export const getMyListings = async (req, res) => {
     return res.status(200).json({
       data: listings,
       total,
-      page: Number(page),
+      page,
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get my listings error:", error);
+    logger.error("Get my listings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -218,7 +290,7 @@ export const getMyListingById = async (req, res) => {
 
     return res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    console.error("Get my listing by ID error:", error);
+    logger.error("Get my listing by ID error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -226,18 +298,90 @@ export const getMyListingById = async (req, res) => {
 // Update a listing
 export const updateListing = async (req, res) => {
   try {
-    const listing = await Listing.findOne({ _id: req.params.id, seller: req.user._id });
+    const listing = await Listing.findById(req.params.id);
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    if (req.body.title) listing.title = req.body.title;
+    // SECURITY FIX [VULN-02]: Enforce explicit owner/admin authorization for listing updates.
+    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    if (req.body.title !== undefined) {
+      if (!req.body.title || req.body.title.length > MAX_TITLE_LENGTH) {
+        return res.status(400).json({ message: "Title is required and must not exceed 200 characters" });
+      }
+      listing.title = req.body.title;
+    }
     if (req.body.game) listing.game = req.body.game;
-    if (req.body.description !== undefined) listing.description = req.body.description;
-    if (req.body.price) listing.price = req.body.price;
-    if (req.body.images) listing.images = req.body.images;
-    if (req.body.coverImage !== undefined) listing.coverImage = req.body.coverImage;
-    if (req.body.details) listing.details = req.body.details;
+    if (req.body.description !== undefined) {
+      if (req.body.description && req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+        return res.status(400).json({ message: "Description must not exceed 2000 characters" });
+      }
+      listing.description = req.body.description;
+    }
+    if (req.body.price !== undefined) {
+      const newPrice = Number(req.body.price);
+      if (!Number.isFinite(newPrice) || newPrice <= 0 || newPrice > 1000000) {
+        return res.status(400).json({ message: "Price must be between 1 and 1,000,000 LE" });
+      }
+      listing.price = newPrice;
+    }
+
+    if (req.body.images !== undefined) {
+      if (!Array.isArray(req.body.images)) {
+        return res.status(400).json({ message: "images must be an array" });
+      }
+
+      const validImages = req.body.images.filter(
+        (url) => typeof url === 'string' && url.startsWith('/uploads/') && !url.includes('..')
+      );
+
+      if (validImages.length !== req.body.images.length) {
+        return res.status(400).json({ message: "Invalid image URLs — only internal uploads allowed" });
+      }
+
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { fileURLToPath } = await import('url');
+      const { dirname } = await import('path');
+      const __fn = fileURLToPath(import.meta.url);
+      const __dn = dirname(__fn);
+      const uploadsRoot = path.join(__dn, '../../../uploads');
+      const existChecks = await Promise.all(
+        validImages.map(async (url) => {
+          const rel = url.replace(/^\/uploads\//, '');
+          const abs = path.join(uploadsRoot, rel);
+          if (!abs.startsWith(uploadsRoot)) return false;
+          try { await fs.access(abs); return true; } catch { return false; }
+        })
+      );
+      const confirmedImages = validImages.filter((_, i) => existChecks[i]);
+      if (confirmedImages.length !== validImages.length) {
+        return res.status(400).json({ message: "One or more image files not found on server" });
+      }
+      listing.images = confirmedImages.slice(0, 10);
+    }
+
+    if (req.body.coverImage !== undefined) {
+      if (
+        req.body.coverImage !== null &&
+        !(typeof req.body.coverImage === 'string' && req.body.coverImage.startsWith('/uploads/') && !req.body.coverImage.includes('..'))
+      ) {
+        return res.status(400).json({ message: "Invalid coverImage URL" });
+      }
+
+      listing.coverImage = req.body.coverImage;
+    }
+
+    if (req.body.details !== undefined && req.body.details !== null && req.body.details !== "") {
+      try {
+        listing.details = parseAndValidateDetails(req.body.details);
+      } catch (e) {
+        return res.status(400).json({ message: e.message || "Invalid details format" });
+      }
+    }
     // Only allow seller to set status to "available" (other transitions are system-controlled)
     if (req.body.status && req.body.status === 'available') listing.status = req.body.status;
 
@@ -248,7 +392,7 @@ export const updateListing = async (req, res) => {
 
     return res.status(200).json({ message: "Listing updated", data: listing });
   } catch (error) {
-    console.error("Update listing error:", error);
+    logger.error("Update listing error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -256,13 +400,20 @@ export const updateListing = async (req, res) => {
 // Delete a listing
 export const deleteListing = async (req, res) => {
   try {
-    const listing = await Listing.findOneAndDelete({ _id: req.params.id, seller: req.user._id });
+    const listing = await Listing.findById(req.params.id);
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
+
+    // SECURITY FIX [VULN-02]: Enforce explicit owner/admin authorization for listing deletion.
+    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    await listing.deleteOne();
     return res.status(200).json({ message: "Listing deleted" });
   } catch (error) {
-    console.error("Delete listing error:", error);
+    logger.error("Delete listing error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -283,7 +434,7 @@ export const getSellerStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get seller stats error:", error);
+    logger.error("Get seller stats error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -388,9 +539,10 @@ export const browseListings = async (req, res) => {
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
     if (search) {
+      const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
       filter.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
+        { title: { $regex: safeSearch, $options: "i" } },
+        { description: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
@@ -404,7 +556,8 @@ export const browseListings = async (req, res) => {
     // Run listing query + count in parallel
     const [listings, total] = await Promise.all([
       Listing.find(filter)
-        .select('title game seller price coverImage images details status createdAt')
+        // SECURITY FIX [VULN-14]: Exclude free-form details from public listing payloads.
+        .select('title game seller price coverImage images status createdAt')
         .populate("game", "name")
         .populate("seller", "username avatar")
         .sort(sortOption)
@@ -424,7 +577,7 @@ export const browseListings = async (req, res) => {
       totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
-    console.error("Browse listings error:", error);
+    logger.error(`Browse listings error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -445,7 +598,7 @@ export const getGamesForFilter = async (req, res) => {
 
     return res.status(200).json({ data: games });
   } catch (error) {
-    console.error("Get games error:", error);
+    logger.error("Get games error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -474,7 +627,8 @@ export const getAllListings = async (req, res) => {
     // Run listing query + count in parallel
     const [listings, total] = await Promise.all([
       Listing.find(filter)
-        .select('title game seller price coverImage images details status createdAt')
+        // SECURITY FIX [VULN-14]: Exclude free-form details from public listing payloads.
+        .select('title game seller price coverImage images status createdAt')
         .populate("game", "name slug icon")
         .populate("seller", "username")
         .sort(sortOptions)
@@ -495,7 +649,7 @@ export const getAllListings = async (req, res) => {
       totalPages: Math.ceil(total / pageLimit),
     });
   } catch (error) {
-    console.error("Get all listings error:", error);
+    logger.error("Get all listings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -504,6 +658,8 @@ export const getAllListings = async (req, res) => {
 export const getListingById = async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id)
+      // SECURITY FIX [VULN-14]: Do not expose free-form details on public listing view.
+      .select('-details')
       .populate("game", "name slug icon category")
       .populate("seller", "username email isSeller")
       .lean();
@@ -566,7 +722,7 @@ export const getListingById = async (req, res) => {
 
     return res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    console.error("Get listing by ID error:", error);
+    logger.error("Get listing by ID error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

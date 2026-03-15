@@ -4,6 +4,30 @@ import Listing from "../listings/listing.model.js";
 import Chat from "../chats/chat.model.js";
 import Notification from "../notifications/notification.model.js";
 import { notifyAllAdmins } from "../notifications/notificationHelper.js";
+import logger from "../../utils/logger.js";
+
+/**
+ * Validate seller image fields to allow only upload URLs or base64 image data.
+ * @param {unknown} value
+ * @param {string} fieldName
+ */
+function validateImageField(value, fieldName) {
+  if (typeof value !== "string") {
+    throw new Error(`${fieldName} must be a string`);
+  }
+
+  const isUrl = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/.test(value);
+  const isBase64 = /^data:image\/(jpeg|jpg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
+
+  if (!isUrl && !isBase64) {
+    throw new Error(`${fieldName} must be a valid upload URL or base64 image`);
+  }
+
+  // 5MB binary image ~ 6.67MB base64 string; enforce strict upper bound.
+  if (isBase64 && value.length > 7 * 1024 * 1024) {
+    throw new Error(`${fieldName} exceeds maximum size of 5MB`);
+  }
+}
 
 // Submit seller request
 export const submitSellerRequest = async (req, res) => {
@@ -19,6 +43,16 @@ export const submitSellerRequest = async (req, res) => {
       if (existing.status === "pending") {
         return res.status(400).json({ message: "You already have a pending request" });
       }
+
+      try {
+        validateImageField(req.body.idImage, "idImage");
+        validateImageField(req.body.faceImageFront, "faceImageFront");
+        validateImageField(req.body.faceImageLeft, "faceImageLeft");
+        validateImageField(req.body.faceImageRight, "faceImageRight");
+      } catch (validationError) {
+        return res.status(400).json({ message: validationError.message });
+      }
+
       // If rejected, allow resubmission — push old rejection to history, update record
       existing.rejectionHistory.push({
         reason: existing.rejectionReason,
@@ -38,6 +72,16 @@ export const submitSellerRequest = async (req, res) => {
       existing.reviewedBy = null;
       existing.reviewedAt = null;
       existing.applicationCount = (existing.applicationCount || 1) + 1;
+
+      // Guard: estimate total base64 size to prevent document bloat
+      const totalBase64Size = [
+        req.body.idImage, req.body.faceImageFront, req.body.faceImageLeft, req.body.faceImageRight
+      ].reduce((sum, v) => sum + (typeof v === 'string' ? v.length : 0), 0);
+
+      if (totalBase64Size > 20 * 1024 * 1024) { // 20MB total base64 cap
+        return res.status(400).json({ message: "Total image size too large. Please compress your images." });
+      }
+
       await existing.save();
 
       // Notify admins about resubmitted seller request
@@ -49,7 +93,22 @@ export const submitSellerRequest = async (req, res) => {
         relatedId: existing._id,
       });
 
-      return res.status(200).json({ message: "Seller request resubmitted successfully", data: existing });
+      const safeRequest = existing.toObject ? existing.toObject() : { ...existing };
+      delete safeRequest.idImage;
+      delete safeRequest.faceImageFront;
+      delete safeRequest.faceImageLeft;
+      delete safeRequest.faceImageRight;
+
+      return res.status(200).json({ message: "Seller request resubmitted successfully", data: safeRequest });
+    }
+
+    try {
+      validateImageField(req.body.idImage, "idImage");
+      validateImageField(req.body.faceImageFront, "faceImageFront");
+      validateImageField(req.body.faceImageLeft, "faceImageLeft");
+      validateImageField(req.body.faceImageRight, "faceImageRight");
+    } catch (validationError) {
+      return res.status(400).json({ message: validationError.message });
     }
 
     const sellerRequest = new SellerRequest({
@@ -63,6 +122,15 @@ export const submitSellerRequest = async (req, res) => {
       applicationCount: 1,
     });
 
+    // Guard: estimate total base64 size to prevent document bloat
+    const totalBase64Size = [
+      req.body.idImage, req.body.faceImageFront, req.body.faceImageLeft, req.body.faceImageRight
+    ].reduce((sum, v) => sum + (typeof v === 'string' ? v.length : 0), 0);
+
+    if (totalBase64Size > 20 * 1024 * 1024) { // 20MB total base64 cap
+      return res.status(400).json({ message: "Total image size too large. Please compress your images." });
+    }
+
     await sellerRequest.save();
 
     // Notify all admins about the new seller request
@@ -74,9 +142,15 @@ export const submitSellerRequest = async (req, res) => {
       relatedId: sellerRequest._id,
     });
 
-    return res.status(201).json({ message: "Seller request submitted successfully", data: sellerRequest });
+    const safeRequest = sellerRequest.toObject ? sellerRequest.toObject() : { ...sellerRequest };
+    delete safeRequest.idImage;
+    delete safeRequest.faceImageFront;
+    delete safeRequest.faceImageLeft;
+    delete safeRequest.faceImageRight;
+
+    return res.status(201).json({ message: "Seller request submitted successfully", data: safeRequest });
   } catch (error) {
-    console.error("Submit seller request error:", error);
+    logger.error("Submit seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -88,9 +162,16 @@ export const getMySellerRequest = async (req, res) => {
     if (!request) {
       return res.status(200).json({ data: null });
     }
-    return res.status(200).json({ data: request });
+
+    const safeRequest = request.toObject ? request.toObject() : { ...request };
+    delete safeRequest.idImage;
+    delete safeRequest.faceImageFront;
+    delete safeRequest.faceImageLeft;
+    delete safeRequest.faceImageRight;
+
+    return res.status(200).json({ data: safeRequest });
   } catch (error) {
-    console.error("Get seller request error:", error);
+    logger.error("Get seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -121,7 +202,7 @@ export const getAllSellerRequests = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get all seller requests error:", error);
+    logger.error("Get all seller requests error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -192,7 +273,7 @@ export const getActiveSellers = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get active sellers error:", error);
+    logger.error("Get active sellers error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -248,7 +329,7 @@ export const getSellerDetail = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Get seller detail error:", error);
+    logger.error("Get seller detail error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -287,7 +368,7 @@ export const approveSellerRequest = async (req, res) => {
 
     return res.status(200).json({ message: "Seller request approved", data: request });
   } catch (error) {
-    console.error("Approve seller request error:", error);
+    logger.error("Approve seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -325,7 +406,7 @@ export const rejectSellerRequest = async (req, res) => {
 
     return res.status(200).json({ message: "Seller request rejected", data: request });
   } catch (error) {
-    console.error("Reject seller request error:", error);
+    logger.error("Reject seller request error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

@@ -85,6 +85,7 @@ load-test-report.json
 *.ps1
 
 # Logs
+# SECURITY FIX [VULN-09]: Prevent accidental commit of runtime logs that may contain sensitive data.
 *.log
 app.log
 logs/

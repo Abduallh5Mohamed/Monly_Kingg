@@ -1,9 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import crypto from "crypto";
+
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../modules/users/user.model.js";
+import logger from "../utils/logger.js";
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -35,6 +38,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: getCallbackURL(),
         scope: ["profile", "email"],
+        // FIX: Removed state:true — this app uses session:false JWT auth flow.
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -68,10 +72,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.create({
             email,
             username: username.length >= 5 ? username : username + "user1",
-            passwordHash: "google-oauth-" + profile.id, // Placeholder, user can't login with password
+            // SECURITY FIX [H-06]: Use cryptographically random placeholder for OAuth-only users.
+            passwordHash: "google-oauth-" + crypto.randomBytes(32).toString('hex'),
             googleId: profile.id,
             fullName: profile.displayName || "",
-            avatar: profile.photos?.[0]?.value || null,
+            avatar: null,
             verified: true,
           });
 
@@ -82,9 +87,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       }
     )
   );
-  console.log("✅ Google OAuth strategy configured");
+  logger.info("Google OAuth strategy configured");
 } else {
-  console.log("⚠️ Google OAuth not configured - missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET");
+  logger.warn("Google OAuth not configured - missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET");
 }
 
 export default passport;

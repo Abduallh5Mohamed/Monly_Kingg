@@ -5,8 +5,10 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { validateObjectId } from "../../middlewares/validateObjectId.js";
 import { cacheResponse, invalidateCache } from "../../middlewares/apiCacheMiddleware.js";
 import { listingWriteLimiter, uploadLimiter } from "../../middlewares/rateLimiter.js";
+import { verifyImageFileType } from "../../middlewares/verifyFileType.js";
 import {
   createListing,
   getMyListings,
@@ -49,19 +51,16 @@ const fileFilter = (req, file, cb) => {
     "image/jpg",
     "image/png",
     "image/gif",
-    "image/webp",
-    "image/heic",
-    "image/heif"
+    "image/webp"
   ];
 
   // Also check file extension as fallback
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic', '.heif'];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
   const ext = path.extname(file.originalname).toLowerCase();
 
   if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    console.error(`❌ Invalid file: ${file.originalname} (type: ${file.mimetype})`);
     cb(new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP images are allowed."));
   }
 };
@@ -69,22 +68,23 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max per file
+  // SECURITY FIX [L-02]: Enforce per-file and total-file count caps for listing uploads.
+  limits: { fileSize: 5 * 1024 * 1024, files: 11 }
 });
 
 // Multer error handler middleware
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ message: 'File too large. Maximum size is 10MB.' });
+      return res.status(400).json({ message: 'File too large. Maximum size is 5MB.' });
     }
     if (err.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({ message: 'Too many files. Maximum is 10 images.' });
+      return res.status(400).json({ message: 'Too many files. Maximum is 11 files total.' });
     }
     return res.status(400).json({ message: 'File upload error: ' + err.message });
   }
   if (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: 'File upload failed. Please check your file and try again.' });
   }
   next();
 };
@@ -109,16 +109,18 @@ router.post(
     { name: 'coverImage', maxCount: 1 }
   ]),
   handleMulterError,
+  // SECURITY FIX [C-04]: Verify actual file contents via magic bytes.
+  verifyImageFileType,
   invalidateCache(LISTING_CACHE_PATTERN),
   createListing
 );
 router.get("/my-listings", authMiddleware, cacheResponse(60), getMyListings);
-router.get("/my-listings/:id", authMiddleware, getMyListingById);
+router.get("/my-listings/:id", authMiddleware, validateObjectId(), getMyListingById);
 router.get("/stats", authMiddleware, cacheResponse(60), getSellerStats);
-router.put("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), updateListing);
-router.delete("/:id", authMiddleware, listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), deleteListing);
+router.put("/:id", authMiddleware, validateObjectId(), listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), updateListing);
+router.delete("/:id", authMiddleware, validateObjectId(), listingWriteLimiter, invalidateCache(LISTING_CACHE_PATTERN), deleteListing);
 
 // Generic routes at the end
-router.get("/:id/public", cacheResponse(120), getListingById);
+router.get("/:id/public", validateObjectId(), cacheResponse(120), getListingById);
 
 export default router;

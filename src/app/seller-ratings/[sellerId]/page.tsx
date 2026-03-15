@@ -69,6 +69,7 @@ export default function SellerRatingsPage() {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState('');
     const [formSuccess, setFormSuccess] = useState('');
+    const [hasCompletedPurchaseWithSeller, setHasCompletedPurchaseWithSeller] = useState(false);
 
     useEffect(() => {
         if (sellerId) {
@@ -76,6 +77,61 @@ export default function SellerRatingsPage() {
             fetchSellerInfo();
         }
     }, [sellerId, page]);
+
+    useEffect(() => {
+        let isActive = true;
+
+        const checkRatingEligibility = async () => {
+            if (!user || !sellerId || user.id === sellerId) {
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(false);
+                }
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/v1/transactions/mine?role=buyer&status=completed&limit=100', {
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    if (isActive) {
+                        setHasCompletedPurchaseWithSeller(false);
+                    }
+                    return;
+                }
+
+                const data = await res.json();
+                const transactions: Array<{ seller?: { _id?: string } | string }> =
+                    Array.isArray(data?.data) ? data.data : [];
+
+                const canRateSeller = transactions.some((tx) => {
+                    const txSellerId = typeof tx.seller === 'string' ? tx.seller : tx.seller?._id;
+                    return txSellerId === sellerId;
+                });
+
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(canRateSeller);
+                }
+            } catch {
+                if (isActive) {
+                    setHasCompletedPurchaseWithSeller(false);
+                }
+            }
+        };
+
+        checkRatingEligibility();
+
+        return () => {
+            isActive = false;
+        };
+    }, [user?.id, sellerId]);
+
+    useEffect(() => {
+        if (showRatingForm && (!user || user.id === sellerId || !hasCompletedPurchaseWithSeller)) {
+            setShowRatingForm(false);
+        }
+    }, [showRatingForm, user?.id, sellerId, hasCompletedPurchaseWithSeller]);
 
     const fetchSellerInfo = async () => {
         try {
@@ -165,7 +221,7 @@ export default function SellerRatingsPage() {
         </div>
     );
 
-    const canRate = user && user.id !== sellerId;
+    const canRate = Boolean(user && user.id !== sellerId && hasCompletedPurchaseWithSeller);
 
     return (
         <div className="min-h-screen bg-[#060811]">

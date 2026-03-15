@@ -11,10 +11,111 @@ import {
 } from "../../utils/emailTemplates.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
+import redis from "../../config/redis.js";
+import socketService from "../../services/socketService.js";
+import { maskSensitive } from "../../utils/encryption.js";
+
+function hashRefreshToken(raw) {
+  return crypto.createHash('sha256').update(raw).digest('hex');
+}
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
+const OTP_HMAC_SECRET = process.env.OTP_SECRET || process.env.JWT_SECRET || "dev_fallback_otp_secret";
+
+// SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
+const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
+
+/**
+ * Hash an IP address before persistence to reduce stored PII.
+ * @param {string|null} ip
+ * @returns {string|null}
+ */
+export function anonymizeIp(ip) {
+  if (!ip) return null;
+  return crypto
+    .createHash("sha256")
+    .update(`${ip}${process.env.IP_SALT || "default_salt"}`)
+    .digest("hex")
+    .slice(0, 16);
+}
+
+/**
+ * Truncate user-agent strings to bounded size before persistence.
+ * @param {string|null} userAgent
+ * @returns {string|null}
+ */
+export function truncateUserAgent(userAgent) {
+  if (!userAgent) return null;
+  return String(userAgent).slice(0, 200);
+}
+
+/**
+ * SECURITY FIX [VULN-08]: Hash OTP codes with HMAC-SHA256.
+ * @param {string} code
+ * @returns {string}
+ */
+function hashOtpCode(code) {
+  return crypto
+    .createHmac("sha256", OTP_HMAC_SECRET)
+    .update(String(code))
+    .digest("hex");
+}
+
+/**
+ * Constant-time comparison for same-length hex strings.
+ * @param {string} a
+ * @param {string} b
+ * @returns {boolean}
+ */
+function timingSafeEqualHex(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  const aBuf = Buffer.from(a, "hex");
+  const bBuf = Buffer.from(b, "hex");
+  if (aBuf.length === 0 || bBuf.length === 0 || aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+/**
+ * Verify OTP against stored value (supports legacy bcrypt hashes).
+ * @param {string} inputCode
+ * @param {string|null} storedCode
+ * @returns {Promise<boolean>}
+ */
+async function verifyOtpCode(inputCode, storedCode) {
+  if (!storedCode) return false;
+
+  // Backward compatibility for older bcrypt-hashed OTP records.
+  if (/^\$2[aby]\$/.test(storedCode)) {
+    return bcrypt.compare(String(inputCode), storedCode);
+  }
+
+  const hashedInput = hashOtpCode(inputCode);
+  return timingSafeEqualHex(hashedInput, storedCode);
+}
+
+async function appendAuthLog(userId, { action, success = true, ip = null, userAgent = null }) {
+  try {
+    const safeIp = anonymizeIp(ip);
+    const safeUserAgent = truncateUserAgent(userAgent);
+
+    // SECURITY FIX [M-03]: Keep authLogs bounded to avoid unbounded growth.
+    await User.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          authLogs: {
+            $each: [{ action, success, ip: safeIp, userAgent: safeUserAgent, timestamp: new Date() }],
+            $slice: -50,
+          },
+        },
+      }
+    );
+  } catch (_err) {
+    // Non-blocking logging path.
+  }
+}
 
 function signAccessToken(user) {
   const payload = { id: user._id.toString(), role: user.role };
@@ -30,10 +131,10 @@ async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
   const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
   user.refreshTokens.push({
-    token: tokenString,
+    token: hashRefreshToken(tokenString),
     expiresAt,
-    ip,
-    userAgent
+    ip: anonymizeIp(ip),
+    userAgent: truncateUserAgent(userAgent)
   });
 
   await user.save();
@@ -42,7 +143,7 @@ async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
 
 // Revoke a refresh token (mark as revoked)
 async function revokeRefreshToken(user, token, ip) {
-  const rt = user.refreshTokens.find(r => r.token === token);
+  const rt = user.refreshTokens.find(r => r.token === hashRefreshToken(token));
   if (!rt) return false;
   rt.revoked = true;
   rt.revokedAt = new Date();
@@ -58,13 +159,14 @@ async function revokeAllRefreshTokens(user, reason = null) {
     r.revokedAt = new Date();
     r.replacedByToken = null;
   });
-  user.authLogs.push({ action: "revoke_all_tokens", success: true, ip: null, userAgent: reason || "manual" });
   await user.save();
+  await appendAuthLog(user._id, { action: "revoke_all_tokens", success: true, ip: null, userAgent: reason || "manual" });
 }
 
 // Validate refresh token for a user instance
-function isRefreshTokenValid(rtObj) {
+function isRefreshTokenValid(rtObj, rawToken = null) {
   if (!rtObj) return false;
+  if (rawToken && rtObj.token !== hashRefreshToken(rawToken)) return false;
   if (rtObj.revoked) return false;
   if (Date.now() >= new Date(rtObj.expiresAt).getTime()) return false;
   return true;
@@ -75,7 +177,8 @@ export const register = async ({ email, username, password }) => {
   try {
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const rawCode = crypto.randomInt(100000, 1000000).toString(); // correct range
-    const verificationCode = await bcrypt.hash(rawCode, BCRYPT_ROUNDS);
+    // SECURITY FIX [VULN-08]: Replace bcrypt OTP hashing with HMAC-SHA256.
+    const verificationCode = hashOtpCode(rawCode);
     const verificationCodeValidation = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     const user = await User.create({
@@ -97,26 +200,17 @@ export const register = async ({ email, username, password }) => {
         expiresInMinutes: 10,
       });
       await sendEmail(user.email, "Verify your MonlyKing account", verificationEmail);
-      logger.info(`📧 Verification email sent to ${email}`);
+      logger.info(`[AUTH] Verification email sent to ${maskIdentifier(email)}`);
     } catch (emailError) {
-      logger.warn(`⚠️ Email sending failed for ${email}: ${emailError.message}`);
-      logger.info(`\n${'='.repeat(60)}`);
-      logger.info(`📋 VERIFICATION CODE (Email failed - showing in console):`);
-      logger.info(`   Email: ${email}`);
-      logger.info(`   Code: ${rawCode}`);
-      logger.info(`   Expires: ${new Date(Date.now() + 10 * 60 * 1000).toLocaleString()}`);
-      logger.info(`${'='.repeat(60)}\n`);
+      logger.warn(`[AUTH] Verification email delivery failed for ${maskIdentifier(email)}.`);
       // Continue registration even if email fails
     }
 
-    // log
-    user.authLogs.push({ action: "register", success: true, ip: null, userAgent: null });
-
-    await user.save();
-    logger.info(`User registered: ${email}`);
+    await appendAuthLog(user._id, { action: "register", success: true, ip: null, userAgent: null });
+    logger.info(`[AUTH] User registered: ${maskIdentifier(email)}`);
     return user;
   } catch (err) {
-    logger.error(`Register failed for ${email}: ${err.message}`);
+    logger.error(`[AUTH] Register failed for ${maskIdentifier(email)}: ${err.message}`);
     throw err;
 
   }
@@ -140,7 +234,7 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
       throw new Error("Invalid or expired code");
     }
 
-    const isMatch = await bcrypt.compare(code, user.verificationCode);
+    const isMatch = await verifyOtpCode(code, user.verificationCode);
     if (!isMatch) throw new Error("Invalid or expired code");
 
     user.verified = true;
@@ -152,13 +246,12 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
     const accessToken = signAccessToken(user);
     const refreshToken = await createAndStoreRefreshToken(user, ip, userAgent);
 
-    // audit
-    user.authLogs.push({ action: "verify", success: true, ip, userAgent });
     await user.save();
-    logger.info(`Email verified for user: ${email}`);
+    await appendAuthLog(user._id, { action: "verify", success: true, ip, userAgent });
+    logger.info(`[AUTH] Email verified for user: ${maskIdentifier(email)}`);
     return { accessToken, refreshToken };
   } catch (err) {
-    logger.error(`Invalid verification attempt for ${email}: ${err.message}`);
+    logger.error(`[AUTH] Invalid verification attempt for ${maskIdentifier(email)}: ${err.message}`);
     throw err;
 
   }
@@ -187,14 +280,14 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
     }
 
     const rawCode = crypto.randomInt(100000, 1000000).toString();
-    const hashedCode = await bcrypt.hash(rawCode, BCRYPT_ROUNDS);
+    // SECURITY FIX [VULN-08]: Replace bcrypt OTP hashing with HMAC-SHA256.
+    const hashedCode = hashOtpCode(rawCode);
     user.verificationCode = hashedCode;
     user.verificationCodeValidation = new Date(Date.now() + 10 * 60 * 1000);
     user.lastVerificationSentAt = new Date();
 
-    // audit
-    user.authLogs.push({ action: "resend_code", success: true, ip, userAgent });
     await user.save();
+    await appendAuthLog(user._id, { action: "resend_code", success: true, ip, userAgent });
 
     const verificationEmail = buildVerificationEmail({
       username: user.username,
@@ -202,10 +295,10 @@ export const resendVerificationCode = async (email, password, ip = null, userAge
       expiresInMinutes: 10,
     });
     await sendEmail(user.email, "Your new MonlyKing verification code", verificationEmail);
-    logger.info(`Verification code resent to: ${email}`);
+    logger.info(`[AUTH] Verification code resent to: ${maskIdentifier(email)}`);
     return { message: "Verification code resent successfully" };
   } catch (err) {
-    logger.error(`Resend verification failed for ${email}: ${err.message}`);
+    logger.error(`[AUTH] Resend verification failed for ${maskIdentifier(email)}: ${err.message}`);
     throw err;
 
   }
@@ -241,16 +334,19 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      const safeIp = anonymizeIp(ip);
+      const safeUserAgent = truncateUserAgent(userAgent);
       const newFailedAttempts = (user.failedLoginAttempts || 0) + 1;
       const updateData = {
         $inc: { failedLoginAttempts: 1 },
-        $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
+        // SECURITY FIX [M-03]: Keep auth logs bounded during failed login tracking.
+        $push: { authLogs: { $each: [{ action: "login", success: false, ip: safeIp, userAgent: safeUserAgent, createdAt: new Date() }], $slice: -50 } }
       };
 
       // Lock account if max attempts reached
       if (newFailedAttempts >= MAX_FAILED_ATTEMPTS) {
         updateData.$set = { lockUntil: new Date(Date.now() + LOCK_DURATION_MS) };
-        logger.warn(`🔒 Account locked for ${user.email} after ${newFailedAttempts} failed attempts`);
+        logger.warn(`[AUTH] Account locked for ${maskIdentifier(user.email)} after ${newFailedAttempts} failed attempts`);
       }
 
       // Lightweight failed attempt update
@@ -263,14 +359,35 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const refreshTokenString = generateRefreshTokenString();
     const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
+    // SECURITY FIX [M-1]: Prune expired/revoked refresh tokens and keep only recent valid entries.
+    const now = new Date();
+    const validRefreshTokens = (user.refreshTokens || [])
+      .filter((rt) => !rt.revoked && new Date(rt.expiresAt) > now)
+      .slice(-9);
+    const nextRefreshTokens = [
+      ...validRefreshTokens,
+      {
+        token: hashRefreshToken(refreshTokenString),
+        expiresAt,
+        ip: anonymizeIp(ip),
+        userAgent: truncateUserAgent(userAgent)
+      },
+    ];
+
     // Single atomic DB update: reset counters + push refresh token + push audit log
     await User.updateOne(
       { _id: user._id },
       {
-        $set: { failedLoginAttempts: 0, lockUntil: null },
+        $set: {
+          failedLoginAttempts: 0,
+          lockUntil: null,
+          refreshTokens: nextRefreshTokens,
+        },
         $push: {
-          refreshTokens: { token: refreshTokenString, expiresAt, ip, userAgent },
-          authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -50 }
+          authLogs: {
+            $each: [{ action: "login", success: true, ip: anonymizeIp(ip), userAgent: truncateUserAgent(userAgent), createdAt: new Date() }],
+            $slice: -50
+          }
         }
       }
     );
@@ -283,7 +400,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     Promise.allSettled(cacheOps).catch(() => { }); // Non-blocking
 
     const totalTime = Date.now() - startTime;
-    logger.info(`✅ [LOGIN] ${email} (${totalTime}ms)`);
+    logger.info(`[LOGIN] ${maskIdentifier(email)} (${totalTime}ms)`);
 
     Promise.resolve(
       sendEmail(
@@ -297,14 +414,14 @@ export const login = async (email, password, ip = null, userAgent = null) => {
         })
       )
     ).catch((emailErr) => {
-      logger.warn(`⚠️ Login alert email failed for ${user.email}: ${emailErr.message}`);
+      logger.warn(`[AUTH] Login alert email failed for ${maskIdentifier(user.email)}: ${emailErr.message}`);
     });
 
     return { accessToken, refreshToken: refreshTokenString };
   } catch (err) {
     const totalTime = Date.now() - startTime;
     if (err.message !== "Invalid credentials") {
-      logger.error(`❌ [LOGIN ERROR] ${email}: ${err.message} (${totalTime}ms)`);
+      logger.error(`[LOGIN ERROR] ${maskIdentifier(email)}: ${err.message} (${totalTime}ms)`);
     }
     throw err;
   }
@@ -313,16 +430,15 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 /* ---------------- refreshTokens (rotation) ---------------- */
 export const refreshTokens = async (refreshToken, ip = null, userAgent = null) => {
   try {// find user containing this refresh token
-    const user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
+    const hashedRefreshToken = hashRefreshToken(refreshToken);
+    const user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
 
     if (!user) throw new Error("Invalid token");
 
-    const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
+    const rtObj = user.refreshTokens.find(r => r.token === hashedRefreshToken);
 
-    if (!isRefreshTokenValid(rtObj)) {
-      // audit
-      user.authLogs.push({ action: "refresh", success: false, ip, userAgent });
-      await user.save();
+    if (!isRefreshTokenValid(rtObj, refreshToken)) {
+      await appendAuthLog(user._id, { action: "refresh", success: false, ip, userAgent });
       throw new Error("Invalid token");
     }
 
@@ -333,38 +449,51 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     // mark old
     rtObj.revoked = true;
     rtObj.revokedAt = new Date();
-    rtObj.replacedByToken = newRefreshToken;
+    rtObj.replacedByToken = hashRefreshToken(newRefreshToken);
 
-    // push new
-    user.refreshTokens.push({
-      token: newRefreshToken,
-      expiresAt,
-      ip,
-      userAgent
-    });
+    // SECURITY FIX [VULN-06]: Remove rotated token explicitly from persistent token list.
+    user.refreshTokens = user.refreshTokens.filter((r) => r.token !== hashedRefreshToken);
 
-    // audit
-    user.authLogs.push({ action: "refresh", success: true, ip, userAgent });
+    const now = new Date();
+    const validTokens = user.refreshTokens.filter((r) => !r.revoked && new Date(r.expiresAt) > now);
+    const recentRevoked = user.refreshTokens
+      .filter((r) => r.revoked)
+      .sort((a, b) => new Date(b.revokedAt || 0) - new Date(a.revokedAt || 0))
+      .slice(0, 5);
+
+    user.refreshTokens = [
+      ...validTokens,
+      ...recentRevoked,
+      {
+        token: hashRefreshToken(newRefreshToken),
+        expiresAt,
+        ip: anonymizeIp(ip),
+        userAgent: truncateUserAgent(userAgent)
+      }
+    ];
+
     await user.save();
-    logger.info(`Refresh token rotated for user: ${user.email}`);
+    await appendAuthLog(user._id, { action: "refresh", success: true, ip, userAgent });
+    logger.info(`[AUTH] Refresh token rotated for user: ${maskIdentifier(user.email)}`);
     const accessToken = signAccessToken(user);
     return { accessToken, refreshToken: newRefreshToken };
   } catch (err) {
     // Detect possible reuse: if rtObj existed but invalid (expired or revoked) and token matches a revoked token without replacedByToken, treat as reuse
     try {
-      const suspectUser = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens +email");
-      const suspectRt = suspectUser?.refreshTokens.find(r => r.token === refreshToken);
+      const hashedRefreshToken = hashRefreshToken(refreshToken);
+      const suspectUser = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens +email");
+      const suspectRt = suspectUser?.refreshTokens.find(r => r.token === hashedRefreshToken);
       if (suspectRt && suspectRt.revoked && suspectRt.replacedByToken && suspectRt.replacedByToken !== null) {
         // normal rotation path, ignore
       } else if (suspectRt && suspectRt.revoked && !suspectRt.replacedByToken) {
         // token was revoked earlier but seen again -> possible reuse. Revoke all tokens for this user.
         await revokeAllRefreshTokens(suspectUser, "refresh_token_reuse_detected");
-        logger.warn(`Refresh token reuse detected for user: ${suspectUser.email}`);
+        logger.warn(`[AUTH] Refresh token reuse detected for user: ${maskIdentifier(suspectUser.email)}`);
       }
     } catch (innerErr) {
       // ignore helper probe errors
     }
-    logger.error(`Invalid refresh token attempt for user: ${user?.email || "unknown"}`);
+    logger.error("[AUTH] Invalid refresh token attempt");
     throw err;
 
   }
@@ -373,17 +502,54 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
 };
 
 /* ---------------- revokeRefreshToken / logout ---------------- */
-export const revokeRefreshTokenForUser = async (refreshToken, ip = null) => {
-  const user = await User.findOne({ "refreshTokens.token": refreshToken }).select("+refreshTokens");
-  if (!user) return;
-  const rtObj = user.refreshTokens.find(r => r.token === refreshToken);
-  if (!rtObj) return;
-  rtObj.revoked = true;
-  rtObj.revokedAt = new Date();
-  rtObj.revokedByIp = ip;
-  user.authLogs.push({ action: "logout", success: true, ip, userAgent: null });
-  await user.save();
-  logger.info(`User logged out, refresh token revoked: ${user.email}`);
+export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessToken = null) => {
+  let user = null;
+  let disconnectUserId = null;
+
+  if (refreshToken) {
+    const hashedRefreshToken = hashRefreshToken(refreshToken);
+    user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
+    if (user) {
+      disconnectUserId = user._id?.toString() || null;
+      const rtObj = user.refreshTokens.find(r => r.token === hashedRefreshToken);
+      if (rtObj) {
+        rtObj.revoked = true;
+        rtObj.revokedAt = new Date();
+        rtObj.revokedByIp = ip;
+      }
+    }
+  }
+
+  // Blacklist current access token for its remaining lifetime.
+  if (accessToken && redis.isReady()) {
+    try {
+      const decoded = jwt.decode(accessToken);
+      if (decoded?.id && !disconnectUserId) {
+        disconnectUserId = decoded.id.toString();
+      }
+      const remainingTTL = decoded?.exp ? Math.max(0, decoded.exp - Math.floor(Date.now() / 1000)) : 900;
+      if (remainingTTL > 0) {
+        const tokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
+        await redis.set(`bl:token:${tokenHash}`, 1, remainingTTL);
+      }
+    } catch (_) {
+      // Ignore blacklist failures when Redis/JWT decode is unavailable.
+    }
+  }
+
+  if (user) {
+    await user.save();
+    await appendAuthLog(user._id, { action: "logout", success: true, ip, userAgent: null });
+    logger.info(`[AUTH] User logged out, refresh token revoked: ${maskIdentifier(user.email)}`);
+  }
+
+  if (disconnectUserId) {
+    // SECURITY FIX [L-06]: Invalidate auth middleware cache on logout.
+    if (redis.isReady()) {
+      await redis.del(`auth:user:${disconnectUserId}`).catch(() => {});
+    }
+    socketService.disconnectUser(disconnectUserId);
+  }
 
 };
 
@@ -393,18 +559,19 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null) => {
 export const forgotPassword = async (email, ip = null, userAgent = null) => {
   try {
     const normalizedEmail = email.toLowerCase().trim();
+    const maskedEmail = maskIdentifier(normalizedEmail);
 
     // 🎯 Try cache first
-    logger.info(`🔍 [FORGOT PASSWORD] Checking cache for user: ${normalizedEmail}`);
+    logger.info(`[FORGOT PASSWORD] Checking cache for user: ${maskedEmail}`);
     let cachedUser = await cacheService.getUser(normalizedEmail);
     let user;
 
     if (cachedUser) {
-      logger.info(`⚡ [CACHE HIT] User found in cache: ${normalizedEmail}`);
+      logger.info(`[FORGOT PASSWORD] Cache hit for ${maskedEmail}`);
       // Get user from database for password reset operations
       user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
     } else {
-      logger.info(`📊 [CACHE MISS] User not in cache, querying database: ${normalizedEmail}`);
+      logger.info(`[FORGOT PASSWORD] Cache miss for ${maskedEmail}`);
       user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
 
       if (user) {
@@ -420,31 +587,31 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     const genericResponse = { message: "If the email exists, a reset link will be sent" };
 
     if (!user || !user.verified) {
-      logger.warn(`❌ [FORGOT PASSWORD] Invalid user or unverified: ${normalizedEmail}`);
+      logger.warn(`[FORGOT PASSWORD] Invalid user or unverified: ${maskedEmail}`);
       return genericResponse;
     }
 
     // Rate limiting - only allow one reset request per 5 minutes per user
     if (user.lastPasswordResetSentAt && user.lastPasswordResetSentAt.getTime() > Date.now() - 5 * 60 * 1000) {
-      logger.warn(`⚠️ [RATE LIMIT] Password reset rate limited for: ${normalizedEmail}`);
+      logger.warn(`[FORGOT PASSWORD] Rate limited for: ${maskedEmail}`);
       return genericResponse; // Don't reveal rate limiting to prevent abuse
     }
 
     // Generate secure reset token
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hashedResetToken = await bcrypt.hash(resetToken, BCRYPT_ROUNDS);
+    const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
 
     // Set token and expiry (15 minutes)
     user.passwordResetToken = hashedResetToken;
     user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     user.lastPasswordResetSentAt = new Date();
 
-    // Cache the reset token temporarily (for faster verification)
-    await cacheService.cachePasswordResetToken(user._id, resetToken);
+    // SECURITY FIX [H-02]: Cache hash only, never raw reset token.
+    await cacheService.cachePasswordResetToken(user._id, resetTokenHash);
 
-    // Audit log
-    user.authLogs.push({ action: "forgot_password", success: true, ip, userAgent });
     await user.save();
+    await appendAuthLog(user._id, { action: "forgot_password", success: true, ip, userAgent });
 
     // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(normalizedEmail)}`;
@@ -464,11 +631,11 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 
     await sendEmail(user.email, "Password Reset Request", emailContent);
 
-    logger.info(`✅ [FORGOT PASSWORD] Reset token sent to: ${normalizedEmail}`);
+    logger.info(`[FORGOT PASSWORD] Reset token sent to: ${maskedEmail}`);
     return genericResponse;
 
   } catch (err) {
-    logger.error(`❌ [FORGOT PASSWORD ERROR] ${email}: ${err.message}`);
+    logger.error(`[FORGOT PASSWORD ERROR] ${maskIdentifier(email)}: ${err.message}`);
     throw new Error("Unable to process password reset request");
   }
 };
@@ -477,15 +644,17 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 export const verifyResetToken = async (email, token) => {
   try {
     const normalizedEmail = email.toLowerCase().trim();
+    const maskedEmail = maskIdentifier(normalizedEmail);
 
-    logger.info(`🔍 [VERIFY RESET TOKEN] Checking token for: ${normalizedEmail}`);
+    logger.info(`[VERIFY RESET TOKEN] Checking token for: ${maskedEmail}`);
 
     // Check cache first for faster verification
-    const cachedToken = await cacheService.getPasswordResetToken(normalizedEmail);
+    const cachedTokenHash = await cacheService.getPasswordResetToken(normalizedEmail);
+    const incomingHash = crypto.createHash("sha256").update(token).digest("hex");
     let isValidToken = false;
 
-    if (cachedToken && cachedToken === token) {
-      logger.info(`⚡ [CACHE HIT] Reset token found in cache: ${normalizedEmail}`);
+    if (cachedTokenHash && cachedTokenHash === incomingHash) {
+      logger.info(`[VERIFY RESET TOKEN] Cache hash match for: ${maskedEmail}`);
       isValidToken = true;
     }
 
@@ -493,13 +662,25 @@ export const verifyResetToken = async (email, token) => {
     const user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires");
 
     if (!user || !user.passwordResetToken || !user.passwordResetExpires) {
-      logger.warn(`❌ [INVALID TOKEN] No reset token found for: ${normalizedEmail}`);
+      logger.warn(`[VERIFY RESET TOKEN] No reset token found for: ${maskedEmail}`);
       throw new Error("Invalid or expired reset token");
+    }
+
+    // Track failed token verification attempts
+    const attemptKey = `reset_attempts:${normalizedEmail}`;
+    if (redis.isReady()) {
+      const attempts = await redis.getClient().incr(attemptKey);
+      if (attempts === 1) {
+        await redis.getClient().expire(attemptKey, 15 * 60); // 15 min window
+      }
+      if (attempts > 10) {
+        throw new Error("Invalid or expired reset token");
+      }
     }
 
     // Check expiry
     if (user.passwordResetExpires.getTime() < Date.now()) {
-      logger.warn(`⏰ [EXPIRED TOKEN] Reset token expired for: ${normalizedEmail}`);
+      logger.warn(`[VERIFY RESET TOKEN] Reset token expired for: ${maskedEmail}`);
       // Clean up expired token
       user.passwordResetToken = null;
       user.passwordResetExpires = null;
@@ -511,25 +692,35 @@ export const verifyResetToken = async (email, token) => {
     // Verify token hash
     const isMatch = await bcrypt.compare(token, user.passwordResetToken);
     if (!isMatch) {
-      logger.warn(`❌ [INVALID TOKEN] Token hash mismatch for: ${normalizedEmail}`);
+      logger.warn(`[VERIFY RESET TOKEN] Token hash mismatch for: ${maskedEmail}`);
       throw new Error("Invalid or expired reset token");
     }
 
-    logger.info(`✅ [VALID TOKEN] Reset token verified for: ${normalizedEmail}`);
+    // Clear attempt counter on success
+    if (redis.isReady()) {
+      await redis.getClient().del(`reset_attempts:${normalizedEmail}`).catch(() => {});
+    }
+
+    if (isValidToken) {
+      logger.info(`[VERIFY RESET TOKEN] Cache+DB verification succeeded for: ${maskedEmail}`);
+    } else {
+      logger.info(`[VERIFY RESET TOKEN] DB verification succeeded for: ${maskedEmail}`);
+    }
     return { valid: true, userId: user._id };
 
   } catch (err) {
-    logger.error(`❌ [VERIFY TOKEN ERROR] ${email}: ${err.message}`);
+    logger.error(`[VERIFY TOKEN ERROR] ${maskIdentifier(email)}: ${err.message}`);
     throw err;
   }
 };
 
 // Reset password with token
-export const resetPassword = async (email, token, newPassword, ip = null, userAgent = null) => {
+export const resetPassword = async (email, token, newPassword, ip = null, userAgent = null, currentAccessToken = null) => {
   try {
     const normalizedEmail = email.toLowerCase().trim();
+    const maskedEmail = maskIdentifier(normalizedEmail);
 
-    logger.info(`🔄 [RESET PASSWORD] Processing for: ${normalizedEmail}`);
+    logger.info(`[RESET PASSWORD] Processing for: ${maskedEmail}`);
 
     // First verify the token
     const tokenVerification = await verifyResetToken(normalizedEmail, token);
@@ -560,13 +751,22 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
     // Revoke all existing refresh tokens for security
     await revokeAllRefreshTokens(user, "password_reset");
 
+    // SECURITY FIX [H-09]: Blacklist active access token when present.
+    if (currentAccessToken && redis.isReady()) {
+      const tokenHash = crypto.createHash("sha256").update(currentAccessToken).digest("hex");
+      await redis.getClient().set(`bl:token:${tokenHash}`, "1", { EX: 15 * 60 });
+    }
+
     // Clear user from cache (password changed, need fresh data)
     await cacheService.invalidateUser(user._id);
+    // SECURITY FIX [L-06]: Explicitly clear auth middleware cache key after password reset.
+    if (redis.isReady()) {
+      await redis.del(`auth:user:${user._id.toString()}`).catch(() => {});
+    }
     await cacheService.removePasswordResetToken(user._id);
 
-    // Audit log
-    user.authLogs.push({ action: "reset_password", success: true, ip, userAgent });
     await user.save();
+    await appendAuthLog(user._id, { action: "reset_password", success: true, ip, userAgent });
 
     // Send confirmation email
     const confirmationContent = buildEmailLayout({
@@ -581,11 +781,11 @@ export const resetPassword = async (email, token, newPassword, ip = null, userAg
 
     await sendEmail(user.email, "Password Reset Successful", confirmationContent);
 
-    logger.info(`✅ [PASSWORD RESET] Successful password reset for: ${normalizedEmail}`);
+    logger.info(`[RESET PASSWORD] Successful password reset for: ${maskedEmail}`);
     return { message: "Password reset successful" };
 
   } catch (err) {
-    logger.error(`❌ [RESET PASSWORD ERROR] ${email}: ${err.message}`);
+    logger.error(`[RESET PASSWORD ERROR] ${maskIdentifier(email)}: ${err.message}`);
     throw err;
   }
 };

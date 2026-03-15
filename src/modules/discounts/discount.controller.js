@@ -1,5 +1,7 @@
 import Discount from "./discount.model.js";
 import Listing from "../listings/listing.model.js";
+import logger from "../../utils/logger.js";
+import escapeRegex from "../../utils/escapeRegex.js";
 
 /**
  * Create a discount on a listing (admin only)
@@ -7,9 +9,17 @@ import Listing from "../listings/listing.model.js";
 export const createDiscount = async (req, res) => {
   try {
     const { listingId, discountPercent, reason, endDate } = req.body;
+    const pct = parseFloat(discountPercent);
 
     if (!listingId || !discountPercent) {
       return res.status(400).json({ success: false, message: "Listing ID and discount percent are required" });
+    }
+
+    if (!Number.isFinite(pct) || pct < 1 || pct > 90) {
+      return res.status(400).json({
+        success: false,
+        message: "Discount percent must be between 1 and 90"
+      });
     }
 
     const listing = await Listing.findById(listingId);
@@ -24,13 +34,16 @@ export const createDiscount = async (req, res) => {
     );
 
     const originalPrice = listing.price;
-    const discountedPrice = parseFloat((originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    const discountedPrice = parseFloat((originalPrice * (1 - pct / 100)).toFixed(2));
+    if (discountedPrice <= 0) {
+      return res.status(400).json({ success: false, message: "Discount too large — price cannot be zero or negative" });
+    }
 
     const discount = await Discount.create({
       listing: listingId,
       originalPrice,
       discountedPrice,
-      discountPercent,
+      discountPercent: pct,
       reason: reason || "",
       endDate: endDate || null,
       createdBy: req.user._id,
@@ -38,7 +51,7 @@ export const createDiscount = async (req, res) => {
 
     res.status(201).json({ success: true, data: discount });
   } catch (error) {
-    console.error("Create discount error:", error);
+    logger.error("Create discount error:", error);
     res.status(500).json({ success: false, message: "Failed to create discount" });
   }
 };
@@ -76,7 +89,7 @@ export const getAllDiscounts = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("Get discounts error:", error);
+    logger.error("Get discounts error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discounts" });
   }
 };
@@ -94,9 +107,17 @@ export const updateDiscount = async (req, res) => {
       return res.status(404).json({ success: false, message: "Discount not found" });
     }
 
-    if (discountPercent) {
-      discount.discountPercent = discountPercent;
-      discount.discountedPrice = parseFloat((discount.originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    if (discountPercent !== undefined) {
+      const pct = parseFloat(discountPercent);
+      if (!Number.isFinite(pct) || pct < 1 || pct > 90) {
+        return res.status(400).json({ success: false, message: "Invalid discount percent" });
+      }
+
+      discount.discountPercent = pct;
+      discount.discountedPrice = parseFloat((discount.originalPrice * (1 - pct / 100)).toFixed(2));
+      if (discount.discountedPrice <= 0) {
+        return res.status(400).json({ message: "Discount too large — price cannot be zero or negative" });
+      }
     }
     if (reason !== undefined) discount.reason = reason;
     if (status) discount.status = status;
@@ -106,7 +127,7 @@ export const updateDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Update discount error:", error);
+    logger.error("Update discount error:", error);
     res.status(500).json({ success: false, message: "Failed to update discount" });
   }
 };
@@ -125,7 +146,7 @@ export const cancelDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Cancel discount error:", error);
+    logger.error("Cancel discount error:", error);
     res.status(500).json({ success: false, message: "Failed to cancel discount" });
   }
 };
@@ -139,8 +160,9 @@ export const searchListings = async (req, res) => {
 
     const query = { status: "available" };
     if (q) {
+      const safeSearch = escapeRegex(String(q).trim().slice(0, 100));
       query.$or = [
-        { title: { $regex: q, $options: "i" } },
+        { title: { $regex: safeSearch, $options: "i" } },
       ];
     }
 
@@ -154,7 +176,7 @@ export const searchListings = async (req, res) => {
 
     res.json({ success: true, data: listings });
   } catch (error) {
-    console.error("Search listings error:", error);
+    logger.error(`Search listings error: ${error.message}`);
     res.status(500).json({ success: false, message: "Failed to search listings" });
   }
 };
@@ -186,7 +208,7 @@ export const getDiscountStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get discount stats error:", error);
+    logger.error("Get discount stats error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch stats" });
   }
 };
@@ -220,7 +242,7 @@ export const getActiveDiscounts = async (req, res) => {
 
     res.json({ success: true, data: validDiscounts });
   } catch (error) {
-    console.error("Get active discounts error:", error);
+    logger.error("Get active discounts error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discounts" });
   }
 };
@@ -237,8 +259,8 @@ export const createSellerDiscount = async (req, res) => {
       return res.status(400).json({ success: false, message: "Listing ID and discount percent are required" });
     }
 
-    if (discountPercent < 1 || discountPercent > 99) {
-      return res.status(400).json({ success: false, message: "Discount percent must be between 1 and 99" });
+    if (discountPercent < 1 || discountPercent > 90) {
+      return res.status(400).json({ success: false, message: "Discount percent must be between 1 and 90" });
     }
 
     // Verify listing belongs to seller
@@ -259,6 +281,9 @@ export const createSellerDiscount = async (req, res) => {
 
     const originalPrice = listing.price;
     const discountedPrice = parseFloat((originalPrice * (1 - discountPercent / 100)).toFixed(2));
+    if (discountedPrice <= 0) {
+      return res.status(400).json({ success: false, message: "Discount too large — price cannot be zero or negative" });
+    }
 
     // Calculate end date if duration is specified
     let endDate = null;
@@ -279,7 +304,7 @@ export const createSellerDiscount = async (req, res) => {
 
     res.status(201).json({ success: true, data: discount });
   } catch (error) {
-    console.error("Create seller discount error:", error);
+    logger.error("Create seller discount error:", error);
     res.status(500).json({ success: false, message: "Failed to create discount" });
   }
 };
@@ -305,7 +330,7 @@ export const getMyListingDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Get listing discount error:", error);
+    logger.error("Get listing discount error:", error);
     res.status(500).json({ success: false, message: "Failed to fetch discount" });
   }
 };
@@ -336,7 +361,7 @@ export const cancelMyListingDiscount = async (req, res) => {
 
     res.json({ success: true, data: discount });
   } catch (error) {
-    console.error("Cancel listing discount error:", error);
+    logger.error("Cancel listing discount error:", error);
     res.status(500).json({ success: false, message: "Failed to cancel discount" });
   }
 };

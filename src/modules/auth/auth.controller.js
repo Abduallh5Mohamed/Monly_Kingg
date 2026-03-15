@@ -1,8 +1,10 @@
 import * as authService from "./auth.service.js";
+import { anonymizeIp, truncateUserAgent } from "./auth.service.js";
 import User from "../users/user.model.js";
 import Joi from "joi";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import logger from "../../utils/logger.js";
 
 const registerSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -97,7 +99,7 @@ export const verifyEmail = async (req, res) => {
       path: "/"
     });
 
-    // Get user data (lean for performance)
+      // Get user data (lean for performance)
     const userData = await User.findOne({ email }).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
     const responseData = {
@@ -136,8 +138,9 @@ export const resendCode = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  const email = req.body.email?.toLowerCase().trim();
+
   try {
-    const email = req.body.email?.toLowerCase().trim();
     const password = req.body.password;
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
@@ -186,7 +189,7 @@ export const login = async (req, res) => {
       expiresIn: 15 * 60
     });
   } catch (err) {
-    console.error("Login error:", err.message);
+    logger.warn(`Login failed for ${email || "unknown"}: ${err.message}`);
 
     // Check if email not verified
     if (err.message === "Invalid credentials") {
@@ -223,7 +226,7 @@ export const refresh = async (req, res) => {
       path: "/"
     });
 
-    // Generate new CSRF token when refreshing
+    // SECURITY FIX [VULN-03]: Regenerate CSRF token on each access-token refresh.
     const csrfToken = crypto.randomBytes(24).toString("hex");
     res.cookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", csrfToken, {
       httpOnly: false,
@@ -259,17 +262,29 @@ export const refresh = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refresh_token || req.body.refreshToken;
-    if (refreshToken) {
-      await authService.revokeRefreshTokenForUser(refreshToken, req.ip);
+    const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
+
+    if (refreshToken || accessToken) {
+      await authService.revokeRefreshTokenForUser(refreshToken, req.ip, accessToken);
     }
 
-    // clear cookies
-    res.clearCookie("access_token");
-    res.clearCookie("refresh_token");
-    res.clearCookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN");
+    // SECURITY FIX [M-09]: Clear cookies with matching options used when setting them.
+    const cookieOpts = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      path: "/"
+    };
+    res.clearCookie("access_token", cookieOpts);
+    res.clearCookie("refresh_token", cookieOpts);
+    res.clearCookie(process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN", {
+      ...cookieOpts,
+      httpOnly: false
+    });
 
     res.status(200).json({ message: "Logged out" });
   } catch (err) {
+    logger.error(`Logout failed: ${err.message}`);
     res.status(500).json({ message: "Failed to logout" });
   }
 };
@@ -315,14 +330,22 @@ export const verifyResetToken = async (req, res) => {
     const result = await authService.verifyResetToken(value.email, value.token);
     res.status(200).json({ valid: result.valid });
   } catch (err) {
-    res.status(400).json({ message: err.message, valid: false });
+    const safeMessages = ["Invalid or expired reset token"];
+    const msg = safeMessages.includes(err.message) ? err.message : "Invalid request";
+    res.status(400).json({ message: msg, valid: false });
   }
 };
 
 const resetPasswordSchema = Joi.object({
   email: Joi.string().email().required(),
   token: Joi.string().required(),
-  newPassword: Joi.string().min(8).required()
+  newPassword: Joi.string()
+    .min(8)
+    .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"))
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    })
 });
 
 export const resetPassword = async (req, res) => {
@@ -334,18 +357,23 @@ export const resetPassword = async (req, res) => {
 
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
+    // SECURITY FIX: Forward current access token (if any) for post-reset blacklist.
+    const currentAccessToken = req.headers.authorization?.split(" ")[1] || req.cookies?.access_token || null;
 
     const result = await authService.resetPassword(
       value.email,
       value.token,
       value.newPassword,
       ip,
-      userAgent
+      userAgent,
+      currentAccessToken
     );
 
     res.status(200).json(result);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const safeMessages = ["Invalid or expired token", "Password too weak", "Token already used"];
+    const msg = safeMessages.includes(err.message) ? err.message : "Invalid request";
+    res.status(400).json({ message: msg });
   }
 };
 
@@ -361,8 +389,8 @@ export const getCsrfToken = async (req, res) => {
     });
 
     res.status(200).json({
-      success: true,
-      message: "CSRF token generated"
+      // SECURITY FIX [C-02]: Never return CSRF token in body; cookie-only delivery.
+      success: true
     });
   } catch (err) {
     res.status(500).json({
@@ -406,8 +434,8 @@ export const googleCallback = async (req, res) => {
     user.authLogs.push({
       action: "google_login",
       success: true,
-      ip,
-      userAgent,
+      ip: anonymizeIp(ip),
+      userAgent: truncateUserAgent(userAgent),
       createdAt: new Date()
     });
 
@@ -449,7 +477,7 @@ export const googleCallback = async (req, res) => {
       return res.redirect(frontendUrl + "/user");
     }
   } catch (err) {
-    console.error("Google callback error:", err);
+    logger.error(`Google callback error: ${err.message}`);
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
     return res.redirect(frontendUrl + "/login?error=google_failed");
   }

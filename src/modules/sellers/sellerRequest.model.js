@@ -12,12 +12,12 @@ const rejectionHistorySchema = new mongoose.Schema({
 const sellerRequestSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   idType: { type: String, enum: ["national_id", "passport"], required: true },
-  idImage: { type: String, required: true }, // صورة واحدة للبطاقة أو الباسبور (base64 or URL)
+  idImage: { type: String, required: true, select: false }, // صورة واحدة للبطاقة أو الباسبور (base64 or URL)
 
   // صور الوجه من 3 جهات (required)
-  faceImageFront: { type: String, required: true }, // سيلفي أمامي واضح
-  faceImageLeft: { type: String, required: true }, // صورة من الجانب الأيسر
-  faceImageRight: { type: String, required: true }, // صورة من الجانب الأيمن
+  faceImageFront: { type: String, required: true, select: false }, // سيلفي أمامي واضح
+  faceImageLeft: { type: String, required: true, select: false }, // صورة من الجانب الأيسر
+  faceImageRight: { type: String, required: true, select: false }, // صورة من الجانب الأيمن
 
   fullName: { type: String, required: true },
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },

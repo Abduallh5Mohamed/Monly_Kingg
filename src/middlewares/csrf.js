@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export default function csrfProtection(req, res, next) {
   const method = req.method;
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
@@ -29,8 +31,13 @@ export default function csrfProtection(req, res, next) {
     '/support/messages'
   ];
 
+  const normalizedPath = (req.originalUrl || "")
+    .split("?")[0]
+    .replace(/^\/api\/v1/, "")
+    .replace(/^\/api/, "");
+
   // Exact path match
-  if (publicPaths.includes(req.path)) {
+  if (publicPaths.includes(req.path) || publicPaths.includes(normalizedPath)) {
     return next();
   }
 
@@ -39,14 +46,21 @@ export default function csrfProtection(req, res, next) {
     /^\/v1\/ads\/[a-f0-9]+\/click$/  // POST /v1/ads/:id/click
   ];
 
-  if (publicPatterns.some(pattern => pattern.test(req.path))) {
+  if (publicPatterns.some(pattern => pattern.test(req.path) || pattern.test(normalizedPath))) {
     return next();
   }
 
   const csrfCookie = req.cookies?.[process.env.CSRF_COOKIE_NAME || "XSRF-TOKEN"];
   const csrfHeader = req.get("X-XSRF-TOKEN");
 
-  if (!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader) {
+  // SECURITY FIX [H-01]: Use constant-time token comparison to reduce timing attack surface.
+  const isTokenMismatch =
+    !csrfCookie ||
+    !csrfHeader ||
+    csrfCookie.length !== csrfHeader.length ||
+    !crypto.timingSafeEqual(Buffer.from(csrfCookie), Buffer.from(csrfHeader));
+
+  if (isTokenMismatch) {
     return res.status(403).json({ message: "Invalid CSRF token" });
   }
 

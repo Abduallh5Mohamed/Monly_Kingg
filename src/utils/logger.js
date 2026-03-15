@@ -4,6 +4,7 @@ import path from "path";
 class Logger {
   constructor() {
     this.logFile = path.join(process.cwd(), "app.log");
+    this.maxLogSize = 50 * 1024 * 1024; // 50MB
     this.buffer = [];
     this.bufferSize = 20; // Flush every 20 messages
     this.flushInterval = 5000; // Or every 5 seconds
@@ -21,15 +22,42 @@ class Logger {
     try {
       const data = this.buffer.join('');
       this.buffer = [];
-      fs.appendFile(this.logFile, data, () => { }); // Async, non-blocking
+      // SECURITY FIX [L-01]: Rotate log file when it exceeds max size.
+      fs.stat(this.logFile, (err, stats) => {
+        if (!err && stats.size > this.maxLogSize) {
+          const rotated = this.logFile.replace('.log', `.${Date.now()}.log`);
+          fs.rename(this.logFile, rotated, () => {
+            fs.appendFile(this.logFile, data, () => { });
+          });
+        } else {
+          fs.appendFile(this.logFile, data, () => { });
+        }
+      });
     } catch (_) {
       this.buffer = [];
     }
   }
 
-  log(level, message) {
+  formatArg(arg) {
+    if (arg instanceof Error) {
+      return arg.stack || arg.message;
+    }
+
+    if (typeof arg === "string") {
+      return arg;
+    }
+
+    try {
+      return JSON.stringify(arg);
+    } catch (_err) {
+      return String(arg);
+    }
+  }
+
+  log(level, message, ...args) {
     const time = new Date().toISOString();
-    const logMessage = `[${time}] [${level.toUpperCase()}]: ${message}\n`;
+    const extra = args.length ? ` ${args.map((arg) => this.formatArg(arg)).join(" ")}` : "";
+    const logMessage = `[${time}] [${level.toUpperCase()}]: ${this.formatArg(message)}${extra}\n`;
 
     // In production, only log warnings and errors to console
     if (!this.isProduction || level === 'warn' || level === 'error') {
@@ -43,21 +71,21 @@ class Logger {
     }
   }
 
-  info(message) {
-    this.log("info", message);
+  info(...args) {
+    this.log("info", ...args);
   }
 
-  warn(message) {
-    this.log("warn", message);
+  warn(...args) {
+    this.log("warn", ...args);
   }
 
-  error(message) {
-    this.log("error", message);
+  error(...args) {
+    this.log("error", ...args);
   }
 
-  debug(message) {
+  debug(...args) {
     if (!this.isProduction) {
-      this.log("debug", message);
+      this.log("debug", ...args);
     }
   }
 }

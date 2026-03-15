@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import DOMPurify from 'isomorphic-dompurify';
 import Chat from '../modules/chats/chat.model.js';
 import User from '../modules/users/user.model.js';
@@ -10,21 +11,39 @@ import redis from '../config/redis.js';
 
 // Message length limits
 const MAX_MESSAGE_LENGTH = 5000;
+const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
 
 // Simple rate limiter for socket events
 const socketRateLimits = new Map(); // key: `${userId}:${event}` -> { count, resetAt }
+const MAX_RATE_LIMIT_ENTRIES = 10_000;
 let rateLimitCleanupTimer = null;
 
 function checkSocketRateLimit(userId, event, maxPerMinute = 30) {
     const key = `${userId}:${event}`;
     const now = Date.now();
+
+    // Bound memory usage during abuse by evicting oldest entries at capacity.
+    while (socketRateLimits.size >= MAX_RATE_LIMIT_ENTRIES && !socketRateLimits.has(key)) {
+        const firstKey = socketRateLimits.keys().next().value;
+        if (!firstKey) break;
+        socketRateLimits.delete(firstKey);
+    }
+
     const entry = socketRateLimits.get(key);
     if (!entry || entry.resetAt < now) {
         socketRateLimits.set(key, { count: 1, resetAt: now + 60000 });
         return true;
     }
+
     entry.count++;
+    // Refresh insertion order to approximate LRU behavior.
+    socketRateLimits.delete(key);
+    socketRateLimits.set(key, entry);
     return entry.count <= maxPerMinute;
+}
+
+function isValidUploadUrl(value) {
+    return typeof value === 'string' && UPLOAD_URL_PATTERN.test(value.trim());
 }
 // Cleanup stale entries every 5 minutes (clearable on shutdown)
 rateLimitCleanupTimer = setInterval(() => {
@@ -116,6 +135,19 @@ class SocketService {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 if (!decoded?.id) return next(new Error('Invalid token'));
 
+                // Enforce token revocation parity with HTTP middleware.
+                if (redis.isReady()) {
+                    try {
+                        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+                        const isBlacklisted = await redis.get(`bl:token:${tokenHash}`);
+                        if (isBlacklisted) {
+                            return next(new Error('Token revoked. Please login again.'));
+                        }
+                    } catch (_) {
+                        // Redis unavailable — continue with normal auth flow.
+                    }
+                }
+
                 // Use Redis cache (same as HTTP authMiddleware) to avoid DB hit on every connect
                 const cacheKey = `auth:user:${decoded.id}`;
                 let user = null;
@@ -187,6 +219,21 @@ class SocketService {
                 return socket.emit('error', { message: 'Invalid chat ID' });
             }
 
+            // Rate limit join_chat requests.
+            if (!checkSocketRateLimit(socket.userId, 'join_chat', 10)) {
+                return socket.emit('error', { message: 'Too many join requests. Slow down.' });
+            }
+
+            // Ensure the connecting user is actually part of the chat.
+            const chat = await Chat.findOne({
+                _id: chatId,
+                participants: socket.userId
+            }).select('_id').lean();
+
+            if (!chat) {
+                return socket.emit('error', { message: 'Access denied to this chat' });
+            }
+
             socket.join(`chat:${chatId}`);
 
             socket.to(`chat:${chatId}`).emit('user_joined', {
@@ -194,6 +241,7 @@ class SocketService {
                 username: socket.user.username
             });
         } catch (error) {
+            logger.error(`handleJoinChat error: ${error.message}`);
             socket.emit('error', { message: 'Failed to join chat' });
         }
     }
@@ -206,6 +254,7 @@ class SocketService {
     async handleSendMessage(socket, data) {
         try {
             const { chatId, content, type = 'text', fileUrl, tempId } = data;
+            const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
             if (!chatId || !content) {
                 return socket.emit('error', { message: 'Invalid message data' });
@@ -221,15 +270,35 @@ class SocketService {
                 return socket.emit('error', { message: 'You are sending messages too fast. Please slow down.' });
             }
 
-            // Enforce message length limit
-            if (typeof content !== 'string' || content.length > MAX_MESSAGE_LENGTH) {
-                return socket.emit('error', { message: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` });
-            }
+            let sanitizedContent;
+            let sanitizedFileUrl;
 
-            // Sanitize message content
-            const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
-            if (!sanitizedContent) {
-                return socket.emit('error', { message: 'Message content is empty after sanitization' });
+            if (attachmentTypes.has(type)) {
+                const attachmentUrl = typeof fileUrl === 'string' && fileUrl.trim()
+                    ? fileUrl.trim()
+                    : String(content).trim();
+
+                if (!isValidUploadUrl(attachmentUrl)) {
+                    return socket.emit('error', { message: 'Invalid file URL' });
+                }
+
+                sanitizedContent = attachmentUrl;
+                sanitizedFileUrl = attachmentUrl;
+            } else {
+                // Enforce message length limit for text-like messages
+                if (typeof content !== 'string' || content.length > MAX_MESSAGE_LENGTH) {
+                    return socket.emit('error', { message: `Message too long (max ${MAX_MESSAGE_LENGTH} characters)` });
+                }
+
+                // Sanitize message content
+                sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim();
+                if (!sanitizedContent) {
+                    return socket.emit('error', { message: 'Message content is empty after sanitization' });
+                }
+
+                sanitizedFileUrl = fileUrl
+                    ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }).trim()
+                    : undefined;
             }
 
             const now = new Date();
@@ -244,7 +313,7 @@ class SocketService {
                         sender: socket.userId,
                         content: sanitizedContent,
                         type,
-                        fileUrl: fileUrl ? DOMPurify.sanitize(fileUrl, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) : undefined,
+                        fileUrl: sanitizedFileUrl,
                         timestamp: now,
                         read: false,
                         delivered: true
@@ -294,7 +363,7 @@ class SocketService {
                 },
                 content: sanitizedContent,
                 type,
-                fileUrl: fileUrl || undefined,
+                fileUrl: sanitizedFileUrl,
                 timestamp: now,
                 read: false,
                 delivered: true
@@ -454,6 +523,26 @@ class SocketService {
 
     sendToChat(chatId, event, data) {
         this.io.to(`chat:${chatId}`).emit(event, data);
+    }
+
+    disconnectUser(userId) {
+        try {
+            if (!this.io || !userId) return;
+
+            const userRoom = `user:${userId}`;
+            const sockets = this.io.sockets.adapter.rooms.get(userRoom);
+            if (sockets) {
+                sockets.forEach((socketId) => {
+                    const s = this.io.sockets.sockets.get(socketId);
+                    if (s) {
+                        s.emit('force_logout', { message: 'Session ended. Please login again.' });
+                        s.disconnect(true);
+                    }
+                });
+            }
+        } catch (err) {
+            logger.error(`disconnectUser error: ${err.message}`);
+        }
     }
 
     // Admin notifications for deposits/withdrawals

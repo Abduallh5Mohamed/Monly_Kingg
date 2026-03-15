@@ -1,7 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
+type JwtPayload = {
+  role?: string;
+} | null;
+
+async function verifyAccessToken(accessToken: string): Promise<JwtPayload> {
+  const secretValue = process.env.JWT_SECRET;
+  if (!secretValue) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+
+  const secret = new TextEncoder().encode(secretValue);
+  const { payload } = await jwtVerify(accessToken, secret);
+  return payload as JwtPayload;
+}
+
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const { pathname } = request.nextUrl;
 
@@ -18,19 +34,18 @@ export function middleware(request: NextRequest) {
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    // Decode JWT to check role — admins must NOT access user pages
+
     try {
-      const payloadBase64 = accessToken.split('.')[1];
-      const payload = JSON.parse(atob(payloadBase64));
-      if (payload.role === 'admin' || payload.role === 'moderator') {
-        // Admin/Moderator has no user account — redirect to admin dashboard
+      const payload = await verifyAccessToken(accessToken);
+      if (payload?.role === 'admin' || payload?.role === 'moderator') {
         return NextResponse.redirect(new URL('/admin/dashboard', request.url));
       }
     } catch {
-      // Malformed token — redirect to login
       const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
+
     return response;
   }
 
@@ -38,24 +53,22 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const accessToken = request.cookies.get('access_token')?.value;
     if (!accessToken) {
-      // No token — show 404 (hide admin existence)
-      const notFoundUrl = new URL('/not-found', request.url);
-      return NextResponse.rewrite(notFoundUrl);
+      // SECURITY FIX: [LOW-02] Log unauthorized admin route access attempts.
+      console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: missing token');
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // Decode JWT payload to check role
     try {
-      const payloadBase64 = accessToken.split('.')[1];
-      const payload = JSON.parse(atob(payloadBase64));
-      if (payload.role !== 'admin' && payload.role !== 'moderator') {
-        // Regular user — show 404 (hide admin existence)
-        const notFoundUrl = new URL('/not-found', request.url);
-        return NextResponse.rewrite(notFoundUrl);
+      const payload = await verifyAccessToken(accessToken);
+      if (payload?.role !== 'admin' && payload?.role !== 'moderator') {
+        // SECURITY FIX: [LOW-02] Log unauthorized role trying to access admin routes.
+        console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: invalid role');
+        return NextResponse.redirect(new URL('/not-found', request.url));
       }
     } catch {
-      // Malformed token — show 404
-      const notFoundUrl = new URL('/not-found', request.url);
-      return NextResponse.rewrite(notFoundUrl);
+      // SECURITY FIX: [LOW-02] Token invalid/expired on admin access.
+      console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: invalid token');
+      return NextResponse.redirect(new URL('/not-found', request.url));
     }
   }
 

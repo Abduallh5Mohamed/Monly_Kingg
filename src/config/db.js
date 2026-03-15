@@ -9,6 +9,7 @@ const connectDB = async () => {
             connectTimeoutMS: 10000,
             serverSelectionTimeoutMS: 10000,
             socketTimeoutMS: 45000,
+            heartbeatFrequencyMS: 10000,
             // Connection pooling - optimized for concurrent access
             maxPoolSize: 50,
             minPoolSize: 10,

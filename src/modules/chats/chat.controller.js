@@ -3,20 +3,45 @@ import User from "../users/user.model.js";
 import mongoose from "mongoose";
 import logger from "../../utils/logger.js";
 import socketService from "../../services/socketService.js";
+import { safePaginate } from "../../utils/pagination.js";
+
+const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
+const ALLOWED_MESSAGE_TYPES = new Set(['text', 'image', 'video', 'audio', 'file']);
+
+const isValidUploadUrl = (value) => typeof value === "string" && UPLOAD_URL_PATTERN.test(value.trim());
 
 /* ---------------- Send Message (HTTP fallback — socket is preferred) ---------------- */
 export const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(chatId)) {
+            return res.status(400).json({ success: false, message: "Invalid chat ID" });
+        }
         const userId = req.user._id;
-        const { content, type = 'text', fileUrl } = req.body;
+        const { content, fileUrl } = req.body;
+        // SECURITY FIX [M-05]: Strict whitelist for message type values.
+        const type = ALLOWED_MESSAGE_TYPES.has(req.body.type) ? req.body.type : 'text';
+        const attachmentTypes = new Set(['image', 'video', 'audio', 'file']);
 
         if (!content) {
             return res.status(400).json({ success: false, message: "Message content is required" });
         }
 
+        let normalizedContent = content;
+        let normalizedFileUrl = fileUrl;
+
+        if (attachmentTypes.has(type)) {
+            const attachmentUrl = typeof fileUrl === 'string' && fileUrl.trim() ? fileUrl.trim() : String(content).trim();
+            if (!isValidUploadUrl(attachmentUrl)) {
+                return res.status(400).json({ success: false, message: "Invalid file URL" });
+            }
+
+            normalizedContent = attachmentUrl;
+            normalizedFileUrl = attachmentUrl;
+        }
+
         // Limit message length to prevent abuse
-        if (content.length > 5000) {
+        if (String(normalizedContent).length > 5000) {
             return res.status(400).json({ success: false, message: "Message too long (max 5000 characters)" });
         }
 
@@ -28,10 +53,10 @@ export const sendMessage = async (req, res) => {
             { _id: chatId, participants: userId },
             {
                 $push: {
-                    messages: { _id: msgId, sender: userId, content, type, fileUrl, timestamp: now, read: false, delivered: true }
+                    messages: { _id: msgId, sender: userId, content: normalizedContent, type, fileUrl: normalizedFileUrl, timestamp: now, read: false, delivered: true }
                 },
                 $set: {
-                    lastMessage: { content, sender: userId, timestamp: now, messageType: type }
+                    lastMessage: { content: normalizedContent, sender: userId, timestamp: now, messageType: type }
                 }
             },
             { new: false, projection: { participants: 1 } }
@@ -58,7 +83,12 @@ export const sendMessage = async (req, res) => {
                 email: req.user.email,
                 avatar: req.user.avatar
             },
-            content, type, fileUrl, timestamp: now, read: false, delivered: true
+            content: normalizedContent,
+            type,
+            fileUrl: normalizedFileUrl,
+            timestamp: now,
+            read: false,
+            delivered: true
         };
 
         // Broadcast via Socket.IO
@@ -79,7 +109,8 @@ export const sendMessage = async (req, res) => {
 export const getUserChats = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { page = 1, limit = 20 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         const chats = await Chat.find({
             participants: userId,
@@ -89,8 +120,8 @@ export const getUserChats = async (req, res) => {
             .populate('participants', 'username email avatar role')
             .populate('lastMessage.sender', 'username avatar')
             .sort({ 'lastMessage.timestamp': -1 })
-            .skip((page - 1) * limit)
-            .limit(parseInt(limit))
+            .skip(skip)
+            .limit(limit)
             .select('-messages') // Don't load messages
             .lean();
 
@@ -111,8 +142,8 @@ export const getUserChats = async (req, res) => {
             data: {
                 chats: chatsWithUnread,
                 pagination: {
-                    page: parseInt(page),
-                    limit: parseInt(limit),
+                    page,
+                    limit,
                     total,
                     pages: Math.ceil(total / limit)
                 }
@@ -131,6 +162,9 @@ export const getUserChats = async (req, res) => {
 export const getChatMessages = async (req, res) => {
     try {
         const { chatId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(chatId)) {
+            return res.status(400).json({ success: false, message: "Invalid chat ID" });
+        }
         const userId = req.user._id;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
@@ -282,7 +316,7 @@ export const createSupportChat = async (req, res) => {
                 type: 'support',
                 participants: [userId],
                 messages: [{
-                    sender: userId,
+                    sender: null,
                     content: 'Hello! How can I help you today?',
                     type: 'text',
                     timestamp: new Date(),
@@ -291,7 +325,7 @@ export const createSupportChat = async (req, res) => {
                 }],
                 lastMessage: {
                     content: 'Hello! How can I help you today?',
-                    sender: userId,
+                    sender: null,
                     timestamp: new Date(),
                     type: 'text'
                 },

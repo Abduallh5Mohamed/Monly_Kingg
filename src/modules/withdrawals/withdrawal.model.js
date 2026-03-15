@@ -11,6 +11,7 @@ const withdrawalSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 500,
+      max: 50000,
     },
     method: {
       type: String,
@@ -26,9 +27,9 @@ const withdrawalSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: function (v) {
-          return /^\d{11}$/.test(v);
+          return /^\d{11}$/.test(v) || /^[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+$/.test(v);
         },
-        message: 'Phone number must be exactly 11 digits'
+        message: 'Phone number must be encrypted or exactly 11 digits'
       }
     },
     status: {
@@ -48,6 +49,10 @@ const withdrawalSchema = new mongoose.Schema(
     reviewedAt: {
       type: Date,
       default: null,
+    },
+    balanceReserved: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

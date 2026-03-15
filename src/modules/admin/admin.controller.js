@@ -7,25 +7,87 @@ import Listing from "../listings/listing.model.js";
 import Game from "../games/game.model.js";
 import SellerRequest from "../sellers/sellerRequest.model.js";
 import SiteSettings from "./siteSettings.model.js";
+import AuditLog from "./auditLog.model.js";
 import logger from "../../utils/logger.js";
 import cacheService from "../../services/cacheService.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import redis from "../../config/redis.js";
 import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
+import escapeRegex from "../../utils/escapeRegex.js";
+import { safePaginate } from "../../utils/pagination.js";
+import { decrypt } from "../../utils/encryption.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
+
+/**
+ * Decrypt sensitive deposit fields for admin display.
+ * @param {Record<string, any>} deposit
+ * @returns {Record<string, any>}
+ */
+function decryptAdminDepositFields(deposit) {
+    if (!deposit) return deposit;
+    const normalized = { ...deposit };
+
+    const tryDecrypt = (value) => {
+        if (typeof value !== "string" || !value) return value;
+        try {
+            return decrypt(value);
+        } catch (error) {
+            logger.error(`Admin deposit decryption failed: ${error.message}`);
+            return null;
+        }
+    };
+
+    normalized.senderFullName = tryDecrypt(normalized.senderFullName);
+    normalized.senderPhoneOrEmail = tryDecrypt(normalized.senderPhoneOrEmail);
+    if (normalized.gameTitle !== undefined) {
+        normalized.gameTitle = tryDecrypt(normalized.gameTitle);
+    }
+
+    return normalized;
+}
+
+/**
+ * Decrypt sensitive withdrawal fields for admin display.
+ * @param {Record<string, any>} withdrawal
+ * @returns {Record<string, any>}
+ */
+function decryptAdminWithdrawalFields(withdrawal) {
+    if (!withdrawal) return withdrawal;
+    const normalized = { ...withdrawal };
+
+    const tryDecrypt = (value) => {
+        if (typeof value !== "string" || !value) return value;
+        try {
+            return decrypt(value);
+        } catch (error) {
+            logger.error(`Admin withdrawal decryption failed: ${error.message}`);
+            return null;
+        }
+    };
+
+    normalized.countryCode = tryDecrypt(normalized.countryCode);
+    normalized.phoneNumber = tryDecrypt(normalized.phoneNumber);
+    return normalized;
+}
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
     try {
-        const { page = 1, limit = 10, search = "", role = "all" } = req.query;
+        const { role = "all" } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 10, 100);
+        const search = (req.query.search || "").trim().slice(0, 100);
 
         // Build filter
         const filter = {};
         if (search) {
             filter.$or = [
-                { email: { $regex: search, $options: 'i' } },
-                { username: { $regex: search, $options: 'i' } }
+                { email: { $regex: escapeRegex(search), $options: 'i' } },
+                { username: { $regex: escapeRegex(search), $options: 'i' } }
             ];
         }
         if (role !== "all") {
@@ -33,12 +95,11 @@ export const getAllUsers = async (req, res) => {
         }
 
         // Get users with pagination
-        const skip = (page - 1) * limit;
         const users = await User.find(filter)
             .select("-passwordHash -verificationCode -passwordResetToken")
             .sort({ createdAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit));
+            .limit(limit);
 
         // Get total count
         const total = await User.countDocuments(filter);
@@ -50,7 +111,7 @@ export const getAllUsers = async (req, res) => {
             data: {
                 users,
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(total / limit),
                     totalUsers: total,
                     hasNext: page * limit < total,
@@ -148,6 +209,14 @@ export const getAdminStats = async (req, res) => {
 export const updateUserRole = async (req, res) => {
     try {
         const { userId } = req.params;
+
+        if (userId === req.user._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot change your own role"
+            });
+        }
+
         const { role } = req.body;
 
         if (!["user", "admin"].includes(role)) {
@@ -156,6 +225,12 @@ export const updateUserRole = async (req, res) => {
                 message: "Invalid role. Moderators must be created via the Moderators page."
             });
         }
+
+        const existingUser = await User.findById(userId).select("role email").lean();
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        const previousRole = existingUser.role;
 
         const user = await User.findByIdAndUpdate(
             userId,
@@ -172,6 +247,28 @@ export const updateUserRole = async (req, res) => {
 
         // Clear user from cache
         await cacheService.invalidateUser(userId);
+
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "role_update",
+                targetModel: "User",
+                targetId: userId,
+                targetUser: userId,
+                details: {
+                    previousRole,
+                    newRole: role,
+                    targetEmail: user.email,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for role update ${userId}: ${auditErr.message}`);
+        }
 
         // Log the action
         user.authLogs.push({
@@ -241,13 +338,14 @@ export const deleteUser = async (req, res) => {
 /* ---------------- Get Recent Activity ---------------- */
 export const getRecentActivity = async (req, res) => {
     try {
-        const { limit = 10 } = req.query;
+        // SECURITY FIX [M-06]: Cap limit parameter to avoid oversized queries.
+        const { limit } = safePaginate({ page: 1, limit: req.query.limit }, 10, 100);
 
         // Get recent users with their auth logs
         const recentUsers = await User.find()
             .select("email username role verified createdAt authLogs")
             .sort({ createdAt: -1 })
-            .limit(parseInt(limit) * 2); // Get more to filter
+            .limit(limit * 2); // Get more to filter
 
         // Extract recent activities
         const activities = [];
@@ -287,7 +385,7 @@ export const getRecentActivity = async (req, res) => {
         // Sort by timestamp and limit
         const sortedActivities = activities
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-            .slice(0, parseInt(limit));
+            .slice(0, limit);
 
         res.json({
             success: true,
@@ -353,7 +451,9 @@ export const toggleUserStatus = async (req, res) => {
 /* ---------------- Get All Chats (Admin Monitoring) ---------------- */
 export const getAllChats = async (req, res) => {
     try {
-        const { page = 1, limit = 20, type = 'all', search = '' } = req.query;
+        const { type = 'all', search = '' } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         // Build filter
         const filter = { isActive: true };
@@ -368,10 +468,11 @@ export const getAllChats = async (req, res) => {
                 filter.chatNumber = search;
             } else {
                 // Search by participant email/username
+                const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
                 const users = await User.find({
                     $or: [
-                        { email: { $regex: search, $options: 'i' } },
-                        { username: { $regex: search, $options: 'i' } }
+                        { email: { $regex: safeSearch, $options: 'i' } },
+                        { username: { $regex: safeSearch, $options: 'i' } }
                     ]
                 }).select('_id');
 
@@ -380,14 +481,12 @@ export const getAllChats = async (req, res) => {
             }
         }
 
-        const skip = (page - 1) * limit;
-
         const chats = await Chat.find(filter)
             .populate('participants', 'username email avatar role verified')
             .populate('lastMessage.sender', 'username email avatar')
             .sort({ 'lastMessage.timestamp': -1, updatedAt: -1 })
             .skip(skip)
-            .limit(parseInt(limit))
+            .limit(limit)
             .select('-messages') // Don't load messages for list view
             .lean();
 
@@ -413,7 +512,7 @@ export const getAllChats = async (req, res) => {
             data: {
                 chats: chatsWithStats,
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(total / limit),
                     totalChats: total,
                     hasNext: page * limit < total,
@@ -434,7 +533,8 @@ export const getAllChats = async (req, res) => {
 export const getChatDetails = async (req, res) => {
     try {
         const { chatId } = req.params;
-        const { page = 1, limit = 50 } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit } = safePaginate(req.query, 50, 100);
 
         const chat = await Chat.findById(chatId)
             .populate('participants', 'username email avatar role verified createdAt')
@@ -491,7 +591,7 @@ export const getChatDetails = async (req, res) => {
                     lastActivity: chat.lastMessage?.timestamp || chat.updatedAt
                 },
                 pagination: {
-                    currentPage: parseInt(page),
+                    currentPage: page,
                     totalPages: Math.ceil(totalMessages / limit),
                     totalMessages,
                     hasNext: page * limit < totalMessages,
@@ -588,7 +688,7 @@ export const getUserDetail = async (req, res) => {
 
         // Seller request (ID verification)
         const sellerRequest = await SellerRequest.findOne({ user: userId })
-            .select("fullName idType idImage faceImageFront faceImageLeft faceImageRight status rejectionReason applicationCount rejectionHistory reviewedAt createdAt")
+            .select("fullName idType +idImage +faceImageFront +faceImageLeft +faceImageRight status rejectionReason applicationCount rejectionHistory reviewedAt createdAt")
             .populate("reviewedBy", "username")
             .lean();
 
@@ -623,6 +723,8 @@ export const getUserDetail = async (req, res) => {
                 .lean(),
         ]);
 
+            const safeRecentDeposits = recentDeposits.map((deposit) => decryptAdminDepositFields(deposit));
+
         // Withdrawal history
         const [withdrawalStats, recentWithdrawals] = await Promise.all([
             Withdrawal.aggregate([
@@ -637,25 +739,14 @@ export const getUserDetail = async (req, res) => {
                 .lean(),
         ]);
 
+            const safeRecentWithdrawals = recentWithdrawals.map((withdrawal) => decryptAdminWithdrawalFields(withdrawal));
+
         // Active listings count
         const [listingsActive, listingsSold, listingsTotal] = await Promise.all([
             Listing.countDocuments({ seller: userId, status: "available" }),
             Listing.countDocuments({ seller: userId, status: "sold" }),
             Listing.countDocuments({ seller: userId }),
         ]);
-
-        // Extract unique IPs from auth logs and refresh tokens
-        const ipSet = new Set();
-        if (user.authLogs) {
-            user.authLogs.forEach(log => {
-                if (log.ip) ipSet.add(log.ip);
-            });
-        }
-        if (user.refreshTokens) {
-            user.refreshTokens.forEach(rt => {
-                if (rt.ip) ipSet.add(rt.ip);
-            });
-        }
 
         // Get last login info
         const lastLogin = user.authLogs
@@ -704,7 +795,6 @@ export const getUserDetail = async (req, res) => {
                     userAgent: lastLogin.userAgent,
                     at: lastLogin.createdAt,
                 } : null,
-                knownIPs: [...ipSet],
                 authLogs: (user.authLogs || []).slice(-30).reverse(), // last 30 logs, newest first
             },
 
@@ -732,13 +822,13 @@ export const getUserDetail = async (req, res) => {
             // Deposits
             deposits: {
                 stats: depositStats,
-                recent: recentDeposits,
+                recent: safeRecentDeposits,
             },
 
             // Withdrawals
             withdrawals: {
                 stats: withdrawalStats,
-                recent: recentWithdrawals,
+                recent: safeRecentWithdrawals,
             },
 
             // Listings
@@ -772,17 +862,42 @@ export const changePassword = async (req, res) => {
             return res.status(400).json({ success: false, message: "New password must be at least 8 characters" });
         }
 
-        const user = await User.findById(req.user._id).select("+passwordHash");
+        const user = await User.findById(req.user._id).select("+passwordHash +refreshTokens");
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
         const match = await bcrypt.compare(currentPassword, user.passwordHash);
         if (!match) return res.status(400).json({ success: false, message: "Current password is incorrect" });
 
-        user.passwordHash = await bcrypt.hash(newPassword, 12);
+        user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+        // Revoke all refresh tokens on password change.
+        if (Array.isArray(user.refreshTokens)) {
+            user.refreshTokens.forEach((rt) => {
+                rt.revoked = true;
+                rt.revokedAt = new Date();
+                rt.replacedByToken = null;
+            });
+        }
+
         await user.save();
 
         // Invalidate cached user so tokens re-validated
         await cacheService.invalidateUser(user._id);
+
+        // SECURITY FIX [H-09]: Blacklist current access token on password change.
+        const accessToken = req.cookies?.access_token || req.headers.authorization?.split(" ")[1];
+        if (accessToken && redis.isReady()) {
+            try {
+                const decoded = jwt.decode(accessToken);
+                const remainingTTL = decoded?.exp ? Math.max(0, decoded.exp - Math.floor(Date.now() / 1000)) : 900;
+                if (remainingTTL > 0) {
+                    const tokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
+                    await redis.set(`bl:token:${tokenHash}`, 1, remainingTTL);
+                }
+            } catch (_) {
+                // non-fatal
+            }
+        }
 
         logger.info(`Admin/Mod ${user._id} changed their password`);
         res.json({ success: true, message: "Password updated successfully" });
@@ -916,8 +1031,8 @@ export const updateSiteSettings = async (req, res) => {
 /* ---------------- Get Earned Commission Stats ---------------- */
 export const getEarnedCommission = async (req, res) => {
     try {
-        const { page = 1, limit = 30 } = req.query;
-        const skip = (parseInt(page) - 1) * parseInt(limit);
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 30, 100);
 
         const settings = await SiteSettings.getSingleton();
 
@@ -928,7 +1043,7 @@ export const getEarnedCommission = async (req, res) => {
             Transaction.find(filter)
                 .sort({ createdAt: -1 })
                 .skip(skip)
-                .limit(parseInt(limit))
+                .limit(limit)
                 .select("buyer seller listing amount commissionPercent commissionAmount sellerNetAmount payoutStatus paidOutAt status createdAt")
                 .populate("listing", "title price")
                 .populate("buyer", "username")
@@ -1001,7 +1116,7 @@ export const getEarnedCommission = async (req, res) => {
                 currentCommissionPercent: settings.commissionPercent,
                 currentPayoutDelay: settings.sellerPayoutDelayDays,
                 transactions,
-                pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+                pagination: { total, page, limit },
             },
         });
     } catch (error) {
@@ -1019,13 +1134,13 @@ export const getEarnedCommission = async (req, res) => {
 export const getAdminListings = async (req, res) => {
     try {
         const {
-            page = 1,
-            limit = 20,
             search = "",
             status = "all",
             game = "all",
             sort = "newest"
         } = req.query;
+        // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+        const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
         const filter = {};
 
@@ -1042,8 +1157,8 @@ export const getAdminListings = async (req, res) => {
         // Search filter
         if (search) {
             filter.$or = [
-                { title: { $regex: search, $options: "i" } },
-                { description: { $regex: search, $options: "i" } },
+                { title: { $regex: escapeRegex(search), $options: "i" } },
+                { description: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
 
@@ -1054,15 +1169,13 @@ export const getAdminListings = async (req, res) => {
         else if (sort === "price_desc") sortOption = { price: -1 };
         else if (sort === "title") sortOption = { title: 1 };
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-
         const [listings, total] = await Promise.all([
             Listing.find(filter)
                 .populate("game", "name")
                 .populate("seller", "username email avatar")
                 .sort(sortOption)
                 .skip(skip)
-                .limit(parseInt(limit))
+                .limit(limit)
                 .lean(),
             Listing.countDocuments(filter),
         ]);
@@ -1104,8 +1217,8 @@ export const getAdminListings = async (req, res) => {
             data: {
                 listings: enrichedListings,
                 pagination: {
-                    currentPage: parseInt(page),
-                    totalPages: Math.ceil(total / parseInt(limit)),
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
                     total,
                     hasNext: page * limit < total,
                     hasPrev: page > 1
@@ -1246,8 +1359,8 @@ export const getAdminGames = async (req, res) => {
         const filter = {};
         if (search) {
             filter.$or = [
-                { name: { $regex: search, $options: "i" } },
-                { category: { $regex: search, $options: "i" } },
+                { name: { $regex: escapeRegex(search), $options: "i" } },
+                { category: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
         if (status !== "all") {
@@ -1350,7 +1463,7 @@ export const createAdminGame = async (req, res) => {
         }
 
         // Check duplicate
-        const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" } });
+        const existing = await Game.findOne({ name: { $regex: `^${escapeRegex(name.trim())}$`, $options: "i" } });
         if (existing) {
             return res.status(409).json({ success: false, message: "A game with this name already exists" });
         }
@@ -1406,7 +1519,7 @@ export const updateAdminGame = async (req, res) => {
         }
 
         if (name && name.trim() !== game.name) {
-            const existing = await Game.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" }, _id: { $ne: id } });
+            const existing = await Game.findOne({ name: { $regex: `^${escapeRegex(name.trim())}$`, $options: "i" }, _id: { $ne: id } });
             if (existing) {
                 return res.status(409).json({ success: false, message: "A game with this name already exists" });
             }
@@ -1537,6 +1650,35 @@ export const adminInstantRelease = async (req, res) => {
         });
         await tx.save();
 
+        try {
+            await AuditLog.create({
+                admin: req.user._id,
+                performedBy: req.user._id,
+                category: "user_management",
+                action: "wallet_instant_release",
+                targetModel: "Transaction",
+                targetId: tx._id,
+                targetUser: sellerId,
+                details: {
+                    transactionId: tx._id.toString(),
+                    sellerId,
+                    amountReleased: sellerNetAmount,
+                    previousPayoutStatus: "pending_payout",
+                    newPayoutStatus: "paid_out",
+                },
+                metadata: {
+                    transactionId: tx._id.toString(),
+                    sellerId,
+                    amountReleased: sellerNetAmount,
+                },
+                ip: req.ip,
+                userAgent: req.get("User-Agent"),
+                timestamp: new Date(),
+            });
+        } catch (auditErr) {
+            logger.error(`AuditLog failed for instant_release tx ${tx._id}: ${auditErr.message}`);
+        }
+
         logger.info(`Admin instant-released tx ${tx._id} — ${sellerNetAmount} EGP to seller ${sellerId}`);
 
         // Best-effort notification
@@ -1608,8 +1750,8 @@ export const getExemptSellers = async (req, res) => {
         const filter = { isSeller: true };
         if (search) {
             filter.$or = [
-                { username: { $regex: search, $options: "i" } },
-                { email: { $regex: search, $options: "i" } },
+                { username: { $regex: escapeRegex(search), $options: "i" } },
+                { email: { $regex: escapeRegex(search), $options: "i" } },
             ];
         }
 
@@ -1749,8 +1891,13 @@ export const createModerator = async (req, res) => {
             return res.status(400).json({ success: false, message: "Username, email, and password are required" });
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+        if (password.length < 8) {
+            return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ success: false, message: "Invalid email format" });
         }
 
         // Check for existing user with same email or username

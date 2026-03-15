@@ -1,5 +1,6 @@
 import Promotion from "./promotion.model.js";
 import Listing from "../listings/listing.model.js";
+import logger from "../../utils/logger.js";
 
 // Pricing: cost per day in EGP
 const PRICE_PER_DAY = 2;
@@ -14,8 +15,10 @@ export const submitPromotion = async (req, res) => {
       return res.status(400).json({ message: "Listing and days are required" });
     }
 
-    if (days < 1 || days > 30) {
-      return res.status(400).json({ message: "Days must be between 1 and 30" });
+    const parsedDays = Number(days);
+
+    if (!Number.isInteger(parsedDays) || parsedDays < 1 || parsedDays > 30) {
+      return res.status(400).json({ message: "Days must be a whole number between 1 and 30" });
     }
 
     // Verify the listing belongs to this seller
@@ -42,12 +45,12 @@ export const submitPromotion = async (req, res) => {
       });
     }
 
-    const cost = days * PRICE_PER_DAY;
+    const cost = parsedDays * PRICE_PER_DAY;
 
     const promotion = new Promotion({
       listing: listingId,
       seller: sellerId,
-      days,
+      days: parsedDays,
       cost,
     });
 
@@ -58,7 +61,7 @@ export const submitPromotion = async (req, res) => {
       data: promotion,
     });
   } catch (error) {
-    console.error("Submit promotion error:", error);
+    logger.error("Submit promotion error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -87,7 +90,7 @@ export const getMyPromotions = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get my promotions error:", error);
+    logger.error("Get my promotions error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -104,7 +107,7 @@ export const getPromotionPricing = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get promotion pricing error:", error);
+    logger.error("Get promotion pricing error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -136,7 +139,7 @@ export const getAllPromotions = async (req, res) => {
       totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
-    console.error("Get all promotions error:", error);
+    logger.error("Get all promotions error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -171,7 +174,7 @@ export const approvePromotion = async (req, res) => {
       data: promotion,
     });
   } catch (error) {
-    console.error("Approve promotion error:", error);
+    logger.error("Approve promotion error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -202,7 +205,7 @@ export const rejectPromotion = async (req, res) => {
       data: promotion,
     });
   } catch (error) {
-    console.error("Reject promotion error:", error);
+    logger.error("Reject promotion error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -235,7 +238,7 @@ export const getPromotionStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Get promotion stats error:", error);
+    logger.error("Get promotion stats error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

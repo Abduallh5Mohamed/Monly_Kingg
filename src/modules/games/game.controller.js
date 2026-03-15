@@ -1,5 +1,6 @@
 import Game from "./game.model.js";
 import cacheService from "../../services/cacheService.js";
+import logger from "../../utils/logger.js";
 
 // Get all active games (public) — cached for 6 hours
 export const getAllGames = async (req, res) => {
@@ -17,7 +18,7 @@ export const getAllGames = async (req, res) => {
 
         return res.status(200).json({ data: games });
     } catch (error) {
-        console.error("Get all games error:", error);
+        logger.error("Get all games error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -43,7 +44,7 @@ export const getGameBySlug = async (req, res) => {
 
         return res.status(200).json({ data: game });
     } catch (error) {
-        console.error("Get game by slug error:", error);
+        logger.error("Get game by slug error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

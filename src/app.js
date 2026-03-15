@@ -22,6 +22,8 @@ import sellerLevelRoutes from "./modules/seller-levels/sellerLevel.routes.js";
 import ticketRoutes from "./modules/tickets/ticket.routes.js";
 import supportRoutes from "./modules/support/support.routes.js";
 import sellerRatingRoutes from "./modules/ratings/sellerRating.routes.js";
+import depositRoutes from "./modules/deposits/deposit.routes.js";
+import withdrawalRoutes from "./modules/withdrawals/withdrawal.routes.js";
 import { startAutoConfirmJob } from "./jobs/autoConfirmTransactions.js";
 import { startPayoutReleaseJob } from "./jobs/sellerPayoutRelease.js";
 import { startTransactionWorkers } from "./workers/transactionWorker.js";
@@ -33,6 +35,9 @@ import { globalLimiter } from "./middlewares/rateLimiter.js";
 import csrfProtection from "./middlewares/csrf.js";
 import compression from "compression";
 import passport from "./config/passport.js";
+import crypto from "crypto";
+import { authMiddleware } from "./middlewares/authMiddleware.js";
+import logger from "./utils/logger.js";
 
 // Import models to ensure they are registered with Mongoose
 import "./modules/chats/chat.model.js";
@@ -45,6 +50,7 @@ import "./modules/admin/auditLog.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const uploadsDir = path.join(__dirname, "../uploads");
 
 dotenv.config();
 
@@ -60,21 +66,71 @@ connectDB().then(() => {
 
 const app = express();
 
+const SAFE_UPLOAD_FILENAME_REGEX = /^[a-zA-Z0-9._-]+$/;
+
+function getSafeUploadFilename(rawFilename) {
+  const filename = path.basename(rawFilename || "");
+  // SECURITY FIX [H-04]: Reject suspicious filenames even after basename normalization.
+  if (!SAFE_UPLOAD_FILENAME_REGEX.test(filename) || filename.includes('..')) {
+    return null;
+  }
+  return filename;
+}
+
+const parsedProxyHops = Number.parseInt(process.env.PROXY_HOPS || "0", 10);
+if (Number.isInteger(parsedProxyHops) && parsedProxyHops > 0) {
+  app.set("trust proxy", parsedProxyHops);
+  logger.info(`Express trust proxy enabled with ${parsedProxyHops} hop(s)`);
+} else {
+  app.set("trust proxy", false);
+}
+
 // Compression middleware for better performance
 app.use(compression({
   filter: (req, res) => {
-    if (req.headers['x-no-compression']) {
-      return false;
-    }
+    // SECURITY FIX [M-08]: Remove client-controlled compression bypass header.
     return compression.filter(req, res);
   },
   level: 4, // Fast compression
   threshold: 1024, // Only compress responses > 1KB
 }));
 
-// Payload limit
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// SECURITY FIX [VULN-04]: Apply stricter global body limits and skip only the dedicated large-avatar profile route.
+const defaultJsonParser = express.json({ limit: '500kb' });
+const defaultUrlencodedParser = express.urlencoded({ extended: true, limit: '500kb' });
+
+app.use((req, res, next) => {
+  const isProfileUpdateRoute = req.method === "PUT" && /^\/api\/v1\/users\/profile\/?$/.test(req.path);
+  if (isProfileUpdateRoute) {
+    return next();
+  }
+  return defaultJsonParser(req, res, next);
+});
+
+app.use((req, res, next) => {
+  const isProfileUpdateRoute = req.method === "PUT" && /^\/api\/v1\/users\/profile\/?$/.test(req.path);
+  if (isProfileUpdateRoute) {
+    return next();
+  }
+  return defaultUrlencodedParser(req, res, next);
+});
+
+// SECURITY FIX [H-04]: Enforce accepted content types for state-changing requests.
+app.use((req, res, next) => {
+  if (["POST", "PUT", "PATCH"].includes(req.method) && req.headers["content-type"]) {
+    const contentType = req.headers["content-type"];
+    const ct = contentType.split(';')[0].trim().toLowerCase();
+    const isAllowed =
+      ct === "application/json" ||
+      ct === "multipart/form-data" ||
+      ct === "application/x-www-form-urlencoded";
+
+    if (!isAllowed) {
+      return res.status(415).json({ message: "Unsupported Media Type" });
+    }
+  }
+  return next();
+});
 
 // NoSQL injection protection
 function sanitizeObject(obj) {
@@ -99,10 +155,25 @@ app.use((req, res, next) => {
   next();
 });
 
+const getAllowedOrigins = () => {
+  if (process.env.NODE_ENV === "production") {
+    if (!process.env.ALLOWED_ORIGINS) {
+      throw new Error("FATAL: ALLOWED_ORIGINS must be set in production");
+    }
+    return process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim()).filter(Boolean);
+  }
+  return ["http://localhost:3000", "http://localhost:5000"];
+};
+
+const allowedOrigins = getAllowedOrigins();
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-    : ['http://localhost:3000', 'http://localhost:5000'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -110,15 +181,125 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(helmet());
-if (process.env.NODE_ENV === "production") {
-  app.use(helmet.hsts({ maxAge: 31536000 }));
-}
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'", process.env.FRONTEND_URL || "http://localhost:3000"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null,
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  permittedCrossDomainPolicies: false,
+}));
+
+app.use((req, res, next) => {
+  const requestId = crypto.randomUUID();
+  req.requestId = requestId;
+  res.setHeader("X-Request-ID", requestId);
+  next();
+});
+
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// SECURITY FIX [H-04]: Replace open static serving with validated file handlers.
+app.get('/uploads/listings/:filename', (req, res) => {
+  const filename = getSafeUploadFilename(req.params.filename);
+  if (!filename) {
+    return res.status(400).json({ message: 'Invalid filename' });
+  }
+
+  const filePath = path.join(uploadsDir, 'listings', filename);
+  return res.sendFile(filePath, (err) => {
+    if (err) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+    return undefined;
+  });
+});
+
+// SECURITY FIX [H-04]: Replace open static serving for /other with validated file handler.
+app.get('/uploads/other/:filename', (req, res) => {
+  const filename = getSafeUploadFilename(req.params.filename);
+  if (!filename) {
+    return res.status(400).json({ message: 'Invalid filename' });
+  }
+
+  const filePath = path.join(uploadsDir, 'other', filename);
+  return res.sendFile(filePath, (err) => {
+    if (err) {
+      return res.status(404).json({ message: 'File not found' });
+    }
+    return undefined;
+  });
+});
+
+app.get('/uploads/receipts/:filename', authMiddleware, async (req, res) => {
+  try {
+    const filename = getSafeUploadFilename(req.params.filename);
+    if (!filename) {
+      return res.status(400).json({ message: 'Invalid filename' });
+    }
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
+
+    if (!isAdmin) {
+      const Deposit = (await import('./modules/deposits/deposit.model.js')).default;
+      const receiptPath = `/uploads/receipts/${filename}`;
+      const deposit = await Deposit.findOne({
+        user: req.user._id,
+        receiptImage: receiptPath
+      }).lean();
+
+      if (!deposit) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+    }
+
+    const filePath = path.join(uploadsDir, 'receipts', filename);
+    return res.sendFile(filePath);
+  } catch (_err) {
+    return res.status(404).json({ message: 'File not found' });
+  }
+});
+
+app.get('/uploads/tickets/:filename', authMiddleware, async (req, res) => {
+  try {
+    const filename = getSafeUploadFilename(req.params.filename);
+    if (!filename) {
+      return res.status(400).json({ message: 'Invalid filename' });
+    }
+    const isAdmin = req.user.role === 'admin' || req.user.role === 'moderator';
+
+    if (!isAdmin) {
+      const Ticket = (await import('./modules/tickets/ticket.model.js')).default;
+      const ticket = await Ticket.findOne({
+        user: req.user._id,
+        'messages.attachments.fileName': filename
+      }).lean();
+
+      if (!ticket) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+    }
+
+    const filePath = path.join(uploadsDir, 'tickets', filename);
+    return res.sendFile(filePath);
+  } catch (_err) {
+    return res.status(404).json({ message: 'File not found' });
+  }
+});
 
 // Health checks (before rate limiting)
 app.use("/", healthRoutes);
@@ -127,23 +308,52 @@ app.use(globalLimiter);
 
 // API Routes
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
-app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/admin/seller-levels", sellerLevelRoutes);
-app.use("/api/v1/seller", sellerRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to all state-changing routes.
+app.use("/api/v1/admin", csrfProtection, adminRoutes);
+// SECURITY FIX [C-01]: Keep direct admin seller-level mount protected.
+app.use("/api/v1/admin/seller-levels", csrfProtection, sellerLevelRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to seller routes.
+app.use("/api/v1/seller", csrfProtection, sellerRoutes);
 app.use("/api/v1/listings", csrfProtection, listingRoutes);
 app.use("/api/v1/promotions", csrfProtection, promotionRoutes);
-app.use("/api/v1/notifications", notificationRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to notification routes.
+app.use("/api/v1/notifications", csrfProtection, notificationRoutes);
 app.use("/api/v1/games", gamesRoutes);
 app.use("/api/v1/ads", adsRoutes);
 app.use("/api/v1/discounts", csrfProtection, discountRoutes);
 app.use("/api/v1/rankings", rankingRoutes);
 app.use("/api/v1/cache", cacheRoutes);
-app.use("/api/v1/transactions", transactionRoutes);
-app.use("/api/v1/tickets", ticketRoutes);
-app.use("/api/v1/support", supportRoutes);
-app.use("/api/v1/ratings", sellerRatingRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to transaction routes.
+app.use("/api/v1/transactions", csrfProtection, transactionRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to ticket routes.
+app.use("/api/v1/tickets", csrfProtection, ticketRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to rating routes.
+app.use("/api/v1/ratings", csrfProtection, sellerRatingRoutes);
+// SECURITY FIX [C-01]: Add CSRF protection to deposit and withdrawal routes.
+app.use("/api/v1/deposits", csrfProtection, depositRoutes);
+app.use("/api/v1/withdrawals", csrfProtection, withdrawalRoutes);
+
+// Convert invalid ObjectId cast failures into clean 400 responses.
+app.use((err, req, res, next) => {
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    return res.status(400).json({ success: false, message: "Invalid ID format" });
+  }
+
+  const status = err.status || err.statusCode || 500;
+  const isProd = process.env.NODE_ENV === "production";
+
+  logger.error(`[UnhandledError] ${err.message}`, {
+    path: req.path,
+    method: req.method,
+    stack: isProd ? undefined : err.stack
+  });
+
+  return res.status(status).json({
+    success: false,
+    message: isProd ? "Internal server error" : (err.message || "Internal server error")
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("🚀 Accounts Store API is running...");

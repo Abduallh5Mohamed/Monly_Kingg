@@ -2,70 +2,18 @@ import express from 'express';
 import mongoose from 'mongoose';
 import redis from '../config/redis.js';
 import os from 'os';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { requireAdmin } from '../middlewares/roleMiddleware.js';
 const router = express.Router();
 
 // Health check endpoint — protected by global limiter
-router.get('/health', async (req, res) => {
-    const health = {
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        service: 'accounts-store-api',
-        version: process.env.npm_package_version || '1.0.0'
-    };
-
-    try {
-        // Check MongoDB
-        const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-        health.mongodb = {
-            status: mongoStatus,
-            host: mongoose.connection.host || 'unknown'
-        };
-
-        // Check Redis
-        let redisStatus = 'unknown';
-        try {
-            await redis.ping();
-            redisStatus = 'connected';
-        } catch (error) {
-            redisStatus = 'disconnected';
-        }
-        health.redis = { status: redisStatus };
-
-        // System metrics
-        health.system = {
-            memory: {
-                used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-                total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-                external: Math.round(process.memoryUsage().external / 1024 / 1024),
-                unit: 'MB'
-            },
-            cpu: {
-                loadAverage: os.loadavg(),
-                cores: os.cpus().length
-            },
-            platform: process.platform,
-            nodeVersion: process.version
-        };
-
-        // Overall health status
-        const isHealthy = mongoStatus === 'connected' && redisStatus === 'connected';
-        health.status = isHealthy ? 'healthy' : 'degraded';
-
-        const statusCode = isHealthy ? 200 : 503;
-        res.status(statusCode).json(health);
-
-    } catch (error) {
-        res.status(503).json({
-            status: 'error',
-            error: error.message,
-            timestamp: new Date().toISOString()
-        });
-    }
+router.get('/health', (req, res) => {
+    // Return simple alive response — do not reveal infrastructure state.
+    res.status(200).json({ status: 'ok' });
 });
 
 // Readiness check (for k8s/load balancer)
-router.get('/ready', async (req, res) => {
+router.get('/ready', authMiddleware, requireAdmin, async (req, res) => {
     try {
         // Check if MongoDB is ready
         if (mongoose.connection.readyState !== 1) {
@@ -100,7 +48,7 @@ router.get('/alive', (req, res) => {
 });
 
 // Metrics endpoint (Prometheus format)
-router.get('/metrics', async (req, res) => {
+router.get('/metrics', authMiddleware, requireAdmin, async (req, res) => {
     const metrics = {
         // Process metrics
         process_uptime_seconds: process.uptime(),

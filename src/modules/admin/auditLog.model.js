@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const auditLogSchema = new mongoose.Schema({
+  admin: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   action: { type: String, required: true },
   category: {
     type: String,
@@ -8,11 +9,14 @@ const auditLogSchema = new mongoose.Schema({
     required: true
   },
   performedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  targetModel: { type: String, default: null },
+  targetId: { type: mongoose.Schema.Types.ObjectId, default: null },
   targetUser: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  details: { type: String, default: "" },
+  details: { type: mongoose.Schema.Types.Mixed, default: {} },
   ip: { type: String, default: null },
   userAgent: { type: String, default: null },
-  metadata: { type: mongoose.Schema.Types.Mixed, default: {} }
+  metadata: { type: mongoose.Schema.Types.Mixed, default: {} },
+  timestamp: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 // Indexes

@@ -7,12 +7,23 @@ import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { fileTypeFromBuffer } from 'file-type';
+import logger from "../../utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Max avatar size: 2MB (base64 encoded ~2.7MB string)
 const MAX_AVATAR_BASE64_LENGTH = 2_700_000;
+const ALLOWED_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const SAFE_FILENAME_RE = /^[a-zA-Z0-9._-]+$/;
+const MAX_LENGTHS = {
+    fullName: 100,
+    phone: 20,
+    address: 300,
+    bio: 500,
+    username: 30,
+};
 
 // Helper function to save base64 image
 const saveBase64Image = async (base64String, userId) => {
@@ -37,6 +48,13 @@ const saveBase64Image = async (base64String, userId) => {
         const data = matches[2];
         const buffer = Buffer.from(data, 'base64');
 
+        // SECURITY FIX [H-07]: Verify actual file signature (magic bytes) of decoded avatar data.
+        const detected = await fileTypeFromBuffer(buffer);
+        if (!detected || !ALLOWED_IMAGE_MIMES.includes(detected.mime)) {
+            logger.warn(`[saveBase64Image] Magic bytes mismatch for user ${userId}: declared ${ext}, actual ${detected?.mime}`);
+            return null;
+        }
+
         // Create unique filename with crypto-safe random
         const { randomUUID } = await import('crypto');
         const filename = `avatar-${userId}-${randomUUID()}.${ext}`;
@@ -50,7 +68,7 @@ const saveBase64Image = async (base64String, userId) => {
 
         return `/uploads/avatars/${filename}`;
     } catch (error) {
-        console.error('[saveBase64Image] Error:', error.message);
+        logger.error('[saveBase64Image] Error:', error.message);
         return null;
     }
 };
@@ -108,7 +126,7 @@ export const getPublicSellerProfile = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Get public seller profile error:", error);
+        logger.error("Get public seller profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -207,7 +225,7 @@ export const getProfile = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Get profile error:", error);
+        logger.error("Get profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -215,11 +233,26 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
     try {
-        console.log('🔧 [updateProfile] Called - User:', req.user?._id);
-        console.log('🔧 [updateProfile] Body keys:', Object.keys(req.body));
+        logger.info('🔧 [updateProfile] Called - User:', req.user?._id);
+        logger.info('🔧 [updateProfile] Body keys:', Object.keys(req.body));
 
         const userId = req.user._id;
         const { fullName, username, phone, address, avatar, bio } = req.body;
+
+        // SECURITY FIX [VULN-04]: Reject oversized base64 avatar input before any processing.
+        if (typeof avatar === 'string' && avatar.length > MAX_AVATAR_BASE64_LENGTH) {
+            return res.status(413).json({ message: "Avatar image too large" });
+        }
+
+        for (const [field, maxLen] of Object.entries(MAX_LENGTHS)) {
+            const val = req.body[field];
+            if (val !== undefined && typeof val === 'string' && val.length > maxLen) {
+                return res.status(400).json({
+                    message: `${field} must not exceed ${maxLen} characters`,
+                    field
+                });
+            }
+        }
 
         const user = await User.findById(userId);
         if (!user) {
@@ -311,7 +344,7 @@ export const updateProfile = async (req, res) => {
             data: updatedUser
         });
     } catch (error) {
-        console.error("Update profile error:", error);
+        logger.error("Update profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -341,7 +374,7 @@ export const addToFavorites = async (req, res) => {
             data: favorite
         });
     } catch (error) {
-        console.error("Add to favorites error:", error);
+        logger.error("Add to favorites error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -363,7 +396,7 @@ export const removeFromFavorites = async (req, res) => {
             message: "Removed from favorites"
         });
     } catch (error) {
-        console.error("Remove from favorites error:", error);
+        logger.error("Remove from favorites error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };
@@ -422,9 +455,12 @@ export const completeProfile = async (req, res) => {
 
         // Handle avatar upload if file is present
         if (req.file) {
-            // Save the file path as avatar URL
-            const avatarUrl = `/uploads/${req.file.filename}`;
-            updates.avatar = avatarUrl;
+            // SECURITY FIX [H-08]: Enforce safe avatar filename and correct avatars path.
+            const filename = path.basename(req.file.filename);
+            if (!SAFE_FILENAME_RE.test(filename) || filename.includes('..')) {
+                return res.status(400).json({ message: "Invalid file name" });
+            }
+            updates.avatar = `/uploads/avatars/${filename}`;
         }
 
         const updatedUser = await cacheService.updateUserWithSync(
@@ -438,7 +474,7 @@ export const completeProfile = async (req, res) => {
             data: updatedUser
         });
     } catch (error) {
-        console.error("Complete profile error:", error);
+        logger.error("Complete profile error:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

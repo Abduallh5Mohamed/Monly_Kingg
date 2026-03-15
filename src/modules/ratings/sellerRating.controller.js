@@ -1,8 +1,11 @@
 import SellerRating from "./sellerRating.model.js";
 import CommentPenalty from "./commentPenalty.model.js";
 import User from "../users/user.model.js";
+import Transaction from "../transactions/transaction.model.js";
 import { createNotification } from "../notifications/notificationHelper.js";
 import mongoose from "mongoose";
+import logger from "../../utils/logger.js";
+import { safePaginate } from "../../utils/pagination.js";
 
 // ─── Profanity word list (Arabic + English) ───────────────────────────────────
 const PROFANITY_LIST = [
@@ -35,29 +38,36 @@ const PROFANITY_LIST = [
   "retard", "retarded",
 ];
 
+const PROFANITY_PATTERNS = PROFANITY_LIST.map((word) => {
+  if (word.includes(" ")) {
+    return { type: "includes", word };
+  }
+
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return { type: "regex", word, re: new RegExp(`(?:^|\\s)${escaped}(?:\\s|$)`, "i") };
+});
+
 /**
  * Check if text contains profanity.
  * Returns the first matched word or null.
  */
 function detectProfanity(text) {
   if (!text) return null;
-  const lower = text.toLowerCase().trim();
-  for (const word of PROFANITY_LIST) {
-    // Use word-boundary-aware matching for single-word entries
-    // For multi-word phrases, do a simple includes check
-    if (word.includes(" ")) {
-      if (lower.includes(word)) return word;
+  const lower = String(text).slice(0, 500).toLowerCase().trim();
+
+  for (const pattern of PROFANITY_PATTERNS) {
+    if (pattern.type === "includes") {
+      if (lower.includes(pattern.word)) return pattern.word;
     } else {
-      // Build a regex that matches the word as a standalone token
-      const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const re = new RegExp(`(^|\\s|[^\\p{L}])${escaped}($|\\s|[^\\p{L}])`, "iu");
-      if (re.test(lower)) return word;
+      if (pattern.re.test(lower)) return pattern.word;
     }
   }
+
   return null;
 }
 
 const BAN_DURATION_DAYS = 6;
+const MAX_COMMENT_LENGTH = 500;
 
 // ─── Add or update a rating ───────────────────────────────────────────────────
 export const addRating = async (req, res) => {
@@ -65,6 +75,12 @@ export const addRating = async (req, res) => {
     const { sellerId } = req.params;
     const raterId = req.user._id;
     const { rating, comment } = req.body;
+
+    if (comment && typeof comment === 'string' && comment.length > MAX_COMMENT_LENGTH) {
+      return res.status(400).json({
+        message: `Comment must not exceed ${MAX_COMMENT_LENGTH} characters`
+      });
+    }
 
     // Validate rating value
     if (!rating || rating < 1 || rating > 5) {
@@ -83,6 +99,20 @@ export const addRating = async (req, res) => {
     }
     if (!seller.isSeller) {
       return res.status(400).json({ message: "This user is not a seller" });
+    }
+
+    // Only verified buyers can rate a seller.
+    const completedTx = await Transaction.findOne({
+      buyer: raterId,
+      seller: sellerId,
+      status: { $in: ["completed", "auto_confirmed"] }
+    }).select("_id").lean();
+
+    if (!completedTx) {
+      return res.status(403).json({
+        message: "You can only rate sellers after completing a transaction with them",
+        code: "NO_COMPLETED_TRANSACTION"
+      });
     }
 
     // ── Profanity check on comment ──
@@ -142,13 +172,14 @@ export const addRating = async (req, res) => {
         ? "Rating added successfully"
         : "Rating updated successfully",
       data: result,
+      transactionId: completedTx._id
     });
   } catch (error) {
     // Duplicate key race condition
     if (error.code === 11000) {
       return res.status(409).json({ message: "You have already rated this seller. Your rating was updated." });
     }
-    console.error("addRating error:", error);
+    logger.error("addRating error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -157,8 +188,8 @@ export const addRating = async (req, res) => {
 export const getSellerRatings = async (req, res) => {
   try {
     const { sellerId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
     if (!mongoose.Types.ObjectId.isValid(sellerId)) {
       return res.status(400).json({ message: "Invalid seller ID" });
@@ -169,7 +200,7 @@ export const getSellerRatings = async (req, res) => {
         .populate("rater", "username avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(Number(limit))
+        .limit(limit)
         .lean(),
       SellerRating.countDocuments({ seller: sellerId }),
       SellerRating.aggregate([
@@ -213,7 +244,7 @@ export const getSellerRatings = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("getSellerRatings error:", error);
+    logger.error("getSellerRatings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -236,7 +267,7 @@ export const deleteRating = async (req, res) => {
     await SellerRating.findByIdAndDelete(ratingId);
     return res.status(200).json({ message: "Rating deleted successfully" });
   } catch (error) {
-    console.error("deleteRating error:", error);
+    logger.error("deleteRating error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -245,15 +276,15 @@ export const deleteRating = async (req, res) => {
 export const getMyRatings = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 10, 100);
 
     const [ratings, total] = await Promise.all([
       SellerRating.find({ rater: userId })
         .populate("seller", "username avatar")
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(Number(limit))
+        .limit(limit)
         .lean(),
       SellerRating.countDocuments({ rater: userId }),
     ]);
@@ -265,7 +296,7 @@ export const getMyRatings = async (req, res) => {
       total,
     });
   } catch (error) {
-    console.error("getMyRatings error:", error);
+    logger.error("getMyRatings error:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };

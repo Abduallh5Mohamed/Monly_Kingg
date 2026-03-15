@@ -14,6 +14,8 @@ import { sendEmail } from "../../utils/email.js";
 import { buildTransactionInvoiceEmail } from "../../utils/emailTemplates.js";
 import { encrypt, decrypt } from "../../utils/encryption.js";
 import { updateSellerLevel } from "../seller-levels/sellerLevel.service.js";
+import { safePaginate } from "../../utils/pagination.js";
+import { notificationQueue } from "../../queues/transactionQueue.js";
 
 // ─── Credential encryption helpers ───────────────────────────────────────────
 function encryptCredentials(credentials) {
@@ -25,10 +27,15 @@ function encryptCredentials(credentials) {
 
 function decryptCredentials(credentials) {
   if (!credentials || !Array.isArray(credentials)) return [];
-  return credentials.map(c => ({
-    key: c.key,
-    value: decrypt(c.value),
-  }));
+  try {
+    return credentials.map(c => ({
+      key: c.key,
+      value: decrypt(c.value),
+    }));
+  } catch (err) {
+    logger.error(`[Transaction] Credential decryption failed: ${err.message}`);
+    return [];
+  }
 }
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -96,7 +103,16 @@ export const createTransaction = async (req, res) => {
     // ── Idempotency ── ──────────────────────────────────────────────────────
     // Client must send a UUID in X-Idempotency-Key to prevent double-charge
     // on network retries. Same key → same response, no second deduction.
-    const idempotencyKey = req.headers["x-idempotency-key"] || null;
+    const rawIdempotencyHeader = req.headers["x-idempotency-key"];
+    let idempotencyKey = null;
+    if (rawIdempotencyHeader) {
+      const trimmed = String(rawIdempotencyHeader).trim();
+      if (trimmed.length > 64 || !/^[a-zA-Z0-9\-_]+$/.test(trimmed)) {
+        return res.status(400).json({ success: false, message: "Invalid idempotency key format" });
+      }
+      idempotencyKey = trimmed;
+    }
+
     if (idempotencyKey) {
       const existing = await Transaction.findOne({ idempotencyKey }).lean();
       if (existing) {
@@ -177,81 +193,94 @@ export const createTransaction = async (req, res) => {
       };
     }
 
-    // ── ATOMIC Step 1: Deduct buyer balance + add to hold ───────────────────
-    // Uses findOneAndUpdate with a balance guard so it's a single atomic
-    // MongoDB operation — no read-modify-write race condition.
-    const updatedBuyer = await User.findOneAndUpdate(
-      {
-        _id: buyerId,
-        "wallet.balance": { $gte: finalPrice }, // guard: enough funds?
-      },
-      {
-        $inc: {
-          "wallet.balance": -finalPrice,
-          "wallet.hold": finalPrice,
-        },
-      },
-      { new: true }
-    );
-
-    if (!updatedBuyer) {
-      // Either user doesn't exist or balance is insufficient
-      const buyer = await User.findById(buyerId).select("wallet").lean();
-      if (!buyer) {
-        return res.status(404).json({ success: false, message: "User not found" });
-      }
-      return res.status(400).json({
-        success: false,
-        message: "Insufficient balance",
-        required: finalPrice,
-        available: buyer.wallet?.balance || 0,
-      });
-    }
-
-    // ── ATOMIC Step 2: Lock listing (prevents two buyers buying the same item) ─
-    // findOneAndUpdate only succeeds if listing is still "available" — atomic lock.
-    const lockedListing = await Listing.findOneAndUpdate(
-      { _id: listingId, status: "available" },
-      { $set: { status: "in_progress" } },
-      { new: true }
-    );
-
-    if (!lockedListing) {
-      // Listing was snapped up by another buyer — rollback balance deduction
-      await User.findByIdAndUpdate(buyerId, {
-        $inc: {
-          "wallet.balance": finalPrice,
-          "wallet.hold": -finalPrice,
-        },
-      });
-      return res.status(400).json({ success: false, message: "Listing is no longer available" });
-    }
-
-    // ── Step 3: Create transaction record ───────────────────────────────────
-    // If this crashes, the recovery scanner on startup will detect an
-    // orphaned hold (hold set but no waiting_seller tx) and alert admins.
+    let updatedBuyer;
     let transaction;
+    const session = await mongoose.startSession();
+
     try {
-      transaction = await Transaction.create({
-        buyer: buyerId,
-        seller: listing.seller._id,
-        listing: listingId,
-        amount: finalPrice,
-        originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
-        discountPercent: discountApplied ? discountApplied.percent : undefined,
-        status: "waiting_seller",
-        idempotencyKey: idempotencyKey || undefined,
-        timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
+      // SECURITY FIX [VULN-01]: Wrap debit + listing lock + transaction create in one DB transaction.
+      await session.withTransaction(async () => {
+        updatedBuyer = await User.findOneAndUpdate(
+          {
+            _id: buyerId,
+            "wallet.balance": { $gte: finalPrice },
+          },
+          {
+            $inc: {
+              "wallet.balance": -finalPrice,
+              "wallet.hold": finalPrice,
+            },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedBuyer) {
+          const insufficientBalanceError = new Error("Insufficient balance");
+          insufficientBalanceError.code = "INSUFFICIENT_BALANCE";
+          throw insufficientBalanceError;
+        }
+
+        const lockedListing = await Listing.findOneAndUpdate(
+          { _id: listingId, status: "available" },
+          { $set: { status: "in_progress" } },
+          { new: true, session }
+        );
+
+        if (!lockedListing) {
+          const listingUnavailableError = new Error("Listing is no longer available");
+          listingUnavailableError.code = "LISTING_UNAVAILABLE";
+          throw listingUnavailableError;
+        }
+
+        const createdTransactions = await Transaction.create([
+          {
+            buyer: buyerId,
+            seller: listing.seller._id,
+            listing: listingId,
+            amount: finalPrice,
+            originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
+            discountPercent: discountApplied ? discountApplied.percent : undefined,
+            status: "waiting_seller",
+            idempotencyKey: idempotencyKey || undefined,
+            timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
+          }
+        ], { session });
+
+        transaction = createdTransactions[0];
       });
-    } catch (createErr) {
-      // Rollback: restore buyer balance & listing status
-      await Promise.allSettled([
-        User.findByIdAndUpdate(buyerId, {
-          $inc: { "wallet.balance": finalPrice, "wallet.hold": -finalPrice },
-        }),
-        Listing.findByIdAndUpdate(listingId, { $set: { status: "available" } }),
-      ]);
-      throw createErr;
+    } catch (txnErr) {
+      if (txnErr?.code === "INSUFFICIENT_BALANCE") {
+        const buyer = await User.findById(buyerId).select("wallet").lean();
+        if (!buyer) {
+          return res.status(404).json({ success: false, message: "User not found" });
+        }
+        return res.status(400).json({
+          success: false,
+          message: "Insufficient balance",
+          required: finalPrice,
+          available: buyer.wallet?.balance || 0,
+        });
+      }
+
+      if (txnErr?.code === "LISTING_UNAVAILABLE") {
+        return res.status(400).json({ success: false, message: "Listing is no longer available" });
+      }
+
+      if (txnErr?.code === 11000 && idempotencyKey) {
+        const existing = await Transaction.findOne({ idempotencyKey }).lean();
+        if (existing) {
+          return res.status(200).json({
+            success: true,
+            message: "Purchase already initiated (idempotent response).",
+            data: { transactionId: existing._id },
+          });
+        }
+      }
+
+      throw txnErr;
+    } finally {
+      // SECURITY FIX [VULN-01]: Always release DB session resources.
+      await session.endSession();
     }
 
     // ── Step 4: Queue seller notification (durable) ─────────────────────────
@@ -358,6 +387,18 @@ export const submitCredentials = async (req, res) => {
     if (!credentials || !Array.isArray(credentials) || credentials.length === 0) {
       return res.status(400).json({ success: false, message: "credentials array is required" });
     }
+    // SECURITY FIX [L-04]: Validate credentials array size and key/value lengths.
+    if (credentials.length > 20) {
+      return res.status(400).json({ success: false, message: "Too many credential fields (max 20)" });
+    }
+    for (const cred of credentials) {
+      if (!cred || typeof cred.key !== "string" || typeof cred.value !== "string") {
+        return res.status(400).json({ success: false, message: "Invalid credential format" });
+      }
+      if (cred.key.length > 100 || cred.value.length > 500) {
+        return res.status(400).json({ success: false, message: "Credential key/value exceeds maximum length" });
+      }
+    }
 
     const AUTO_CONFIRM_HOURS = 48;
     const autoConfirmAt = new Date(Date.now() + AUTO_CONFIRM_HOURS * 60 * 60 * 1000);
@@ -454,9 +495,14 @@ export const openDispute = async (req, res) => {
       return res.status(400).json({ success: false, message: "Cannot dispute at this stage" });
     }
 
+    // SECURITY FIX [L-03]: Enforce dispute reason length limits.
+    const sanitizedReason = typeof reason === "string"
+      ? reason.trim().slice(0, 1000)
+      : "No reason provided";
+
     transaction.status = "disputed";
-    transaction.disputeReason = reason || "No reason provided";
-    transaction.timeline.push({ event: "dispute_opened", note: reason || "Buyer opened dispute" });
+    transaction.disputeReason = sanitizedReason || "No reason provided";
+    transaction.timeline.push({ event: "dispute_opened", note: sanitizedReason || "Buyer opened dispute" });
     await transaction.save();
 
     // Notify admin via socket
@@ -540,7 +586,9 @@ export const adminResolveDispute = async (req, res) => {
 export const getMyTransactions = async (req, res) => {
   try {
     const userId = req.user._id.toString();
-    const { role, status, page = 1, limit = 20 } = req.query;
+    const { role, status } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 20, 100);
 
     const filter = {};
     if (role === "buyer") filter.buyer = userId;
@@ -549,13 +597,12 @@ export const getMyTransactions = async (req, res) => {
 
     if (status) filter.status = status;
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
         .select("-credentials") // ✅ SECURITY: Never include credentials in list views
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .populate("listing", "title coverImage price game")
         .populate("buyer", "username avatar")
         .populate("seller", "username avatar"),
@@ -569,7 +616,7 @@ export const getMyTransactions = async (req, res) => {
     return res.json({
       success: true,
       data: transactions,
-      pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+      pagination: { total, page, limit },
       pendingCounts: { asBuyer: pendingAsBuyer, asSeller: pendingAsSeller },
     });
   } catch (err) {
@@ -647,7 +694,9 @@ export const getTransactionById = async (req, res) => {
 // ─── Admin: GET /api/v1/transactions/admin/all ──────────────────────────────
 export const adminGetAll = async (req, res) => {
   try {
-    const { status, page = 1, limit = 30, search } = req.query;
+    const { status, search } = req.query;
+    // SECURITY FIX [M-06]: Cap pagination parameters to avoid oversized queries.
+    const { page, limit, skip } = safePaginate(req.query, 30, 100);
     const filter = {};
     if (status) filter.status = status;
 
@@ -660,13 +709,12 @@ export const adminGetAll = async (req, res) => {
       // Removed unsafe $regex on _id to prevent ReDoS
     }
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
     const [transactions, total] = await Promise.all([
       Transaction.find(filter)
         .select("-credentials") // ✅ SECURITY: Never include credentials in admin list view
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
+        .limit(limit)
         .populate("listing", "title price")
         .populate("buyer", "username email")
         .populate("seller", "username email"),
@@ -676,7 +724,7 @@ export const adminGetAll = async (req, res) => {
     return res.json({
       success: true,
       data: transactions,
-      pagination: { total, page: parseInt(page), limit: parseInt(limit) },
+      pagination: { total, page, limit },
     });
   } catch (err) {
     return res.status(500).json({ success: false, message: "Server error" });
