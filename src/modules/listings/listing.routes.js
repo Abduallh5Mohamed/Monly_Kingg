@@ -51,13 +51,11 @@ const fileFilter = (req, file, cb) => {
     "image/jpg",
     "image/png",
     "image/gif",
-    "image/webp",
-    "image/heic",
-    "image/heif"
+    "image/webp"
   ];
 
   // Also check file extension as fallback
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.heic', '.heif'];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
   const ext = path.extname(file.originalname).toLowerCase();
 
   if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {

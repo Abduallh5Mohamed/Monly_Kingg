@@ -10,6 +10,11 @@ function stripHtml(html = "") {
 }
 
 export const sendEmail = async (to, subject, content) => {
+  // Validate recipient
+  if (!to || typeof to !== 'string' || !to.includes('@') || to.length > 254) {
+    throw new Error(`Invalid email recipient: ${typeof to}`);
+  }
+
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: 465,

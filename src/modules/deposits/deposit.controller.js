@@ -7,6 +7,7 @@ import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
 import { safePaginate } from '../../utils/pagination.js';
 import { encrypt, decrypt } from '../../utils/encryption.js';
+import redis from '../../config/redis.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -143,13 +144,21 @@ export const submitDeposit = async (req, res) => {
             return res.status(400).json({ message: "Image size must not exceed 10MB" });
         }
 
-        const recentDeposit = await Deposit.findOne({
-            user: userId,
-            createdAt: { $gte: new Date(Date.now() - 60000) }
-        });
-
-        if (recentDeposit) {
-            return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+        if (redis.isReady()) {
+            const depositRateLockKey = `deposit:rate:${userId}`;
+            const acquired = await redis.getClient().set(depositRateLockKey, '1', { NX: true, EX: 60 });
+            if (!acquired) {
+                return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+            }
+        } else {
+            // Fallback: DB check (still vulnerable to race but best effort without Redis)
+            const recentDeposit = await Deposit.findOne({
+                user: userId,
+                createdAt: { $gte: new Date(Date.now() - 60000) }
+            });
+            if (recentDeposit) {
+                return res.status(429).json({ message: "Please wait at least 1 minute between deposit requests" });
+            }
         }
 
         const receiptImagePath = `/uploads/receipts/${req.file.filename}`;

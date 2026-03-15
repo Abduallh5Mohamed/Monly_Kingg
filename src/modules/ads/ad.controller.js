@@ -1,12 +1,26 @@
 import Ad from "./ad.model.js";
 import logger from "../../utils/logger.js";
 
+function isValidAdUrl(url) {
+  if (!url || url === '') return true; // empty is allowed
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Create a new ad (admin only)
  */
 export const createAd = async (req, res) => {
   try {
     const { title, description, image, link, position, priority, status, startDate, endDate } = req.body;
+
+    if (link && !isValidAdUrl(link)) {
+      return res.status(400).json({ success: false, message: "Ad link must be a valid http or https URL" });
+    }
 
     if (!title || !image) {
       return res.status(400).json({ success: false, message: "Title and image are required" });
@@ -73,6 +87,10 @@ export const updateAd = async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+
+    if (updates.link !== undefined && !isValidAdUrl(updates.link)) {
+      return res.status(400).json({ success: false, message: "Ad link must be a valid http or https URL" });
+    }
 
     const ad = await Ad.findByIdAndUpdate(id, updates, { new: true });
     if (!ad) {

@@ -72,6 +72,16 @@ export const submitSellerRequest = async (req, res) => {
       existing.reviewedBy = null;
       existing.reviewedAt = null;
       existing.applicationCount = (existing.applicationCount || 1) + 1;
+
+      // Guard: estimate total base64 size to prevent document bloat
+      const totalBase64Size = [
+        req.body.idImage, req.body.faceImageFront, req.body.faceImageLeft, req.body.faceImageRight
+      ].reduce((sum, v) => sum + (typeof v === 'string' ? v.length : 0), 0);
+
+      if (totalBase64Size > 20 * 1024 * 1024) { // 20MB total base64 cap
+        return res.status(400).json({ message: "Total image size too large. Please compress your images." });
+      }
+
       await existing.save();
 
       // Notify admins about resubmitted seller request
@@ -111,6 +121,15 @@ export const submitSellerRequest = async (req, res) => {
       fullName: req.body.fullName,
       applicationCount: 1,
     });
+
+    // Guard: estimate total base64 size to prevent document bloat
+    const totalBase64Size = [
+      req.body.idImage, req.body.faceImageFront, req.body.faceImageLeft, req.body.faceImageRight
+    ].reduce((sum, v) => sum + (typeof v === 'string' ? v.length : 0), 0);
+
+    if (totalBase64Size > 20 * 1024 * 1024) { // 20MB total base64 cap
+      return res.status(400).json({ message: "Total image size too large. Please compress your images." });
+    }
 
     await sellerRequest.save();
 

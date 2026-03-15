@@ -15,6 +15,10 @@ import redis from "../../config/redis.js";
 import socketService from "../../services/socketService.js";
 import { maskSensitive } from "../../utils/encryption.js";
 
+function hashRefreshToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
@@ -122,16 +126,12 @@ function generateRefreshTokenString() {
   return crypto.randomBytes(64).toString("hex");
 }
 
-function hashToken(token) {
-  return crypto.createHash('sha256').update(token).digest('hex');
-}
-
 async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
   const tokenString = generateRefreshTokenString();
   const expiresAt = dayjs().add(REFRESH_DAYS, "day").toDate();
 
   user.refreshTokens.push({
-    token: hashToken(tokenString),
+    token: hashRefreshToken(tokenString),
     expiresAt,
     ip: anonymizeIp(ip),
     userAgent: truncateUserAgent(userAgent)
@@ -143,7 +143,7 @@ async function createAndStoreRefreshToken(user, ip = null, userAgent = null) {
 
 // Revoke a refresh token (mark as revoked)
 async function revokeRefreshToken(user, token, ip) {
-  const rt = user.refreshTokens.find(r => r.token === hashToken(token));
+  const rt = user.refreshTokens.find(r => r.token === hashRefreshToken(token));
   if (!rt) return false;
   rt.revoked = true;
   rt.revokedAt = new Date();
@@ -166,7 +166,7 @@ async function revokeAllRefreshTokens(user, reason = null) {
 // Validate refresh token for a user instance
 function isRefreshTokenValid(rtObj, rawToken = null) {
   if (!rtObj) return false;
-  if (rawToken && rtObj.token !== hashToken(rawToken)) return false;
+  if (rawToken && rtObj.token !== hashRefreshToken(rawToken)) return false;
   if (rtObj.revoked) return false;
   if (Date.now() >= new Date(rtObj.expiresAt).getTime()) return false;
   return true;
@@ -367,7 +367,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const nextRefreshTokens = [
       ...validRefreshTokens,
       {
-        token: hashToken(refreshTokenString),
+        token: hashRefreshToken(refreshTokenString),
         expiresAt,
         ip: anonymizeIp(ip),
         userAgent: truncateUserAgent(userAgent)
@@ -430,7 +430,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 /* ---------------- refreshTokens (rotation) ---------------- */
 export const refreshTokens = async (refreshToken, ip = null, userAgent = null) => {
   try {// find user containing this refresh token
-    const hashedRefreshToken = hashToken(refreshToken);
+    const hashedRefreshToken = hashRefreshToken(refreshToken);
     const user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
 
     if (!user) throw new Error("Invalid token");
@@ -449,7 +449,7 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     // mark old
     rtObj.revoked = true;
     rtObj.revokedAt = new Date();
-    rtObj.replacedByToken = hashToken(newRefreshToken);
+    rtObj.replacedByToken = hashRefreshToken(newRefreshToken);
 
     // SECURITY FIX [VULN-06]: Remove rotated token explicitly from persistent token list.
     user.refreshTokens = user.refreshTokens.filter((r) => r.token !== hashedRefreshToken);
@@ -465,7 +465,7 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
       ...validTokens,
       ...recentRevoked,
       {
-        token: hashToken(newRefreshToken),
+        token: hashRefreshToken(newRefreshToken),
         expiresAt,
         ip: anonymizeIp(ip),
         userAgent: truncateUserAgent(userAgent)
@@ -480,7 +480,7 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
   } catch (err) {
     // Detect possible reuse: if rtObj existed but invalid (expired or revoked) and token matches a revoked token without replacedByToken, treat as reuse
     try {
-      const hashedRefreshToken = hashToken(refreshToken);
+      const hashedRefreshToken = hashRefreshToken(refreshToken);
       const suspectUser = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens +email");
       const suspectRt = suspectUser?.refreshTokens.find(r => r.token === hashedRefreshToken);
       if (suspectRt && suspectRt.revoked && suspectRt.replacedByToken && suspectRt.replacedByToken !== null) {
@@ -507,7 +507,7 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
   let disconnectUserId = null;
 
   if (refreshToken) {
-    const hashedRefreshToken = hashToken(refreshToken);
+    const hashedRefreshToken = hashRefreshToken(refreshToken);
     user = await User.findOne({ "refreshTokens.token": hashedRefreshToken }).select("+refreshTokens");
     if (user) {
       disconnectUserId = user._id?.toString() || null;
@@ -666,6 +666,18 @@ export const verifyResetToken = async (email, token) => {
       throw new Error("Invalid or expired reset token");
     }
 
+    // Track failed token verification attempts
+    const attemptKey = `reset_attempts:${normalizedEmail}`;
+    if (redis.isReady()) {
+      const attempts = await redis.getClient().incr(attemptKey);
+      if (attempts === 1) {
+        await redis.getClient().expire(attemptKey, 15 * 60); // 15 min window
+      }
+      if (attempts > 10) {
+        throw new Error("Invalid or expired reset token");
+      }
+    }
+
     // Check expiry
     if (user.passwordResetExpires.getTime() < Date.now()) {
       logger.warn(`[VERIFY RESET TOKEN] Reset token expired for: ${maskedEmail}`);
@@ -682,6 +694,11 @@ export const verifyResetToken = async (email, token) => {
     if (!isMatch) {
       logger.warn(`[VERIFY RESET TOKEN] Token hash mismatch for: ${maskedEmail}`);
       throw new Error("Invalid or expired reset token");
+    }
+
+    // Clear attempt counter on success
+    if (redis.isReady()) {
+      await redis.getClient().del(`reset_attempts:${normalizedEmail}`).catch(() => {});
     }
 
     if (isValidToken) {

@@ -211,6 +211,13 @@ export const updateUserRole = async (req, res) => {
         const { userId } = req.params;
         const { role } = req.body;
 
+        if (userId === req.user._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot change your own role"
+            });
+        }
+
         if (!["user", "admin"].includes(role)) {
             return res.status(400).json({
                 success: false,
@@ -832,7 +839,7 @@ export const changePassword = async (req, res) => {
         const match = await bcrypt.compare(currentPassword, user.passwordHash);
         if (!match) return res.status(400).json({ success: false, message: "Current password is incorrect" });
 
-        user.passwordHash = await bcrypt.hash(newPassword, 12);
+        user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
 
         // Revoke all refresh tokens on password change.
         if (Array.isArray(user.refreshTokens)) {
