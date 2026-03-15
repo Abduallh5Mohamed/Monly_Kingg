@@ -258,31 +258,93 @@ nextApp.prepare().then(async () => {
     memLevel: 8, // More memory = faster compression
   }));
 
-  // Serve static files from uploads directory with security headers
+  // FIX: Serve sensitive upload dirs with auth protection.
   const uploadsPath = path.join(__dirname, 'uploads');
+  const PUBLIC_UPLOAD_DIRS = ['ads', 'other', 'avatars', 'listings', 'chat_media', 'profile_picture', 'account_image'];
+
+  // Security headers for all uploads
   app.use('/uploads', (req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Content-Disposition', 'inline');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    next();
-  }, express.static(uploadsPath), async (req, res, next) => {
-    // Fallback: if file not found in root, search subdirectories
-    // Exclude sensitive directories — those require auth
-    const fileName = path.basename(req.path);
-    const { access } = await import('fs/promises');
-    const publicDirs = ['ads', 'other', 'avatars', 'listings', 'chat_media', 'profile_picture', 'account_image'];
-    for (const dir of publicDirs) {
-      const filePath = path.join(uploadsPath, dir, fileName);
-      try {
-        await access(filePath);
-        return res.sendFile(filePath);
-      } catch {
-        // File not in this dir, continue
-      }
-    }
     next();
   });
-  console.log('✅ Serving static uploads from:', uploadsPath);
+
+  // FIX: Public dirs — serve with static middleware only.
+  PUBLIC_UPLOAD_DIRS.forEach((dir) => {
+    app.use(`/uploads/${dir}`, express.static(path.join(uploadsPath, dir), {
+      maxAge: '1d',
+      setHeaders: (res) => {
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+      }
+    }));
+  });
+
+  // FIX: Sensitive dirs — require authentication.
+  const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  const sensitiveUploadsHandler = (dirName, canAccess) => [
+    authMiddleware,
+    async (req, res) => {
+      const filename = path.basename(req.path).replace(/[^a-zA-Z0-9._-]/g, '');
+      if (!filename) {
+        return res.status(400).end();
+      }
+
+      if (typeof canAccess === 'function') {
+        const allowed = await canAccess({ req, filename, escapeRegex });
+        if (!allowed) {
+          return res.status(403).end();
+        }
+      }
+
+      const filePath = path.join(uploadsPath, dirName, filename);
+      return res.sendFile(filePath, (err) => {
+        if (err) {
+          return res.status(404).end();
+        }
+        return undefined;
+      });
+    }
+  ];
+
+  app.use('/uploads/receipts', ...sensitiveUploadsHandler('receipts', async ({ req, filename, escapeRegex }) => {
+    const isAdmin = req.user?.role === 'admin' || req.user?.role === 'moderator';
+    if (isAdmin) return true;
+    const Deposit = (await import('./src/modules/deposits/deposit.model.js')).default;
+    const deposit = await Deposit.findOne({
+      user: req.user._id,
+      receiptImage: { $regex: escapeRegex(filename), $options: 'i' }
+    }).select('_id').lean();
+    return Boolean(deposit);
+  }));
+
+  app.use('/uploads/tickets', ...sensitiveUploadsHandler('tickets', async ({ req, filename }) => {
+    const isAdmin = req.user?.role === 'admin' || req.user?.role === 'moderator';
+    if (isAdmin) return true;
+    const Ticket = (await import('./src/modules/tickets/ticket.model.js')).default;
+    const ticket = await Ticket.findOne({
+      user: req.user._id,
+      'messages.attachments.fileName': filename
+    }).select('_id').lean();
+    return Boolean(ticket);
+  }));
+
+  app.use('/uploads/identity', ...sensitiveUploadsHandler('identity', async ({ req, filename, escapeRegex }) => {
+    const isAdmin = req.user?.role === 'admin' || req.user?.role === 'moderator';
+    if (isAdmin) return true;
+    const SellerRequest = (await import('./src/modules/sellers/sellerRequest.model.js')).default;
+    const identityPathRegex = { $regex: escapeRegex(filename), $options: 'i' };
+    const requestDoc = await SellerRequest.findOne({
+      user: req.user._id,
+      $or: [
+        { idImage: identityPathRegex },
+        { faceImageFront: identityPathRegex },
+        { faceImageLeft: identityPathRegex },
+        { faceImageRight: identityPathRegex }
+      ]
+    }).select('_id').lean();
+    return Boolean(requestDoc);
+  }));
+  console.log('✅ Serving uploads with public/sensitive directory isolation');
 
   // Rate limit only API routes (not static assets or Next.js pages)
   app.use('/api', globalLimiter);

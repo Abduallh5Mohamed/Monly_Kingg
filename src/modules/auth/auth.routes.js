@@ -36,12 +36,15 @@ router.post("/verify-reset-token", passwordResetLimiter, authController.verifyRe
 router.post("/reset-password", passwordResetLimiter, authController.resetPassword);
 
 // Google OAuth routes
-const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/v1/auth/google/callback";
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"], session: false, state: true }));
+router.get("/google", passport.authenticate("google", {
+  scope: ["profile", "email"],
+  session: false,
+  // FIX: Removed state:true — passport session state flow is incompatible with session:false JWT setup.
+}));
 router.get("/google/callback",
   passport.authenticate("google", {
     session: false,
-    callbackURL: GOOGLE_CALLBACK_URL,
+    // FIX: Removed callbackURL here to avoid strategy/authenticate callback mismatch.
     failureRedirect: (process.env.FRONTEND_URL || "http://localhost:3000") + "/login?error=google_failed"
   }),
   authController.googleCallback
