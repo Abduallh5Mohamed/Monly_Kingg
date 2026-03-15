@@ -95,6 +95,29 @@ export function DiscountCampaignsContent() {
         if (toast) { const t = setTimeout(() => setToast(null), 4000); return () => clearTimeout(t); }
     }, [toast]);
 
+    const getJoinSuccessMessage = (count: number) =>
+        language === 'ar' ? `تم الانضمام بـ ${count} حساب` : `Joined with ${count} accounts`;
+
+    const getJoinErrorMessage = (status?: number) => {
+        if (language === 'ar') {
+            if (status === 400) return 'تحقق من الحسابات المختارة وحاول مرة أخرى';
+            if (status === 404) return 'الحملة غير متاحة الآن';
+            return 'فشل الانضمام';
+        }
+        if (status === 400) return 'Please verify the selected accounts and try again';
+        if (status === 404) return 'Campaign is not available right now';
+        return 'Failed to join';
+    };
+
+    const getLeaveErrorMessage = (status?: number) => {
+        if (language === 'ar') {
+            if (status === 404) return 'الحملة غير موجودة';
+            return 'فشل مغادرة الحملة';
+        }
+        if (status === 404) return 'Campaign not found';
+        return 'Failed to leave campaign';
+    };
+
     // Fetch data
     const fetchData = useCallback(async () => {
         if (!user?.isSeller) return;
@@ -174,10 +197,10 @@ export function DiscountCampaignsContent() {
             });
             const data = await res.json();
             if (data.success) {
-                setToast({ type: 'success', msg: data.message || (language === 'ar' ? `تم الانضمام بـ ${selected.size} حساب` : `Joined with ${selected.size} accounts`) });
+                setToast({ type: 'success', msg: getJoinSuccessMessage(selected.size) });
                 await fetchData();
             } else {
-                setToast({ type: 'error', msg: data.message || tr('فشل الانضمام', 'Failed to join') });
+                setToast({ type: 'error', msg: getJoinErrorMessage(res.status) });
             }
         } catch {
             setToast({ type: 'error', msg: tr('خطأ في الشبكة', 'Network error') });
@@ -201,7 +224,7 @@ export function DiscountCampaignsContent() {
                 setToast({ type: 'success', msg: tr('تم مغادرة الحملة', 'Left campaign successfully') });
                 await fetchData();
             } else {
-                setToast({ type: 'error', msg: data.message || tr('فشل مغادرة الحملة', 'Failed to leave campaign') });
+                setToast({ type: 'error', msg: getLeaveErrorMessage(res.status) });
             }
         } catch {
             setToast({ type: 'error', msg: tr('خطأ في الشبكة', 'Network error') });

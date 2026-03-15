@@ -2,11 +2,13 @@
 import { Header } from '@/components/layout/header';
 import { ResendCodeForm } from '@/components/resend-code-form';
 import { CircuitBackground } from '@/components/layout/circuit-background';
+import { ForceEnglishDocument } from '@/components/layout/force-english-document';
 
 export default function ResendCodePage() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
+      <ForceEnglishDocument />
       {/* Login Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
