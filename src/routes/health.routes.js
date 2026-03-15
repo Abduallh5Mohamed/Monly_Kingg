@@ -8,10 +8,8 @@ const router = express.Router();
 
 // Health check endpoint — protected by global limiter
 router.get('/health', (req, res) => {
-    const isHealthy = mongoose.connection.readyState === 1;
-    res.status(isHealthy ? 200 : 503).json({
-        status: isHealthy ? 'ok' : 'degraded'
-    });
+    // Return simple alive response — do not reveal infrastructure state.
+    res.status(200).json({ status: 'ok' });
 });
 
 // Readiness check (for k8s/load balancer)

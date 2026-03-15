@@ -22,6 +22,8 @@ const __dirname = dirname(__filename);
 // ─── In-process campaign cache (avoids DB hit on every browse) ───
 let _campaignCache = { data: null, expiresAt: 0 };
 const CAMPAIGN_CACHE_TTL = 120_000; // 2 minutes
+const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 async function getActiveCampaignsCached() {
   const now = Date.now();
@@ -68,6 +70,20 @@ export const createListing = async (req, res) => {
     let coverImage = null;
 
     if (req.files) {
+      const allFiles = [
+        ...(req.files.accountImages || []),
+        ...(req.files.coverImage || [])
+      ];
+
+      for (const file of allFiles) {
+        if (!ALLOWED_IMAGE_MIMES.has(file.mimetype)) {
+          return res.status(400).json({ message: 'Only JPEG, PNG, and WEBP images are allowed' });
+        }
+        if (file.size > MAX_IMAGE_SIZE) {
+          return res.status(400).json({ message: 'Image size must not exceed 10MB' });
+        }
+      }
+
       // Get account images
       if (req.files.accountImages) {
         req.files.accountImages.forEach(file => {
@@ -170,7 +186,7 @@ export const createListing = async (req, res) => {
       return res.status(400).json({ message: messages.join(', ') });
     }
 
-    return res.status(500).json({ message: error.message || "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

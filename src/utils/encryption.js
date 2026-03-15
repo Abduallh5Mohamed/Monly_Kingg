@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import logger from './logger.js';
 
 // ✅ SECURITY: Data encryption utility for sensitive information
 // Uses AES-256-GCM for strong encryption with authentication
@@ -99,9 +100,8 @@ export const decrypt = (encryptedText) => {
 
         return decrypted;
     } catch (error) {
-        console.error('❌ Decryption error:', error.message);
-        // Return encrypted text if decryption fails (backward compatibility)
-        return encryptedText;
+        logger.error('Decryption failed:', error.message);
+        throw new Error('Failed to decrypt data — possible key mismatch or data corruption');
     }
 };
 

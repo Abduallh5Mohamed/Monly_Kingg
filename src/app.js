@@ -290,7 +290,6 @@ app.use(globalLimiter);
 
 // API Routes
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/auth", authRoutes);
 app.use("/api/v1/users", csrfProtection, userRoutes);
 // SECURITY FIX [C-01]: Add CSRF protection to all state-changing routes.
 app.use("/api/v1/admin", csrfProtection, adminRoutes);

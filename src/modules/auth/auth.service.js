@@ -22,15 +22,42 @@ const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10
 // SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
 
+/**
+ * Hash an IP address before persistence to reduce stored PII.
+ * @param {string|null} ip
+ * @returns {string|null}
+ */
+function anonymizeIp(ip) {
+  if (!ip) return null;
+  return crypto
+    .createHash("sha256")
+    .update(`${ip}${process.env.IP_SALT || "default_salt"}`)
+    .digest("hex")
+    .slice(0, 16);
+}
+
+/**
+ * Truncate user-agent strings to bounded size before persistence.
+ * @param {string|null} userAgent
+ * @returns {string|null}
+ */
+function truncateUserAgent(userAgent) {
+  if (!userAgent) return null;
+  return String(userAgent).slice(0, 200);
+}
+
 async function appendAuthLog(userId, { action, success = true, ip = null, userAgent = null }) {
   try {
+    const safeIp = anonymizeIp(ip);
+    const safeUserAgent = truncateUserAgent(userAgent);
+
     // SECURITY FIX [M-03]: Keep authLogs bounded to avoid unbounded growth.
     await User.updateOne(
       { _id: userId },
       {
         $push: {
           authLogs: {
-            $each: [{ action, success, ip, userAgent, timestamp: new Date() }],
+            $each: [{ action, success, ip: safeIp, userAgent: safeUserAgent, timestamp: new Date() }],
             $slice: -50,
           },
         },
@@ -255,11 +282,13 @@ export const login = async (email, password, ip = null, userAgent = null) => {
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      const safeIp = anonymizeIp(ip);
+      const safeUserAgent = truncateUserAgent(userAgent);
       const newFailedAttempts = (user.failedLoginAttempts || 0) + 1;
       const updateData = {
         $inc: { failedLoginAttempts: 1 },
         // SECURITY FIX [M-03]: Keep auth logs bounded during failed login tracking.
-        $push: { authLogs: { $each: [{ action: "login", success: false, ip, userAgent, createdAt: new Date() }], $slice: -50 } }
+        $push: { authLogs: { $each: [{ action: "login", success: false, ip: safeIp, userAgent: safeUserAgent, createdAt: new Date() }], $slice: -50 } }
       };
 
       // Lock account if max attempts reached
@@ -298,7 +327,10 @@ export const login = async (email, password, ip = null, userAgent = null) => {
           refreshTokens: nextRefreshTokens,
         },
         $push: {
-          authLogs: { $each: [{ action: "login", success: true, ip, userAgent, createdAt: new Date() }], $slice: -50 }
+          authLogs: {
+            $each: [{ action: "login", success: true, ip: anonymizeIp(ip), userAgent: truncateUserAgent(userAgent), createdAt: new Date() }],
+            $slice: -50
+          }
         }
       }
     );
@@ -361,13 +393,23 @@ export const refreshTokens = async (refreshToken, ip = null, userAgent = null) =
     rtObj.revokedAt = new Date();
     rtObj.replacedByToken = newRefreshToken;
 
-    // push new
-    user.refreshTokens.push({
-      token: newRefreshToken,
-      expiresAt,
-      ip,
-      userAgent
-    });
+    const now = new Date();
+    const validTokens = user.refreshTokens.filter((r) => !r.revoked && new Date(r.expiresAt) > now);
+    const recentRevoked = user.refreshTokens
+      .filter((r) => r.revoked)
+      .sort((a, b) => new Date(b.revokedAt || 0) - new Date(a.revokedAt || 0))
+      .slice(0, 5);
+
+    user.refreshTokens = [
+      ...validTokens,
+      ...recentRevoked,
+      {
+        token: newRefreshToken,
+        expiresAt,
+        ip,
+        userAgent
+      }
+    ];
 
     await user.save();
     await appendAuthLog(user._id, { action: "refresh", success: true, ip, userAgent });

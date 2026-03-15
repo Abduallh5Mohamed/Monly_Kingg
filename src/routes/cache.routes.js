@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import cacheService from '../services/cacheService.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { requireAdmin } from '../middlewares/roleMiddleware.js';
@@ -6,6 +7,7 @@ import { adminHeavyLimiter } from '../middlewares/rateLimiter.js';
 import logger from '../utils/logger.js';
 
 const router = express.Router();
+const MAX_BULK_SYNC = 100;
 
 router.get('/stats', authMiddleware, requireAdmin, adminHeavyLimiter, async (req, res) => {
     try {
@@ -98,6 +100,20 @@ router.post('/bulk-sync', authMiddleware, requireAdmin, adminHeavyLimiter, async
             return res.status(400).json({
                 success: false,
                 message: 'userIds array is required'
+            });
+        }
+
+        if (userIds.length > MAX_BULK_SYNC) {
+            return res.status(400).json({
+                success: false,
+                message: `Maximum ${MAX_BULK_SYNC} users per bulk sync`
+            });
+        }
+
+        if (userIds.some((id) => !mongoose.Types.ObjectId.isValid(id))) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid user ID in array'
             });
         }
 

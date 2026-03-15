@@ -27,10 +27,15 @@ function encryptCredentials(credentials) {
 
 function decryptCredentials(credentials) {
   if (!credentials || !Array.isArray(credentials)) return [];
-  return credentials.map(c => ({
-    key: c.key,
-    value: decrypt(c.value),
-  }));
+  try {
+    return credentials.map(c => ({
+      key: c.key,
+      value: decrypt(c.value),
+    }));
+  } catch (err) {
+    logger.error(`[Transaction] Credential decryption failed: ${err.message}`);
+    return [];
+  }
 }
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -98,7 +103,16 @@ export const createTransaction = async (req, res) => {
     // ── Idempotency ── ──────────────────────────────────────────────────────
     // Client must send a UUID in X-Idempotency-Key to prevent double-charge
     // on network retries. Same key → same response, no second deduction.
-    const idempotencyKey = req.headers["x-idempotency-key"] || null;
+    const rawIdempotencyHeader = req.headers["x-idempotency-key"];
+    let idempotencyKey = null;
+    if (rawIdempotencyHeader) {
+      const trimmed = String(rawIdempotencyHeader).trim();
+      if (trimmed.length > 64 || !/^[a-zA-Z0-9\-_]+$/.test(trimmed)) {
+        return res.status(400).json({ success: false, message: "Invalid idempotency key format" });
+      }
+      idempotencyKey = trimmed;
+    }
+
     if (idempotencyKey) {
       const existing = await Transaction.findOne({ idempotencyKey }).lean();
       if (existing) {

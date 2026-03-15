@@ -6,13 +6,28 @@ import { notifyAllAdmins, createNotification } from '../notifications/notificati
 import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
 import { safePaginate } from '../../utils/pagination.js';
+import redis from '../../config/redis.js';
 
 export const submitWithdrawal = async (req, res) => {
+  let lockKey = null;
+  let lockAcquired = false;
+
   try {
     const userId = req.user._id;
     const { amount, method, countryCode, phoneNumber } = req.body;
     const parsedAmount = Number(amount);
     const normalizedAmount = Math.round(parsedAmount * 100) / 100;
+
+    if (redis.isReady()) {
+      lockKey = `withdrawal:lock:${userId}`;
+      const acquired = await redis.getClient().set(lockKey, '1', { NX: true, EX: 10 });
+      if (!acquired) {
+        return res.status(429).json({
+          message: 'A withdrawal is already being processed. Please wait.'
+        });
+      }
+      lockAcquired = true;
+    }
 
     if (!amount || !method || !countryCode || !phoneNumber) {
       return res.status(400).json({ message: "All fields are required" });
@@ -27,18 +42,6 @@ export const submitWithdrawal = async (req, res) => {
     if (existingPending) {
       return res.status(400).json({
         message: "You already have a pending withdrawal request. Please wait for it to be processed."
-      });
-    }
-
-    // SECURITY FIX [C-06]: Prevent rapid duplicate submission race window.
-    const recentWithdrawal = await Withdrawal.findOne({
-      user: userId,
-      status: "pending",
-      createdAt: { $gte: new Date(Date.now() - 60 * 1000) }
-    }).lean();
-    if (recentWithdrawal) {
-      return res.status(429).json({
-        message: "You already have a pending withdrawal request. Please wait before submitting another."
       });
     }
 
@@ -109,6 +112,10 @@ export const submitWithdrawal = async (req, res) => {
   } catch (error) {
     logger.error(`Submit withdrawal error: ${error.message}`);
     return res.status(500).json({ message: "Server error" });
+  } finally {
+    if (lockAcquired && lockKey && redis.isReady()) {
+      await redis.del(lockKey).catch(() => {});
+    }
   }
 };
 

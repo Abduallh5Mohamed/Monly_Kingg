@@ -6,6 +6,29 @@ import Notification from "../notifications/notification.model.js";
 import { notifyAllAdmins } from "../notifications/notificationHelper.js";
 import logger from "../../utils/logger.js";
 
+/**
+ * Validate seller image fields to allow only upload URLs or base64 image data.
+ * @param {unknown} value
+ * @param {string} fieldName
+ */
+function validateImageField(value, fieldName) {
+  if (typeof value !== "string") {
+    throw new Error(`${fieldName} must be a string`);
+  }
+
+  const isUrl = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/.test(value);
+  const isBase64 = /^data:image\/(jpeg|jpg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value);
+
+  if (!isUrl && !isBase64) {
+    throw new Error(`${fieldName} must be a valid upload URL or base64 image`);
+  }
+
+  // 5MB binary image ~ 6.67MB base64 string; enforce strict upper bound.
+  if (isBase64 && value.length > 7 * 1024 * 1024) {
+    throw new Error(`${fieldName} exceeds maximum size of 5MB`);
+  }
+}
+
 // Submit seller request
 export const submitSellerRequest = async (req, res) => {
   try {
@@ -20,6 +43,16 @@ export const submitSellerRequest = async (req, res) => {
       if (existing.status === "pending") {
         return res.status(400).json({ message: "You already have a pending request" });
       }
+
+      try {
+        validateImageField(req.body.idImage, "idImage");
+        validateImageField(req.body.faceImageFront, "faceImageFront");
+        validateImageField(req.body.faceImageLeft, "faceImageLeft");
+        validateImageField(req.body.faceImageRight, "faceImageRight");
+      } catch (validationError) {
+        return res.status(400).json({ message: validationError.message });
+      }
+
       // If rejected, allow resubmission — push old rejection to history, update record
       existing.rejectionHistory.push({
         reason: existing.rejectionReason,
@@ -57,6 +90,15 @@ export const submitSellerRequest = async (req, res) => {
       delete safeRequest.faceImageRight;
 
       return res.status(200).json({ message: "Seller request resubmitted successfully", data: safeRequest });
+    }
+
+    try {
+      validateImageField(req.body.idImage, "idImage");
+      validateImageField(req.body.faceImageFront, "faceImageFront");
+      validateImageField(req.body.faceImageLeft, "faceImageLeft");
+      validateImageField(req.body.faceImageRight, "faceImageRight");
+    } catch (validationError) {
+      return res.status(400).json({ message: validationError.message });
     }
 
     const sellerRequest = new SellerRequest({

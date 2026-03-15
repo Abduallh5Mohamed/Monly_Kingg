@@ -27,9 +27,14 @@ export const submitDeposit = async (req, res) => {
         const userId = req.user._id;
         // SECURITY FIX [M-07]: Idempotency key prevents race-condition double submission.
         const rawIdempotencyHeader = req.headers["x-idempotency-key"];
-        const idempotencyKey = typeof rawIdempotencyHeader === "string" && rawIdempotencyHeader.trim()
-            ? rawIdempotencyHeader.trim()
-            : null;
+        let idempotencyKey = null;
+        if (rawIdempotencyHeader) {
+            const trimmed = String(rawIdempotencyHeader).trim();
+            if (trimmed.length > 64 || !/^[a-zA-Z0-9\-_]+$/.test(trimmed)) {
+                return res.status(400).json({ message: "Invalid idempotency key format" });
+            }
+            idempotencyKey = trimmed;
+        }
         const {
             paymentMethod,
             amount,

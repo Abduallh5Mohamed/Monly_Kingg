@@ -14,6 +14,9 @@ const isValidUploadUrl = (value) => typeof value === "string" && UPLOAD_URL_PATT
 export const sendMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(chatId)) {
+            return res.status(400).json({ success: false, message: "Invalid chat ID" });
+        }
         const userId = req.user._id;
         const { content, fileUrl } = req.body;
         // SECURITY FIX [M-05]: Strict whitelist for message type values.
@@ -159,6 +162,9 @@ export const getUserChats = async (req, res) => {
 export const getChatMessages = async (req, res) => {
     try {
         const { chatId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(chatId)) {
+            return res.status(400).json({ success: false, message: "Invalid chat ID" });
+        }
         const userId = req.user._id;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));

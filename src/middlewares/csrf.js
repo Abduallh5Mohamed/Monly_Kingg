@@ -4,6 +4,13 @@ export default function csrfProtection(req, res, next) {
   const method = req.method;
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
 
+  // SECURITY NOTE: Bearer token requests bypass CSRF (token-in-header is self-CSRF-protected
+  // because it cannot be set by cross-origin forms). These requests use authorization header auth.
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return next();
+  }
+
   const publicPaths = [
     '/v1/auth/register',
     '/v1/auth/login',
@@ -29,10 +36,13 @@ export default function csrfProtection(req, res, next) {
     '/auth/google/callback'
   ];
 
-  const normalizedOriginalPath = (req.originalUrl || "").replace(/^\/api/, "");
+  const normalizedPath = (req.originalUrl || "")
+    .split("?")[0]
+    .replace(/^\/api\/v1/, "")
+    .replace(/^\/api/, "");
 
   // Exact path match
-  if (publicPaths.includes(req.path) || publicPaths.includes(normalizedOriginalPath)) {
+  if (publicPaths.includes(req.path) || publicPaths.includes(normalizedPath)) {
     return next();
   }
 
@@ -41,7 +51,7 @@ export default function csrfProtection(req, res, next) {
     /^\/v1\/ads\/[a-f0-9]+\/click$/  // POST /v1/ads/:id/click
   ];
 
-  if (publicPatterns.some(pattern => pattern.test(req.path))) {
+  if (publicPatterns.some(pattern => pattern.test(req.path) || pattern.test(normalizedPath))) {
     return next();
   }
 

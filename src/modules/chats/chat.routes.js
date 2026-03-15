@@ -31,7 +31,7 @@ router.post("/", userWriteLimiter, createChat);
 router.post("/support", userWriteLimiter, createSupportChat);
 
 // Send message to chat (MUST be before /:chatId route)
-router.post("/:chatId/messages", validateObjectId("chatId"), chatMessageLimiter, sendMessage);
+router.post("/:chatId/messages", authMiddleware, validateObjectId("chatId"), chatMessageLimiter, sendMessage);
 
 // Delete message from chat (soft delete — admin can still see)
 router.delete("/:chatId/messages/:messageId", validateObjectId("chatId"), validateObjectId("messageId"), userWriteLimiter, deleteMessage);
