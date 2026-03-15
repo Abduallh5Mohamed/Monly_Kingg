@@ -15,17 +15,30 @@ const UPLOAD_URL_PATTERN = /^\/uploads\/[a-zA-Z0-9/_\-.]+$/;
 
 // Simple rate limiter for socket events
 const socketRateLimits = new Map(); // key: `${userId}:${event}` -> { count, resetAt }
+const MAX_RATE_LIMIT_ENTRIES = 10_000;
 let rateLimitCleanupTimer = null;
 
 function checkSocketRateLimit(userId, event, maxPerMinute = 30) {
     const key = `${userId}:${event}`;
     const now = Date.now();
+
+    // Bound memory usage during abuse by evicting oldest entries at capacity.
+    while (socketRateLimits.size >= MAX_RATE_LIMIT_ENTRIES && !socketRateLimits.has(key)) {
+        const firstKey = socketRateLimits.keys().next().value;
+        if (!firstKey) break;
+        socketRateLimits.delete(firstKey);
+    }
+
     const entry = socketRateLimits.get(key);
     if (!entry || entry.resetAt < now) {
         socketRateLimits.set(key, { count: 1, resetAt: now + 60000 });
         return true;
     }
+
     entry.count++;
+    // Refresh insertion order to approximate LRU behavior.
+    socketRateLimits.delete(key);
+    socketRateLimits.set(key, entry);
     return entry.count <= maxPerMinute;
 }
 

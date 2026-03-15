@@ -38,25 +38,31 @@ const PROFANITY_LIST = [
   "retard", "retarded",
 ];
 
+const PROFANITY_PATTERNS = PROFANITY_LIST.map((word) => {
+  if (word.includes(" ")) {
+    return { type: "includes", word };
+  }
+
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return { type: "regex", word, re: new RegExp(`(?:^|\\s)${escaped}(?:\\s|$)`, "i") };
+});
+
 /**
  * Check if text contains profanity.
  * Returns the first matched word or null.
  */
 function detectProfanity(text) {
   if (!text) return null;
-  const lower = text.toLowerCase().trim();
-  for (const word of PROFANITY_LIST) {
-    // Use word-boundary-aware matching for single-word entries
-    // For multi-word phrases, do a simple includes check
-    if (word.includes(" ")) {
-      if (lower.includes(word)) return word;
+  const lower = String(text).slice(0, 500).toLowerCase().trim();
+
+  for (const pattern of PROFANITY_PATTERNS) {
+    if (pattern.type === "includes") {
+      if (lower.includes(pattern.word)) return pattern.word;
     } else {
-      // Build a regex that matches the word as a standalone token
-      const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const re = new RegExp(`(^|\\s|[^\\p{L}])${escaped}($|\\s|[^\\p{L}])`, "iu");
-      if (re.test(lower)) return word;
+      if (pattern.re.test(lower)) return pattern.word;
     }
   }
+
   return null;
 }
 
@@ -92,7 +98,7 @@ export const addRating = async (req, res) => {
     const completedTx = await Transaction.findOne({
       buyer: raterId,
       seller: sellerId,
-      status: "completed"
+      status: { $in: ["completed", "auto_confirmed"] }
     }).select("_id").lean();
 
     if (!completedTx) {

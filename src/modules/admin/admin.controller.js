@@ -18,8 +18,37 @@ import redis from "../../config/redis.js";
 import { PERMISSION_KEYS } from "../../middlewares/roleMiddleware.js";
 import escapeRegex from "../../utils/escapeRegex.js";
 import { safePaginate } from "../../utils/pagination.js";
+import { decrypt } from "../../utils/encryption.js";
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
+
+/**
+ * Decrypt sensitive deposit fields for admin display.
+ * @param {Record<string, any>} deposit
+ * @returns {Record<string, any>}
+ */
+function decryptAdminDepositFields(deposit) {
+    if (!deposit) return deposit;
+    const normalized = { ...deposit };
+
+    const tryDecrypt = (value) => {
+        if (typeof value !== "string" || !value) return value;
+        try {
+            return decrypt(value);
+        } catch (error) {
+            logger.error(`Admin deposit decryption failed: ${error.message}`);
+            return null;
+        }
+    };
+
+    normalized.senderFullName = tryDecrypt(normalized.senderFullName);
+    normalized.senderPhoneOrEmail = tryDecrypt(normalized.senderPhoneOrEmail);
+    if (normalized.gameTitle !== undefined) {
+        normalized.gameTitle = tryDecrypt(normalized.gameTitle);
+    }
+
+    return normalized;
+}
 
 /* ---------------- Get All Users ---------------- */
 export const getAllUsers = async (req, res) => {
@@ -634,6 +663,8 @@ export const getUserDetail = async (req, res) => {
                 .lean(),
         ]);
 
+            const safeRecentDeposits = recentDeposits.map((deposit) => decryptAdminDepositFields(deposit));
+
         // Withdrawal history
         const [withdrawalStats, recentWithdrawals] = await Promise.all([
             Withdrawal.aggregate([
@@ -743,7 +774,7 @@ export const getUserDetail = async (req, res) => {
             // Deposits
             deposits: {
                 stats: depositStats,
-                recent: recentDeposits,
+                recent: safeRecentDeposits,
             },
 
             // Withdrawals

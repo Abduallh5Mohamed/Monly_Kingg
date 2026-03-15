@@ -37,11 +37,10 @@ router.post("/reset-password", passwordResetLimiter, authController.resetPasswor
 
 // Google OAuth routes
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/v1/auth/google/callback";
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"], session: false, state: false }));
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"], session: false, state: true }));
 router.get("/google/callback",
   passport.authenticate("google", {
     session: false,
-    state: false,
     callbackURL: GOOGLE_CALLBACK_URL,
     failureRedirect: (process.env.FRONTEND_URL || "http://localhost:3000") + "/login?error=google_failed"
   }),

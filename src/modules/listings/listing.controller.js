@@ -24,6 +24,51 @@ let _campaignCache = { data: null, expiresAt: 0 };
 const CAMPAIGN_CACHE_TTL = 120_000; // 2 minutes
 const ALLOWED_IMAGE_MIMES = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp']);
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_DESCRIPTION_LENGTH = 2000;
+const MAX_DETAILS_SIZE_BYTES = 10_000;
+const MAX_DETAILS_DEPTH = 5;
+
+/**
+ * Recursively validate object depth to block overly nested payloads.
+ * @param {unknown} value
+ * @param {number} depth
+ */
+function validateDetailsDepth(value, depth = 0) {
+  if (depth > MAX_DETAILS_DEPTH) {
+    throw new Error("Details object structure is too complex");
+  }
+
+  if (value && typeof value === "object") {
+    Object.values(value).forEach((child) => validateDetailsDepth(child, depth + 1));
+  }
+}
+
+/**
+ * Parse and validate listing details payload (format, size, and nesting).
+ * @param {unknown} rawDetails
+ * @returns {Record<string, unknown>}
+ */
+function parseAndValidateDetails(rawDetails) {
+  let details;
+
+  try {
+    details = typeof rawDetails === "string" ? JSON.parse(rawDetails) : rawDetails;
+  } catch (_err) {
+    throw new Error("Invalid details format");
+  }
+
+  if (!details || typeof details !== "object" || Array.isArray(details)) {
+    throw new Error("Invalid details format");
+  }
+
+  const serialized = JSON.stringify(details);
+  if (Buffer.byteLength(serialized, "utf8") > MAX_DETAILS_SIZE_BYTES) {
+    throw new Error("Details field exceeds maximum size (10KB)");
+  }
+
+  validateDetailsDepth(details);
+  return details;
+}
 
 async function getActiveCampaignsCached() {
   const now = Date.now();
@@ -63,6 +108,10 @@ export const createListing = async (req, res) => {
     const price = Number(req.body.price);
     if (!Number.isFinite(price) || price <= 0 || price > 1000000) {
       return res.status(400).json({ message: "Price must be between 1 and 1,000,000" });
+    }
+
+    if (req.body.description && req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+      return res.status(400).json({ message: "Description must not exceed 2000 characters" });
     }
 
     // Handle file uploads
@@ -106,11 +155,9 @@ export const createListing = async (req, res) => {
     let details = {};
     if (req.body.details) {
       try {
-        details = typeof req.body.details === 'string'
-          ? JSON.parse(req.body.details)
-          : req.body.details;
+        details = parseAndValidateDetails(req.body.details);
       } catch (e) {
-        details = req.body.details;
+        return res.status(400).json({ message: e.message || "Invalid details format" });
       }
     }
 
@@ -253,7 +300,12 @@ export const updateListing = async (req, res) => {
 
     if (req.body.title) listing.title = req.body.title;
     if (req.body.game) listing.game = req.body.game;
-    if (req.body.description !== undefined) listing.description = req.body.description;
+    if (req.body.description !== undefined) {
+      if (req.body.description && req.body.description.length > MAX_DESCRIPTION_LENGTH) {
+        return res.status(400).json({ message: "Description must not exceed 2000 characters" });
+      }
+      listing.description = req.body.description;
+    }
     if (req.body.price !== undefined) {
       const newPrice = Number(req.body.price);
       if (!Number.isFinite(newPrice) || newPrice <= 0 || newPrice > 1000000) {
@@ -289,7 +341,13 @@ export const updateListing = async (req, res) => {
       listing.coverImage = req.body.coverImage;
     }
 
-    if (req.body.details) listing.details = req.body.details;
+    if (req.body.details !== undefined && req.body.details !== null && req.body.details !== "") {
+      try {
+        listing.details = parseAndValidateDetails(req.body.details);
+      } catch (e) {
+        return res.status(400).json({ message: e.message || "Invalid details format" });
+      }
+    }
     // Only allow seller to set status to "available" (other transitions are system-controlled)
     if (req.body.status && req.body.status === 'available') listing.status = req.body.status;
 

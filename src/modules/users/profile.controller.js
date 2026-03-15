@@ -16,6 +16,13 @@ const __dirname = path.dirname(__filename);
 const MAX_AVATAR_BASE64_LENGTH = 2_700_000;
 const ALLOWED_IMAGE_MIMES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 const SAFE_FILENAME_RE = /^[a-zA-Z0-9._-]+$/;
+const MAX_LENGTHS = {
+    fullName: 100,
+    phone: 20,
+    address: 300,
+    bio: 500,
+    username: 30,
+};
 
 // Helper function to save base64 image
 const saveBase64Image = async (base64String, userId) => {
@@ -216,6 +223,16 @@ export const updateProfile = async (req, res) => {
 
         const userId = req.user._id;
         const { fullName, username, phone, address, avatar, bio } = req.body;
+
+        for (const [field, maxLen] of Object.entries(MAX_LENGTHS)) {
+            const val = req.body[field];
+            if (val !== undefined && typeof val === 'string' && val.length > maxLen) {
+                return res.status(400).json({
+                    message: `${field} must not exceed ${maxLen} characters`,
+                    field
+                });
+            }
+        }
 
         const user = await User.findById(userId);
         if (!user) {

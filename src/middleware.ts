@@ -55,9 +55,7 @@ export async function middleware(request: NextRequest) {
     if (!accessToken) {
       // SECURITY FIX: [LOW-02] Log unauthorized admin route access attempts.
       console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: missing token');
-      // No token — show 404 (hide admin existence)
-      const notFoundUrl = new URL('/not-found', request.url);
-      return NextResponse.rewrite(notFoundUrl);
+      return NextResponse.redirect(new URL('/login', request.url));
     }
 
     try {
@@ -65,14 +63,12 @@ export async function middleware(request: NextRequest) {
       if (payload?.role !== 'admin' && payload?.role !== 'moderator') {
         // SECURITY FIX: [LOW-02] Log unauthorized role trying to access admin routes.
         console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: invalid role');
-        const notFoundUrl = new URL('/not-found', request.url);
-        return NextResponse.rewrite(notFoundUrl);
+        return NextResponse.redirect(new URL('/not-found', request.url));
       }
     } catch {
       // SECURITY FIX: [LOW-02] Token invalid/expired on admin access.
       console.warn('[SECURITY FIX: [LOW-02]] Unauthorized admin access attempt: invalid token');
-      const notFoundUrl = new URL('/not-found', request.url);
-      return NextResponse.rewrite(notFoundUrl);
+      return NextResponse.redirect(new URL('/not-found', request.url));
     }
   }
 

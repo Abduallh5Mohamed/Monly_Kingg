@@ -19,6 +19,7 @@ const router = express.Router();
 const PROMO_PATTERNS = ['api_cache:*:/api/v1/promotions*', 'api_cache:*:/api/v1/listings*'];
 
 // Seller routes
+router.post("/", authMiddleware, sellerRequestLimiter, submitPromotion);
 router.post("/request", authMiddleware, sellerRequestLimiter, submitPromotion);
 router.get("/my-requests", authMiddleware, getMyPromotions);
 router.get("/pricing", authMiddleware, getPromotionPricing);

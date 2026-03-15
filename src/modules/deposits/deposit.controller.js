@@ -6,6 +6,7 @@ import { notifyAllAdmins, createNotification } from '../notifications/notificati
 import AuditLog from '../admin/auditLog.model.js';
 import logger from '../../utils/logger.js';
 import { safePaginate } from '../../utils/pagination.js';
+import { encrypt, decrypt } from '../../utils/encryption.js';
 
 const sanitizeInput = (input) => {
     if (typeof input !== 'string') return input;
@@ -20,6 +21,37 @@ const validateContactInfo = (contact) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9+\-\s()]{10,20}$/;
     return emailRegex.test(contact) || phoneRegex.test(contact);
+};
+
+/**
+ * Safely decrypt a sensitive deposit field for API responses.
+ * @param {unknown} value
+ * @returns {unknown}
+ */
+const safeDecryptDepositField = (value) => {
+    if (typeof value !== 'string' || !value) return value;
+    try {
+        return decrypt(value);
+    } catch (error) {
+        logger.error(`Deposit field decryption failed: ${error.message}`);
+        return null;
+    }
+};
+
+/**
+ * Decrypt sensitive deposit fields before returning them in responses.
+ * @param {Record<string, any>} deposit
+ * @returns {Record<string, any>}
+ */
+const decryptDepositForResponse = (deposit) => {
+    if (!deposit) return deposit;
+    const normalized = deposit.toObject ? deposit.toObject() : { ...deposit };
+    normalized.senderFullName = safeDecryptDepositField(normalized.senderFullName);
+    normalized.senderPhoneOrEmail = safeDecryptDepositField(normalized.senderPhoneOrEmail);
+    if (normalized.gameTitle !== undefined) {
+        normalized.gameTitle = safeDecryptDepositField(normalized.gameTitle);
+    }
+    return normalized;
 };
 
 export const submitDeposit = async (req, res) => {
@@ -126,11 +158,11 @@ export const submitDeposit = async (req, res) => {
             user: userId,
             paymentMethod,
             amount: normalizedAmount,
-            senderFullName: sanitizedFullName,
-            senderPhoneOrEmail: sanitizedPhoneOrEmail,
+            senderFullName: encrypt(sanitizedFullName),
+            senderPhoneOrEmail: encrypt(sanitizedPhoneOrEmail),
             depositDate: depositDateTime,
             receiptImage: receiptImagePath,
-            gameTitle: sanitizedGameTitle,
+            gameTitle: sanitizedGameTitle ? encrypt(sanitizedGameTitle) : undefined,
             paidAmount: normalizedAmount,
             creditedAmount: normalizedAmount,
             idempotencyKey: idempotencyKey || undefined,
@@ -200,10 +232,12 @@ export const getMyDeposits = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
+        const safeDeposits = deposits.map((deposit) => decryptDepositForResponse(deposit));
+
         const total = await Deposit.countDocuments({ user: userId });
 
         return res.status(200).json({
-            data: deposits,
+            data: safeDeposits,
             total,
             page,
             totalPages: Math.ceil(total / limit),
@@ -227,11 +261,13 @@ export const getAllDeposits = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
+        const safeDeposits = deposits.map((deposit) => decryptDepositForResponse(deposit));
+
         const total = await Deposit.countDocuments(filter);
         const pendingCount = await Deposit.countDocuments({ status: "pending" });
 
         return res.status(200).json({
-            data: deposits,
+            data: safeDeposits,
             total,
             pendingCount,
             page,
@@ -348,7 +384,7 @@ export const approveDeposit = async (req, res) => {
 
         return res.status(200).json({
             message: `Deposit approved and ${amountToCredit} LE added to balance`,
-            data: deposit
+            data: decryptDepositForResponse(deposit)
         });
     } catch (error) {
         logger.error(`Approve deposit error: ${error.message}`);
@@ -409,7 +445,7 @@ export const rejectDeposit = async (req, res) => {
             logger.error(`AuditLog failed for deposit rejection ${deposit._id}: ${auditErr.message}`);
         }
 
-        return res.status(200).json({ message: "Deposit rejected", data: deposit });
+        return res.status(200).json({ message: "Deposit rejected", data: decryptDepositForResponse(deposit) });
     } catch (error) {
         logger.error(`Reject deposit error: ${error.message}`);
         return res.status(500).json({ message: "Server error" });
