@@ -58,11 +58,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.findOne({ email });
 
           if (user) {
-            // Link Google account to existing user
-            user.googleId = profile.id;
-            if (!user.verified) user.verified = true;
-            await user.save();
-            return done(null, user);
+            // SECURITY FIX [GT-002]: Disallow insecure auto-linking of OAuth accounts
+            if (user.googleId) {
+                return done(new Error("Email already associated with another account"), null);
+            }
+            return done(new Error("Account exists. Please login with password to link Google account."), null);
           }
 
           // Create new user

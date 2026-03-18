@@ -316,6 +316,9 @@ export const logout = async (req, res) => {
       httpOnly: false
     });
 
+    // SECURITY FIX [GT-012]: Instruct browser to purge all stored data on logout.
+    res.setHeader('Clear-Site-Data', '"cookies", "storage"');
+
     res.status(200).json({ message: "Logged out" });
   } catch (err) {
     logger.error(`Logout failed: ${err.message}`);
@@ -375,6 +378,7 @@ const resetPasswordSchema = Joi.object({
   token: Joi.string().required(),
   newPassword: Joi.string()
     .min(8)
+    .max(128) // SECURITY FIX [GT-009]: Prevent bcrypt DoS via oversized passwords
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"))
     .required()
     .messages({
@@ -419,6 +423,7 @@ export const getCsrfToken = async (req, res) => {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
+      path: "/", // SECURITY FIX [GT-004]: Set explicit path for CSRF cookie
       maxAge: 15 * 60 * 1000
     });
 

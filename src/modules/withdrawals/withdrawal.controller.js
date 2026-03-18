@@ -210,12 +210,15 @@ export const getAllWithdrawals = async (req, res) => {
 export const approveWithdrawal = async (req, res) => {
   try {
     const { id } = req.params;
-    const withdrawal = await Withdrawal.findById(id).populate('user');
+    // SECURITY FIX [GT-001]: Atomic status transition prevents TOCTOU race condition.
+    // Two concurrent approve requests can no longer both pass the status check.
+    const withdrawal = await Withdrawal.findOneAndUpdate(
+      { _id: id, status: "pending" },
+      { $set: { status: "processing" } },
+      { new: true }
+    ).populate('user');
     if (!withdrawal) {
-      return res.status(404).json({ message: "Withdrawal not found" });
-    }
-    if (withdrawal.status !== "pending") {
-      return res.status(400).json({ message: "Withdrawal already processed" });
+      return res.status(400).json({ message: "Withdrawal not found or already processed" });
     }
 
     // Backward compatibility: old pending withdrawals may not have reserved balance.
@@ -301,12 +304,14 @@ export const rejectWithdrawal = async (req, res) => {
   try {
     const { id } = req.params;
     const { reason } = req.body;
-    const withdrawal = await Withdrawal.findById(id);
+    // SECURITY FIX [GT-001]: Atomic status transition prevents TOCTOU race condition.
+    const withdrawal = await Withdrawal.findOneAndUpdate(
+      { _id: id, status: "pending" },
+      { $set: { status: "processing" } },
+      { new: true }
+    );
     if (!withdrawal) {
-      return res.status(404).json({ message: "Withdrawal not found" });
-    }
-    if (withdrawal.status !== "pending") {
-      return res.status(400).json({ message: "Withdrawal already processed" });
+      return res.status(400).json({ message: "Withdrawal not found or already processed" });
     }
 
     let refundApplied = false;
@@ -341,6 +346,28 @@ export const rejectWithdrawal = async (req, res) => {
         });
       }
       throw saveErr;
+    }
+
+    try {
+      await AuditLog.create({
+        admin: req.user._id,
+        performedBy: req.user._id,
+        category: "user_management",
+        action: "wallet_withdrawal_rejected",
+        targetModel: "Withdrawal",
+        targetId: withdrawal._id,
+        targetUser: withdrawal.user,
+        details: {
+          withdrawalId: withdrawal._id.toString(),
+          reason: withdrawal.rejectionReason,
+          refundApplied
+        },
+        ip: req.ip,
+        userAgent: req.get("User-Agent"),
+        timestamp: new Date(),
+      });
+    } catch (auditErr) {
+      logger.error(`AuditLog failed for withdrawal rejection ${withdrawal._id}: ${auditErr.message}`);
     }
 
     const safeWithdrawal = decryptWithdrawalForResponse(withdrawal);

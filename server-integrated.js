@@ -158,8 +158,13 @@ nextApp.prepare().then(async () => {
 
   const corsOptions = {
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, server-to-server, curl)
-      if (!origin) return callback(null, true);
+      // SECURITY FIX [GT-007]: Block explicit null origins in production
+      if (!origin) {
+        if (!dev) {
+          return callback(new Error('Origin required by CORS'));
+        }
+        return callback(null, true);
+      }
       if (ALLOWED_ORIGINS.includes(origin)) {
         return callback(null, true);
       }
@@ -190,10 +195,14 @@ nextApp.prepare().then(async () => {
           defaultSrc: ["'self'"],
           scriptSrc: dev
             ? ["'self'", "'unsafe-eval'", "'unsafe-inline'"]  // Required for Next.js dev mode
-            : ["'self'", "'unsafe-inline'"],                    // Production: no eval
-          styleSrc: [
+            : ["'self'"],                                        // SECURITY FIX [GT-005]: No unsafe-inline in production
+          styleSrc: dev ? [
             "'self'",
             "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://fonts.gstatic.com"
+          ] : [
+            "'self'",
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
@@ -216,7 +225,7 @@ nextApp.prepare().then(async () => {
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
-          connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "ws:", "wss:"],
+          connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "wss:"],  // SECURITY FIX [GT-011]: No unencrypted ws: in production
           frameSrc: ["'none'"],
           frameAncestors: ["'none'"],  // SECURITY FIX [VULN-012]: Modern clickjacking protection
           objectSrc: ["'none'"],

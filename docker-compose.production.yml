@@ -41,6 +41,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -77,6 +80,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -110,6 +116,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -137,8 +146,8 @@ services:
     container_name: accounts_store_mongo1
     # SECURITY FIX [VULN-011]: Enable MongoDB authentication
     command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
-    ports:
-      - "27017:27017"
+    expose:
+      - "27017"
     volumes:
       - mongo1_data:/data/db
       - mongo1_config:/data/configdb
@@ -156,8 +165,8 @@ services:
     image: mongo:7
     container_name: accounts_store_mongo2
     command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
-    ports:
-      - "27018:27017"
+    expose:
+      - "27017"
     volumes:
       - mongo2_data:/data/db
       - mongo2_config:/data/configdb
@@ -174,8 +183,8 @@ services:
     image: mongo:7
     container_name: accounts_store_mongo3
     command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
-    ports:
-      - "27019:27017"
+    expose:
+      - "27017"
     volumes:
       - mongo3_data:/data/db
       - mongo3_config:/data/configdb
@@ -202,7 +211,7 @@ services:
     command: >
       bash -c "
         sleep 10 &&
-        mongosh --host mongo1:27017 --eval '
+        mongosh --host mongo1:27017 -u admin -p $$MONGO_ROOT_PASSWORD --authenticationDatabase admin --eval '
           rs.initiate({
             _id: \"rs0\",
             members: [
@@ -346,11 +355,12 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: accounts_store_grafana
-    ports:
-      - "3000:3000"
+    # SECURITY FIX [GT-008]: Don't expose Grafana to host — access via NGINX or SSH tunnel
+    expose:
+      - "3000"
     environment:
-      # SECURITY FIX [VULN-010]: Use env variable for Grafana admin password
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-changeme_in_production}
+      # SECURITY FIX [GT-008]: GRAFANA_ADMIN_PASSWORD must be set explicitly — no weak defaults
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD must be set}
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_INSTALL_PLUGINS=redis-datasource
     volumes:

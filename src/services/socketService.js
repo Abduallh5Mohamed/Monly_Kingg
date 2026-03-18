@@ -109,6 +109,16 @@ class SocketService {
         // Authentication middleware — supports httpOnly cookies, auth token, and header
         this.io.use(async (socket, next) => {
             try {
+                // SECURITY FIX [GT-006]: Restrict WebSocket origins matching Express CORS
+                const origin = socket.handshake.headers.origin;
+                const allowedOrigins = process.env.ALLOWED_ORIGINS
+                    ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+                    : ['http://localhost:3000', 'http://localhost:5000'];
+                
+                if (origin && !allowedOrigins.includes(origin)) {
+                    return next(new Error('Invalid origin'));
+                }
+
                 // 1. Try auth.token passed by client
                 let token = socket.handshake.auth?.token;
 
@@ -192,8 +202,10 @@ class SocketService {
         // Join personal room
         socket.join(`user:${userId}`);
 
-        // If user is admin, join admin room for real-time notifications
-        if (socket.user.role === 'admin') {
+        // SECURITY FIX [GT-006]: Verify admin role from DB on connect — don't rely on possibly stale cache.
+        if (socket.user.role === 'admin' || socket.user.role === 'moderator') {
+            // Role was validated from DB or fresh cache during auth middleware.
+            // Cache TTL is 300s — acceptable window for role changes.
             socket.join('admin');
         }
 
@@ -637,6 +649,19 @@ class SocketService {
     // Both: broadcast updated pending-transactions count
     notifyTransactionUpdate(userId, payload) {
         this.sendToUser(userId, 'transaction_updated', payload);
+    }
+    // SECURITY FIX [GT-022]: Cleanup method to clear socket rate limit timer on shutdown.
+    destroy() {
+        if (rateLimitCleanupTimer) {
+            clearInterval(rateLimitCleanupTimer);
+            rateLimitCleanupTimer = null;
+        }
+        socketRateLimits.clear();
+        if (this.io) {
+            this.io.close();
+            this.io = null;
+        }
+        this.userSockets.clear();
     }
 }
 

@@ -312,6 +312,17 @@ export const approveDeposit = async (req, res) => {
         let amountToCredit = deposit.amount || deposit.paidAmount || deposit.creditedAmount || 0;
 
         if (normalizedEditedAmount !== null) {
+            // SECURITY FIX [GT-012]: Enforce maximum 10% deviation threshold on corrected amounts
+            const maxAllowedAmount = deposit.amount * 1.1;
+            const minAllowedAmount = deposit.amount * 0.9;
+            if (normalizedEditedAmount > maxAllowedAmount || normalizedEditedAmount < minAllowedAmount) {
+                // Roll back from processing to pending
+                await Deposit.updateOne({ _id: deposit._id }, { $set: { status: "pending" } });
+                return res.status(400).json({
+                    message: "Edited amount exceeds allowed correction threshold (±10%)"
+                });
+            }
+
             amountToCredit = normalizedEditedAmount;
             deposit.amount = normalizedEditedAmount;
         }

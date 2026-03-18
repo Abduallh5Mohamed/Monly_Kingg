@@ -269,7 +269,7 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
 /* ---------------- resendVerificationCode ---------------- */
 export const resendVerificationCode = async (email, password, ip = null, userAgent = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const user = await User.findOne({ email: normalizedEmail }).select("+passwordHash +lastVerificationSentAt +verified");
 
     if (!user || user.verified) {
@@ -415,6 +415,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const totalTime = Date.now() - startTime;
     logger.info(`[LOGIN] ${maskIdentifier(email)} (${totalTime}ms)`);
 
+    // SECURITY FIX [GT-024]: Use masked IP in alert email body to avoid PII in emails.
     Promise.resolve(
       sendEmail(
         user.email,
@@ -422,8 +423,8 @@ export const login = async (email, password, ip = null, userAgent = null) => {
         buildLoginAlertEmail({
           username: user.username,
           loginAt: new Date(),
-          ip,
-          userAgent,
+          ip: ip ? `${ip.substring(0, 3)}.***.***` : "unknown",
+          userAgent: userAgent ? truncateUserAgent(userAgent) : "unknown",
         })
       )
     ).catch((emailErr) => {
@@ -571,7 +572,7 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
 // Generate and send reset token
 export const forgotPassword = async (email, ip = null, userAgent = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     // 🎯 Try cache first
@@ -588,10 +589,18 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
       user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
 
       if (user) {
-        // Cache user for future requests
+        // SECURITY FIX [GT-015]: Strip all sensitive fields before caching.
         const userDataForCache = { ...user.toObject() };
-        delete userDataForCache.passwordHash; // Security
-        delete userDataForCache.passwordResetToken; // Security
+        delete userDataForCache.passwordHash;
+        delete userDataForCache.passwordResetToken;
+        delete userDataForCache.passwordResetExpires;
+        delete userDataForCache.verificationCode;
+        delete userDataForCache.verificationCodeValidation;
+        delete userDataForCache.failedLoginAttempts;
+        delete userDataForCache.lockUntil;
+        delete userDataForCache.refreshTokens;
+        delete userDataForCache.authLogs;
+        if (userDataForCache.twoFA) delete userDataForCache.twoFA.secret;
         await cacheService.cacheUser(userDataForCache);
       }
     }
@@ -617,12 +626,12 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     }
 
     // Generate secure reset token
+    // SECURITY FIX [GT-003]: Use SHA-256 only for reset tokens (no bcrypt)
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const hashedResetToken = await bcrypt.hash(resetToken, BCRYPT_ROUNDS);
     const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
 
     // Set token and expiry (15 minutes)
-    user.passwordResetToken = hashedResetToken;
+    user.passwordResetToken = resetTokenHash;
     user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     user.lastPasswordResetSentAt = new Date();
 
@@ -662,7 +671,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 // Verify reset token
 export const verifyResetToken = async (email, token) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     logger.info(`[VERIFY RESET TOKEN] Checking token for: ${maskedEmail}`);
@@ -716,7 +725,14 @@ export const verifyResetToken = async (email, token) => {
     }
 
     // Verify token hash
-    const isMatch = await bcrypt.compare(token, user.passwordResetToken);
+    // SECURITY FIX [GT-003]: Use constant-time comparison for SHA-256 reset token DB matching
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    let isMatch = false;
+
+    if (user.passwordResetToken && user.passwordResetToken.length === tokenHash.length) {
+      isMatch = crypto.timingSafeEqual(Buffer.from(tokenHash, 'hex'), Buffer.from(user.passwordResetToken, 'hex'));
+    }
+
     if (!isMatch) {
       logger.warn(`[VERIFY RESET TOKEN] Token hash mismatch for: ${maskedEmail}`);
       throw new Error("Invalid or expired reset token");
@@ -743,7 +759,7 @@ export const verifyResetToken = async (email, token) => {
 // Reset password with token
 export const resetPassword = async (email, token, newPassword, ip = null, userAgent = null, currentAccessToken = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     logger.info(`[RESET PASSWORD] Processing for: ${maskedEmail}`);
