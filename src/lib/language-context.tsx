@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 
 type Language = 'en' | 'ar';
 
@@ -87,13 +88,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
 };
 
 const STORAGE_KEY = 'site-language';
-const ENGLISH_ONLY_PATHS = new Set([
-    '/',
-    '/login',
-    '/register',
-    '/forgot-password',
-    '/reset-password',
-]);
+const DEFAULT_LANGUAGE: Language = 'en';
 
 interface LanguageContextValue {
     language: Language;
@@ -104,40 +99,57 @@ interface LanguageContextValue {
 }
 
 const fallbackLanguageContext: LanguageContextValue = {
-    language: 'ar',
-    isRTL: true,
+    language: 'en',
+    isRTL: false,
     setLanguage: () => { },
     toggleLanguage: () => { },
-    t: (key) => translations.ar[key] ?? key,
+    t: (key) => translations.en[key] ?? key,
 };
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [language, setLanguageState] = useState<Language>('ar');
+    const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
+    const { user } = useAuth();
     const pathname = usePathname();
+
+    const userStorageKey = useMemo(() => {
+        const userAny = user as (typeof user & { _id?: string }) | null;
+        const userKey = userAny?._id || user?.id || user?.email || user?.username;
+        return userKey ? `${STORAGE_KEY}:${userKey}` : null;
+    }, [user]);
 
     const normalizedPath = useMemo(() => {
         if (!pathname) return '/';
         return pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     }, [pathname]);
 
-    const isEnglishOnlyRoute = ENGLISH_ONLY_PATHS.has(normalizedPath);
-    const effectiveLanguage: Language = isEnglishOnlyRoute ? 'en' : language;
+    const isUserLocalizedRoute = normalizedPath === '/user' || normalizedPath.startsWith('/user/');
+    const effectiveLanguage: Language = isUserLocalizedRoute ? language : DEFAULT_LANGUAGE;
 
     useEffect(() => {
-        const saved = window.localStorage.getItem(STORAGE_KEY);
+        if (!userStorageKey) {
+            setLanguageState(DEFAULT_LANGUAGE);
+            return;
+        }
+        const saved = window.localStorage.getItem(userStorageKey);
         if (saved === 'en' || saved === 'ar') {
             setLanguageState(saved);
+            return;
         }
-    }, []);
+        setLanguageState(DEFAULT_LANGUAGE);
+    }, [userStorageKey]);
 
     useEffect(() => {
         const dir = effectiveLanguage === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.lang = effectiveLanguage;
         document.documentElement.dir = dir;
-        window.localStorage.setItem(STORAGE_KEY, language);
-    }, [effectiveLanguage, language]);
+    }, [effectiveLanguage]);
+
+    useEffect(() => {
+        if (!userStorageKey) return;
+        window.localStorage.setItem(userStorageKey, language);
+    }, [language, userStorageKey]);
 
     const setLanguage = useCallback((nextLanguage: Language) => {
         setLanguageState(nextLanguage);
@@ -152,12 +164,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }, [effectiveLanguage]);
 
     const value = useMemo<LanguageContextValue>(() => ({
-        language,
+        // Expose route-effective language so non-user routes (e.g. admin/auth/home)
+        // always render in English regardless of persisted user preference.
+        language: effectiveLanguage,
         isRTL: effectiveLanguage === 'ar',
         setLanguage,
         toggleLanguage,
         t,
-    }), [effectiveLanguage, language, setLanguage, toggleLanguage, t]);
+    }), [effectiveLanguage, setLanguage, toggleLanguage, t]);
 
     return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

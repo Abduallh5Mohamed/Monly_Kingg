@@ -390,6 +390,30 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .notification-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(148, 163, 184, 0.6) rgba(255, 255, 255, 0.05);
+        }
+
+        .notification-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .notification-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 9999px;
+        }
+
+        .notification-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(56, 189, 248, 0.7), rgba(99, 102, 241, 0.65));
+          border-radius: 9999px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .notification-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, rgba(56, 189, 248, 0.9), rgba(99, 102, 241, 0.85));
+        }
       `}</style>
     </div>
   );
@@ -591,7 +615,7 @@ function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.10] bg-[#0a0e17]/70 backdrop-blur-xl shadow-2xl shadow-black/50 z-[100]">
+        <div className={`notification-scrollbar absolute top-12 w-80 sm:w-96 max-h-[70vh] overflow-y-auto rounded-2xl border border-white/[0.10] bg-[#0a0e17]/70 backdrop-blur-xl shadow-2xl shadow-black/50 z-[100] ${language === 'ar' ? 'left-0' : 'right-0'}`}>
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
             <div className="flex items-center gap-2">

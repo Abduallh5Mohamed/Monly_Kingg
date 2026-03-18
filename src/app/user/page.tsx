@@ -120,24 +120,26 @@ interface ActiveCampaign {
 
 /* ═══════════ EMPTY STATE COMPONENT ═══════════ */
 function EmptyGameSection({ gameName, isSeller }: { gameName: string; isSeller?: boolean }) {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   return (
     <div className="flex flex-col items-center justify-center py-12 px-6 bg-white/[0.02] border border-white/[0.04] rounded-2xl">
       <div className="w-16 h-16 rounded-2xl bg-white/[0.04] flex items-center justify-center mb-4">
         <Package className="w-8 h-8 text-white/20" />
       </div>
       <h3 className="text-base font-semibold text-white/60 mb-2">
-        No accounts available currently
+        {tr('لا توجد حسابات متاحة حاليًا', 'No accounts available currently')}
       </h3>
       <p className="text-sm text-white/30 text-center mb-5">
         {isSeller
-          ? `Start adding ${gameName} accounts from the seller dashboard`
-          : `No ${gameName} accounts listed yet`}
+          ? (language === 'ar' ? `ابدأ بإضافة حسابات ${gameName} من لوحة البائع` : `Start adding ${gameName} accounts from the seller dashboard`)
+          : (language === 'ar' ? `لا توجد حسابات ${gameName} معروضة بعد` : `No ${gameName} accounts listed yet`)}
       </p>
       {isSeller && (
         <Link href="/user/store/new">
           <Button className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20">
             <Plus className="w-4 h-4 mr-2" />
-            Add New Account
+            {tr('إضافة حساب جديد', 'Add New Account')}
           </Button>
         </Link>
       )}
@@ -201,6 +203,8 @@ function HorizontalScroll({ children, className = '' }: { children: React.ReactN
 
 /* ═══════════ DYNAMIC PRODUCT CARD (from API) ═══════════ */
 function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, onToggleFavorite }: { listing: Listing; currentUserId?: string; discount?: ActiveDiscount; gridMode?: boolean; isFavorited?: boolean; onToggleFavorite?: (id: string, e: React.MouseEvent) => void }) {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const isOwner = !!(currentUserId && listing.seller && listing.seller._id === currentUserId);
 
   // Individual discount (from Discounts API) takes priority, then campaign discount (from listing.discount)
@@ -246,7 +250,7 @@ function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, 
           <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
             {isOwner ? (
               <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl">
-                MY LISTING
+                {tr('إعلاني', 'MY LISTING')}
               </span>
             ) : hasDiscount ? (
               <span className="bg-gradient-to-r from-red-500 to-rose-600 text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl flex items-center gap-1">
@@ -257,7 +261,7 @@ function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, 
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(listing._id, e); }}
                 className={`ml-auto w-7 h-7 rounded-lg backdrop-blur-md flex items-center justify-center transition-all ${isFavorited ? 'bg-pink-500/30 text-pink-400' : 'bg-black/40 text-white/50 hover:text-pink-400 hover:bg-pink-500/20'}`}
-                title={isFavorited ? 'Remove from favourites' : 'Add to favourites'}
+                title={isFavorited ? tr('إزالة من المفضلة', 'Remove from favourites') : tr('إضافة إلى المفضلة', 'Add to favourites')}
               >
                 <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-current' : ''}`} />
               </button>
@@ -296,7 +300,7 @@ function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, 
 
           <div className="flex items-center gap-1 mt-2">
             {listing.game && <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{listing.game.name}</span>}
-            <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">GLOBAL</span>
+            <span className="text-[9px] text-white/40 bg-white/[0.04] px-1.5 py-0.5 rounded font-medium">{tr('عالمي', 'GLOBAL')}</span>
           </div>
           <div className="flex items-end justify-between mt-4 pt-4 border-t border-white/[0.06]">
             <div>
@@ -310,7 +314,7 @@ function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, 
               className="w-full mt-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-[12px] font-bold py-2 rounded-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-1.5"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
-              Buy Now
+              {tr('اشترِ الآن', 'Buy Now')}
             </button>
           )}
         </div>
@@ -321,6 +325,8 @@ function ProductCard({ listing, currentUserId, discount, gridMode, isFavorited, 
 
 /* ═══════════ SECTION HEADER ═══════════ */
 function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggle }: { icon: React.ElementType; title: string; color: string; subtitle?: string; isExpanded?: boolean; onToggle?: () => void }) {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-3">
@@ -344,12 +350,12 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
           {isExpanded ? (
             <>
               <X className="w-3.5 h-3.5" />
-              Show Less
+              {tr('عرض أقل', 'Show Less')}
             </>
           ) : (
             <>
               <LayoutGrid className="w-3.5 h-3.5" />
-              View All
+              {tr('عرض الكل', 'View All')}
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </>
           )}
@@ -361,6 +367,8 @@ function SectionHeader({ icon: Icon, title, color, subtitle, isExpanded, onToggl
 
 /* ═══════════ BETWEEN-GAMES AD BANNER ═══════════ */
 function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
+  const { language } = useLanguage();
+  const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
   const handleClick = () => {
     fetch(`/api/v1/ads/${ad._id}/click`, { method: 'POST' }).catch(() => { });
   };
@@ -402,7 +410,7 @@ function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
 
             {ad.link && (
               <div className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] sm:text-xs font-semibold px-4 py-2 rounded-xl group-hover:bg-white/20 transition-all duration-300">
-                Learn More
+                {tr('اعرف المزيد', 'Learn More')}
                 <ChevronRight className="w-3 h-3 inline-block mr-1 group-hover:translate-x-0.5 transition-transform" />
               </div>
             )}
@@ -410,7 +418,7 @@ function BetweenGamesAd({ ad }: { ad: DashboardAd }) {
 
           {/* Ad badge */}
           <span className="absolute top-3 left-3 bg-black/30 backdrop-blur-sm text-white/50 text-[8px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-white/10">
-            AD
+            {tr('إعلان', 'AD')}
           </span>
         </div>
       </Wrapper>
@@ -771,7 +779,7 @@ export default function UserDashboardPage() {
               {/* Quick stats pills */}
               <div className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2">
                 <Flame className="w-4 h-4 text-orange-400" />
-                <span className="text-[11px] font-semibold text-white/60">12K+ Products</span>
+                <span className="text-[11px] font-semibold text-white/60">{tr('12K+ منتج', '12K+ Products')}</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2">
                 <ShieldCheck className="w-4 h-4 text-green-400" />
@@ -969,7 +977,7 @@ export default function UserDashboardPage() {
                   <div>
                     <h2 className="text-base font-bold text-white leading-tight flex items-center gap-2">
                       {!campaign.image && campaign.title}
-                      {campaign.image && `${campaign.title} — Accounts`}
+                      {campaign.image && (language === 'ar' ? `${campaign.title} — حسابات` : `${campaign.title} — Accounts`)}
                       <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}`}>
                         {isMandatory ? tr('خصم عمولة', 'Commission Discount') : tr('خصم سعر', 'Price Discount')}
                       </span>
@@ -1237,7 +1245,7 @@ export default function UserDashboardPage() {
         {/* ═══════════ ⭐ POPULAR (RANKED BY ALGORITHM) ═══════════ */}
         {filteredPopular.length > 0 && (
           <section>
-            <SectionHeader icon={Star} title="Most Popular" color="from-amber-500 to-yellow-600" subtitle="Community favorites" />
+            <SectionHeader icon={Star} title={tr('الأكثر شيوعًا', 'Most Popular')} color="from-amber-500 to-yellow-600" subtitle={tr('مفضلة المجتمع', 'Community favorites')} />
             {loading ? (
               <div className="flex items-center justify-center py-16">
                 <div className="flex flex-col items-center gap-3">
@@ -1258,10 +1266,10 @@ export default function UserDashboardPage() {
         {/* ═══════════ TRUST BADGES - Minimal ═══════════ */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
           {[
-            { icon: ShieldCheck, title: 'Secure Payments', desc: 'Protected transactions', color: 'text-emerald-400' },
-            { icon: Zap, title: 'Instant Delivery', desc: 'Get accounts instantly', color: 'text-amber-400' },
-            { icon: Headphones, title: '24/7 Support', desc: 'Always available', color: 'text-blue-400' },
-            { icon: Gift, title: 'Best Deals', desc: 'Unbeatable prices', color: 'text-pink-400' },
+            { icon: ShieldCheck, title: tr('مدفوعات آمنة', 'Secure Payments'), desc: tr('معاملات محمية', 'Protected transactions'), color: 'text-emerald-400' },
+            { icon: Zap, title: tr('تسليم فوري', 'Instant Delivery'), desc: tr('احصل على الحسابات فورًا', 'Get accounts instantly'), color: 'text-amber-400' },
+            { icon: Headphones, title: tr('دعم 24/7', '24/7 Support'), desc: tr('متاح دائمًا', 'Always available'), color: 'text-blue-400' },
+            { icon: Gift, title: tr('أفضل العروض', 'Best Deals'), desc: tr('أسعار لا تُنافس', 'Unbeatable prices'), color: 'text-pink-400' },
           ].map((feature, i) => (
             <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-2xl p-4 flex items-center gap-3 hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300">
               <div className={`w-9 h-9 rounded-xl bg-white/[0.04] flex items-center justify-center ${feature.color}`}>

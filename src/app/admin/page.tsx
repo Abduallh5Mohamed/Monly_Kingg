@@ -68,7 +68,7 @@ export default function AdminDashboard() {
       // No permissions at all — just show a message
       setRedirecting(false);
       setLoading(false);
-      setError('ليس لديك صلاحيات محددة. تواصل مع الأدمن.');
+      setError('No permissions assigned. Please contact an administrator.');
     }
   }, [user, router]);
 

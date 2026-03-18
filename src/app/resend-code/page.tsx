@@ -10,7 +10,7 @@ export default function ResendCodePage() {
     <div className="relative min-h-screen w-full overflow-hidden">
       <ForceEnglishDocument />
       {/* Login Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/assets/Login-Background.png)' }}
       />
