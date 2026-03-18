@@ -15,14 +15,21 @@ import redis from "../../config/redis.js";
 import socketService from "../../services/socketService.js";
 import { maskSensitive } from "../../utils/encryption.js";
 
-function hashRefreshToken(raw) {
+export function hashRefreshToken(raw) {
   return crypto.createHash('sha256').update(raw).digest('hex');
 }
 
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
-const OTP_HMAC_SECRET = process.env.OTP_SECRET || process.env.JWT_SECRET || "dev_fallback_otp_secret";
+// SECURITY FIX [VULN-003]: Require a dedicated OTP secret — never fall back to JWT_SECRET.
+const OTP_HMAC_SECRET = process.env.OTP_SECRET;
+if (!OTP_HMAC_SECRET) {
+  throw new Error(
+    "CRITICAL: OTP_SECRET environment variable is required. " +
+    "Generate with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+  );
+}
 
 // SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
@@ -119,7 +126,8 @@ async function appendAuthLog(userId, { action, success = true, ip = null, userAg
 
 function signAccessToken(user) {
   const payload = { id: user._id.toString(), role: user.role };
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_EXPIRES });
+  // SECURITY FIX: Explicitly set algorithm to prevent alg confusion.
+  return jwt.sign(payload, process.env.JWT_SECRET, { algorithm: "HS256", expiresIn: ACCESS_EXPIRES });
 }
 
 function generateRefreshTokenString() {
@@ -261,7 +269,7 @@ export const verifyEmail = async ({ email, code, ip = null, userAgent = null }) 
 /* ---------------- resendVerificationCode ---------------- */
 export const resendVerificationCode = async (email, password, ip = null, userAgent = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const user = await User.findOne({ email: normalizedEmail }).select("+passwordHash +lastVerificationSentAt +verified");
 
     if (!user || user.verified) {
@@ -314,6 +322,11 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const user = await User.findOne({ email }).select("+passwordHash +verified +refreshTokens +failedLoginAttempts +lockUntil");
 
     if (!user || !user.verified || !user.passwordHash) {
+      throw new Error("Invalid credentials");
+    }
+
+    // SECURITY FIX [VULN-004]: Block OAuth-only users from password login.
+    if (user.passwordHash.startsWith('!OAUTH_ONLY!')) {
       throw new Error("Invalid credentials");
     }
 
@@ -402,6 +415,7 @@ export const login = async (email, password, ip = null, userAgent = null) => {
     const totalTime = Date.now() - startTime;
     logger.info(`[LOGIN] ${maskIdentifier(email)} (${totalTime}ms)`);
 
+    // SECURITY FIX [GT-024]: Use masked IP in alert email body to avoid PII in emails.
     Promise.resolve(
       sendEmail(
         user.email,
@@ -409,8 +423,8 @@ export const login = async (email, password, ip = null, userAgent = null) => {
         buildLoginAlertEmail({
           username: user.username,
           loginAt: new Date(),
-          ip,
-          userAgent,
+          ip: ip ? `${ip.substring(0, 3)}.***.***` : "unknown",
+          userAgent: userAgent ? truncateUserAgent(userAgent) : "unknown",
         })
       )
     ).catch((emailErr) => {
@@ -558,7 +572,7 @@ export const revokeRefreshTokenForUser = async (refreshToken, ip = null, accessT
 // Generate and send reset token
 export const forgotPassword = async (email, ip = null, userAgent = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     // 🎯 Try cache first
@@ -575,10 +589,18 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
       user = await User.findOne({ email: normalizedEmail }).select("+passwordResetToken +passwordResetExpires +lastPasswordResetSentAt");
 
       if (user) {
-        // Cache user for future requests
+        // SECURITY FIX [GT-015]: Strip all sensitive fields before caching.
         const userDataForCache = { ...user.toObject() };
-        delete userDataForCache.passwordHash; // Security
-        delete userDataForCache.passwordResetToken; // Security
+        delete userDataForCache.passwordHash;
+        delete userDataForCache.passwordResetToken;
+        delete userDataForCache.passwordResetExpires;
+        delete userDataForCache.verificationCode;
+        delete userDataForCache.verificationCodeValidation;
+        delete userDataForCache.failedLoginAttempts;
+        delete userDataForCache.lockUntil;
+        delete userDataForCache.refreshTokens;
+        delete userDataForCache.authLogs;
+        if (userDataForCache.twoFA) delete userDataForCache.twoFA.secret;
         await cacheService.cacheUser(userDataForCache);
       }
     }
@@ -591,6 +613,12 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
       return genericResponse;
     }
 
+    // SECURITY FIX [VULN-004]: Block password reset for OAuth-only users.
+    if (user.passwordHash && user.passwordHash.startsWith('!OAUTH_ONLY!')) {
+      logger.info(`[FORGOT PASSWORD] OAuth-only user skipped: ${maskedEmail}`);
+      return genericResponse; // Don't reveal OAuth status
+    }
+
     // Rate limiting - only allow one reset request per 5 minutes per user
     if (user.lastPasswordResetSentAt && user.lastPasswordResetSentAt.getTime() > Date.now() - 5 * 60 * 1000) {
       logger.warn(`[FORGOT PASSWORD] Rate limited for: ${maskedEmail}`);
@@ -598,12 +626,12 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     }
 
     // Generate secure reset token
+    // SECURITY FIX [GT-003]: Use SHA-256 only for reset tokens (no bcrypt)
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const hashedResetToken = await bcrypt.hash(resetToken, BCRYPT_ROUNDS);
     const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
 
     // Set token and expiry (15 minutes)
-    user.passwordResetToken = hashedResetToken;
+    user.passwordResetToken = resetTokenHash;
     user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     user.lastPasswordResetSentAt = new Date();
 
@@ -643,7 +671,7 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
 // Verify reset token
 export const verifyResetToken = async (email, token) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     logger.info(`[VERIFY RESET TOKEN] Checking token for: ${maskedEmail}`);
@@ -653,9 +681,16 @@ export const verifyResetToken = async (email, token) => {
     const incomingHash = crypto.createHash("sha256").update(token).digest("hex");
     let isValidToken = false;
 
-    if (cachedTokenHash && cachedTokenHash === incomingHash) {
-      logger.info(`[VERIFY RESET TOKEN] Cache hash match for: ${maskedEmail}`);
-      isValidToken = true;
+    // SECURITY FIX [VULN-008]: Use constant-time comparison for cached reset token hash.
+    if (cachedTokenHash && incomingHash.length === cachedTokenHash.length) {
+      try {
+        if (crypto.timingSafeEqual(Buffer.from(cachedTokenHash, "hex"), Buffer.from(incomingHash, "hex"))) {
+          logger.info(`[VERIFY RESET TOKEN] Cache hash match for: ${maskedEmail}`);
+          isValidToken = true;
+        }
+      } catch (_) {
+        // Buffer length mismatch or invalid hex — fall through to DB check
+      }
     }
 
     // Always verify against database for security
@@ -690,7 +725,14 @@ export const verifyResetToken = async (email, token) => {
     }
 
     // Verify token hash
-    const isMatch = await bcrypt.compare(token, user.passwordResetToken);
+    // SECURITY FIX [GT-003]: Use constant-time comparison for SHA-256 reset token DB matching
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    let isMatch = false;
+
+    if (user.passwordResetToken && user.passwordResetToken.length === tokenHash.length) {
+      isMatch = crypto.timingSafeEqual(Buffer.from(tokenHash, 'hex'), Buffer.from(user.passwordResetToken, 'hex'));
+    }
+
     if (!isMatch) {
       logger.warn(`[VERIFY RESET TOKEN] Token hash mismatch for: ${maskedEmail}`);
       throw new Error("Invalid or expired reset token");
@@ -717,7 +759,7 @@ export const verifyResetToken = async (email, token) => {
 // Reset password with token
 export const resetPassword = async (email, token, newPassword, ip = null, userAgent = null, currentAccessToken = null) => {
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email.normalize('NFC').toLowerCase().trim();
     const maskedEmail = maskIdentifier(normalizedEmail);
 
     logger.info(`[RESET PASSWORD] Processing for: ${maskedEmail}`);

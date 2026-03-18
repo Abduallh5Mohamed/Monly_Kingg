@@ -58,22 +58,24 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.findOne({ email });
 
           if (user) {
-            // Link Google account to existing user
-            user.googleId = profile.id;
-            if (!user.verified) user.verified = true;
-            await user.save();
-            return done(null, user);
+            // SECURITY FIX [GT-002]: Disallow insecure auto-linking of OAuth accounts
+            if (user.googleId) {
+                return done(new Error("Email already associated with another account"), null);
+            }
+            return done(new Error("Account exists. Please login with password to link Google account."), null);
           }
 
           // Create new user
+          // SECURITY FIX [VULN-H04]: Use crypto.randomBytes() instead of Math.random() for unpredictable username suffixes.
           const username = email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase().slice(0, 20) +
-            Math.random().toString(36).slice(2, 6);
+            crypto.randomBytes(3).toString('hex'); // 6 hex chars, cryptographically random
 
           user = await User.create({
             email,
             username: username.length >= 5 ? username : username + "user1",
-            // SECURITY FIX [H-06]: Use cryptographically random placeholder for OAuth-only users.
-            passwordHash: "google-oauth-" + crypto.randomBytes(32).toString('hex'),
+            // SECURITY FIX [VULN-004]: Use a sentinel that bcrypt.compare() will ALWAYS reject.
+            // This prevents OAuth-only users from logging in via password or resetting their password.
+            passwordHash: "!OAUTH_ONLY!_no_password_login_allowed",
             googleId: profile.id,
             fullName: profile.displayName || "",
             avatar: null,

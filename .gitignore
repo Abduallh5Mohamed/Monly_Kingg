@@ -54,6 +54,18 @@ create-test-users.js
 create-mongo-user.js
 unlock-user.js
 clear-user-cache.js
+create-user.js
+
+# SECURITY FIX [VULN-L02]: Debug/check scripts must never be committed
+check-*.js
+check-*.cjs
+cleanup-*.js
+cleanup-*.cjs
+test_import.js
+
+# SECURITY FIX [VULN-L01]: Data dump files may contain sensitive PII
+*-result.txt
+user-avatar-result.txt
 
 # Load testing scripts
 *-load-test.js

@@ -90,6 +90,18 @@ nextApp.prepare().then(async () => {
   const app = express();
   const server = createServer(app);
 
+  // SECURITY FIX [VULN-023]: Configure trust proxy when behind reverse proxy (NGINX).
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', parseInt(process.env.PROXY_HOPS || '1', 10));
+  }
+
+  // SECURITY FIX [VULN-005]: Validate required production env vars at startup.
+  if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGINS) {
+    console.error('\n🚨 CRITICAL: ALLOWED_ORIGINS must be set in production!');
+    console.error('   Example: ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com\n');
+    process.exit(1);
+  }
+
   // Set server timeouts for better performance and reliability
   server.timeout = 60000; // 60 seconds timeout
   server.keepAliveTimeout = 65000; // 65 seconds (longer than timeout)
@@ -139,10 +151,25 @@ nextApp.prepare().then(async () => {
     next();
   });
 
+  // SECURITY FIX [VULN-006]: Strict origin whitelist instead of origin:true in development.
+  const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+    : ['http://localhost:3000', 'http://localhost:5000'];
+
   const corsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-      ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-      : true,
+    origin: (origin, callback) => {
+      // SECURITY FIX [GT-007]: Block explicit null origins in production
+      if (!origin) {
+        if (!dev) {
+          return callback(new Error('Origin required by CORS'));
+        }
+        return callback(null, true);
+      }
+      if (ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
     optionsSuccessStatus: 200
   };
@@ -151,6 +178,12 @@ nextApp.prepare().then(async () => {
   // Set Origin-Agent-Cluster FIRST before any other middleware
   app.use((req, res, next) => {
     res.setHeader('Origin-Agent-Cluster', '?1');
+    // SECURITY FIX [VULN-H05]: Add Permissions-Policy to restrict browser feature access.
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()');
+    // SECURITY FIX [VULN-H05]: Add Cross-Origin-Embedder-Policy for Spectre mitigation in production.
+    if (!dev) {
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    }
     next();
   });
 
@@ -162,10 +195,14 @@ nextApp.prepare().then(async () => {
           defaultSrc: ["'self'"],
           scriptSrc: dev
             ? ["'self'", "'unsafe-eval'", "'unsafe-inline'"]  // Required for Next.js dev mode
-            : ["'self'", "'unsafe-inline'"],                    // Production: no eval
-          styleSrc: [
+            : ["'self'"],                                        // SECURITY FIX [GT-005]: No unsafe-inline in production
+          styleSrc: dev ? [
             "'self'",
             "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://fonts.gstatic.com"
+          ] : [
+            "'self'",
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
@@ -188,8 +225,9 @@ nextApp.prepare().then(async () => {
             "https://fonts.googleapis.com",
             "https://fonts.gstatic.com"
           ],
-          connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "ws:", "wss:"],
+          connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "wss:"],  // SECURITY FIX [GT-011]: No unencrypted ws: in production
           frameSrc: ["'none'"],
+          frameAncestors: ["'none'"],  // SECURITY FIX [VULN-012]: Modern clickjacking protection
           objectSrc: ["'none'"],
           baseUri: ["'self'"],                   // Prevent base tag hijacking
           formAction: ["'self'"],                // Restrict form submissions
@@ -417,7 +455,9 @@ nextApp.prepare().then(async () => {
       const stats = await cacheService.getCacheStats();
       res.json({ success: true, data: stats });
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      // SECURITY FIX [VULN-L04]: Never leak raw error.message in production.
+      const errMsg = process.env.NODE_ENV === 'production' ? 'Cache stats unavailable' : error.message;
+      res.status(500).json({ success: false, error: errMsg });
     }
   });
 
@@ -428,7 +468,9 @@ nextApp.prepare().then(async () => {
       await cacheService.clearUserCache(userId);
       res.json({ success: true, message: `Cache cleared for user ${userId}` });
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      // SECURITY FIX [VULN-L04]: Never leak raw error.message in production.
+      const errMsg = process.env.NODE_ENV === 'production' ? 'Cache clear failed' : error.message;
+      res.status(500).json({ success: false, error: errMsg });
     }
   });
 
@@ -454,8 +496,11 @@ nextApp.prepare().then(async () => {
     }
 
     // Handle specific error messages
-    const message = err.message || 'An error occurred';
     const statusCode = err.statusCode || 500;
+    // SECURITY FIX [VULN-L03]: Return generic message for 5xx errors in production to avoid info disclosure.
+    const message = (process.env.NODE_ENV === 'production' && statusCode >= 500)
+      ? 'An internal server error occurred'
+      : (err.message || 'An error occurred');
 
     // Return JSON error response
     res.status(statusCode).json({

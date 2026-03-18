@@ -41,6 +41,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -77,6 +80,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -110,6 +116,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - OTP_SECRET=${OTP_SECRET}
+      - IP_SALT=${IP_SALT}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -135,12 +144,14 @@ services:
   mongo1:
     image: mongo:7
     container_name: accounts_store_mongo1
-    command: mongod --replSet rs0 --bind_ip_all
-    ports:
-      - "27017:27017"
+    # SECURITY FIX [VULN-011]: Enable MongoDB authentication
+    command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
+    expose:
+      - "27017"
     volumes:
       - mongo1_data:/data/db
       - mongo1_config:/data/configdb
+      - ./mongo-keyfile:/etc/mongo/keyfile:ro
     networks:
       - app_network
     restart: unless-stopped
@@ -153,9 +164,9 @@ services:
   mongo2:
     image: mongo:7
     container_name: accounts_store_mongo2
-    command: mongod --replSet rs0 --bind_ip_all
-    ports:
-      - "27018:27017"
+    command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
+    expose:
+      - "27017"
     volumes:
       - mongo2_data:/data/db
       - mongo2_config:/data/configdb
@@ -171,9 +182,9 @@ services:
   mongo3:
     image: mongo:7
     container_name: accounts_store_mongo3
-    command: mongod --replSet rs0 --bind_ip_all
-    ports:
-      - "27019:27017"
+    command: mongod --replSet rs0 --bind_ip_all --auth --keyFile /etc/mongo/keyfile
+    expose:
+      - "27017"
     volumes:
       - mongo3_data:/data/db
       - mongo3_config:/data/configdb
@@ -200,7 +211,7 @@ services:
     command: >
       bash -c "
         sleep 10 &&
-        mongosh --host mongo1:27017 --eval '
+        mongosh --host mongo1:27017 -u admin -p $$MONGO_ROOT_PASSWORD --authenticationDatabase admin --eval '
           rs.initiate({
             _id: \"rs0\",
             members: [
@@ -325,8 +336,9 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: accounts_store_prometheus
-    ports:
-      - "9090:9090"
+    # SECURITY FIX [VULN-022]: Don't expose monitoring ports to host
+    expose:
+      - "9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -343,10 +355,13 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: accounts_store_grafana
-    ports:
-      - "3000:3000"
+    # SECURITY FIX [GT-008]: Don't expose Grafana to host — access via NGINX or SSH tunnel
+    expose:
+      - "3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # SECURITY FIX [GT-008]: GRAFANA_ADMIN_PASSWORD must be set explicitly — no weak defaults
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD must be set}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_INSTALL_PLUGINS=redis-datasource
     volumes:
       - grafana_data:/var/lib/grafana
@@ -362,8 +377,9 @@ services:
     environment:
       - REDIS_ADDR=redis-node1:6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports:
-      - "9121:9121"
+    # SECURITY FIX [VULN-022]: Don't expose monitoring ports to host
+    expose:
+      - "9121"
     networks:
       - app_network
     restart: unless-stopped
@@ -374,8 +390,9 @@ services:
     container_name: mongodb_exporter
     environment:
       - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
-    ports:
-      - "9216:9216"
+    # SECURITY FIX [VULN-022]: Don't expose monitoring ports to host
+    expose:
+      - "9216"
     networks:
       - app_network
     restart: unless-stopped

@@ -13,7 +13,8 @@ async function verifyAccessToken(accessToken: string): Promise<JwtPayload> {
   }
 
   const secret = new TextEncoder().encode(secretValue);
-  const { payload } = await jwtVerify(accessToken, secret);
+  // SECURITY FIX: Restrict to HS256 to prevent alg:none bypass.
+  const { payload } = await jwtVerify(accessToken, secret, { algorithms: ['HS256'] });
   return payload as JwtPayload;
 }
 

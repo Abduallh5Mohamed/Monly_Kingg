@@ -38,14 +38,20 @@ const storage = multer.diskStorage({
     cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
+    // SECURITY FIX [VULN-C02]: Use crypto.randomBytes() instead of Math.random() for unpredictable filenames.
+    // SECURITY FIX [VULN-C03]: Use MIME-based extension instead of trusting user-supplied extension.
+    const uniqueSuffix = Date.now() + "-" + crypto.randomBytes(8).toString('hex');
+    const SAFE_EXTENSIONS = {
+      'image/jpeg': '.jpg', 'image/jpg': '.jpg', 'image/png': '.png',
+      'image/gif': '.gif', 'image/webp': '.webp'
+    };
+    const ext = SAFE_EXTENSIONS[file.mimetype] || '.bin';
     cb(null, file.fieldname + "-" + uniqueSuffix + ext);
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  // Allow common image MIME types
+  // SECURITY FIX [VULN-C03]: Only allow by MIME type — never trust the user-supplied extension.
   const allowedMimes = [
     "image/jpeg",
     "image/jpg",
@@ -54,11 +60,7 @@ const fileFilter = (req, file, cb) => {
     "image/webp"
   ];
 
-  // Also check file extension as fallback
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  const ext = path.extname(file.originalname).toLowerCase();
-
-  if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
+  if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error("Invalid file type. Only JPEG, PNG, GIF, and WEBP images are allowed."));
