@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 type Language = 'en' | 'ar';
 
@@ -86,6 +87,13 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
 };
 
 const STORAGE_KEY = 'site-language';
+const ENGLISH_ONLY_PATHS = new Set([
+    '/',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+]);
 
 interface LanguageContextValue {
     language: Language;
@@ -107,6 +115,15 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(undefine
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>('ar');
+    const pathname = usePathname();
+
+    const normalizedPath = useMemo(() => {
+        if (!pathname) return '/';
+        return pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    }, [pathname]);
+
+    const isEnglishOnlyRoute = ENGLISH_ONLY_PATHS.has(normalizedPath);
+    const effectiveLanguage: Language = isEnglishOnlyRoute ? 'en' : language;
 
     useEffect(() => {
         const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -116,11 +133,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        const dir = language === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = language;
+        const dir = effectiveLanguage === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = effectiveLanguage;
         document.documentElement.dir = dir;
         window.localStorage.setItem(STORAGE_KEY, language);
-    }, [language]);
+    }, [effectiveLanguage, language]);
 
     const setLanguage = useCallback((nextLanguage: Language) => {
         setLanguageState(nextLanguage);
@@ -131,16 +148,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const t = useCallback((key: TranslationKey) => {
-        return translations[language][key] ?? key;
-    }, [language]);
+        return translations[effectiveLanguage][key] ?? key;
+    }, [effectiveLanguage]);
 
     const value = useMemo<LanguageContextValue>(() => ({
         language,
-        isRTL: language === 'ar',
+        isRTL: effectiveLanguage === 'ar',
         setLanguage,
         toggleLanguage,
         t,
-    }), [language, setLanguage, toggleLanguage, t]);
+    }), [effectiveLanguage, language, setLanguage, toggleLanguage, t]);
 
     return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
