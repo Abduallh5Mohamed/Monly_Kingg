@@ -72,8 +72,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           user = await User.create({
             email,
             username: username.length >= 5 ? username : username + "user1",
-            // SECURITY FIX [H-06]: Use cryptographically random placeholder for OAuth-only users.
-            passwordHash: "google-oauth-" + crypto.randomBytes(32).toString('hex'),
+            // SECURITY FIX [VULN-004]: Use a sentinel that bcrypt.compare() will ALWAYS reject.
+            // This prevents OAuth-only users from logging in via password or resetting their password.
+            passwordHash: "!OAUTH_ONLY!_no_password_login_allowed",
             googleId: profile.id,
             fullName: profile.displayName || "",
             avatar: null,

@@ -467,14 +467,28 @@ export const googleCallback = async (req, res) => {
       path: "/"
     });
 
-    // Redirect to frontend based on profile completion
+    // SECURITY FIX [VULN-016]: Validate redirect destination against allowed hostname.
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const allowedHost = new URL(frontendUrl).host;
+
+    function safeRedirect(res, url) {
+      try {
+        const parsed = new URL(url, frontendUrl);
+        if (parsed.host !== allowedHost) {
+          return res.redirect(frontendUrl + "/login?error=invalid_redirect");
+        }
+        return res.redirect(parsed.href);
+      } catch {
+        return res.redirect(frontendUrl + "/login");
+      }
+    }
+
     if (user.profileCompleted !== true) {
-      return res.redirect(frontendUrl + "/complete-profile");
+      return safeRedirect(res, frontendUrl + "/complete-profile");
     } else if (user.role === "admin") {
-      return res.redirect(frontendUrl + "/admin/dashboard");
+      return safeRedirect(res, frontendUrl + "/admin/dashboard");
     } else {
-      return res.redirect(frontendUrl + "/user");
+      return safeRedirect(res, frontendUrl + "/user");
     }
   } catch (err) {
     logger.error(`Google callback error: ${err.message}`);

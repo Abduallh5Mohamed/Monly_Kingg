@@ -22,7 +22,14 @@ function hashRefreshToken(raw) {
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
-const OTP_HMAC_SECRET = process.env.OTP_SECRET || process.env.JWT_SECRET || "dev_fallback_otp_secret";
+// SECURITY FIX [VULN-003]: Require a dedicated OTP secret — never fall back to JWT_SECRET.
+const OTP_HMAC_SECRET = process.env.OTP_SECRET;
+if (!OTP_HMAC_SECRET) {
+  throw new Error(
+    "CRITICAL: OTP_SECRET environment variable is required. " +
+    "Generate with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+  );
+}
 
 // SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.
 const maskIdentifier = (value) => maskSensitive(String(value || "unknown"), 3, 4);
@@ -317,6 +324,11 @@ export const login = async (email, password, ip = null, userAgent = null) => {
       throw new Error("Invalid credentials");
     }
 
+    // SECURITY FIX [VULN-004]: Block OAuth-only users from password login.
+    if (user.passwordHash.startsWith('!OAUTH_ONLY!')) {
+      throw new Error("Invalid credentials");
+    }
+
     // ✅ SECURITY: Enforce account lockout after too many failed attempts
     const MAX_FAILED_ATTEMPTS = 5;
     const LOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutes
@@ -589,6 +601,12 @@ export const forgotPassword = async (email, ip = null, userAgent = null) => {
     if (!user || !user.verified) {
       logger.warn(`[FORGOT PASSWORD] Invalid user or unverified: ${maskedEmail}`);
       return genericResponse;
+    }
+
+    // SECURITY FIX [VULN-004]: Block password reset for OAuth-only users.
+    if (user.passwordHash && user.passwordHash.startsWith('!OAUTH_ONLY!')) {
+      logger.info(`[FORGOT PASSWORD] OAuth-only user skipped: ${maskedEmail}`);
+      return genericResponse; // Don't reveal OAuth status
     }
 
     // Rate limiting - only allow one reset request per 5 minutes per user

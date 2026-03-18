@@ -63,9 +63,10 @@ class SocketService {
     async initialize(httpServer) {
         this.io = new Server(httpServer, {
             cors: {
-                origin: process.env.NODE_ENV === 'production'
-                    ? process.env.ALLOWED_ORIGINS?.split(',')
-                    : true,
+                // SECURITY FIX [VULN-007]: Use strict origin whitelist, same as Express CORS.
+                origin: process.env.ALLOWED_ORIGINS
+                    ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+                    : ['http://localhost:3000', 'http://localhost:5000'],
                 credentials: true
             },
             pingTimeout: 60000,
@@ -247,8 +248,13 @@ class SocketService {
     }
 
     handleLeaveChat(socket, chatId) {
-        socket.leave(`chat:${chatId}`);
-        socket.to(`chat:${chatId}`).emit('user_left', { userId: socket.userId });
+        // SECURITY FIX [VULN-019]: Validate input and check room membership before leaving.
+        if (!chatId || typeof chatId !== 'string' || !chatId.match(/^[0-9a-fA-F]{24}$/)) return;
+        const roomName = `chat:${chatId}`;
+        if (socket.rooms.has(roomName)) {
+            socket.leave(roomName);
+            socket.to(roomName).emit('user_left', { userId: socket.userId });
+        }
     }
 
     async handleSendMessage(socket, data) {

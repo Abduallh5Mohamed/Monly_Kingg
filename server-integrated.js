@@ -90,6 +90,18 @@ nextApp.prepare().then(async () => {
   const app = express();
   const server = createServer(app);
 
+  // SECURITY FIX [VULN-023]: Configure trust proxy when behind reverse proxy (NGINX).
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', parseInt(process.env.PROXY_HOPS || '1', 10));
+  }
+
+  // SECURITY FIX [VULN-005]: Validate required production env vars at startup.
+  if (process.env.NODE_ENV === 'production' && !process.env.ALLOWED_ORIGINS) {
+    console.error('\n🚨 CRITICAL: ALLOWED_ORIGINS must be set in production!');
+    console.error('   Example: ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com\n');
+    process.exit(1);
+  }
+
   // Set server timeouts for better performance and reliability
   server.timeout = 60000; // 60 seconds timeout
   server.keepAliveTimeout = 65000; // 65 seconds (longer than timeout)
@@ -139,10 +151,20 @@ nextApp.prepare().then(async () => {
     next();
   });
 
+  // SECURITY FIX [VULN-006]: Strict origin whitelist instead of origin:true in development.
+  const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+    : ['http://localhost:3000', 'http://localhost:5000'];
+
   const corsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-      ? process.env.ALLOWED_ORIGINS?.split(',') || ['https://yourdomain.com']
-      : true,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, server-to-server, curl)
+      if (!origin) return callback(null, true);
+      if (ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
     optionsSuccessStatus: 200
   };
@@ -190,6 +212,7 @@ nextApp.prepare().then(async () => {
           ],
           connectSrc: dev ? ["'self'", "http:", "https:", "ws:", "wss:"] : ["'self'", "ws:", "wss:"],
           frameSrc: ["'none'"],
+          frameAncestors: ["'none'"],  // SECURITY FIX [VULN-012]: Modern clickjacking protection
           objectSrc: ["'none'"],
           baseUri: ["'self'"],                   // Prevent base tag hijacking
           formAction: ["'self'"],                // Restrict form submissions

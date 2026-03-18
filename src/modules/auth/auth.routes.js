@@ -35,19 +35,48 @@ router.post("/forgot-password", passwordResetLimiter, authController.forgotPassw
 router.post("/verify-reset-token", passwordResetLimiter, authController.verifyResetToken);
 router.post("/reset-password", passwordResetLimiter, authController.resetPassword);
 
-// Google OAuth routes
-router.get("/google", passport.authenticate("google", {
-  scope: ["profile", "email"],
-  session: false,
-  // FIX: Removed state:true — passport session state flow is incompatible with session:false JWT setup.
-}));
+// SECURITY FIX [VULN-008]: Google OAuth with manual state parameter for CSRF protection.
+// Since we use session:false (JWT-based), we generate a state token and store it in a
+// secure httpOnly cookie, then verify it when Google redirects back.
+router.get("/google", (req, res, next) => {
+  const state = crypto.randomBytes(32).toString('hex');
+  res.cookie('oauth_state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax', // Must be 'lax' for cross-site redirect from Google
+    maxAge: 10 * 60 * 1000, // 10 minutes
+    path: '/'
+  });
+
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+    state: state
+  })(req, res, next);
+});
+
 router.get("/google/callback",
   loginLimiter,
-  passport.authenticate("google", {
-    session: false,
-    // FIX: Removed callbackURL here to avoid strategy/authenticate callback mismatch.
-    failureRedirect: (process.env.FRONTEND_URL || "http://localhost:3000") + "/login?error=google_failed"
-  }),
+  (req, res, next) => {
+    // Verify state parameter matches the cookie
+    const stateFromGoogle = req.query.state;
+    const stateFromCookie = req.cookies?.oauth_state;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+
+    if (!stateFromGoogle || !stateFromCookie ||
+        stateFromGoogle.length !== stateFromCookie.length ||
+        !crypto.timingSafeEqual(Buffer.from(stateFromGoogle), Buffer.from(stateFromCookie))) {
+      return res.redirect(frontendUrl + "/login?error=csrf_failed");
+    }
+
+    // Clear the state cookie
+    res.clearCookie('oauth_state', { httpOnly: true, path: '/' });
+
+    passport.authenticate("google", {
+      session: false,
+      failureRedirect: frontendUrl + "/login?error=google_failed"
+    })(req, res, next);
+  },
   authController.googleCallback
 );
 
