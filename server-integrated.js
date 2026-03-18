@@ -173,6 +173,12 @@ nextApp.prepare().then(async () => {
   // Set Origin-Agent-Cluster FIRST before any other middleware
   app.use((req, res, next) => {
     res.setHeader('Origin-Agent-Cluster', '?1');
+    // SECURITY FIX [VULN-H05]: Add Permissions-Policy to restrict browser feature access.
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()');
+    // SECURITY FIX [VULN-H05]: Add Cross-Origin-Embedder-Policy for Spectre mitigation in production.
+    if (!dev) {
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    }
     next();
   });
 
@@ -440,7 +446,9 @@ nextApp.prepare().then(async () => {
       const stats = await cacheService.getCacheStats();
       res.json({ success: true, data: stats });
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      // SECURITY FIX [VULN-L04]: Never leak raw error.message in production.
+      const errMsg = process.env.NODE_ENV === 'production' ? 'Cache stats unavailable' : error.message;
+      res.status(500).json({ success: false, error: errMsg });
     }
   });
 
@@ -451,7 +459,9 @@ nextApp.prepare().then(async () => {
       await cacheService.clearUserCache(userId);
       res.json({ success: true, message: `Cache cleared for user ${userId}` });
     } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
+      // SECURITY FIX [VULN-L04]: Never leak raw error.message in production.
+      const errMsg = process.env.NODE_ENV === 'production' ? 'Cache clear failed' : error.message;
+      res.status(500).json({ success: false, error: errMsg });
     }
   });
 
@@ -477,8 +487,11 @@ nextApp.prepare().then(async () => {
     }
 
     // Handle specific error messages
-    const message = err.message || 'An error occurred';
     const statusCode = err.statusCode || 500;
+    // SECURITY FIX [VULN-L03]: Return generic message for 5xx errors in production to avoid info disclosure.
+    const message = (process.env.NODE_ENV === 'production' && statusCode >= 500)
+      ? 'An internal server error occurred'
+      : (err.message || 'An error occurred');
 
     // Return JSON error response
     res.status(statusCode).json({

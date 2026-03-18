@@ -15,7 +15,7 @@ import redis from "../../config/redis.js";
 import socketService from "../../services/socketService.js";
 import { maskSensitive } from "../../utils/encryption.js";
 
-function hashRefreshToken(raw) {
+export function hashRefreshToken(raw) {
   return crypto.createHash('sha256').update(raw).digest('hex');
 }
 
@@ -126,7 +126,8 @@ async function appendAuthLog(userId, { action, success = true, ip = null, userAg
 
 function signAccessToken(user) {
   const payload = { id: user._id.toString(), role: user.role };
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_EXPIRES });
+  // SECURITY FIX: Explicitly set algorithm to prevent alg confusion.
+  return jwt.sign(payload, process.env.JWT_SECRET, { algorithm: "HS256", expiresIn: ACCESS_EXPIRES });
 }
 
 function generateRefreshTokenString() {
@@ -671,9 +672,16 @@ export const verifyResetToken = async (email, token) => {
     const incomingHash = crypto.createHash("sha256").update(token).digest("hex");
     let isValidToken = false;
 
-    if (cachedTokenHash && cachedTokenHash === incomingHash) {
-      logger.info(`[VERIFY RESET TOKEN] Cache hash match for: ${maskedEmail}`);
-      isValidToken = true;
+    // SECURITY FIX [VULN-008]: Use constant-time comparison for cached reset token hash.
+    if (cachedTokenHash && incomingHash.length === cachedTokenHash.length) {
+      try {
+        if (crypto.timingSafeEqual(Buffer.from(cachedTokenHash, "hex"), Buffer.from(incomingHash, "hex"))) {
+          logger.info(`[VERIFY RESET TOKEN] Cache hash match for: ${maskedEmail}`);
+          isValidToken = true;
+        }
+      } catch (_) {
+        // Buffer length mismatch or invalid hex — fall through to DB check
+      }
     }
 
     // Always verify against database for security

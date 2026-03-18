@@ -327,7 +327,8 @@ export const rejectWithdrawal = async (req, res) => {
     }
 
     withdrawal.status = "rejected";
-    withdrawal.rejectionReason = reason || "Request denied";
+    // SECURITY FIX: Sanitize and limit rejection reason length.
+    withdrawal.rejectionReason = (typeof reason === 'string' ? reason.trim().slice(0, 1000) : '') || "Request denied";
     withdrawal.reviewedBy = req.user._id;
     withdrawal.reviewedAt = new Date();
 

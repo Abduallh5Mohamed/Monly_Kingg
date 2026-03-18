@@ -66,8 +66,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           }
 
           // Create new user
+          // SECURITY FIX [VULN-H04]: Use crypto.randomBytes() instead of Math.random() for unpredictable username suffixes.
           const username = email.split("@")[0].replace(/[^a-z0-9]/gi, "").toLowerCase().slice(0, 20) +
-            Math.random().toString(36).slice(2, 6);
+            crypto.randomBytes(3).toString('hex'); // 6 hex chars, cryptographically random
 
           user = await User.create({
             email,

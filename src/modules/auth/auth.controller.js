@@ -1,15 +1,38 @@
 import * as authService from "./auth.service.js";
-import { anonymizeIp, truncateUserAgent } from "./auth.service.js";
+import { anonymizeIp, truncateUserAgent, hashRefreshToken } from "./auth.service.js";
 import User from "../users/user.model.js";
 import Joi from "joi";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import logger from "../../utils/logger.js";
+import { maskSensitive } from "../../utils/encryption.js";
 
+// SECURITY FIX [VULN-018]: Block impersonation via reserved usernames.
+const RESERVED_USERNAMES = [
+  "admin", "administrator", "root", "system", "moderator", "mod",
+  "support", "help", "staff", "monlyking", "monly",
+  "api", "www", "mail", "noreply", "contact"
+];
+
+// SECURITY FIX [VULN-003]: Enforce password complexity on registration (matching reset-password schema).
 const registerSchema = Joi.object({
   email: Joi.string().email().required(),
-  username: Joi.string().min(5).required(),
-  password: Joi.string().min(8).required()
+  username: Joi.string().min(5).max(30).required(),
+  password: Joi.string()
+    .min(8)
+    .max(128)
+    .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"))
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+      'string.max': 'Password must not exceed 128 characters'
+    })
+});
+
+// SECURITY FIX [VULN-010]: Validate login input to prevent bcrypt DoS with oversized passwords.
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(1).max(128).required()
 });
 
 /* ---------------- Get Current User ---------------- */
@@ -50,6 +73,11 @@ export const register = async (req, res, next) => {
   try {
     const { error, value } = registerSchema.validate(req.body);
     if (error) return res.status(400).json({ message: "Invalid input" });
+
+    // SECURITY FIX [VULN-018]: Block reserved usernames to prevent impersonation.
+    if (RESERVED_USERNAMES.includes(value.username.toLowerCase())) {
+      return res.status(400).json({ message: "Registration failed" });
+    }
 
     const exists = await User.findOne({ email: value.email });
     if (exists) return res.status(400).json({ message: "Registration failed" }); // Generic message to prevent enumeration
@@ -141,7 +169,11 @@ export const login = async (req, res) => {
   const email = req.body.email?.toLowerCase().trim();
 
   try {
-    const password = req.body.password;
+    // SECURITY FIX [VULN-010]: Validate login input to prevent bcrypt DoS.
+    const { error, value } = loginSchema.validate({ email, password: req.body.password });
+    if (error) return res.status(400).json({ message: "Invalid email or password" });
+
+    const password = value.password;
     const ip = req.ip;
     const userAgent = req.get("User-Agent");
 
@@ -189,7 +221,8 @@ export const login = async (req, res) => {
       expiresIn: 15 * 60
     });
   } catch (err) {
-    logger.warn(`Login failed for ${email || "unknown"}: ${err.message}`);
+    // SECURITY FIX [VULN-005]: Mask email in logs to prevent PII exposure.
+    logger.warn(`Login failed for ${maskSensitive(email || "unknown", 3, 4)}: ${err.message}`);
 
     // Check if email not verified
     if (err.message === "Invalid credentials") {
@@ -237,7 +270,8 @@ export const refresh = async (req, res) => {
     });
 
     // Decode JWT to get user ID
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+    // SECURITY FIX [VULN-007]: Restrict to HS256 to prevent alg:none bypass.
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET, { algorithms: ["HS256"] });
     // Get user data (lean for performance)
     const userData = await User.findById(decoded.id).select('_id username email role isSeller profileCompleted moderatorPermissions').lean();
 
@@ -416,18 +450,18 @@ export const googleCallback = async (req, res) => {
     const accessToken = jwt.sign(
       { id: user._id.toString(), role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m" }
+      { algorithm: "HS256", expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m" }
     );
 
     const refreshTokenString = crypto.randomBytes(64).toString("hex");
     const refreshDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
 
-    // Store refresh token
+    // SECURITY FIX [VULN-001]: Hash refresh token before storage, anonymize IP/UA.
     user.refreshTokens.push({
-      token: refreshTokenString,
+      token: hashRefreshToken(refreshTokenString),
       expiresAt: new Date(Date.now() + refreshDays * 24 * 60 * 60 * 1000),
-      ip,
-      userAgent
+      ip: anonymizeIp(ip),
+      userAgent: truncateUserAgent(userAgent)
     });
 
     // Log the auth event

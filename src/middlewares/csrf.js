@@ -4,19 +4,9 @@ export default function csrfProtection(req, res, next) {
   const method = req.method;
   if (["GET", "HEAD", "OPTIONS"].includes(method)) return next();
 
-  const publicPaths = [
-    '/v1/auth/register',
-    '/v1/auth/login',
-    '/v1/auth/refresh',
-    '/v1/auth/verify-email',
-    '/v1/auth/resend-code',
-    '/v1/auth/forgot-password',
-    '/v1/auth/verify-reset-token',
-    '/v1/auth/reset-password',
-    '/v1/auth/csrf-token',
-    '/v1/auth/google',
-    '/v1/auth/google/callback',
-    '/v1/support/messages',
+  // SECURITY FIX [VULN-M05]: Consolidated to a single normalized path set to eliminate
+  // duplicate maintenance risk (previously had /v1/auth/... AND /auth/... duplicates).
+  const publicPaths = new Set([
     '/auth/register',
     '/auth/login',
     '/auth/refresh',
@@ -28,25 +18,25 @@ export default function csrfProtection(req, res, next) {
     '/auth/csrf-token',
     '/auth/google',
     '/auth/google/callback',
-    '/support/messages'
-  ];
+    '/support/messages',
+  ]);
 
+  // Normalize once: strip /api/v1 or /api prefix, then strip query string
   const normalizedPath = (req.originalUrl || "")
     .split("?")[0]
-    .replace(/^\/api\/v1/, "")
-    .replace(/^\/api/, "");
+    .replace(/^\/api(?:\/v1)?/, "");
 
-  // Exact path match
-  if (publicPaths.includes(req.path) || publicPaths.includes(normalizedPath)) {
+  if (publicPaths.has(normalizedPath)) {
     return next();
   }
 
   // Pattern-based public routes (e.g., ad click tracking)
+  // SECURITY FIX [VULN-M05]: Use strict ObjectId pattern instead of loose [a-f0-9]+
   const publicPatterns = [
-    /^\/v1\/ads\/[a-f0-9]+\/click$/  // POST /v1/ads/:id/click
+    /^\/ads\/[a-f0-9]{24}\/click$/  // POST /ads/:id/click
   ];
 
-  if (publicPatterns.some(pattern => pattern.test(req.path) || pattern.test(normalizedPath))) {
+  if (publicPatterns.some(pattern => pattern.test(normalizedPath))) {
     return next();
   }
 

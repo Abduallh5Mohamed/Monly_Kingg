@@ -39,7 +39,8 @@ export const authMiddleware = async (req, res, next) => {
 
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // SECURITY FIX [VULN-007]: Restrict to HS256 to prevent alg:none bypass.
+      decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
     } catch (err) {
       return res.status(401).json({ message: "Unauthorized" });
     }

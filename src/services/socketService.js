@@ -133,7 +133,8 @@ class SocketService {
                     return next(new Error('Authentication required'));
                 }
 
-                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                // SECURITY FIX [VULN-007]: Restrict to HS256 to prevent alg:none bypass.
+                const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
                 if (!decoded?.id) return next(new Error('Invalid token'));
 
                 // Enforce token revocation parity with HTTP middleware.
@@ -397,16 +398,25 @@ class SocketService {
     }
 
     handleTyping(socket, data) {
+        // SECURITY FIX [VULN-H01]: Validate chatId format, enforce room membership, and rate-limit typing events.
         const { chatId } = data;
-        socket.to(`chat:${chatId}`).emit('user_typing', {
+        if (!chatId || typeof chatId !== 'string' || !chatId.match(/^[0-9a-fA-F]{24}$/)) return;
+        const roomName = `chat:${chatId}`;
+        if (!socket.rooms.has(roomName)) return; // Must have joined this chat room
+        if (!checkSocketRateLimit(socket.userId, 'typing', 10)) return;
+        socket.to(roomName).emit('user_typing', {
             userId: socket.userId,
             username: socket.user.username
         });
     }
 
     handleStopTyping(socket, data) {
+        // SECURITY FIX [VULN-H01]: Validate chatId format, enforce room membership.
         const { chatId } = data;
-        socket.to(`chat:${chatId}`).emit('user_stop_typing', {
+        if (!chatId || typeof chatId !== 'string' || !chatId.match(/^[0-9a-fA-F]{24}$/)) return;
+        const roomName = `chat:${chatId}`;
+        if (!socket.rooms.has(roomName)) return; // Must have joined this chat room
+        socket.to(roomName).emit('user_stop_typing', {
             userId: socket.userId
         });
     }
@@ -414,14 +424,17 @@ class SocketService {
     async handleMarkRead(socket, data) {
         try {
             const { chatId } = data;
-            const chat = await Chat.findOne({
-                _id: chatId,
-                participants: socket.userId
-            });
+            // SECURITY FIX [VULN-M01]: Validate input, check rate limit, use atomic update instead of loading full doc.
+            if (!chatId || typeof chatId !== 'string' || !chatId.match(/^[0-9a-fA-F]{24}$/)) return;
+            if (!checkSocketRateLimit(socket.userId, 'mark_read', 10)) return;
 
-            if (!chat) return;
+            // Atomic update: no full document load needed
+            const result = await Chat.updateOne(
+                { _id: chatId, participants: socket.userId },
+                { $set: { [`unreadCount.${socket.userId}`]: 0 } }
+            );
 
-            await chat.markAsRead(socket.userId);
+            if (!result.matchedCount) return; // Not a participant
 
             socket.to(`chat:${chatId}`).emit('messages_read', {
                 chatId,
@@ -435,7 +448,12 @@ class SocketService {
     handleMessageDelivered(socket, data) {
         try {
             const { chatId, messageId } = data;
-            socket.to(`chat:${chatId}`).emit('message_delivered', { chatId, messageId });
+            // SECURITY FIX: Validate chatId and messageId format.
+            if (!chatId || typeof chatId !== 'string' || !chatId.match(/^[0-9a-fA-F]{24}$/)) return;
+            if (!messageId || typeof messageId !== 'string' || !messageId.match(/^[0-9a-fA-F]{24}$/)) return;
+            const roomName = `chat:${chatId}`;
+            if (!socket.rooms.has(roomName)) return;
+            socket.to(roomName).emit('message_delivered', { chatId, messageId });
         } catch (error) {
             // silent
         }
@@ -443,6 +461,8 @@ class SocketService {
 
     async handleGetOnlineUsers(socket) {
         try {
+            // SECURITY FIX: Rate limit online user queries.
+            if (!checkSocketRateLimit(socket.userId, 'get_online_users', 5)) return;
             const onlineUsers = await this.getOnlineUsers();
             socket.emit('online_users', onlineUsers);
         } catch (error) {

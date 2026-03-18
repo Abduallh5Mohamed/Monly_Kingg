@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 const messageSchema = new mongoose.Schema({
   sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -58,10 +59,10 @@ chatSchema.statics.generateChatNumber = async function () {
   let exists = true;
 
   while (exists) {
-    // Generate random 9-digit number
-    chatNumber = Math.floor(100000000 + Math.random() * 900000000).toString();
+    // SECURITY FIX [VULN-H03]: Use crypto.randomInt() instead of Math.random() for unpredictable chat numbers.
+    chatNumber = crypto.randomInt(100000000, 1000000000).toString();
     // Check if it already exists
-    const existing = await this.findOne({ chatNumber });
+    const existing = await this.findOne({ chatNumber }).select('_id').lean();
     exists = !!existing;
   }
 

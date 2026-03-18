@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
+import crypto from "crypto";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -24,8 +25,14 @@ if (!fs.existsSync(uploadsDir)) {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadsDir),
     filename: (req, file, cb) => {
-        const unique = Date.now() + "-" + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname);
+        // SECURITY FIX [VULN-M02]: Use crypto.randomBytes() instead of Math.random() for unpredictable filenames.
+        // Use MIME-based extension instead of trusting user-supplied extension.
+        const unique = Date.now() + "-" + crypto.randomBytes(8).toString('hex');
+        const SAFE_EXTENSIONS = {
+            'image/jpeg': '.jpg', 'image/jpg': '.jpg', 'image/png': '.png',
+            'image/gif': '.gif', 'image/webp': '.webp', 'application/pdf': '.pdf'
+        };
+        const ext = SAFE_EXTENSIONS[file.mimetype] || '.bin';
         cb(null, "ticket-" + unique + ext);
     },
 });

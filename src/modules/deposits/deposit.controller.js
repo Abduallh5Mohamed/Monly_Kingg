@@ -9,14 +9,8 @@ import { safePaginate } from '../../utils/pagination.js';
 import { encrypt, decrypt } from '../../utils/encryption.js';
 import redis from '../../config/redis.js';
 
-const sanitizeInput = (input) => {
-    if (typeof input !== 'string') return input;
-    return input
-        .trim()
-        .replace(/[<>]/g, '')
-        .replace(/javascript:/gi, '')
-        .replace(/on\w+=/gi, '');
-};
+// SECURITY FIX [VULN-012]: Removed redundant local sanitizeInput() — the global
+// DOMPurify middleware in server-integrated.js already sanitizes all API mutation inputs.
 
 const validateContactInfo = (contact) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,9 +71,9 @@ export const submitDeposit = async (req, res) => {
             gameTitle
         } = req.body;
 
-        const sanitizedFullName = sanitizeInput(senderFullName);
-        const sanitizedPhoneOrEmail = sanitizeInput(senderPhoneOrEmail);
-        const sanitizedGameTitle = gameTitle ? sanitizeInput(gameTitle) : undefined;
+        const sanitizedFullName = senderFullName?.trim();
+        const sanitizedPhoneOrEmail = senderPhoneOrEmail?.trim();
+        const sanitizedGameTitle = gameTitle ? gameTitle.trim() : undefined;
 
         if (!paymentMethod || !amount || !sanitizedFullName || !sanitizedPhoneOrEmail || !depositDate) {
             return res.status(400).json({ message: "All fields are required (payment method, amount, sender name, sender phone/email, deposit date)" });
@@ -406,17 +400,21 @@ export const rejectDeposit = async (req, res) => {
         const { id } = req.params;
         const { reason } = req.body;
 
-        const deposit = await Deposit.findById(id).populate("user", "username email");
-        if (!deposit) {
-            return res.status(404).json({ message: "Deposit not found" });
-        }
-        if (deposit.status !== "pending") {
-            return res.status(400).json({ message: "Deposit already processed" });
-        }
+        // SECURITY FIX [VULN-015]: Atomic status transition (matching approveDeposit pattern).
+        const deposit = await Deposit.findOneAndUpdate(
+            { _id: id, status: "pending" },
+            {
+                $set: {
+                    status: "rejected",
+                    rejectionReason: reason || "Rejected by admin"
+                }
+            },
+            { new: true }
+        ).populate("user", "username email");
 
-        deposit.status = "rejected";
-        deposit.rejectionReason = reason || "Rejected by admin";
-        await deposit.save();
+        if (!deposit) {
+            return res.status(400).json({ message: "Deposit already processed or not found" });
+        }
 
         // Real-time: notify admins of deposit update
         socketService.notifyAdminsDepositUpdate(deposit);
