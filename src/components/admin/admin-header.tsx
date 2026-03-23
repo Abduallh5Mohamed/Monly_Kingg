@@ -1,23 +1,28 @@
-﻿'use client';
+'use client';
 
-import { Search, LogOut } from 'lucide-react';
+import { Search, LogOut, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/lib/auth-context';
 import { AdminNotificationBell } from './notification-bell';
 
-export function AdminHeader() {
+export function AdminHeader({ onMenuClick }: { onMenuClick?: () => void }) {
   const { user, logout } = useAuth();
 
   return (
     <header className="fixed top-0 md:left-20 left-0 right-0 h-16 bg-[#0f1117]/90 backdrop-blur-xl border-b border-white/[0.06] flex items-center justify-between px-4 md:px-8 z-40">
-      <div className="flex-1 max-w-md hidden md:block">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/30" />
-          <Input
-            placeholder="Search users, orders, games..."
-            className="pl-10 bg-white/[0.04] border-white/[0.06] text-white placeholder:text-white/30 rounded-lg h-9 text-sm focus:border-white/20 focus:ring-0 transition-colors"
-          />
+      <div className="flex items-center gap-3">
+        <Button onClick={onMenuClick} variant="ghost" size="sm" className="md:hidden text-white/70 p-2 -ml-2 hover:bg-white/10 rounded-lg">
+          <Menu className="h-5 w-5" />
+        </Button>
+        <div className="flex-1 max-w-md hidden md:block">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/30" />
+            <Input
+              placeholder="Search users, orders, games..."
+              className="pl-10 bg-white/[0.04] border-white/[0.06] text-white placeholder:text-white/30 rounded-lg h-9 text-sm focus:border-white/20 focus:ring-0 transition-colors"
+            />
+          </div>
         </div>
       </div>
 

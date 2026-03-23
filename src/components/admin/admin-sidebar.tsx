@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ const allSidebarItems: SidebarItem[] = [
   { icon: Settings, label: 'Settings', href: '/admin/settings', permissionKey: 'settings' },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
   const [role, setRole] = useState<string>('admin');
   const [permissions, setPermissions] = useState<string[]>([]);
@@ -88,9 +88,22 @@ export function AdminSidebar() {
   });
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-20 bg-[#0f1117] border-r border-white/[0.06] flex flex-col items-center py-6 z-50 md:flex hidden">
-      {/* Navigation Icons */}
-      <nav className="flex-1 flex flex-col gap-1.5 w-full items-center pt-4 px-2 overflow-y-auto scrollbar-hide">
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] md:hidden transition-opacity" 
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar Content */}
+      <aside className={cn(
+        "fixed left-0 top-0 h-[100dvh] w-20 bg-[#0f1117] border-r border-white/[0.06] flex flex-col items-center py-6 z-[70] transition-transform duration-300 md:translate-x-0",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        {/* Navigation Icons */}
+        <nav className="flex-1 flex flex-col gap-1.5 w-full items-center pt-4 px-2 overflow-y-auto scrollbar-hide">
         {visibleItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -99,6 +112,7 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={cn(
                 "w-11 h-11 rounded-lg flex items-center justify-center transition-all duration-200 relative group flex-shrink-0",
                 isActive
@@ -131,6 +145,7 @@ export function AdminSidebar() {
           {role === 'admin' ? 'A' : 'M'}
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

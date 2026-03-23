@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,7 @@ export default function AdminLayout({
   const { user, loading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -61,9 +62,9 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#0a0c10]">
-      <AdminSidebar />
+      <AdminSidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       <div className="md:ml-20 ml-0">
-        <AdminHeader />
+        <AdminHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
         <main className="pt-20 px-4 md:px-8 pb-8">
           {children}
         </main>

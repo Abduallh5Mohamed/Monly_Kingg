@@ -19,7 +19,8 @@ import {
   Users,
   TrendingUp,
   Shield,
-  X
+  X,
+  ArrowLeft
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -327,7 +328,7 @@ export default function ChatsPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className={`flex-col md:flex-row md:items-center justify-between gap-4 ${selectedChat ? 'hidden lg:flex' : 'flex'}`}>
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
             <Shield className="inline-block mr-2 h-8 w-8" />
@@ -342,7 +343,7 @@ export default function ChatsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ${selectedChat ? 'hidden lg:grid' : 'grid'}`}>
         <Card className="bg-[#131620] border-white/[0.06]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -401,9 +402,9 @@ export default function ChatsPage() {
       </div>
 
       {/* Chat Interface */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[600px]">
+      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 ${selectedChat ? 'h-[80dvh] lg:h-[70dvh]' : 'h-[75dvh] min-h-[500px]'}`}>
         {/* Chat List - Left Side */}
-        <Card className="lg:col-span-4 bg-[#131620] border-white/[0.06] flex flex-col">
+        <Card className={`lg:col-span-4 bg-[#131620] border-white/[0.06] flex-col ${selectedChat ? 'hidden lg:flex' : 'flex'}`}>
           <CardHeader className="border-b border-white/[0.06] pb-4">
             <form onSubmit={handleSearch} className="space-y-3">
               <div className="relative">
@@ -483,13 +484,21 @@ export default function ChatsPage() {
         </Card>
 
         {/* Chat Messages - Right Side */}
-        <Card className="lg:col-span-8 bg-[#131620] border-white/[0.06] flex flex-col">
+        <Card className={`lg:col-span-8 bg-[#131620] border-white/[0.06] flex-col ${!selectedChat ? 'hidden lg:flex' : 'flex'}`}>
           {selectedChat && chatDetails ? (
             <>
               {/* Chat Header */}
               <CardHeader className="border-b border-white/[0.06]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="lg:hidden h-8 w-8 text-white/50 hover:text-white"
+                      onClick={() => setSelectedChat(null)}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
                         {chatDetails.chat.participants.length === 2 ? (
@@ -551,8 +560,8 @@ export default function ChatsPage() {
                       // Handle empty participants array
                       const participants = chatDetails.chat.participants || [];
                       const firstParticipant = participants[0];
-                      const isFromSender = firstParticipant ? message.sender._id === firstParticipant._id : false;
-                      const sender = participants.find(p => p && p._id === message.sender._id);
+                      const isFromSender = firstParticipant && message.sender ? message.sender._id === firstParticipant._id : false;
+                      const sender = participants.find(p => p && message.sender && p._id === message.sender._id);
 
                       return (
                         <div key={message._id} className={`flex ${!isFromSender ? 'justify-end' : 'justify-start'}`}>
