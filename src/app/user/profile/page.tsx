@@ -318,7 +318,7 @@ export default function ProfilePage() {
 
     return (
         <UserDashboardLayout>
-            <div className="min-h-screen bg-[#0d1117] p-4 md:p-6">
+            <div className="min-h-screen bg-[#0d1117] p-4 md:p-6 pb-4">
                 <div className="max-w-5xl mx-auto space-y-5">
 
                     {/* ── Top Hero Card ─────────────────────────────── */}

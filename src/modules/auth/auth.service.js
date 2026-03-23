@@ -22,13 +22,18 @@ export function hashRefreshToken(raw) {
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12", 10);
 const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || "15m";
 const REFRESH_DAYS = parseInt(process.env.REFRESH_TOKEN_EXPIRES_DAYS || "30", 10);
-// SECURITY FIX [VULN-003]: Require a dedicated OTP secret — never fall back to JWT_SECRET.
-const OTP_HMAC_SECRET = process.env.OTP_SECRET;
+// SECURITY FIX [VULN-003]: Require a dedicated OTP secret.
+// In development only, allow a temporary in-memory key so local startup does not fail hard.
+const isProduction = process.env.NODE_ENV === "production";
+const OTP_HMAC_SECRET = process.env.OTP_SECRET || (!isProduction ? crypto.randomBytes(32).toString("hex") : null);
 if (!OTP_HMAC_SECRET) {
   throw new Error(
-    "CRITICAL: OTP_SECRET environment variable is required. " +
+    "CRITICAL: OTP_SECRET environment variable is required in production. " +
     "Generate with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   );
+}
+if (!process.env.OTP_SECRET && !isProduction) {
+  logger.warn("DEV ONLY: Using temporary OTP_SECRET. OTP codes become invalid after restart. Set OTP_SECRET in .env");
 }
 
 // SECURITY FIX [M-03]: Mask identifiers before logging sensitive user data.

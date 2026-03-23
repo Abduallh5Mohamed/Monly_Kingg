@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Store, MessageCircle, CreditCard, User, ArrowRightLeft, Bell } from 'lucide-react';
+import { Home, MessageCircle, CreditCard, User, ArrowRightLeft, Bell } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useSocket } from '@/lib/socket-context';
 import { useLanguage } from '@/lib/language-context';
@@ -91,7 +91,6 @@ export function UserSidebar() {
         if (isOnNotifPage) setNotifUnread(false);
     }, [isOnNotifPage]);
 
-    const isSeller = !!(user?.isSeller);
 
     const leftItems: NavItem[] = [
         {
@@ -99,21 +98,11 @@ export function UserSidebar() {
             dot: chatUnread && !isOnChatPage,
             activeColor: 'from-pink-500 to-rose-500', glowColor: 'rgba(236,72,153,0.35)'
         },
-        ...(isSeller
-            ? [
-                { icon: Store, label: t('store'), path: '/user/browse', activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)' },
-                {
-                    icon: Bell, label: t('alerts'), path: '/user/notifications',
-                    dot: notifUnread && !isOnNotifPage,
-                    activeColor: 'from-cyan-400 to-blue-500', glowColor: 'rgba(34,211,238,0.35)'
-                },
-            ]
-            : [{
-                icon: Bell, label: t('alerts'), path: '/user/notifications',
-                dot: notifUnread && !isOnNotifPage,
-                activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)'
-            }]
-        ),
+        {
+            icon: Bell, label: t('alerts'), path: '/user/notifications',
+            dot: notifUnread && !isOnNotifPage,
+            activeColor: 'from-amber-500 to-orange-500', glowColor: 'rgba(245,158,11,0.35)'
+        },
     ];
 
     const rightItems: NavItem[] = [
@@ -169,7 +158,10 @@ export function UserSidebar() {
     const isHomeActive = isPathActive(homeItem.path, true);
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-3 px-5">
+        <div
+            className="fixed bottom-0 left-0 right-0 z-[120] flex justify-center pointer-events-none px-4"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 12px)' }}
+        >
             <div className={`relative w-full max-w-[400px] pointer-events-auto transition-all duration-700 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
 
                 {/* ── Floating Home Button (completely outside the bar) ── */}
@@ -220,7 +212,7 @@ export function UserSidebar() {
                 </div>
 
                 {/* ── Main Bar ── */}
-                <div className="relative bg-[#0f1322]/95 backdrop-blur-2xl rounded-full shadow-[0_4px_30px_rgba(0,0,0,0.5)] border border-white/[0.06]">
+                <div className="relative bg-[#0f1322]/98 backdrop-blur-2xl rounded-full shadow-[0_10px_35px_rgba(0,0,0,0.65)] border border-white/[0.12]">
 
                     {/* Nav Items */}
                     <div className="relative flex items-center justify-between px-2 py-1.5">

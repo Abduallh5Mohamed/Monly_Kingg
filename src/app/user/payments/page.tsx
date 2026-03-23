@@ -50,24 +50,24 @@ const statusConfig: Record<string, { icon: any; label: string; color: string }> 
 };
 
 const countryCodes = [
-  { code: '+20', country: 'Egypt', flag: '🇪🇬' },
-  { code: '+966', country: 'Saudi Arabia', flag: '🇸🇦' },
-  { code: '+971', country: 'UAE', flag: '🇦🇪' },
-  { code: '+965', country: 'Kuwait', flag: '🇰🇼' },
-  { code: '+968', country: 'Oman', flag: '🇴🇲' },
-  { code: '+974', country: 'Qatar', flag: '🇶🇦' },
-  { code: '+973', country: 'Bahrain', flag: '🇧🇭' },
-  { code: '+962', country: 'Jordan', flag: '🇯🇴' },
-  { code: '+961', country: 'Lebanon', flag: '🇱🇧' },
-  { code: '+963', country: 'Syria', flag: '🇸🇾' },
-  { code: '+964', country: 'Iraq', flag: '🇮🇶' },
-  { code: '+967', country: 'Yemen', flag: '🇾🇪' },
-  { code: '+970', country: 'Palestine', flag: '🇵🇸' },
-  { code: '+212', country: 'Morocco', flag: '🇲🇦' },
-  { code: '+213', country: 'Algeria', flag: '🇩🇿' },
-  { code: '+216', country: 'Tunisia', flag: '🇹🇳' },
-  { code: '+218', country: 'Libya', flag: '🇱🇾' },
-  { code: '+249', country: 'Sudan', flag: '🇸🇩' },
+  { code: '+20', country: 'Egypt', flag: 'EG' },
+  { code: '+966', country: 'Saudi Arabia', flag: 'SA' },
+  { code: '+971', country: 'UAE', flag: 'AE' },
+  { code: '+965', country: 'Kuwait', flag: 'KW' },
+  { code: '+968', country: 'Oman', flag: 'OM' },
+  { code: '+974', country: 'Qatar', flag: 'QA' },
+  { code: '+973', country: 'Bahrain', flag: 'BH' },
+  { code: '+962', country: 'Jordan', flag: 'JO' },
+  { code: '+961', country: 'Lebanon', flag: 'LB' },
+  { code: '+963', country: 'Syria', flag: 'SY' },
+  { code: '+964', country: 'Iraq', flag: 'IQ' },
+  { code: '+967', country: 'Yemen', flag: 'YE' },
+  { code: '+970', country: 'Palestine', flag: 'PS' },
+  { code: '+212', country: 'Morocco', flag: 'MA' },
+  { code: '+213', country: 'Algeria', flag: 'DZ' },
+  { code: '+216', country: 'Tunisia', flag: 'TN' },
+  { code: '+218', country: 'Libya', flag: 'LY' },
+  { code: '+249', country: 'Sudan', flag: 'SD' },
 ];
 
 export default function PaymentsPage() {
@@ -134,9 +134,8 @@ export default function PaymentsPage() {
     // When admin approves/rejects my deposit
     unsubs.push(on('deposit_status_updated', (deposit: Deposit) => {
       setDeposits(prev => prev.map(d => d._id === deposit._id ? { ...d, ...deposit } : d));
-      const emoji = deposit.status === 'approved' ? '✅' : '❌';
       toast({
-        title: `${emoji} Deposit ${deposit.status === 'approved' ? 'Approved' : 'Rejected'}`,
+        title: `Deposit ${deposit.status === 'approved' ? 'Approved' : 'Rejected'}`,
         description: deposit.status === 'approved'
           ? `Your deposit of ${deposit.amount} EGP has been approved!`
           : `Your deposit of ${deposit.amount} EGP was rejected.`,
@@ -147,9 +146,8 @@ export default function PaymentsPage() {
     // When admin approves/rejects my withdrawal
     unsubs.push(on('withdrawal_status_updated', (withdrawal: Withdrawal) => {
       setWithdrawals(prev => prev.map(w => w._id === withdrawal._id ? { ...w, ...withdrawal } : w));
-      const emoji = withdrawal.status === 'approved' ? '✅' : '❌';
       toast({
-        title: `${emoji} Withdrawal ${withdrawal.status === 'approved' ? 'Approved' : 'Rejected'}`,
+        title: `Withdrawal ${withdrawal.status === 'approved' ? 'Approved' : 'Rejected'}`,
         description: withdrawal.status === 'approved'
           ? `Your withdrawal of ${withdrawal.amount} EGP has been approved!`
           : `Your withdrawal was rejected${withdrawal.rejectionReason ? ': ' + withdrawal.rejectionReason : ''}.`,
@@ -355,17 +353,17 @@ export default function PaymentsPage() {
 
   return (
     <UserDashboardLayout>
-      <div className="min-h-screen bg-gradient-to-br from-[#0a0e14] via-[#1a1f2e] to-[#0f1419] p-6">
+      <div className="bg-gradient-to-br from-[#0a0e14] via-[#1a1f2e] to-[#0f1419] p-4 sm:p-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#f5f5dc] mb-2">
-            💰 {tr('مركز المدفوعات', 'Payments Center')}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#f5f5dc] mb-2">
+            {tr('مركز المدفوعات', 'Payments Center')}
           </h1>
           <p className="text-gray-400">{tr('إدارة الإيداعات وعمليات السحب', 'Manage your deposits and withdrawals')}</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto pb-1 scrollbar-hide">
           <button
             onClick={() => setActiveTab('deposit')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${activeTab === 'deposit'
@@ -404,11 +402,11 @@ export default function PaymentsPage() {
 
             {/* Deposits List */}
             {depositsLoading ? (
-              <div className="flex justify-center items-center py-20">
+              <div className="flex justify-center items-center py-12 sm:py-20">
                 <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
               </div>
             ) : deposits.length === 0 ? (
-              <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-12 text-center">
+              <div className="bg-gradient-to-br from-[#1a1d2e]/90 to-[#252841]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-8 sm:p-12 text-center">
                 <ArrowDownCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-[#f5f5dc] mb-2">{tr('لا توجد إيداعات بعد', 'No deposits yet')}</h3>
                 <p className="text-gray-400 mb-6">{tr('لم تقم بإرسال أي طلب إيداع حتى الآن.', 'You have not submitted any deposit request yet.')}</p>
@@ -447,7 +445,7 @@ export default function PaymentsPage() {
                               {deposit.gameTitle || tr('طلب إيداع', 'Deposit Request')}
                             </h3>
                             <p className="text-sm text-gray-400">
-                              {deposit.paymentMethod === 'vodafone_cash' ? '💳 Vodafone Cash' : '⚡ InstaPay'}
+                              {deposit.paymentMethod === 'vodafone_cash' ? 'Vodafone Cash' : 'InstaPay'}
                             </p>
                           </div>
                         </div>
@@ -585,7 +583,7 @@ export default function PaymentsPage() {
                         min="500"
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                       />
-                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('⚠️ الحد الأدنى: 500 ج.م', '⚠️ Minimum: 500 EGP')}</p>
+                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('الحد الأدنى: 500 ج.م', 'Minimum: 500 EGP')}</p>
                     </div>
 
                     {/* Method */}
@@ -600,8 +598,8 @@ export default function PaymentsPage() {
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all text-base"
                       >
                         <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- اختر الطريقة --', '-- Select method --')}</option>
-                        <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">📱 Vodafone Cash</option>
-                        <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ InstaPay</option>
+                        <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">Vodafone Cash</option>
+                        <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">InstaPay</option>
                       </select>
                     </div>
 
@@ -638,7 +636,7 @@ export default function PaymentsPage() {
                         maxLength={11}
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                       />
-                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('📱 يجب أن يكون 11 رقمًا بالضبط', '📱 Must be exactly 11 digits')}</p>
+                      <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('يجب أن يكون 11 رقمًا بالضبط', 'Must be exactly 11 digits')}</p>
                     </div>
                   </div>
 
@@ -678,7 +676,7 @@ export default function PaymentsPage() {
 
             {/* Withdrawals List */}
             {withdrawalsLoading ? (
-              <div className="flex justify-center items-center py-20">
+              <div className="flex justify-center items-center py-12 sm:py-20">
                 <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
               </div>
             ) : withdrawals.length === 0 ? (
@@ -845,8 +843,8 @@ export default function PaymentsPage() {
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition-all text-base"
                     >
                       <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- اختر طريقة الدفع --', '-- Select payment method --')}</option>
-                      <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">💳 Vodafone Cash</option>
-                      <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ InstaPay</option>
+                      <option value="vodafone_cash" className="bg-[#1a1d2e] text-[#f5f5dc]">Vodafone Cash</option>
+                      <option value="instapay" className="bg-[#1a1d2e] text-[#f5f5dc]">InstaPay</option>
                     </select>
 
                     {/* Send-to number info */}
@@ -886,7 +884,7 @@ export default function PaymentsPage() {
                       min="100"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
-                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('⚠️ الحد الأدنى: 100 ج.م', '⚠️ Minimum: 100 EGP')}</p>
+                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('الحد الأدنى: 100 ج.م', 'Minimum: 100 EGP')}</p>
                   </div>
 
                   {/* Game Title (Optional) */}
@@ -901,11 +899,11 @@ export default function PaymentsPage() {
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all text-base"
                     >
                       <option value="" className="bg-[#1a1d2e] text-gray-400">{tr('-- غير محدد --', '-- Unspecified --')}</option>
-                      <option value="FIFA" className="bg-[#1a1d2e] text-[#f5f5dc]">⚽ FIFA</option>
-                      <option value="PUBG" className="bg-[#1a1d2e] text-[#f5f5dc]">🎮 PUBG</option>
-                      <option value="Arc Raiders" className="bg-[#1a1d2e] text-[#f5f5dc]">⚡ Arc Raiders</option>
-                      <option value="Valorant" className="bg-[#1a1d2e] text-[#f5f5dc]">🎯 Valorant</option>
-                      <option value="League of Legends" className="bg-[#1a1d2e] text-[#f5f5dc]">🏆 League of Legends</option>
+                      <option value="FIFA" className="bg-[#1a1d2e] text-[#f5f5dc]">FIFA</option>
+                      <option value="PUBG" className="bg-[#1a1d2e] text-[#f5f5dc]">PUBG</option>
+                      <option value="Arc Raiders" className="bg-[#1a1d2e] text-[#f5f5dc]">Arc Raiders</option>
+                      <option value="Valorant" className="bg-[#1a1d2e] text-[#f5f5dc]">Valorant</option>
+                      <option value="League of Legends" className="bg-[#1a1d2e] text-[#f5f5dc]">League of Legends</option>
                     </select>
                   </div>
 
@@ -937,7 +935,7 @@ export default function PaymentsPage() {
                       placeholder={tr('الهاتف أو البريد المستخدم في التحويل', 'Phone or email used for transfer')}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-[#f5f5dc] focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition-all placeholder-gray-500 text-base"
                     />
-                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('📱 الهاتف أو البريد الذي استخدمته في التحويل', '📱 Phone or email used in your transfer')}</p>
+                    <p className="text-xs text-gray-400 mt-1.5 ml-1">{tr('الهاتف أو البريد الذي استخدمته في التحويل', 'Phone or email used in your transfer')}</p>
                   </div>
 
                   {/* Deposit Date */}
@@ -997,7 +995,7 @@ export default function PaymentsPage() {
                           <X className="w-5 h-5" />
                         </button>
                         <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-sm rounded-lg p-2 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <p className="text-cyan-400 text-sm font-medium">{tr('✓ تم رفع الصورة بنجاح', '✓ Image uploaded successfully')}</p>
+                          <p className="text-cyan-400 text-sm font-medium">{tr('تم رفع الصورة بنجاح', 'Image uploaded successfully')}</p>
                         </div>
                       </div>
                     )}

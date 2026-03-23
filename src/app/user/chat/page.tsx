@@ -878,9 +878,9 @@ export default function SupportPage() {
   const emojiPalette = ['😀', '😁', '😂', '🤣', '😊', '😍', '😘', '😎', '🙌', '🔥', '❤️', '👍'];
 
   return (
-    <UserDashboardLayout>
+    <UserDashboardLayout hideBottomNav={!!selectedChat}>
       {/* ─── Main Chat Layout ─── */}
-      <div className="flex h-[calc(100dvh-12rem)] lg:h-[calc(100dvh-13rem)] gap-3 overflow-hidden">
+      <div className={`flex ${selectedChat ? 'flex-1 h-full w-full' : 'h-[calc(100dvh-14rem)]'} lg:h-[calc(100dvh-10rem)] gap-3 overflow-hidden`}>
 
         {/* ════ SIDEBAR ════ */}
         <aside className={`${selectedChat ? 'hidden lg:flex' : 'flex'} lg:flex w-full lg:w-[300px] xl:w-[320px] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-[#06080f] shadow-xl`}>
@@ -1148,7 +1148,7 @@ export default function SupportPage() {
               )}
 
               {/* Input Bar */}
-              <div className="shrink-0 border-t border-white/[0.05] bg-[#06080f] px-4 py-3">
+              <div className="shrink-0 border-t border-white/[0.05] bg-[#06080f] px-3 sm:px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 <div className="relative flex items-center gap-2 rounded-xl border border-white/[0.07] bg-[#0b0e18] px-3 py-2 focus-within:border-blue-800/50 transition-colors">
                   {/* Attachment buttons */}
                   <div className="flex items-center gap-0.5">

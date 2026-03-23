@@ -13,9 +13,10 @@ import { useLanguage } from '@/lib/language-context';
 
 interface UserDashboardLayoutProps {
   children: React.ReactNode;
+  hideBottomNav?: boolean;
 }
 
-export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
+export function UserDashboardLayout({ children, hideBottomNav }: UserDashboardLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
@@ -137,10 +138,14 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
       </div>
 
       {/* Bottom Navigation Bar */}
-      <UserSidebar />
+      {!hideBottomNav && (
+        <div className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)]">
+          <UserSidebar />
+        </div>
+      )}
 
       {/* Main Content */}
-      <div className="relative min-h-screen">
+      <div className="relative min-h-[100dvh] flex flex-col">
         {/* ═══════ ULTRA MODERN HEADER ═══════ */}
         <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled
           ? 'bg-[#060811]/90 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
@@ -160,8 +165,8 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
                 <Logo />
               </div>
 
-              {/* Search Bar - Modern floating */}
-              <div className={`flex-1 max-w-lg transition-all duration-500 ${searchFocused ? 'max-w-2xl' : ''}`}>
+              {/* Search Bar - Modern floating (hidden on mobile) */}
+              <div className={`hidden md:block flex-1 max-w-lg transition-all duration-500 ${searchFocused ? 'max-w-2xl' : ''}`}>
                 <div className="relative group">
                   <div className={`absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-300 ${searchFocused ? 'opacity-100' : 'group-hover:opacity-100'}`}>
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20" />
@@ -366,7 +371,7 @@ export function UserDashboardLayout({ children }: UserDashboardLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="relative p-4 sm:p-6 lg:p-8 pb-28">
+        <main className={hideBottomNav ? 'relative flex-1 flex flex-col overflow-hidden pb-0' : 'relative flex-1 p-4 sm:p-6 lg:p-8 pb-28'}>
           {children}
         </main>
       </div>

@@ -68,13 +68,13 @@ export default function TransactionsPage() {
 
   return (
     <UserDashboardLayout>
-      <div className="min-h-screen bg-[#060811]">
+      <div className="bg-[#060811]">
         {/* Ambient */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-[40%] -left-[20%] w-[60%] h-[60%] rounded-full bg-cyan-600/[0.03] blur-[120px]" />
         </div>
 
-        <div className="relative max-w-3xl mx-auto px-4 py-8">
+        <div className="relative max-w-3xl mx-auto px-4 py-5 sm:py-8">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
             <button onClick={() => router.back()} className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/70 hover:text-white transition-colors">
@@ -115,11 +115,11 @@ export default function TransactionsPage() {
 
           {/* List */}
           {loading ? (
-            <div className="flex justify-center py-20">
+            <div className="flex justify-center py-12 sm:py-20">
               <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin" />
             </div>
           ) : txs.length === 0 ? (
-            <div className="text-center py-20">
+            <div className="text-center py-12 sm:py-20">
               <Package className="w-12 h-12 text-white/20 mx-auto mb-3" />
               <p className="text-white/40">{tr('لا توجد معاملات بعد', 'No transactions yet')}</p>
             </div>

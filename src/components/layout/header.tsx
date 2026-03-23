@@ -140,13 +140,6 @@ export function Header() {
                   Sign Up
                 </Link>
               </Button>
-              {/* Mobile hamburger for non-auth */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-all"
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
             </div>
           )}
         </div>

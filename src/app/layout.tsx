@@ -4,6 +4,7 @@ import Snowfall from '@/components/layout/snowfall';
 import { Providers } from '@/lib/providers';
 import PendingTransactionsBar from '@/components/layout/PendingTransactionsBar';
 import { DataPrefetcher } from '@/components/layout/DataPrefetcher';
+import MainContent from '@/components/layout/main-content';
 
 export const metadata: Metadata = {
   title: 'Monly King',
@@ -30,9 +31,7 @@ export default function RootLayout({
           <DataPrefetcher />
           <div className="relative flex flex-col min-h-screen">
             <Snowfall />
-            <main className="flex-grow z-20 pb-16">
-              {children}
-            </main>
+            <MainContent>{children}</MainContent>
             <PendingTransactionsBar />
           </div>
         </Providers>

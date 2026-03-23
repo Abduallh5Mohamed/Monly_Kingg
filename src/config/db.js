@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 const connectDB = async () => {
     try {
         console.log('🔄 Attempting to connect to MongoDB...');
+        const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+        if (!mongoUri) {
+            throw new Error('Missing MongoDB URI. Set MONGO_URI or MONGODB_URI in environment variables.');
+        }
 
         // Production-ready connection options with pooling
         const options = {
@@ -30,7 +35,25 @@ const connectDB = async () => {
             readPreference: process.env.NODE_ENV === 'production' ? 'secondaryPreferred' : 'primary',
         };
 
-        const conn = await mongoose.connect(process.env.MONGO_URI, options);
+        let conn;
+
+        try {
+            conn = await mongoose.connect(mongoUri, options);
+        } catch (error) {
+            const canRetryWithoutAuth =
+                process.env.NODE_ENV !== 'production' &&
+                /Authentication failed/i.test(error?.message || '') &&
+                /mongodb:\/\/[^@]+@localhost/i.test(mongoUri);
+
+            if (!canRetryWithoutAuth) {
+                throw error;
+            }
+
+            const fallbackUri = mongoUri.replace(/mongodb:\/\/[^@]+@/, 'mongodb://');
+            console.warn('⚠️ MongoDB auth failed in development, retrying without credentials for localhost...');
+            conn = await mongoose.connect(fallbackUri, options);
+        }
+
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
         console.log(`📊 Connection Pool Size: ${options.maxPoolSize}`);
 

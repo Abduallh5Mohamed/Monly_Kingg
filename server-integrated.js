@@ -1,5 +1,7 @@
+// MUST be first so environment variables are available to subsequent imports
+import "dotenv/config";
+
 import express from "express";
-import dotenv from "dotenv";
 import next from "next";
 import { createServer } from "http";
 import path from "path";
@@ -28,8 +30,6 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-dotenv.config();
 
 // Initialize services
 async function initializeServices() {

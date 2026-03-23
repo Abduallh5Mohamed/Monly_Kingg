@@ -55,7 +55,16 @@ const uploadsDir = path.join(__dirname, "../uploads");
 dotenv.config();
 
 // Connect to database and create indexes after models are registered
-connectDB().then(() => {
+connectDB().then((isConnected) => {
+  if (!isConnected) {
+    logger.error('Database startup tasks skipped because MongoDB connection is unavailable.');
+    if (process.env.NODE_ENV === 'production') {
+      logger.error('Exiting process in production because database connection is required.');
+      process.exit(1);
+    }
+    return;
+  }
+
   createIndexes();
   startAutoConfirmJob();
   startPayoutReleaseJob();

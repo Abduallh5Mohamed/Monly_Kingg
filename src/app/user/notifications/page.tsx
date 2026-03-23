@@ -227,7 +227,7 @@ export default function NotificationsPage() {
 
     return (
         <UserDashboardLayout>
-            <div className="max-w-2xl mx-auto px-4 py-6 pb-28">
+            <div className="max-w-2xl mx-auto px-4 py-4 sm:py-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
@@ -284,12 +284,12 @@ export default function NotificationsPage() {
 
                 {/* Notifications List */}
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20">
+                    <div className="flex flex-col items-center justify-center py-12 sm:py-20">
                         <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mb-3" />
                         <p className="text-xs text-white/20">{tr('جاري تحميل الإشعارات...', 'Loading notifications...')}</p>
                     </div>
                 ) : filteredNotifications.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20">
+                    <div className="flex flex-col items-center justify-center py-12 sm:py-20">
                         <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
                             <Bell className="w-7 h-7 text-white/10" />
                         </div>
