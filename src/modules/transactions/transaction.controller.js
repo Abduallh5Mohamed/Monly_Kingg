@@ -94,7 +94,7 @@ function sendMonlyKingInvoiceEmail({ to, subject, payload }) {
 }
 
 // ─── POST /api/v1/transactions ───────────────────────────────────────────────
-// Buyer starts the purchase — deducts balance to hold
+// Buyer starts the purchase request (no debit yet). Seller must approve first.
 export const createTransaction = async (req, res) => {
   try {
     const buyerId = req.user._id.toString();
@@ -133,8 +133,39 @@ export const createTransaction = async (req, res) => {
     if (!listing) {
       return res.status(404).json({ success: false, message: "Listing not found" });
     }
+    if (listing.status !== "available") {
+      if (listing.status === "in_progress") {
+        const hasActiveLockedTx = await Transaction.exists({
+          listing: listingId,
+          status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] },
+        });
+
+        if (!hasActiveLockedTx) {
+          await Listing.updateOne({ _id: listingId, status: "in_progress" }, { $set: { status: "available" } });
+          listing.status = "available";
+        }
+      }
+
+      if (listing.status !== "available") {
+        return res.status(400).json({ success: false, message: "Listing is no longer available" });
+      }
+    }
     if (listing.seller._id.toString() === buyerId) {
       return res.status(400).json({ success: false, message: "You cannot buy your own listing" });
+    }
+
+    const existingPendingRequest = await Transaction.findOne({
+      listing: listingId,
+      buyer: buyerId,
+      status: "pending_seller_approval",
+    }).select("_id").lean();
+
+    if (existingPendingRequest) {
+      return res.status(409).json({
+        success: false,
+        message: "You already have a pending request for this listing",
+        data: { transactionId: existingPendingRequest._id },
+      });
     }
 
     // ── Determine the final price (check discounts & campaigns in parallel) ──
@@ -193,80 +224,37 @@ export const createTransaction = async (req, res) => {
       };
     }
 
-    let updatedBuyer;
-    let transaction;
-    const session = await mongoose.startSession();
-
-    try {
-      // SECURITY FIX [VULN-01]: Wrap debit + listing lock + transaction create in one DB transaction.
-      await session.withTransaction(async () => {
-        updatedBuyer = await User.findOneAndUpdate(
-          {
-            _id: buyerId,
-            "wallet.balance": { $gte: finalPrice },
-          },
-          {
-            $inc: {
-              "wallet.balance": -finalPrice,
-              "wallet.hold": finalPrice,
-            },
-          },
-          { new: true, session }
-        );
-
-        if (!updatedBuyer) {
-          const insufficientBalanceError = new Error("Insufficient balance");
-          insufficientBalanceError.code = "INSUFFICIENT_BALANCE";
-          throw insufficientBalanceError;
-        }
-
-        const lockedListing = await Listing.findOneAndUpdate(
-          { _id: listingId, status: "available" },
-          { $set: { status: "in_progress" } },
-          { new: true, session }
-        );
-
-        if (!lockedListing) {
-          const listingUnavailableError = new Error("Listing is no longer available");
-          listingUnavailableError.code = "LISTING_UNAVAILABLE";
-          throw listingUnavailableError;
-        }
-
-        const createdTransactions = await Transaction.create([
-          {
-            buyer: buyerId,
-            seller: listing.seller._id,
-            listing: listingId,
-            amount: finalPrice,
-            originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
-            discountPercent: discountApplied ? discountApplied.percent : undefined,
-            status: "waiting_seller",
-            idempotencyKey: idempotencyKey || undefined,
-            timeline: [{ event: "purchase_initiated", note: `Buyer ${updatedBuyer.username} initiated purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ''}` }],
-          }
-        ], { session });
-
-        transaction = createdTransactions[0];
+    const buyer = await User.findById(buyerId).select("username email wallet.balance").lean();
+    if (!buyer) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    if ((buyer.wallet?.balance || 0) < finalPrice) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient balance",
+        required: finalPrice,
+        available: buyer.wallet?.balance || 0,
       });
-    } catch (txnErr) {
-      if (txnErr?.code === "INSUFFICIENT_BALANCE") {
-        const buyer = await User.findById(buyerId).select("wallet").lean();
-        if (!buyer) {
-          return res.status(404).json({ success: false, message: "User not found" });
-        }
-        return res.status(400).json({
-          success: false,
-          message: "Insufficient balance",
-          required: finalPrice,
-          available: buyer.wallet?.balance || 0,
-        });
-      }
+    }
 
-      if (txnErr?.code === "LISTING_UNAVAILABLE") {
-        return res.status(400).json({ success: false, message: "Listing is no longer available" });
-      }
-
-      if (txnErr?.code === 11000 && idempotencyKey) {
+    let transaction;
+    try {
+      transaction = await Transaction.create({
+        buyer: buyerId,
+        seller: listing.seller._id,
+        listing: listingId,
+        amount: finalPrice,
+        originalAmount: discountApplied ? discountApplied.originalPrice : undefined,
+        discountPercent: discountApplied ? discountApplied.percent : undefined,
+        status: "pending_seller_approval",
+        idempotencyKey: idempotencyKey || undefined,
+        timeline: [{
+          event: "purchase_requested",
+          note: `Buyer ${buyer.username || "unknown"} requested purchase${discountApplied ? ` (${discountApplied.percent}% discount applied)` : ""}`,
+        }],
+      });
+    } catch (createErr) {
+      if (createErr?.code === 11000 && idempotencyKey) {
         const existing = await Transaction.findOne({ idempotencyKey }).lean();
         if (existing) {
           return res.status(200).json({
@@ -276,11 +264,7 @@ export const createTransaction = async (req, res) => {
           });
         }
       }
-
-      throw txnErr;
-    } finally {
-      // SECURITY FIX [VULN-01]: Always release DB session resources.
-      await session.endSession();
+      throw createErr;
     }
 
     // ── Step 4: Queue seller notification (durable) ─────────────────────────
@@ -290,7 +274,7 @@ export const createTransaction = async (req, res) => {
       userId: sellerId,
       type: "purchase_initiated",
       title: "New Purchase!",
-      message: `${updatedBuyer.username} purchased "${listing.title}" for ${finalPrice} EGP${discountApplied ? ` (${discountApplied.percent}% off)` : ''}. Please submit the account credentials.`,
+      message: `${buyer.username} requested to buy "${listing.title}" for ${finalPrice} EGP${discountApplied ? ` (${discountApplied.percent}% off)` : ""}. Approve or reject this request first.`,
       relatedId: transaction._id,
       metadata: {
         transactionId: transaction._id.toString(),
@@ -305,49 +289,49 @@ export const createTransaction = async (req, res) => {
         listingId: listing._id,
         listingTitle: listing.title,
         amount: finalPrice,
-        buyerUsername: updatedBuyer.username,
+        buyerUsername: buyer.username,
       },
     });
 
     // Send branded invoice emails (no credentials included)
     await Promise.allSettled([
       sendMonlyKingInvoiceEmail({
-        to: updatedBuyer.email,
-        subject: "MonlyKing invoice - purchase created",
+        to: buyer.email,
+        subject: "MonlyKing invoice - purchase request sent",
         payload: {
-          heading: "Purchase Initiated",
-          intro: "Your purchase has been created and is now waiting for seller credentials.",
+          heading: "Purchase Request Sent",
+          intro: "Your request was sent to the seller. No funds were deducted yet.",
           transactionId: transaction._id.toString(),
-          status: "waiting_seller",
+          status: "pending_seller_approval",
           listingTitle: listing.title,
           amount: finalPrice,
           originalAmount: discountApplied ? discountApplied.originalPrice : finalPrice,
           discountPercent: discountApplied ? discountApplied.percent : null,
-          buyerName: updatedBuyer.username,
-          buyerEmail: updatedBuyer.email,
+          buyerName: buyer.username,
+          buyerEmail: buyer.email,
           sellerName: listing.seller.username,
           sellerEmail: listing.seller.email,
-          note: "This invoice contains transaction details only. Account credentials are never emailed.",
+          note: "Funds will be held only after the seller approves your request.",
           createdAt: transaction.createdAt,
         },
       }),
       sendMonlyKingInvoiceEmail({
         to: listing.seller.email,
-        subject: "MonlyKing invoice - new sale request",
+        subject: "MonlyKing invoice - new purchase approval request",
         payload: {
-          heading: "New Sale Request",
-          intro: "A buyer started a purchase for your listing. Submit credentials inside the platform.",
+          heading: "New Purchase Request",
+          intro: "A buyer requested your listing. Approve or reject it first.",
           transactionId: transaction._id.toString(),
-          status: "waiting_seller",
+          status: "pending_seller_approval",
           listingTitle: listing.title,
           amount: finalPrice,
           originalAmount: discountApplied ? discountApplied.originalPrice : finalPrice,
           discountPercent: discountApplied ? discountApplied.percent : null,
-          buyerName: updatedBuyer.username,
-          buyerEmail: updatedBuyer.email,
+          buyerName: buyer.username,
+          buyerEmail: buyer.email,
           sellerName: listing.seller.username,
           sellerEmail: listing.seller.email,
-          note: "Do not share credentials by email. Submit them only through the secured transaction page.",
+          note: "Approving this request will hold buyer funds in escrow, then you can submit credentials.",
           createdAt: transaction.createdAt,
         },
       }),
@@ -355,11 +339,292 @@ export const createTransaction = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Purchase initiated. Waiting for seller to submit credentials.",
+      message: "Purchase request sent. Waiting for seller approval.",
       data: { transactionId: transaction._id },
     });
   } catch (err) {
     logger.error(`[Transaction] createTransaction error: ${err.message}`);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// ─── POST /api/v1/transactions/:id/seller-decision ─────────────────────────
+// Seller approves or rejects request. Buyer is charged only after approve.
+export const sellerDecision = async (req, res) => {
+  try {
+    const sellerId = req.user._id.toString();
+    const { decision, reason } = req.body || {};
+
+    if (!["approve", "reject"].includes(String(decision))) {
+      return res.status(400).json({ success: false, message: "decision must be 'approve' or 'reject'" });
+    }
+
+    const transaction = await Transaction.findById(req.params.id)
+      .populate("buyer", "_id username email wallet.balance")
+      .populate("listing", "_id title status");
+
+    if (!transaction) {
+      return res.status(404).json({ success: false, message: "Transaction not found" });
+    }
+    if (transaction.seller.toString() !== sellerId) {
+      return res.status(403).json({ success: false, message: "Not your transaction" });
+    }
+    if (transaction.status !== "pending_seller_approval") {
+      return res.status(400).json({ success: false, message: "This transaction was already decided" });
+    }
+
+    const listingId = (transaction.listing._id || transaction.listing).toString();
+
+    // Legacy self-heal: older flow could leave listing stuck as in_progress even without an approved buyer.
+    if (transaction.listing?.status === "in_progress") {
+      const hasActiveLockedTx = await Transaction.exists({
+        listing: listingId,
+        status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] },
+      });
+
+      if (!hasActiveLockedTx) {
+        await Listing.updateOne({ _id: listingId, status: "in_progress" }, { $set: { status: "available" } });
+        transaction.listing.status = "available";
+      }
+    }
+
+    if (transaction.listing?.status !== "available") {
+      return res.status(400).json({ success: false, message: "Listing is no longer available for approval" });
+    }
+
+    if (decision === "reject") {
+      transaction.status = "rejected_by_seller";
+      transaction.timeline.push({
+        event: "seller_rejected",
+        note: typeof reason === "string" && reason.trim() ? `Seller rejected: ${reason.trim().slice(0, 300)}` : "Seller rejected purchase request",
+      });
+      await transaction.save();
+
+      const buyerUserId = transaction.buyer._id.toString();
+      await queueNotification({
+        userId: buyerUserId,
+        type: "purchase_rejected",
+        title: "Purchase Rejected",
+        message: `Seller rejected your request for "${transaction.listing.title}".${typeof reason === "string" && reason.trim() ? ` Reason: ${reason.trim().slice(0, 120)}` : ""}`,
+        relatedId: transaction._id,
+        metadata: {
+          transactionId: transaction._id.toString(),
+          listingTitle: transaction.listing.title,
+          socketTargetId: buyerUserId,
+        },
+        socketEvent: "notifyTransactionUpdate",
+        socketPayload: { transactionId: transaction._id, status: "rejected_by_seller" },
+      });
+
+      return res.json({ success: true, message: "Purchase request rejected." });
+    }
+
+    const amount = Number(transaction.amount || 0);
+    const buyerId = transaction.buyer._id.toString();
+
+    const chargeBuyer = async (session = null) => {
+      const query = {
+        _id: buyerId,
+        "wallet.balance": { $gte: amount },
+      };
+      const update = {
+        $inc: {
+          "wallet.balance": -amount,
+          "wallet.hold": amount,
+        },
+      };
+      const options = { new: true };
+      if (session) options.session = session;
+      return User.findOneAndUpdate(query, update, options);
+    };
+
+    const otherPendingRequests = await Transaction.find({
+      listing: listingId,
+      status: "pending_seller_approval",
+      _id: { $ne: transaction._id },
+    }).select("_id buyer").lean();
+    const otherPendingIds = otherPendingRequests.map(t => t._id);
+
+    let session = null;
+    try {
+      session = await mongoose.startSession();
+      await session.withTransaction(async () => {
+        const lockedListing = await Listing.findOneAndUpdate(
+          { _id: listingId, status: "available" },
+          { $set: { status: "in_progress" } },
+          { new: true, session }
+        );
+        if (!lockedListing) {
+          const listingUnavailableErr = new Error("Listing is no longer available");
+          listingUnavailableErr.code = "LISTING_UNAVAILABLE";
+          throw listingUnavailableErr;
+        }
+
+        const chargedBuyer = await chargeBuyer(session);
+        if (!chargedBuyer) {
+          const insufficientErr = new Error("Insufficient balance");
+          insufficientErr.code = "INSUFFICIENT_BALANCE";
+          throw insufficientErr;
+        }
+
+        const updatedTx = await Transaction.findOneAndUpdate(
+          { _id: transaction._id, status: "pending_seller_approval" },
+          {
+            $set: { status: "waiting_seller" },
+            $push: { timeline: { event: "seller_approved", note: "Seller approved. Buyer funds moved to escrow hold." } },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedTx) {
+          const statusErr = new Error("Transaction already decided");
+          statusErr.code = "STATUS_CHANGED";
+          throw statusErr;
+        }
+
+        if (otherPendingIds.length > 0) {
+          await Transaction.updateMany(
+            {
+              _id: { $in: otherPendingIds },
+              status: "pending_seller_approval",
+            },
+            {
+              $set: { status: "rejected_by_seller" },
+              $push: {
+                timeline: {
+                  event: "auto_rejected",
+                  note: "Seller approved another buyer for this listing",
+                },
+              },
+            },
+            { session }
+          );
+        }
+      });
+    } catch (txnErr) {
+      const txNotSupported = String(txnErr?.message || "").includes("Transaction numbers are only allowed on a replica set member or mongos");
+      if (txNotSupported) {
+        logger.warn("[Transaction] MongoDB transactions unavailable for sellerDecision. Falling back to compensation flow.");
+
+        const lockedListing = await Listing.findOneAndUpdate(
+          { _id: listingId, status: "available" },
+          { $set: { status: "in_progress" } },
+          { new: true }
+        );
+        if (!lockedListing) {
+          return res.status(400).json({ success: false, message: "Listing is no longer available" });
+        }
+
+        const chargedBuyer = await chargeBuyer();
+        if (!chargedBuyer) {
+          await Listing.updateOne({ _id: listingId, status: "in_progress" }, { $set: { status: "available" } });
+          const freshBuyer = await User.findById(buyerId).select("wallet.balance").lean();
+          return res.status(400).json({
+            success: false,
+            message: "Buyer balance is currently insufficient. Ask buyer to top up before approving.",
+            required: amount,
+            available: freshBuyer?.wallet?.balance || 0,
+          });
+        }
+
+        const updatedTx = await Transaction.findOneAndUpdate(
+          { _id: transaction._id, status: "pending_seller_approval" },
+          {
+            $set: { status: "waiting_seller" },
+            $push: { timeline: { event: "seller_approved", note: "Seller approved. Buyer funds moved to escrow hold." } },
+          },
+          { new: true }
+        );
+
+        if (!updatedTx) {
+          await User.updateOne(
+            { _id: buyerId },
+            {
+              $inc: {
+                "wallet.balance": amount,
+                "wallet.hold": -amount,
+              },
+            }
+          );
+          await Listing.updateOne({ _id: listingId, status: "in_progress" }, { $set: { status: "available" } });
+          return res.status(400).json({ success: false, message: "Transaction already decided" });
+        }
+
+        if (otherPendingIds.length > 0) {
+          await Transaction.updateMany(
+            {
+              _id: { $in: otherPendingIds },
+              status: "pending_seller_approval",
+            },
+            {
+              $set: { status: "rejected_by_seller" },
+              $push: {
+                timeline: {
+                  event: "auto_rejected",
+                  note: "Seller approved another buyer for this listing",
+                },
+              },
+            }
+          );
+        }
+      } else if (txnErr?.code === "INSUFFICIENT_BALANCE") {
+        const freshBuyer = await User.findById(buyerId).select("wallet.balance").lean();
+        return res.status(400).json({
+          success: false,
+          message: "Buyer balance is currently insufficient. Ask buyer to top up before approving.",
+          required: amount,
+          available: freshBuyer?.wallet?.balance || 0,
+        });
+      } else if (txnErr?.code === "LISTING_UNAVAILABLE") {
+        return res.status(400).json({ success: false, message: "Listing is no longer available" });
+      } else if (txnErr?.code === "STATUS_CHANGED") {
+        return res.status(400).json({ success: false, message: "Transaction already decided" });
+      } else {
+        throw txnErr;
+      }
+    } finally {
+      if (session) await session.endSession();
+    }
+
+    await queueNotification({
+      userId: buyerId,
+      type: "purchase_approved",
+      title: "Purchase Approved",
+      message: `Seller approved your request for "${transaction.listing.title}". Funds are now held in escrow; waiting for credentials.`,
+      relatedId: transaction._id,
+      metadata: {
+        transactionId: transaction._id.toString(),
+        listingTitle: transaction.listing.title,
+        amount,
+        socketTargetId: buyerId,
+      },
+      socketEvent: "notifyTransactionUpdate",
+      socketPayload: { transactionId: transaction._id, status: "waiting_seller" },
+    });
+
+    for (const otherRequest of otherPendingRequests) {
+      const rejectedBuyerId = otherRequest.buyer?.toString();
+      if (!rejectedBuyerId || rejectedBuyerId === buyerId) continue;
+
+      await queueNotification({
+        userId: rejectedBuyerId,
+        type: "purchase_rejected",
+        title: "Purchase Rejected",
+        message: `Seller approved another buyer for "${transaction.listing.title}".`,
+        relatedId: otherRequest._id,
+        metadata: {
+          transactionId: otherRequest._id.toString(),
+          listingTitle: transaction.listing.title,
+          socketTargetId: rejectedBuyerId,
+        },
+        socketEvent: "notifyTransactionUpdate",
+        socketPayload: { transactionId: otherRequest._id, status: "rejected_by_seller" },
+      });
+    }
+
+    return res.json({ success: true, message: "Purchase approved. Buyer funds moved to escrow hold." });
+  } catch (err) {
+    logger.error(`[Transaction] sellerDecision error: ${err.message}`);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -611,7 +876,10 @@ export const getMyTransactions = async (req, res) => {
 
     // Count pending actions for the current user
     const pendingAsBuyer = await Transaction.countDocuments({ buyer: userId, status: "waiting_buyer" });
-    const pendingAsSeller = await Transaction.countDocuments({ seller: userId, status: "waiting_seller" });
+    const pendingAsSeller = await Transaction.countDocuments({
+      seller: userId,
+      status: { $in: ["pending_seller_approval", "waiting_seller"] },
+    });
 
     return res.json({
       success: true,
@@ -631,7 +899,7 @@ export const getPendingCount = async (req, res) => {
     const userId = req.user._id.toString();
     const [asBuyer, asSeller] = await Promise.all([
       Transaction.countDocuments({ buyer: userId, status: "waiting_buyer" }),
-      Transaction.countDocuments({ seller: userId, status: "waiting_seller" }),
+      Transaction.countDocuments({ seller: userId, status: { $in: ["pending_seller_approval", "waiting_seller"] } }),
     ]);
     return res.json({ success: true, data: { asBuyer, asSeller, total: asBuyer + asSeller } });
   } catch (err) {

@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -51,8 +51,6 @@ import "./modules/admin/auditLog.model.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const uploadsDir = path.join(__dirname, "../uploads");
-
-dotenv.config();
 
 // Connect to database and create indexes after models are registered
 connectDB().then(() => {

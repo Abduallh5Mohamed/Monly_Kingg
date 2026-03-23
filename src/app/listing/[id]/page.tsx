@@ -376,6 +376,11 @@ export default function ListingDetailPage() {
                                         Sold
                                     </span>
                                 )}
+                                {listing.status === 'in_progress' && (
+                                    <span className="px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium">
+                                        In Progress
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -683,11 +688,10 @@ export default function ListingDetailPage() {
                                                 className="transition-transform hover:scale-125 focus:outline-none"
                                             >
                                                 <Star
-                                                    className={`w-10 h-10 transition-colors ${
-                                                        star <= (ratingHover || ratingValue)
+                                                    className={`w-10 h-10 transition-colors ${star <= (ratingHover || ratingValue)
                                                             ? 'text-yellow-400 fill-yellow-400'
                                                             : 'text-white/20'
-                                                    }`}
+                                                        }`}
                                                 />
                                             </button>
                                         ))}
@@ -840,7 +844,7 @@ export default function ListingDetailPage() {
                 <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-[#0a0d16] rounded-2xl border border-white/10 p-6 max-w-md w-full">
                         <h3 className="text-xl font-bold text-white mb-2">Confirm Purchase</h3>
-                        <p className="text-white/50 text-sm mb-6">Funds will be held in escrow until you confirm receipt of account credentials.</p>
+                        <p className="text-white/50 text-sm mb-6">No funds are deducted now. Seller must approve first; only then funds are held in escrow.</p>
                         <div className="bg-white/[0.03] rounded-xl border border-white/10 p-4 mb-4 space-y-3">
                             <div className="flex justify-between items-center">
                                 <span className="text-white/70 text-sm">Listing</span>

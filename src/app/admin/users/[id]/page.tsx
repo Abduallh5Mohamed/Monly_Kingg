@@ -98,7 +98,56 @@ export default function AdminUserDetailPage() {
         try {
             const res = await fetch(`/api/v1/admin/users/${id}/detail`, { credentials: 'include' });
             const data = await res.json();
-            if (data.success) setUser(data.data);
+            if (data.success) {
+                const raw = data.data || {};
+                const normalized: UserDetail = {
+                    ...raw,
+                    wallet: {
+                        balance: raw.wallet?.balance ?? 0,
+                        hold: raw.wallet?.hold ?? 0,
+                    },
+                    stats: {
+                        totalVolume: raw.stats?.totalVolume ?? 0,
+                        level: raw.stats?.level ?? 1,
+                        successfulTrades: raw.stats?.successfulTrades ?? 0,
+                        failedTrades: raw.stats?.failedTrades ?? 0,
+                    },
+                    twoFA: {
+                        enabled: Boolean(raw.twoFA?.enabled),
+                    },
+                    security: {
+                        failedLoginAttempts: raw.security?.failedLoginAttempts ?? 0,
+                        lockUntil: raw.security?.lockUntil,
+                        lastUsernameChange: raw.security?.lastUsernameChange,
+                        lastPhoneChange: raw.security?.lastPhoneChange,
+                        lastLogin: raw.security?.lastLogin,
+                        knownIPs: Array.isArray(raw.security?.knownIPs) ? raw.security.knownIPs : [],
+                        authLogs: Array.isArray(raw.security?.authLogs) ? raw.security.authLogs : [],
+                    },
+                    activeSessions: Array.isArray(raw.activeSessions) ? raw.activeSessions : [],
+                    transactions: {
+                        asBuyer: raw.transactions?.asBuyer ?? 0,
+                        asSeller: raw.transactions?.asSeller ?? 0,
+                        disputed: raw.transactions?.disputed ?? 0,
+                        recent: Array.isArray(raw.transactions?.recent) ? raw.transactions.recent : [],
+                    },
+                    deposits: {
+                        stats: Array.isArray(raw.deposits?.stats) ? raw.deposits.stats : [],
+                        recent: Array.isArray(raw.deposits?.recent) ? raw.deposits.recent : [],
+                    },
+                    withdrawals: {
+                        stats: Array.isArray(raw.withdrawals?.stats) ? raw.withdrawals.stats : [],
+                        recent: Array.isArray(raw.withdrawals?.recent) ? raw.withdrawals.recent : [],
+                    },
+                    listings: {
+                        total: raw.listings?.total ?? 0,
+                        active: raw.listings?.active ?? 0,
+                        sold: raw.listings?.sold ?? 0,
+                    },
+                    badges: Array.isArray(raw.badges) ? raw.badges : [],
+                };
+                setUser(normalized);
+            }
             else setError(data.message || 'Failed to load');
         } catch { setError('Network error'); }
         finally { setLoading(false); }
@@ -137,6 +186,14 @@ export default function AdminUserDetailPage() {
             </Button>
         </div>
     );
+
+    const knownIPs = Array.isArray(user.security?.knownIPs) ? user.security.knownIPs : [];
+    const activeSessions = Array.isArray(user.activeSessions) ? user.activeSessions : [];
+    const authLogs = Array.isArray(user.security?.authLogs) ? user.security.authLogs : [];
+    const rejectionHistory = Array.isArray(user.sellerRequest?.rejectionHistory) ? user.sellerRequest.rejectionHistory : [];
+    const recentTransactions = Array.isArray(user.transactions?.recent) ? user.transactions.recent : [];
+    const recentDeposits = Array.isArray(user.deposits?.recent) ? user.deposits.recent : [];
+    const recentWithdrawals = Array.isArray(user.withdrawals?.recent) ? user.withdrawals.recent : [];
 
     const depApproved = user.deposits.stats.find(s => s._id === 'approved');
     const depPending = user.deposits.stats.find(s => s._id === 'pending');
@@ -332,11 +389,11 @@ export default function AdminUserDetailPage() {
                                 </div>
 
                                 {/* Rejection History */}
-                                {user.sellerRequest.rejectionHistory && user.sellerRequest.rejectionHistory.length > 0 && (
+                                {rejectionHistory.length > 0 && (
                                     <div>
                                         <p className="text-xs text-white/30 mb-2">Rejection History</p>
                                         <div className="space-y-2">
-                                            {user.sellerRequest.rejectionHistory.map((rej, i) => (
+                                            {rejectionHistory.map((rej, i) => (
                                                 <div key={i} className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3 text-xs">
                                                     <p className="text-red-400">{rej.reason}</p>
                                                     <p className="text-white/30 mt-1">{fmtDate(rej.rejectedAt)}</p>
@@ -360,10 +417,10 @@ export default function AdminUserDetailPage() {
                         {/* Known IPs */}
                         <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                             <h3 className="text-sm font-medium text-white/40 flex items-center gap-2 mb-4">
-                                <Globe className="w-4 h-4" /> Known IP Addresses ({user.security.knownIPs.length})
+                                <Globe className="w-4 h-4" /> Known IP Addresses ({knownIPs.length})
                             </h3>
                             <div className="space-y-2 max-h-64 overflow-y-auto">
-                                {user.security.knownIPs.length > 0 ? user.security.knownIPs.map((ip, i) => (
+                                {knownIPs.length > 0 ? knownIPs.map((ip, i) => (
                                     <div key={i} className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-3 py-2 border border-white/[0.06]">
                                         <Globe className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                                         <span className="text-sm text-white font-mono">{ip}</span>
@@ -377,10 +434,10 @@ export default function AdminUserDetailPage() {
                         {/* Active Sessions */}
                         <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                             <h3 className="text-sm font-medium text-white/40 flex items-center gap-2 mb-4">
-                                <Monitor className="w-4 h-4" /> Active Sessions ({user.activeSessions.length})
+                                <Monitor className="w-4 h-4" /> Active Sessions ({activeSessions.length})
                             </h3>
                             <div className="space-y-3 max-h-64 overflow-y-auto">
-                                {user.activeSessions.length > 0 ? user.activeSessions.map((s, i) => (
+                                {activeSessions.length > 0 ? activeSessions.map((s, i) => (
                                     <div key={i} className="bg-white/[0.03] rounded-lg p-3 border border-white/[0.06] space-y-1">
                                         <div className="flex items-center gap-2">
                                             <Monitor className="w-3 h-3 text-green-400" />
@@ -443,9 +500,9 @@ export default function AdminUserDetailPage() {
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-sm font-medium text-white/40 flex items-center gap-2">
-                                <Activity className="w-4 h-4" /> Auth Activity Log ({user.security.authLogs.length})
+                                <Activity className="w-4 h-4" /> Auth Activity Log ({authLogs.length})
                             </h3>
-                            {user.security.authLogs.length > 10 && (
+                            {authLogs.length > 10 && (
                                 <button
                                     onClick={() => setShowAllLogs(!showAllLogs)}
                                     className="text-xs text-cyan-400 hover:text-cyan-300"
@@ -455,7 +512,7 @@ export default function AdminUserDetailPage() {
                             )}
                         </div>
                         <div className="space-y-0">
-                            {(showAllLogs ? user.security.authLogs : user.security.authLogs.slice(0, 10)).map((log, i) => {
+                            {(showAllLogs ? authLogs : authLogs.slice(0, 10)).map((log, i) => {
                                 const Icon = authActionIcons[log.action] || authActionIcons.default;
                                 return (
                                     <div key={i} className="flex items-center gap-3 py-2.5 border-b border-white/[0.03] last:border-0">
@@ -502,9 +559,9 @@ export default function AdminUserDetailPage() {
                     {/* Recent Transactions */}
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                         <h3 className="text-sm font-medium text-white/40 mb-4">Recent Transactions</h3>
-                        {user.transactions.recent.length > 0 ? (
+                        {recentTransactions.length > 0 ? (
                             <div className="space-y-0">
-                                {user.transactions.recent.map(tx => {
+                                {recentTransactions.map(tx => {
                                     const isBuyer = tx.buyer?._id === user._id;
                                     return (
                                         <Link key={tx._id} href={`/admin/transactions/${tx._id}`}
@@ -552,9 +609,9 @@ export default function AdminUserDetailPage() {
                     {/* Recent Deposits */}
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                         <h3 className="text-sm font-medium text-white/40 mb-4">Recent Deposits</h3>
-                        {user.deposits.recent.length > 0 ? (
+                        {recentDeposits.length > 0 ? (
                             <div className="space-y-3">
-                                {user.deposits.recent.map(dep => (
+                                {recentDeposits.map(dep => (
                                     <div key={dep._id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-lg font-bold text-white">{dep.amount} EGP</span>
@@ -628,11 +685,11 @@ export default function AdminUserDetailPage() {
                     {/* Withdrawal List */}
                     <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6">
                         <h3 className="text-sm font-medium text-white/40 flex items-center gap-2 mb-4">
-                            <ArrowUpCircle className="w-4 h-4" /> Withdrawal Requests ({user.withdrawals.recent.length})
+                            <ArrowUpCircle className="w-4 h-4" /> Withdrawal Requests ({recentWithdrawals.length})
                         </h3>
-                        {user.withdrawals.recent.length > 0 ? (
+                        {recentWithdrawals.length > 0 ? (
                             <div className="space-y-3">
-                                {user.withdrawals.recent.map(w => (
+                                {recentWithdrawals.map(w => (
                                     <div key={w._id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                                         <div className="flex items-center justify-between mb-3">
                                             <div className="flex items-center gap-3">
@@ -645,8 +702,8 @@ export default function AdminUserDetailPage() {
                                                 </div>
                                             </div>
                                             <span className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border ${w.status === 'approved' ? 'text-green-400 bg-green-400/10 border-green-400/30'
-                                                    : w.status === 'rejected' ? 'text-red-400 bg-red-400/10 border-red-400/30'
-                                                        : 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30'
+                                                : w.status === 'rejected' ? 'text-red-400 bg-red-400/10 border-red-400/30'
+                                                    : 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30'
                                                 }`}>{w.status.toUpperCase()}</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 text-xs">

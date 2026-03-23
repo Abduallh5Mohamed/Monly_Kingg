@@ -517,7 +517,7 @@ async function getTopListings(section, limit = 10, gameId = null) {
     // Try cache first
     try {
         const cached = await redis.get(cacheKey);
-        if (cached) return JSON.parse(cached);
+        if (cached) return cached;
     } catch (e) { /* Redis down — continue to DB */ }
 
     // Query DB with timeout - OPTIMIZED
@@ -538,7 +538,7 @@ async function getTopListings(section, limit = 10, gameId = null) {
 
         // Cache result
         try {
-            await redis.set(cacheKey, JSON.stringify(listings), 'EX', CACHE_TTL);
+            await redis.set(cacheKey, listings, CACHE_TTL);
         } catch (e) { /* non-fatal */ }
 
         return listings;
@@ -561,7 +561,7 @@ async function getHomepageRankings(limit = 10) {
         const cached = await redis.get(cacheKey);
         if (cached) {
             logger.info('✓ Homepage rankings served from cache');
-            return JSON.parse(cached);
+            return cached;
         }
     } catch (e) {
         logger.warn('Redis cache miss for homepage rankings:', e.message);
@@ -589,7 +589,7 @@ async function getHomepageRankings(limit = 10) {
 
         // Cache combined result
         try {
-            await redis.set(cacheKey, JSON.stringify(result), 'EX', CACHE_TTL);
+            await redis.set(cacheKey, result, CACHE_TTL);
             logger.info('✓ Homepage rankings cached successfully');
         } catch (e) {
             logger.warn('Failed to cache homepage rankings:', e.message);
@@ -627,7 +627,7 @@ async function recordView(listingId, ipAddress) {
             if (exists) {
                 isDuplicate = true;
             } else {
-                await redis.set(dedupeKey, '1', 'EX', 3600); // 1 hour window
+                await redis.set(dedupeKey, '1', 3600); // 1 hour window
             }
         } catch (e) {
             // Redis down — allow the view (better UX than blocking)

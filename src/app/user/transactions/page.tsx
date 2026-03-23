@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { ShoppingBag, Package, Clock, ArrowLeft } from 'lucide-react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 
-type TxStatus = 'waiting_seller' | 'waiting_buyer' | 'completed' | 'disputed' | 'refunded' | 'auto_confirmed';
+type TxStatus = 'pending_seller_approval' | 'waiting_seller' | 'waiting_buyer' | 'completed' | 'rejected_by_seller' | 'disputed' | 'refunded' | 'auto_confirmed';
 
 interface Tx {
   _id: string;
@@ -22,10 +22,12 @@ interface Tx {
 }
 
 const STATUS_LABEL: Record<TxStatus, { ar: string; en: string; color: string }> = {
+  pending_seller_approval: { ar: 'بانتظار موافقة البائع', en: 'Waiting seller approval', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
   waiting_seller: { ar: 'بانتظار إرسال البيانات', en: 'Waiting for seller data', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
   waiting_buyer: { ar: 'بانتظار تأكيدك', en: 'Waiting for your confirmation', color: 'text-cyan-400    bg-cyan-500/10    border-cyan-500/20' },
   completed: { ar: 'مكتملة', en: 'Completed', color: 'text-green-400  bg-green-500/10   border-green-500/20' },
   auto_confirmed: { ar: 'تأكيد تلقائي', en: 'Auto Confirmed', color: 'text-green-400  bg-green-500/10   border-green-500/20' },
+  rejected_by_seller: { ar: 'مرفوضة من البائع', en: 'Rejected by seller', color: 'text-orange-400 bg-orange-500/10 border-orange-500/20' },
   disputed: { ar: 'متنازع عليها', en: 'Disputed', color: 'text-red-400    bg-red-500/10     border-red-500/20' },
   refunded: { ar: 'مسترجعة', en: 'Refunded', color: 'text-purple-400 bg-purple-500/10  border-purple-500/20' },
 };
@@ -131,7 +133,7 @@ export default function TransactionsPage() {
                 const color = statusMeta ? statusMeta.color : 'text-white/50 bg-white/5 border-white/10';
                 const needsAction =
                   (tab === 'buyer' && tx.status === 'waiting_buyer') ||
-                  (tab === 'seller' && tx.status === 'waiting_seller');
+                  (tab === 'seller' && (tx.status === 'pending_seller_approval' || tx.status === 'waiting_seller'));
                 return (
                   <Link key={tx._id} href={`/user/transactions/${tx._id}`}>
                     <div className={`bg-[#0a0d16]/80 border rounded-2xl p-4 hover:border-cyan-500/30 transition-all cursor-pointer ${needsAction ? 'border-cyan-500/40 ring-1 ring-cyan-500/20' : 'border-white/[0.06]'
@@ -154,7 +156,9 @@ export default function TransactionsPage() {
                         <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-cyan-400 text-sm font-medium">
                           <Clock className="w-4 h-4" />
                           {tab === 'seller'
-                            ? tr('مطلوب إجراء: إرسال البيانات →', 'Action needed: send credentials →')
+                            ? (tx.status === 'pending_seller_approval'
+                              ? tr('مطلوب إجراء: موافقة أو رفض الطلب →', 'Action needed: approve or reject request →')
+                              : tr('مطلوب إجراء: إرسال البيانات →', 'Action needed: send credentials →'))
                             : tr('مطلوب إجراء: مراجعة البيانات →', 'Action needed: review credentials →')}
                         </div>
                       )}

@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import next from "next";
 import { createServer } from "http";
 import path from "path";
@@ -28,8 +28,6 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-dotenv.config();
 
 // Initialize services
 async function initializeServices() {
@@ -409,6 +407,7 @@ nextApp.prepare().then(async () => {
     import("./src/modules/sellers/seller.routes.js"),
     import("./src/modules/listings/listing.routes.js"),
     import("./src/modules/games/game.routes.js"),
+    import("./src/routes/ranking.routes.js"),
     import("./src/modules/withdrawals/withdrawal.routes.js"),
     import("./src/modules/deposits/deposit.routes.js"),
     import("./src/modules/notifications/notification.routes.js"),
@@ -426,6 +425,7 @@ nextApp.prepare().then(async () => {
   const routePaths = [
     "/api/v1/uploads", "/api/v1/chats", "/api/v1/admin",
     "/api/v1/seller", "/api/v1/listings", "/api/v1/games",
+    "/api/v1/rankings",
     "/api/v1/withdrawals", "/api/v1/deposits", "/api/v1/notifications",
     "/api/v1/ads", "/api/v1/discounts", "/api/v1/promotions",
     "/api/v1/transactions", "/api/v1/campaigns", "/api/v1/favorites",
