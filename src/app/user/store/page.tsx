@@ -58,12 +58,12 @@ interface Stats {
 }
 
 // Badge styles per game type
-const GAME_BADGES: Record<string, { color: string; label: string }> = {
-  'FIFA': { color: 'bg-green-500', label: 'EA FC 25' },
-  'PUBG': { color: 'bg-orange-500', label: 'GLOBAL' },
-  'Arc Raiders': { color: 'bg-pink-500', label: 'ACTION' },
-  'Valorant': { color: 'bg-red-500', label: 'RIOT EUW' },
-  'League of Legends': { color: 'bg-blue-500', label: 'RIOT EUW' },
+const GAME_BADGES: Record<string, { color: string; labelAr: string; labelEn: string }> = {
+  'FIFA': { color: 'bg-green-500', labelAr: 'اي ايه اف سي 25', labelEn: 'EA FC 25' },
+  'PUBG': { color: 'bg-orange-500', labelAr: 'عالمي', labelEn: 'GLOBAL' },
+  'Arc Raiders': { color: 'bg-pink-500', labelAr: 'اكشن', labelEn: 'ACTION' },
+  'Valorant': { color: 'bg-red-500', labelAr: 'رايوت EUW', labelEn: 'RIOT EUW' },
+  'League of Legends': { color: 'bg-blue-500', labelAr: 'رايوت EUW', labelEn: 'RIOT EUW' },
 };
 
 
@@ -72,6 +72,7 @@ export default function SellerStorePage() {
   const { user, loading: authLoading } = useAuth();
   const { language } = useLanguage();
   const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
+  const locale = language === 'ar' ? 'ar-EG' : 'en-US';
   const router = useRouter();
   const [listings, setListings] = useState<Listing[]>([]);
   const [stats, setStats] = useState<Stats>({ totalListings: 0, activeListings: 0, soldListings: 0 });
@@ -400,7 +401,11 @@ export default function SellerStorePage() {
                 const gameName = getGameName(listing);
                 const coverUrl = getCoverImageUrl(listing);
                 const hasDiscount = !!listing.discount;
-                const gameBadge = GAME_BADGES[gameName] || { color: 'bg-gray-500', label: gameName?.toUpperCase?.() || 'GAME' };
+                const gameBadge = GAME_BADGES[gameName] || {
+                  color: 'bg-gray-500',
+                  labelAr: gameName || 'لعبة',
+                  labelEn: gameName?.toUpperCase?.() || 'GAME',
+                };
 
                 return (
                   <div
@@ -441,7 +446,7 @@ export default function SellerStorePage() {
                       {/* Game badge - top right */}
                       <div className="absolute top-3 right-3">
                         <span className="text-[11px] text-white/90 font-bold px-2.5 py-1 rounded-md uppercase tracking-wide bg-black/50 backdrop-blur-sm border border-white/20">
-                          {gameBadge.label}
+                          {language === 'ar' ? gameBadge.labelAr : gameBadge.labelEn}
                         </span>
                       </div>
 
@@ -490,7 +495,7 @@ export default function SellerStorePage() {
                       {/* Created date */}
                       <div className="flex items-center gap-2 mb-4">
                         <span className="text-xs text-white/40">
-                          {new Date(listing.createdAt).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {new Date(listing.createdAt).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                       </div>
 

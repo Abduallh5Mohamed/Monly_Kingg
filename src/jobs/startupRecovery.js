@@ -7,9 +7,9 @@
  *
  * Cases detected:
  *
- *  1. "waiting_seller" tx without sellerNotifiedAt
+ *  1. "pending_seller_approval" / "waiting_seller" tx without sellerNotifiedAt
  *     → seller never got the "you have a new purchase" notification.
- *       Re-queue it so the seller knows to submit credentials.
+ *       Re-queue it so the seller knows to approve/reject (or submit credentials if already approved).
  *
  *  2. "waiting_buyer" tx without buyerNotifiedAt
  *     → buyer never got the "credentials ready" notification.
@@ -21,6 +21,7 @@
  *       (Would require MongoDB sessions for true rollback; this is an alert.)
  */
 import Transaction from "../modules/transactions/transaction.model.js";
+import Listing from "../modules/listings/listing.model.js";
 import User from "../modules/users/user.model.js";
 import { notificationQueue } from "../queues/transactionQueue.js";
 import logger from "../utils/logger.js";
@@ -32,6 +33,7 @@ export async function runStartupRecovery() {
     await _recoverMissingSellerNotifications();
     await _recoverMissingBuyerNotifications();
     await _detectOrphanedTransactions();
+    await _recoverStuckInProgressListings();
 
     logger.info("[Recovery] Startup recovery scan complete");
   } catch (err) {
@@ -42,7 +44,7 @@ export async function runStartupRecovery() {
 // ─── 1. Seller never got "new purchase" notification ─────────────────────────
 async function _recoverMissingSellerNotifications() {
   const unnotified = await Transaction.find({
-    status: "waiting_seller",
+    status: { $in: ["pending_seller_approval", "waiting_seller"] },
     sellerNotifiedAt: { $exists: false },
     createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }, // last 7 days
   })
@@ -63,7 +65,9 @@ async function _recoverMissingSellerNotifications() {
         userId: tx.seller.toString(),
         type: "purchase_initiated",
         title: "New Purchase! (recovered)",
-        message: `${buyerName} purchased "${listingTitle}" for ${tx.amount} EGP. Please submit the account credentials.`,
+        message: tx.status === "pending_seller_approval"
+          ? `${buyerName} requested "${listingTitle}" for ${tx.amount} EGP. Please approve or reject this request.`
+          : `${buyerName} purchased "${listingTitle}" for ${tx.amount} EGP. Please submit the account credentials.`,
         relatedId: tx._id.toString(),
         metadata: {
           transactionId: tx._id.toString(),
@@ -148,4 +152,41 @@ async function _detectOrphanedTransactions() {
     `These may be partially-committed. IDs: ${orphans.map(t => t._id).join(", ")}. ` +
     `Check buyer wallet.hold vs open transactions manually.`
   );
+}
+
+// ─── 4. Recover stale listing locks from legacy flow ────────────────────────
+async function _recoverStuckInProgressListings() {
+  const candidates = await Listing.find({ status: "in_progress" })
+    .select("_id title")
+    .lean();
+
+  if (candidates.length === 0) return;
+
+  let unlockedCount = 0;
+
+  for (const listing of candidates) {
+    const hasActiveLockedTx = await Transaction.exists({
+      listing: listing._id,
+      status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] },
+    });
+
+    if (hasActiveLockedTx) continue;
+
+    const hasPendingApprovalOnly = await Transaction.exists({
+      listing: listing._id,
+      status: "pending_seller_approval",
+    });
+
+    if (!hasPendingApprovalOnly) continue;
+
+    await Listing.updateOne(
+      { _id: listing._id, status: "in_progress" },
+      { $set: { status: "available" } }
+    );
+    unlockedCount += 1;
+  }
+
+  if (unlockedCount > 0) {
+    logger.warn(`[Recovery] Unlocked ${unlockedCount} stale in_progress listing(s) back to available`);
+  }
 }

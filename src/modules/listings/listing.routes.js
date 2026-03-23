@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { randomBytes } from "node:crypto";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -40,7 +41,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     // SECURITY FIX [VULN-C02]: Use crypto.randomBytes() instead of Math.random() for unpredictable filenames.
     // SECURITY FIX [VULN-C03]: Use MIME-based extension instead of trusting user-supplied extension.
-    const uniqueSuffix = Date.now() + "-" + crypto.randomBytes(8).toString('hex');
+    const uniqueSuffix = Date.now() + "-" + randomBytes(8).toString('hex');
     const SAFE_EXTENSIONS = {
       'image/jpeg': '.jpg', 'image/jpg': '.jpg', 'image/png': '.png',
       'image/gif': '.gif', 'image/webp': '.webp'

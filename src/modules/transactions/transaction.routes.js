@@ -15,6 +15,9 @@ router.use(authMiddleware);
 // SECURITY FIX [VULN-H02]: Apply rate limiting to prevent spam purchases.
 router.post("/", userWriteLimiter, txController.createTransaction);
 
+// Seller: approve or reject a purchase request before charging buyer
+router.post("/:id/seller-decision", validateObjectId(), userWriteLimiter, txController.sellerDecision);
+
 // Seller: submit account credentials
 router.post("/:id/credentials", validateObjectId(), userWriteLimiter, txController.submitCredentials);
 

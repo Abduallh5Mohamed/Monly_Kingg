@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { ensureCsrfToken } from '@/utils/csrf';
 import Link from 'next/link';
 
-type TxStatus = 'waiting_seller' | 'waiting_buyer' | 'completed' | 'disputed' | 'refunded' | 'auto_confirmed';
+type TxStatus = 'pending_seller_approval' | 'waiting_seller' | 'waiting_buyer' | 'completed' | 'rejected_by_seller' | 'disputed' | 'refunded' | 'auto_confirmed';
 
 interface Credential { key: string; value: string; }
 interface TimelineEntry { event: string; note: string; timestamp: string; }
@@ -41,9 +41,11 @@ interface Transaction {
 }
 
 const statusConfig: Record<TxStatus, { icon: any; label: string; color: string; bg: string }> = {
+    pending_seller_approval: { icon: Clock, label: 'Pending Seller Approval', color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/30' },
     waiting_seller: { icon: Clock, label: 'Waiting Seller', color: 'text-yellow-400', bg: 'bg-yellow-400/10 border-yellow-400/30' },
     waiting_buyer: { icon: Clock, label: 'Waiting Buyer', color: 'text-blue-400', bg: 'bg-blue-400/10 border-blue-400/30' },
     completed: { icon: CheckCircle2, label: 'Completed', color: 'text-green-400', bg: 'bg-green-400/10 border-green-400/30' },
+    rejected_by_seller: { icon: XCircle, label: 'Rejected by Seller', color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/30' },
     disputed: { icon: AlertTriangle, label: 'Disputed', color: 'text-red-400', bg: 'bg-red-400/10 border-red-400/30' },
     refunded: { icon: XCircle, label: 'Refunded', color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/30' },
     auto_confirmed: { icon: ShieldCheck, label: 'Auto Confirmed', color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/30' },

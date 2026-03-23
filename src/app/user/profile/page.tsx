@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { useToast } from '@/hooks/use-toast';
 import { ensureCsrfToken } from '@/utils/csrf';
 import {
@@ -62,7 +63,10 @@ interface Listing {
 
 export default function ProfilePage() {
     const { user } = useAuth();
+    const { language } = useLanguage();
     const { toast } = useToast();
+    const tr = (ar: string, en: string) => (language === 'ar' ? ar : en);
+    const locale = language === 'ar' ? 'ar-EG' : 'en-US';
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -112,8 +116,8 @@ export default function ProfilePage() {
         } catch (error) {
             console.error('Error fetching profile:', error);
             toast({
-                title: 'خطأ',
-                description: 'فشل تحميل الملف الشخصي',
+                title: tr('خطأ', 'Error'),
+                description: tr('فشل تحميل الملف الشخصي', 'Failed to load profile'),
                 variant: 'destructive',
             });
         } finally {
@@ -176,8 +180,10 @@ export default function ProfilePage() {
         // Validate username change
         if (editedProfile.username !== profile.username && !canChangeUsername()) {
             toast({
-                title: 'لا يمكن تغيير اسم المستخدم الآن',
-                description: `يمكنك تغيير الاسم بعد ${getDaysUntilUsernameChange()} يوم`,
+                title: tr('لا يمكن تغيير اسم المستخدم الآن', 'Username cannot be changed now'),
+                description: language === 'ar'
+                    ? `يمكنك تغيير الاسم بعد ${getDaysUntilUsernameChange()} يوم`
+                    : `You can change your username after ${getDaysUntilUsernameChange()} day(s)`,
                 variant: 'destructive',
             });
             return;
@@ -186,8 +192,10 @@ export default function ProfilePage() {
         // Validate phone change
         if (editedProfile.phone !== profile.phone && !canChangePhone()) {
             toast({
-                title: 'لا يمكن تغيير رقم الهاتف الآن',
-                description: `يمكنك تغيير الرقم بعد ${getDaysUntilPhoneChange()} يوم`,
+                title: tr('لا يمكن تغيير رقم الهاتف الآن', 'Phone number cannot be changed now'),
+                description: language === 'ar'
+                    ? `يمكنك تغيير الرقم بعد ${getDaysUntilPhoneChange()} يوم`
+                    : `You can change your phone number after ${getDaysUntilPhoneChange()} day(s)`,
                 variant: 'destructive',
             });
             return;
@@ -200,8 +208,8 @@ export default function ProfilePage() {
 
             if (!csrfToken) {
                 toast({
-                    title: 'خطأ',
-                    description: 'تعذر الحصول على رمز الحماية. حدّث الصفحة وحاول مرة أخرى.',
+                    title: tr('خطأ', 'Error'),
+                    description: tr('تعذر الحصول على رمز الحماية. حدّث الصفحة وحاول مرة أخرى.', 'Failed to get security token. Refresh and try again.'),
                     variant: 'destructive',
                 });
                 setSaving(false);
@@ -244,21 +252,21 @@ export default function ProfilePage() {
                 sessionStorage.removeItem('dashboard_timestamp');
 
                 toast({
-                    title: 'تم بنجاح',
-                    description: 'تم تحديث الملف الشخصي بنجاح',
+                    title: tr('تم بنجاح', 'Success'),
+                    description: tr('تم تحديث الملف الشخصي بنجاح', 'Profile updated successfully'),
                 });
             } else {
                 toast({
-                    title: 'خطأ',
-                    description: data.message || 'فشل تحديث الملف الشخصي',
+                    title: tr('خطأ', 'Error'),
+                    description: data.message || tr('فشل تحديث الملف الشخصي', 'Failed to update profile'),
                     variant: 'destructive',
                 });
             }
         } catch (error) {
             console.error('Error saving profile:', error);
             toast({
-                title: 'خطأ',
-                description: 'خطأ في الشبكة',
+                title: tr('خطأ', 'Error'),
+                description: tr('خطأ في الشبكة', 'Network error'),
                 variant: 'destructive',
             });
         } finally {
@@ -271,8 +279,8 @@ export default function ProfilePage() {
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
                 toast({
-                    title: 'حجم الملف كبير',
-                    description: 'صورة الحساب يجب أن تكون أقل من 2MB',
+                    title: tr('حجم الملف كبير', 'File too large'),
+                    description: tr('صورة الحساب يجب أن تكون أقل من 2MB', 'Avatar image must be smaller than 2MB'),
                     variant: 'destructive',
                 });
                 return;
@@ -302,7 +310,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-center min-h-screen">
                     <div className="text-center">
                         <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                        <p className="text-white">فشل تحميل الملف الشخصي</p>
+                        <p className="text-white">{tr('فشل تحميل الملف الشخصي', 'Failed to load profile')}</p>
                     </div>
                 </div>
             </UserDashboardLayout>
@@ -336,7 +344,7 @@ export default function ProfilePage() {
                                 {/* Avatar */}
                                 <div className="relative">
                                     <div className="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-[#161b25] shadow-xl">
-                                        <img src={avatarPreview || profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                        <img src={avatarPreview || profile.avatar} alt={tr('الصورة الشخصية', 'Profile avatar')} className="w-full h-full object-cover" />
                                     </div>
                                     {isEditing && (
                                         <label htmlFor="avatar-upload" className="absolute -bottom-1 -right-1 w-6 h-6 bg-cyan-500 hover:bg-cyan-400 rounded-lg flex items-center justify-center cursor-pointer transition-colors border-2 border-[#161b25]">
@@ -350,20 +358,20 @@ export default function ProfilePage() {
                                 <div className="flex items-center gap-2 pb-1">
                                     {profile.verified && (
                                         <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-[11px] font-medium text-cyan-400">
-                                            <Shield className="w-3 h-3" /> موثّق
+                                            <Shield className="w-3 h-3" /> {tr('موثّق', 'Verified')}
                                         </span>
                                     )}
                                     {!isEditing ? (
                                         <button onClick={handleEditToggle} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-300 transition-colors">
-                                            <Edit2 className="w-3 h-3" /> تعديل
+                                            <Edit2 className="w-3 h-3" /> {tr('تعديل', 'Edit')}
                                         </button>
                                     ) : (
                                         <>
                                             <Button onClick={handleSaveProfile} disabled={saving} size="sm" className="bg-cyan-500 hover:bg-cyan-400 text-white h-7 px-3 text-xs rounded-lg">
-                                                {saving ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} حفظ
+                                                {saving ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} {tr('حفظ', 'Save')}
                                             </Button>
                                             <button onClick={handleEditToggle} className="flex items-center gap-1 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs text-gray-400 transition-colors">
-                                                <X className="w-3 h-3" /> إلغاء
+                                                <X className="w-3 h-3" /> {tr('إلغاء', 'Cancel')}
                                             </button>
                                         </>
                                     )}
@@ -383,7 +391,7 @@ export default function ProfilePage() {
                                 {/* Stats pills */}
                                 <div className="flex items-center gap-2 flex-wrap">
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-xl">
-                                        <span className="text-xs text-gray-500">المستوى</span>
+                                        <span className="text-xs text-gray-500">{tr('المستوى', 'Level')}</span>
                                         <span className="text-sm font-bold text-purple-400">{profile.stats.level}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
@@ -404,10 +412,10 @@ export default function ProfilePage() {
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-sm font-semibold text-[#f5f5dc] flex items-center gap-2">
                                         <TrendingUp className="w-4 h-4 text-yellow-500" />
-                                        مستوى البائع
+                                        {tr('مستوى البائع', 'Seller level')}
                                     </h3>
                                     <a href="/user/seller-levels" className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
-                                        التفاصيل ←
+                                        {tr('التفاصيل', 'Details')} ←
                                     </a>
                                 </div>
 
@@ -430,7 +438,11 @@ export default function ProfilePage() {
                                     showPercent={false}
                                 />
                                 <div className="flex items-center justify-between mt-2">
-                                    <span className="text-[10px] text-gray-400">{levelProgress.progress?.percent || 0}% إلى المستوى {levelProgress.currentLevel + 1}</span>
+                                    <span className="text-[10px] text-gray-400">
+                                        {language === 'ar'
+                                            ? `${levelProgress.progress?.percent || 0}% إلى المستوى ${levelProgress.currentLevel + 1}`
+                                            : `${levelProgress.progress?.percent || 0}% to level ${levelProgress.currentLevel + 1}`}
+                                    </span>
                                     <span className="text-[10px] text-gray-400 flex items-center gap-1">
                                         <Target className="h-3 w-3" />
                                         {(levelProgress.progress?.remaining || 0).toLocaleString()} EGP
@@ -450,13 +462,13 @@ export default function ProfilePage() {
                             <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
                                 <div className="px-5 py-4 border-b border-white/5">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                                        <User className="w-4 h-4 text-cyan-500" /> المعلومات الشخصية
+                                        <User className="w-4 h-4 text-cyan-500" /> {tr('المعلومات الشخصية', 'Personal information')}
                                     </h3>
                                 </div>
                                 <div className="p-5 space-y-4">
                                     {/* Username */}
                                     <div>
-                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">اسم المستخدم</label>
+                                        <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">{tr('اسم المستخدم', 'Username')}</label>
                                         {isEditing && canChangeUsername() ? (
                                             <input type="text" value={editedProfile.username || ''} onChange={(e) => setEditedProfile({ ...editedProfile, username: e.target.value })}
                                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none" />
@@ -465,7 +477,7 @@ export default function ProfilePage() {
                                                 <span className="text-sm text-white">{profile.username}</span>
                                                 {isEditing && !canChangeUsername() && (
                                                     <span className="text-[10px] text-yellow-500/70 flex items-center gap-0.5">
-                                                        <Clock className="w-2.5 h-2.5" /> {getDaysUntilUsernameChange()}d
+                                                        <Clock className="w-2.5 h-2.5" /> {language === 'ar' ? `${getDaysUntilUsernameChange()}ي` : `${getDaysUntilUsernameChange()}d`}
                                                     </span>
                                                 )}
                                             </div>
@@ -475,17 +487,17 @@ export default function ProfilePage() {
                                     {/* Phone */}
                                     <div>
                                         <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
-                                            <Phone className="w-3 h-3" /> Phone
+                                            <Phone className="w-3 h-3" /> {tr('رقم الهاتف', 'Phone')}
                                         </label>
                                         {isEditing && canChangePhone() ? (
                                             <input type="tel" value={editedProfile.phone || ''} onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                                                placeholder="أدخل رقم الهاتف" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                                placeholder={tr('أدخل رقم الهاتف', 'Enter phone number')} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
                                         ) : (
                                             <div className="flex items-center justify-between">
                                                 <span className="text-sm text-white">{profile.phone || <span className="text-gray-600">—</span>}</span>
                                                 {isEditing && !canChangePhone() && profile.phone && (
                                                     <span className="text-[10px] text-yellow-500/70 flex items-center gap-0.5">
-                                                        <Clock className="w-2.5 h-2.5" /> {getDaysUntilPhoneChange()}d
+                                                        <Clock className="w-2.5 h-2.5" /> {language === 'ar' ? `${getDaysUntilPhoneChange()}ي` : `${getDaysUntilPhoneChange()}d`}
                                                     </span>
                                                 )}
                                             </div>
@@ -495,11 +507,11 @@ export default function ProfilePage() {
                                     {/* Address */}
                                     <div>
                                         <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
-                                            <MapPin className="w-3 h-3" /> العنوان
+                                            <MapPin className="w-3 h-3" /> {tr('العنوان', 'Address')}
                                         </label>
                                         {isEditing ? (
                                             <input type="text" value={editedProfile.address || ''} onChange={(e) => setEditedProfile({ ...editedProfile, address: e.target.value })}
-                                                placeholder="أدخل العنوان" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
+                                                placeholder={tr('أدخل العنوان', 'Enter address')} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20" />
                                         ) : (
                                             <span className="text-sm text-white">{profile.address || <span className="text-gray-600">—</span>}</span>
                                         )}
@@ -508,9 +520,9 @@ export default function ProfilePage() {
                                     {/* Bio (edit only) */}
                                     {isEditing && (
                                         <div>
-                                            <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">نبذة</label>
+                                            <label className="text-[11px] text-gray-600 uppercase tracking-widest block mb-1.5">{tr('نبذة', 'Bio')}</label>
                                             <textarea value={editedProfile.bio || ''} onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
-                                                placeholder="اكتب نبذة قصيرة عنك..." maxLength={500} rows={3}
+                                                placeholder={tr('اكتب نبذة قصيرة عنك...', 'Write a short bio about yourself...')} maxLength={500} rows={3}
                                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-500/50 focus:outline-none placeholder:text-white/20 resize-none" />
                                             <p className="text-[10px] text-gray-700 text-right mt-1">{(editedProfile.bio || '').length}/500</p>
                                         </div>
@@ -522,23 +534,23 @@ export default function ProfilePage() {
                             <div className="bg-[#161b25] border border-white/8 rounded-2xl overflow-hidden">
                                 <div className="px-5 py-4 border-b border-white/5">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                                        <Calendar className="w-4 h-4 text-purple-400" /> النشاط
+                                        <Calendar className="w-4 h-4 text-purple-400" /> {tr('النشاط', 'Activity')}
                                     </h3>
                                 </div>
                                 <div className="p-5 space-y-3">
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">المشتريات</span>
+                                        <span className="text-gray-500">{tr('المشتريات', 'Purchases')}</span>
                                         <span className="font-semibold text-cyan-400">{profile.stats.totalPurchases}</span>
                                     </div>
                                     {profile.isSeller && (
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-500">المبيعات</span>
+                                            <span className="text-gray-500">{tr('المبيعات', 'Sales')}</span>
                                             <span className="font-semibold text-purple-400">{profile.stats.totalSales}</span>
                                         </div>
                                     )}
                                     <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">عضو منذ</span>
-                                        <span className="text-white/70">{new Date(profile.createdAt).toLocaleDateString('ar-EG', { month: 'short', year: 'numeric' })}</span>
+                                        <span className="text-gray-500">{tr('عضو منذ', 'Member since')}</span>
+                                        <span className="text-white/70">{new Date(profile.createdAt).toLocaleDateString(locale, { month: 'short', year: 'numeric' })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -550,9 +562,9 @@ export default function ProfilePage() {
                                 <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                                     <h3 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
                                         {profile.isSeller ? (
-                                            <><Package className="w-4 h-4 text-cyan-400" /> إعلاناتي</>
+                                            <><Package className="w-4 h-4 text-cyan-400" /> {tr('إعلاناتي', 'My listings')}</>
                                         ) : (
-                                            <><Heart className="w-4 h-4 text-pink-400" /> مفضلتي</>
+                                            <><Heart className="w-4 h-4 text-pink-400" /> {tr('مفضلتي', 'My favorites')}</>
                                         )}
                                     </h3>
                                     <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-gray-500">
@@ -564,13 +576,13 @@ export default function ProfilePage() {
                                     {profile.isSeller && myListings.length === 0 && (
                                         <div className="flex flex-col items-center justify-center py-16 text-gray-700">
                                             <Package className="w-8 h-8 mb-2 opacity-30" />
-                                            <p className="text-sm">لا توجد إعلانات بعد</p>
+                                            <p className="text-sm">{tr('لا توجد إعلانات بعد', 'No listings yet')}</p>
                                         </div>
                                     )}
                                     {!profile.isSeller && favorites.length === 0 && (
                                         <div className="flex flex-col items-center justify-center py-16 text-gray-700">
                                             <Heart className="w-8 h-8 mb-2 opacity-30" />
-                                            <p className="text-sm">لا توجد عناصر مفضلة بعد</p>
+                                            <p className="text-sm">{tr('لا توجد عناصر مفضلة بعد', 'No favorites yet')}</p>
                                         </div>
                                     )}
 
@@ -590,11 +602,19 @@ export default function ProfilePage() {
                                                     <span className="text-sm font-bold text-cyan-400">EGP {listing.price.toLocaleString()}</span>
                                                     {listing.status && (
                                                         <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${statusColors[listing.status] || statusColors.active}`}>
-                                                            {listing.status}
+                                                            {listing.status === 'active'
+                                                                ? tr('نشط', 'Active')
+                                                                : listing.status === 'available'
+                                                                    ? tr('متاح', 'Available')
+                                                                    : listing.status === 'sold'
+                                                                        ? tr('مباع', 'Sold')
+                                                                        : listing.status === 'pending'
+                                                                            ? tr('قيد الانتظار', 'Pending')
+                                                                            : listing.status}
                                                         </span>
                                                     )}
                                                     <span className="text-[11px] text-gray-600 hidden sm:block">
-                                                        {new Date(listing.createdAt).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' })}
+                                                        {new Date(listing.createdAt).toLocaleDateString(locale, { month: 'short', day: 'numeric' })}
                                                     </span>
                                                 </div>
                                             </div>

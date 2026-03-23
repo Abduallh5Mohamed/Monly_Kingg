@@ -9,16 +9,18 @@ const transactionSchema = new mongoose.Schema({
   discountPercent: { type: Number },       // discount % applied (if any)
 
   // Escrow flow:
-  // waiting_seller  → seller needs to submit credentials
+  // pending_seller_approval → waiting seller approval/rejection before charging buyer
+  // waiting_seller  → seller approved and now needs to submit credentials
   // waiting_buyer   → buyer needs to confirm or dispute
   // completed       → confirmed (funds released to seller)
+  // rejected_by_seller → seller rejected request; listing returns available
   // disputed        → buyer opened dispute
   // refunded        → admin refunded buyer
   // auto_confirmed  → auto-confirmed after 48h
   status: {
     type: String,
-    enum: ["waiting_seller", "waiting_buyer", "completed", "disputed", "refunded", "auto_confirmed"],
-    default: "waiting_seller"
+    enum: ["pending_seller_approval", "waiting_seller", "waiting_buyer", "completed", "rejected_by_seller", "disputed", "refunded", "auto_confirmed"],
+    default: "pending_seller_approval"
   },
 
   // Free-form credentials submitted by seller

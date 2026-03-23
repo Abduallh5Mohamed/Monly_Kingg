@@ -1,4 +1,5 @@
 import Listing from "./listing.model.js";
+import Transaction from "../transactions/transaction.model.js";
 import User from "../users/user.model.js";
 import Game from "../games/game.model.js";
 import Discount from "../discounts/discount.model.js";
@@ -82,6 +83,21 @@ async function getActiveCampaignsCached() {
   }).lean();
   _campaignCache = { data: campaigns, expiresAt: now + CAMPAIGN_CACHE_TTL };
   return campaigns;
+}
+
+async function buildVisiblePublicListingFilter() {
+  // Keep listings visible while requests are only pending seller approval.
+  // Hide listings that already have an active approved transaction flow.
+  const activelyLockedListingIds = await Transaction.distinct("listing", {
+    status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] },
+  });
+
+  return {
+    $or: [
+      { status: "available" },
+      { status: "in_progress", _id: { $nin: activelyLockedListingIds } },
+    ],
+  };
 }
 
 // Create a new listing (seller only)
@@ -530,7 +546,7 @@ export const browseListings = async (req, res) => {
       limit = 12,
     } = req.query;
 
-    const filter = { status: "available" };
+    const filter = await buildVisiblePublicListingFilter();
 
     if (game) filter.game = game;
     if (minPrice || maxPrice) {
@@ -540,9 +556,14 @@ export const browseListings = async (req, res) => {
     }
     if (search) {
       const safeSearch = escapeRegex(String(search).trim().slice(0, 100));
-      filter.$or = [
-        { title: { $regex: safeSearch, $options: "i" } },
-        { description: { $regex: safeSearch, $options: "i" } },
+      filter.$and = [
+        ...(filter.$and || []),
+        {
+          $or: [
+            { title: { $regex: safeSearch, $options: "i" } },
+            { description: { $regex: safeSearch, $options: "i" } },
+          ],
+        },
       ];
     }
 
@@ -615,7 +636,9 @@ export const getAllListings = async (req, res) => {
       order = "desc"
     } = req.query;
 
-    const filter = { status };
+    const filter = status === "available"
+      ? await buildVisiblePublicListingFilter()
+      : { status };
     if (game && game !== "all") {
       filter.game = game;
     }
@@ -666,6 +689,19 @@ export const getListingById = async (req, res) => {
 
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
+    }
+
+    // Legacy compatibility: keep listing visible/purchasable while only pending approvals exist.
+    if (listing.status === "in_progress") {
+      const hasActiveLockedTx = await Transaction.exists({
+        listing: listing._id,
+        status: { $in: ["waiting_seller", "waiting_buyer", "disputed"] },
+      });
+
+      if (!hasActiveLockedTx) {
+        await Listing.updateOne({ _id: listing._id, status: "in_progress" }, { $set: { status: "available" } });
+        listing.status = "available";
+      }
     }
 
     // Fetch all discount sources in parallel instead of sequentially

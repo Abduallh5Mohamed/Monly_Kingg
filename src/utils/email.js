@@ -42,6 +42,9 @@ export const sendEmail = async (to, subject, content) => {
     throw new Error(`Invalid email recipient: ${typeof to}`);
   }
 
+  const smtpPort = Number.parseInt(String(process.env.SMTP_PORT || "587"), 10);
+  const smtpSecure = smtpPort === 465;
+
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: smtpPort,

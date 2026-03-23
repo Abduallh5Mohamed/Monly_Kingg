@@ -58,17 +58,17 @@ interface Listing {
 }
 
 interface SellerRating {
-    _id: string;
-    rating: number;
-    comment: string | null;
-    rater: { _id: string; username: string; avatar: string | null };
-    createdAt: string;
+  _id: string;
+  rating: number;
+  comment: string | null;
+  rater: { _id: string; username: string; avatar: string | null };
+  createdAt: string;
 }
 
 interface RatingStats {
-    averageRating: number;
-    totalRatings: number;
-    distribution: { 1: number; 2: number; 3: number; 4: number; 5: number };
+  averageRating: number;
+  totalRatings: number;
+  distribution: { 1: number; 2: number; 3: number; 4: number; 5: number };
 }
 
 export default function ListingDetailsPage() {
@@ -127,9 +127,9 @@ export default function ListingDetailsPage() {
 
   // Fetch ratings when listing is loaded
   useEffect(() => {
-      if (listing?.seller?._id) {
-          fetchSellerRatings();
-      }
+    if (listing?.seller?._id) {
+      fetchSellerRatings();
+    }
   }, [listing?.seller?._id, ratingsPage]);
 
   useEffect(() => {
@@ -208,23 +208,23 @@ export default function ListingDetailsPage() {
   };
 
   const fetchSellerRatings = async () => {
-      if (!listing?.seller?._id) return;
-      try {
-          setRatingsLoading(true);
-          const res = await fetch(`/api/v1/ratings/${listing.seller._id}?page=${ratingsPage}&limit=5`, {
-              credentials: 'include',
-          });
-          const data = await res.json();
-          if (data.data) {
-              setSellerRatings(data.data);
-              setRatingStats(data.stats);
-              setRatingsTotalPages(data.totalPages || 1);
-          }
-      } catch (err) {
-          console.error('Failed to fetch seller ratings:', err);
-      } finally {
-          setRatingsLoading(false);
+    if (!listing?.seller?._id) return;
+    try {
+      setRatingsLoading(true);
+      const res = await fetch(`/api/v1/ratings/${listing.seller._id}?page=${ratingsPage}&limit=5`, {
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (data.data) {
+        setSellerRatings(data.data);
+        setRatingStats(data.stats);
+        setRatingsTotalPages(data.totalPages || 1);
       }
+    } catch (err) {
+      console.error('Failed to fetch seller ratings:', err);
+    } finally {
+      setRatingsLoading(false);
+    }
   };
 
   const handleChat = () => {
@@ -283,55 +283,55 @@ export default function ListingDetailsPage() {
 
   // Star button scrolls to ratings section
   const handleScrollToRatings = () => {
-      ratingsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    ratingsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSubmitRating = async () => {
-      if (!listing || ratingValue === 0) return;
-      setRatingSubmitLoading(true);
-      setRatingError('');
-      setRatingSuccess('');
-      try {
-          const csrfToken = await ensureCsrfToken() || '';
-          const res = await fetch(`/api/v1/ratings/${listing.seller._id}`, {
-              method: 'POST',
-              credentials: 'include',
-              headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
-              body: JSON.stringify({ rating: ratingValue, comment: ratingComment || undefined }),
-          });
-          const data = await res.json();
-          if (res.ok) {
-              setRatingSuccess(data.message || 'Rating submitted successfully!');
-              setRatingValue(0);
-              setRatingComment('');
-              setTimeout(() => {
-                  setShowRatingForm(false);
-                  setRatingSuccess('');
-                  fetchSellerRatings();
-              }, 1500);
-          } else {
-              setRatingError(data.message || 'Failed to submit rating');
-          }
-      } catch {
-          setRatingError('Network error. Please try again.');
-      } finally {
-          setRatingSubmitLoading(false);
+    if (!listing || ratingValue === 0) return;
+    setRatingSubmitLoading(true);
+    setRatingError('');
+    setRatingSuccess('');
+    try {
+      const csrfToken = await ensureCsrfToken() || '';
+      const res = await fetch(`/api/v1/ratings/${listing.seller._id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+        body: JSON.stringify({ rating: ratingValue, comment: ratingComment || undefined }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRatingSuccess(data.message || 'Rating submitted successfully!');
+        setRatingValue(0);
+        setRatingComment('');
+        setTimeout(() => {
+          setShowRatingForm(false);
+          setRatingSuccess('');
+          fetchSellerRatings();
+        }, 1500);
+      } else {
+        setRatingError(data.message || 'Failed to submit rating');
       }
+    } catch {
+      setRatingError('Network error. Please try again.');
+    } finally {
+      setRatingSubmitLoading(false);
+    }
   };
 
   const handleDeleteRating = async (ratingId: string) => {
-      if (!confirm('Are you sure you want to delete your rating?')) return;
-      try {
-          const csrfToken = await ensureCsrfToken() || '';
-          await fetch(`/api/v1/ratings/${ratingId}`, {
-              method: 'DELETE',
-              credentials: 'include',
-              headers: { 'X-XSRF-TOKEN': csrfToken },
-          });
-          fetchSellerRatings();
-      } catch (err) {
-          console.error('Failed to delete rating:', err);
-      }
+    if (!confirm('Are you sure you want to delete your rating?')) return;
+    try {
+      const csrfToken = await ensureCsrfToken() || '';
+      await fetch(`/api/v1/ratings/${ratingId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'X-XSRF-TOKEN': csrfToken },
+      });
+      fetchSellerRatings();
+    } catch (err) {
+      console.error('Failed to delete rating:', err);
+    }
   };
 
   const handleToggleFavorite = async () => {
@@ -357,11 +357,11 @@ export default function ListingDetailsPage() {
   };
 
   const StarDisplay = ({ count, size = 'w-4 h-4' }: { count: number; size?: string }) => (
-      <div className="flex items-center gap-0.5">
-          {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className={`${size} ${s <= count ? 'text-yellow-400 fill-yellow-400' : 'text-white/15'}`} />
-          ))}
-      </div>
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star key={s} className={`${size} ${s <= count ? 'text-yellow-400 fill-yellow-400' : 'text-white/15'}`} />
+      ))}
+    </div>
   );
 
   const allImages = listing ? [listing.coverImage, ...listing.images].filter(Boolean) : [];
@@ -423,6 +423,11 @@ export default function ListingDetailsPage() {
                 {listing.status === 'sold' && (
                   <span className="px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium">
                     Sold
+                  </span>
+                )}
+                {listing.status === 'in_progress' && (
+                  <span className="px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium">
+                    In Progress
                   </span>
                 )}
               </div>
@@ -598,7 +603,7 @@ export default function ListingDetailsPage() {
                           >
                             <Star className="w-4 h-4" />
                             {ratingStats && ratingStats.totalRatings > 0 && (
-                                <span className="ml-1 text-xs text-yellow-400">{ratingStats.totalRatings}</span>
+                              <span className="ml-1 text-xs text-yellow-400">{ratingStats.totalRatings}</span>
                             )}
                           </Button>
                           <Button
@@ -652,11 +657,11 @@ export default function ListingDetailsPage() {
 
                 {/* Seller average rating mini-badge */}
                 {ratingStats && ratingStats.totalRatings > 0 && (
-                    <button onClick={handleScrollToRatings} className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl bg-yellow-500/5 border border-yellow-500/15 hover:bg-yellow-500/10 transition-colors w-full">
-                        <StarDisplay count={Math.round(ratingStats.averageRating)} size="w-3.5 h-3.5" />
-                        <span className="text-yellow-400 font-bold text-sm">{ratingStats.averageRating}</span>
-                        <span className="text-white/40 text-xs">({ratingStats.totalRatings} rating{ratingStats.totalRatings !== 1 ? 's' : ''})</span>
-                    </button>
+                  <button onClick={handleScrollToRatings} className="flex items-center gap-2 mb-3 px-3 py-2 rounded-xl bg-yellow-500/5 border border-yellow-500/15 hover:bg-yellow-500/10 transition-colors w-full">
+                    <StarDisplay count={Math.round(ratingStats.averageRating)} size="w-3.5 h-3.5" />
+                    <span className="text-yellow-400 font-bold text-sm">{ratingStats.averageRating}</span>
+                    <span className="text-white/40 text-xs">({ratingStats.totalRatings} rating{ratingStats.totalRatings !== 1 ? 's' : ''})</span>
+                  </button>
                 )}
 
                 <Link
@@ -687,208 +692,207 @@ export default function ListingDetailsPage() {
           {/* Seller Ratings & Reviews Section (inline, below listing) */}
           {/* ═══════════════════════════════════════════════════════════════ */}
           <div ref={ratingsRef} className="mt-10 scroll-mt-24">
-              <div className="bg-[#0a0d16]/80 backdrop-blur-xl rounded-3xl border border-white/[0.06] p-6 lg:p-8">
-                  {/* Section header */}
-                  <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                          <Star className="w-5 h-5 text-yellow-400" />
-                          Seller Ratings & Reviews
-                      </h2>
-                      {canRate && (
-                          <Button
-                              onClick={() => {
-                                  setShowRatingForm(!showRatingForm);
-                                  setRatingError('');
-                                  setRatingSuccess('');
-                                  setRatingValue(0);
-                                  setRatingComment('');
-                              }}
-                              size="sm"
-                              className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold"
-                          >
-                              <Star className="w-4 h-4 mr-1.5" />
-                              {showRatingForm ? 'Cancel' : 'Write Review'}
-                          </Button>
-                      )}
-                  </div>
-
-                  {/* Stats summary + distribution */}
-                  {ratingStats && ratingStats.totalRatings > 0 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-6 mb-8 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-                          {/* Left: big average */}
-                          <div className="flex flex-col items-center justify-center gap-1">
-                              <span className="text-5xl font-bold text-white">{ratingStats.averageRating}</span>
-                              <StarDisplay count={Math.round(ratingStats.averageRating)} size="w-5 h-5" />
-                              <span className="text-white/40 text-sm mt-1">{ratingStats.totalRatings} review{ratingStats.totalRatings !== 1 ? 's' : ''}</span>
-                          </div>
-                          {/* Right: distribution bars */}
-                          <div className="space-y-2">
-                              {[5, 4, 3, 2, 1].map((star) => {
-                                  const count = ratingStats.distribution[star as keyof typeof ratingStats.distribution] || 0;
-                                  const pct = ratingStats.totalRatings > 0 ? (count / ratingStats.totalRatings) * 100 : 0;
-                                  return (
-                                      <div key={star} className="flex items-center gap-3">
-                                          <div className="flex items-center gap-1 w-10">
-                                              <span className="text-white/70 text-sm font-medium">{star}</span>
-                                              <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                                          </div>
-                                          <div className="flex-1 h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
-                                              <div
-                                                  className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-500"
-                                                  style={{ width: `${pct}%` }}
-                                              />
-                                          </div>
-                                          <span className="text-white/40 text-xs w-6 text-right">{count}</span>
-                                      </div>
-                                  );
-                              })}
-                          </div>
-                      </div>
-                  )}
-
-                  {/* Rating Form (inline, toggleable) */}
-                  {showRatingForm && canRate && (
-                      <div className="mb-8 p-5 rounded-2xl border border-yellow-500/20 bg-yellow-500/[0.03]">
-                          <h3 className="text-lg font-bold text-white mb-4">Your Review</h3>
-
-                          {/* Stars */}
-                          <div className="flex justify-center gap-3 mb-3">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                  <button
-                                      key={star}
-                                      onClick={() => setRatingValue(star)}
-                                      onMouseEnter={() => setRatingHover(star)}
-                                      onMouseLeave={() => setRatingHover(0)}
-                                      className="transition-transform hover:scale-125 focus:outline-none"
-                                  >
-                                      <Star
-                                          className={`w-10 h-10 transition-colors ${
-                                              star <= (ratingHover || ratingValue)
-                                                  ? 'text-yellow-400 fill-yellow-400'
-                                                  : 'text-white/20'
-                                          }`}
-                                      />
-                                  </button>
-                              ))}
-                          </div>
-                          <p className="text-center text-sm text-white/50 mb-4">
-                              {ratingValue === 0 ? 'Tap to rate' : ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][ratingValue]}
-                          </p>
-
-                          {/* Comment */}
-                          <textarea
-                              value={ratingComment}
-                              onChange={(e) => setRatingComment(e.target.value)}
-                              placeholder="Share your experience (optional)..."
-                              maxLength={500}
-                              rows={3}
-                              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/25 focus:border-yellow-500/50 focus:outline-none transition-all text-sm resize-none mb-1"
-                          />
-                          <p className="text-right text-xs text-white/30 mb-4">{ratingComment.length}/500</p>
-
-                          {ratingError && (
-                              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
-                                  <p className="text-red-400 text-sm">⚠️ {ratingError}</p>
-                              </div>
-                          )}
-                          {ratingSuccess && (
-                              <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 mb-4">
-                                  <p className="text-green-400 text-sm">✅ {ratingSuccess}</p>
-                              </div>
-                          )}
-
-                          <Button
-                              onClick={handleSubmitRating}
-                              disabled={ratingValue === 0 || ratingSubmitLoading}
-                              className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold disabled:opacity-50"
-                          >
-                              {ratingSubmitLoading ? 'Submitting…' : 'Submit Review'}
-                          </Button>
-                      </div>
-                  )}
-
-                  {/* Ratings List */}
-                  {ratingsLoading ? (
-                      <div className="flex justify-center py-12">
-                          <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
-                      </div>
-                  ) : sellerRatings.length === 0 ? (
-                      <div className="text-center py-12">
-                          <Star className="w-12 h-12 mx-auto mb-3 text-white/10" />
-                          <p className="text-white/40 text-lg">No reviews yet</p>
-                          <p className="text-white/20 text-sm mt-1">Be the first to review this seller</p>
-                      </div>
-                  ) : (
-                      <div className="space-y-4">
-                          {sellerRatings.map((r) => (
-                              <div key={r._id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/10 transition-colors">
-                                  <div className="flex items-start justify-between mb-2">
-                                      <div className="flex items-center gap-3">
-                                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                                              <span className="text-white font-bold text-xs">
-                                                  {r.rater?.username?.[0]?.toUpperCase() || '?'}
-                                              </span>
-                                          </div>
-                                          <div>
-                                              <p className="text-white font-medium text-sm">{r.rater?.username || 'Unknown'}</p>
-                                              <p className="text-white/30 text-xs">
-                                                  {new Date(r.createdAt).toLocaleDateString('en-US', {
-                                                      year: 'numeric', month: 'short', day: 'numeric',
-                                                  })}
-                                              </p>
-                                          </div>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                          <StarDisplay count={r.rating} size="w-3.5 h-3.5" />
-                                          {user && user.id === r.rater?._id && (
-                                              <button
-                                                  onClick={() => handleDeleteRating(r._id)}
-                                                  className="ml-1 text-white/20 hover:text-red-400 transition-colors"
-                                                  title="Delete your rating"
-                                              >
-                                                  <X className="w-4 h-4" />
-                                              </button>
-                                          )}
-                                      </div>
-                                  </div>
-                                  {r.comment && (
-                                      <div className="flex items-start gap-2 ml-12">
-                                          <MessageSquare className="w-3.5 h-3.5 text-white/20 mt-0.5 flex-shrink-0" />
-                                          <p className="text-white/60 text-sm leading-relaxed">{r.comment}</p>
-                                      </div>
-                                  )}
-                              </div>
-                          ))}
-
-                          {/* Pagination */}
-                          {ratingsTotalPages > 1 && (
-                              <div className="flex items-center justify-center gap-3 pt-4">
-                                  <Button
-                                      onClick={() => setRatingsPage(Math.max(1, ratingsPage - 1))}
-                                      disabled={ratingsPage <= 1}
-                                      variant="outline"
-                                      size="sm"
-                                      className="bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06] disabled:opacity-30"
-                                  >
-                                      Previous
-                                  </Button>
-                                  <span className="text-white/50 text-sm">
-                                      Page {ratingsPage} of {ratingsTotalPages}
-                                  </span>
-                                  <Button
-                                      onClick={() => setRatingsPage(Math.min(ratingsTotalPages, ratingsPage + 1))}
-                                      disabled={ratingsPage >= ratingsTotalPages}
-                                      variant="outline"
-                                      size="sm"
-                                      className="bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06] disabled:opacity-30"
-                                  >
-                                      Next
-                                  </Button>
-                              </div>
-                          )}
-                      </div>
-                  )}
+            <div className="bg-[#0a0d16]/80 backdrop-blur-xl rounded-3xl border border-white/[0.06] p-6 lg:p-8">
+              {/* Section header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-400" />
+                  Seller Ratings & Reviews
+                </h2>
+                {canRate && (
+                  <Button
+                    onClick={() => {
+                      setShowRatingForm(!showRatingForm);
+                      setRatingError('');
+                      setRatingSuccess('');
+                      setRatingValue(0);
+                      setRatingComment('');
+                    }}
+                    size="sm"
+                    className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold"
+                  >
+                    <Star className="w-4 h-4 mr-1.5" />
+                    {showRatingForm ? 'Cancel' : 'Write Review'}
+                  </Button>
+                )}
               </div>
+
+              {/* Stats summary + distribution */}
+              {ratingStats && ratingStats.totalRatings > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-6 mb-8 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                  {/* Left: big average */}
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <span className="text-5xl font-bold text-white">{ratingStats.averageRating}</span>
+                    <StarDisplay count={Math.round(ratingStats.averageRating)} size="w-5 h-5" />
+                    <span className="text-white/40 text-sm mt-1">{ratingStats.totalRatings} review{ratingStats.totalRatings !== 1 ? 's' : ''}</span>
+                  </div>
+                  {/* Right: distribution bars */}
+                  <div className="space-y-2">
+                    {[5, 4, 3, 2, 1].map((star) => {
+                      const count = ratingStats.distribution[star as keyof typeof ratingStats.distribution] || 0;
+                      const pct = ratingStats.totalRatings > 0 ? (count / ratingStats.totalRatings) * 100 : 0;
+                      return (
+                        <div key={star} className="flex items-center gap-3">
+                          <div className="flex items-center gap-1 w-10">
+                            <span className="text-white/70 text-sm font-medium">{star}</span>
+                            <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+                          </div>
+                          <div className="flex-1 h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-500"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <span className="text-white/40 text-xs w-6 text-right">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Rating Form (inline, toggleable) */}
+              {showRatingForm && canRate && (
+                <div className="mb-8 p-5 rounded-2xl border border-yellow-500/20 bg-yellow-500/[0.03]">
+                  <h3 className="text-lg font-bold text-white mb-4">Your Review</h3>
+
+                  {/* Stars */}
+                  <div className="flex justify-center gap-3 mb-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setRatingValue(star)}
+                        onMouseEnter={() => setRatingHover(star)}
+                        onMouseLeave={() => setRatingHover(0)}
+                        className="transition-transform hover:scale-125 focus:outline-none"
+                      >
+                        <Star
+                          className={`w-10 h-10 transition-colors ${star <= (ratingHover || ratingValue)
+                              ? 'text-yellow-400 fill-yellow-400'
+                              : 'text-white/20'
+                            }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-center text-sm text-white/50 mb-4">
+                    {ratingValue === 0 ? 'Tap to rate' : ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][ratingValue]}
+                  </p>
+
+                  {/* Comment */}
+                  <textarea
+                    value={ratingComment}
+                    onChange={(e) => setRatingComment(e.target.value)}
+                    placeholder="Share your experience (optional)..."
+                    maxLength={500}
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/25 focus:border-yellow-500/50 focus:outline-none transition-all text-sm resize-none mb-1"
+                  />
+                  <p className="text-right text-xs text-white/30 mb-4">{ratingComment.length}/500</p>
+
+                  {ratingError && (
+                    <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 mb-4">
+                      <p className="text-red-400 text-sm">⚠️ {ratingError}</p>
+                    </div>
+                  )}
+                  {ratingSuccess && (
+                    <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 mb-4">
+                      <p className="text-green-400 text-sm">✅ {ratingSuccess}</p>
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={handleSubmitRating}
+                    disabled={ratingValue === 0 || ratingSubmitLoading}
+                    className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold disabled:opacity-50"
+                  >
+                    {ratingSubmitLoading ? 'Submitting…' : 'Submit Review'}
+                  </Button>
+                </div>
+              )}
+
+              {/* Ratings List */}
+              {ratingsLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+                </div>
+              ) : sellerRatings.length === 0 ? (
+                <div className="text-center py-12">
+                  <Star className="w-12 h-12 mx-auto mb-3 text-white/10" />
+                  <p className="text-white/40 text-lg">No reviews yet</p>
+                  <p className="text-white/20 text-sm mt-1">Be the first to review this seller</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {sellerRatings.map((r) => (
+                    <div key={r._id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/10 transition-colors">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">
+                              {r.rater?.username?.[0]?.toUpperCase() || '?'}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="text-white font-medium text-sm">{r.rater?.username || 'Unknown'}</p>
+                            <p className="text-white/30 text-xs">
+                              {new Date(r.createdAt).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'short', day: 'numeric',
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <StarDisplay count={r.rating} size="w-3.5 h-3.5" />
+                          {user && user.id === r.rater?._id && (
+                            <button
+                              onClick={() => handleDeleteRating(r._id)}
+                              className="ml-1 text-white/20 hover:text-red-400 transition-colors"
+                              title="Delete your rating"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      {r.comment && (
+                        <div className="flex items-start gap-2 ml-12">
+                          <MessageSquare className="w-3.5 h-3.5 text-white/20 mt-0.5 flex-shrink-0" />
+                          <p className="text-white/60 text-sm leading-relaxed">{r.comment}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Pagination */}
+                  {ratingsTotalPages > 1 && (
+                    <div className="flex items-center justify-center gap-3 pt-4">
+                      <Button
+                        onClick={() => setRatingsPage(Math.max(1, ratingsPage - 1))}
+                        disabled={ratingsPage <= 1}
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06] disabled:opacity-30"
+                      >
+                        Previous
+                      </Button>
+                      <span className="text-white/50 text-sm">
+                        Page {ratingsPage} of {ratingsTotalPages}
+                      </span>
+                      <Button
+                        onClick={() => setRatingsPage(Math.min(ratingsTotalPages, ratingsPage + 1))}
+                        disabled={ratingsPage >= ratingsTotalPages}
+                        variant="outline"
+                        size="sm"
+                        className="bg-white/[0.03] border-white/10 text-white hover:bg-white/[0.06] disabled:opacity-30"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -919,7 +923,7 @@ export default function ListingDetailsPage() {
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0a0d16] rounded-2xl border border-white/10 p-6 max-w-md w-full">
             <h3 className="text-xl font-bold text-white mb-2">Confirm Purchase</h3>
-            <p className="text-white/50 text-sm mb-6">Funds will be held in escrow until you confirm receipt of account credentials.</p>
+            <p className="text-white/50 text-sm mb-6">No funds are deducted now. Seller must approve first; only then funds are held in escrow.</p>
             <div className="bg-white/[0.03] rounded-xl border border-white/10 p-4 mb-4 space-y-3">
               {/* Listing name */}
               <div className="flex justify-between items-center">
